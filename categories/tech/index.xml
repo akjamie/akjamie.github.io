@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tech on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/categories/tech/</link>
+    <description>Recent content in Tech on Jamie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 14 Jul 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://akjamie.github.io/categories/tech/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Harshicorp Vault</title>
+      <link>http://akjamie.github.io/post/2019-07-14-harshicorp-vault-setup-config/</link>
+      <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2019-07-14-harshicorp-vault-setup-config/</guid>
+      <description>Install vault Prepare docker-compose.yml, content as below (just a sample here, please don&amp;rsquo;t use it for production, there are more aspects should be considered) version: &#39;3&#39; services: consul: container_name: consul.server command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect=1 image: consul:latest restart: always volumes: - ./consul.server/config:/consul/config - ./consul.server/data:/consul/data ports: - &amp;quot;9300:9300&amp;quot; - &amp;quot;9500:9500&amp;quot; - &amp;quot;9600:9600/udp&amp;quot; vault: container_name: vault.server image: vault ports: - &amp;quot;8200:8200&amp;quot; restart: always links: - consul:consul.server volumes: - ./vault.server/config:/mnt/vault/config</description>
+    </item>
+    
+  </channel>
+</rss>

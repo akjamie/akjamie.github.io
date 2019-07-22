@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tops on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/top/</link>
+    <description>Recent content in Tops on Jamie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 14 Jul 2019 09:54:06 +0000</lastBuildDate>
+    
+	<atom:link href="http://akjamie.github.io/top/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Jamie</title>
+      <link>http://akjamie.github.io/top/about/</link>
+      <pubDate>Sun, 14 Jul 2019 09:54:06 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/top/about/</guid>
+      <description>Jamie Zhang is from Shannxi China. He has more than 9 years of experience in web/mobile application development and management, participated in a number of large-scale projects in Huawei &amp;amp; HSBC.
+He loves open source and likes learning new technologies.
+He also has strong interests in various tech stuff such as Artificial Intelligence, Microservice, Cloud native.
+He is happy with his current job, but also willing to take new challenges if the opportunity matches his career path.</description>
+    </item>
+    
+  </channel>
+</rss>
