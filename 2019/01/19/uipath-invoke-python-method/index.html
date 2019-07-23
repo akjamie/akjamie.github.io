@@ -206,8 +206,11 @@
                 </header>
                 <nav id="TableOfContents">
 <ul>
-<li>
+<li><a href="#模拟问题场景">模拟问题场景</a></li>
+<li><a href="#解决步骤">解决步骤</a>
 <ul>
+<li><a href="#预置条件">预置条件：</a></li>
+<li><a href="#设置python-home并用变量保存">设置PYTHON_HOME并用变量保存</a></li>
 <li><a href="#使用python-activities下面的组件来调用python脚本">使用Python activities下面的组件来调用python脚本</a></li>
 </ul></li>
 </ul>
@@ -217,12 +220,15 @@
 
 <p>UIPath是一个非常不错的RPA(Robotic Process Automation) 工具和平台，并且有开源社区版本可以方便RPA爱好者去尝试，本文是介绍如何在UIPath下调用python的脚本中的方法并提取返回值</p>
 
-<p>#模拟问题场景
-uipath加载python脚本，并根据传入的配置文件，返回配置文件中的符合条件的配置信息</p>
+<h1 id="模拟问题场景">模拟问题场景</h1>
 
-<p>#解决步骤<br />
-##预置条件：
-a. python脚本pmt_detection.py， 内容如下：</p>
+<p>uipath加载python脚本，并根据传入的配置文件，返回配置文件中的符合条件的配置信息</p>
+
+<h1 id="解决步骤">解决步骤</h1>
+
+<h2 id="预置条件">预置条件：</h2>
+
+<p>a. python脚本pmt_detection.py， 内容如下：</p>
 
 <pre><code>from configparser import ConfigParser
 def getPmtReqsStatToBeSync(configFilePath):
@@ -247,14 +253,15 @@ rm_scan_on_status=CANCELLED,COMPLETED
 doc_type_list=ID,PASSPORT
 </code></pre>
 
-<p>我们本次的目标是，用getPmtReqsStatToBeSync去拿到配置文件中的key sync_scan_on_status对应的value，即SUBMITTED,INPROGRESS
+<p>我们本次的目标是，用getPmtReqsStatToBeSync去拿到配置文件中的key sync_scan_on_status对应的value，即SUBMITTED,INPROGRESS<br />
 c.uipath项目已创建且python activities已安装</p>
 
-<p>##设置PYTHON_HOME并用变量保存
-避免每次调用python脚本的时候都要hardcode python env home 地址，及python.exe所在的目录
+<h2 id="设置python-home并用变量保存">设置PYTHON_HOME并用变量保存</h2>
+
+<p>避免每次调用python脚本的时候都要hardcode python env home 地址，及python.exe所在的目录<br />
 a. 我们现在系统环境变量中设置PYTHON_HOME,如下图
 <img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-48a93520172f1317.png" alt="" />
-b.在UIpath activities中找到&rsquo;Get Environment Variable&rsquo;并拖入使用，配置如下图，用变量保存下python home的地址
+b. 在UIpath activities中找到&rsquo;Get Environment Variable&rsquo;并拖入使用，配置如下图，用变量保存下python home的地址
 <img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-b9231e50939f7b28.png" alt="" /></p>
 
 <h2 id="使用python-activities下面的组件来调用python脚本">使用Python activities下面的组件来调用python脚本</h2>
@@ -262,9 +269,9 @@ b.在UIpath activities中找到&rsquo;Get Environment Variable&rsquo;并拖入�
 <p>a. 添加python scope及配置
 <img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-b3d0136be36e7810.png" alt="" />
 截了其它例子中的图(请姑且认为py_home跟python_home是同一个变量)
-需要补充说明的是,除了Path需要配置之外，Target和Version也请选择正确否则会得到无法加载script的错误且没有具体的错误日志
-b.在python scope的Do区域添加Load Python Script并设置脚本路径和result - 变量保存python object
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-91e3fecb9fd03402.png" alt="" />
+需要补充说明的是,除了Path需要配置之外，Target和Version也请选择正确否则会得到无法加载script的错误且没有具体的错误日志<br />
+b. 在python scope的Do区域添加Load Python Script并设置脚本路径和result - 变量保存python object
+<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-91e3fecb9fd03402.png" alt="" /><br />
 c. 在添加invoke python method组件，配置如下
 <img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-aa7b7078eba0b3e7.png" alt="" />
 Instance即 在上一步加载进来的脚本对象，Name即方法名，本例中方法名为：getPmtReqsStatToBeSync，输出同样是pythonObject
