@@ -6,60 +6,51 @@
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Jul 2019 13:36:10 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 23 Jul 2019 13:36:10 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>AWS SAM</title>
-      <link>http://akjamie.github.io/tags/aws-sam/</link>
-      <pubDate>Tue, 23 Jul 2019 13:36:10 +0800</pubDate>
-      
-      <guid>http://akjamie.github.io/tags/aws-sam/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Python</title>
-      <link>http://akjamie.github.io/tags/python/</link>
-      <pubDate>Tue, 23 Jul 2019 13:36:10 +0800</pubDate>
-      
-      <guid>http://akjamie.github.io/tags/python/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Serveless</title>
-      <link>http://akjamie.github.io/tags/serveless/</link>
-      <pubDate>Tue, 23 Jul 2019 13:36:10 +0800</pubDate>
-      
-      <guid>http://akjamie.github.io/tags/serveless/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Docker</title>
       <link>http://akjamie.github.io/tags/docker/</link>
-      <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       
       <guid>http://akjamie.github.io/tags/docker/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Harshicorp Vault</title>
-      <link>http://akjamie.github.io/tags/harshicorp-vault/</link>
-      <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
+      <title>Spring Batch</title>
+      <link>http://akjamie.github.io/tags/spring-batch/</link>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/harshicorp-vault/</guid>
+      <guid>http://akjamie.github.io/tags/spring-batch/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spring Boot</title>
+      <link>http://akjamie.github.io/tags/spring-boot/</link>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/spring-boot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud</title>
+      <link>http://akjamie.github.io/tags/spring-cloud/</link>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/spring-cloud/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Let’s Encrypt</title>
       <link>http://akjamie.github.io/tags/lets-encrypt/</link>
-      <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 14 Jul 2019 18:30:05 +0000</pubDate>
       
       <guid>http://akjamie.github.io/tags/lets-encrypt/</guid>
       <description></description>
@@ -68,18 +59,72 @@
     <item>
       <title>Nginx</title>
       <link>http://akjamie.github.io/tags/nginx/</link>
-      <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 14 Jul 2019 18:30:05 +0000</pubDate>
       
       <guid>http://akjamie.github.io/tags/nginx/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Spring Cloud</title>
-      <link>http://akjamie.github.io/tags/spring-cloud/</link>
-      <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
+      <title>Proxychain</title>
+      <link>http://akjamie.github.io/tags/proxychain/</link>
+      <pubDate>Sun, 14 Jul 2019 14:50:52 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/spring-cloud/</guid>
+      <guid>http://akjamie.github.io/tags/proxychain/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Shadowsocks</title>
+      <link>http://akjamie.github.io/tags/shadowsocks/</link>
+      <pubDate>Sun, 14 Jul 2019 14:50:52 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/shadowsocks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Harshicorp Vault</title>
+      <link>http://akjamie.github.io/tags/harshicorp-vault/</link>
+      <pubDate>Sun, 14 Jul 2019 12:10:27 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/harshicorp-vault/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>AWS SAM</title>
+      <link>http://akjamie.github.io/tags/aws-sam/</link>
+      <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/aws-sam/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>http://akjamie.github.io/tags/python/</link>
+      <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Serveless</title>
+      <link>http://akjamie.github.io/tags/serveless/</link>
+      <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/serveless/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>UIPath</title>
+      <link>http://akjamie.github.io/tags/uipath/</link>
+      <pubDate>Sat, 19 Jan 2019 12:10:27 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/uipath/</guid>
       <description></description>
     </item>
     

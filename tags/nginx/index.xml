@@ -6,7 +6,7 @@
     <description>Recent content in Nginx on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 14 Jul 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 14 Jul 2019 18:30:05 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Free CA Certs setup using Certbot &#43; Docker &#43; Nginx</title>
       <link>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</link>
-      <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 14 Jul 2019 18:30:05 +0000</pubDate>
       
       <guid>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</guid>
       <description>Background Let&amp;rsquo;s Encrypt is a certificate authority that provides X.509 certificates for Transport Layer Security (TLS) encryption at no charge,The certificate is valid for 90 days, during which renewal can take place at anytime. 这样我们就可以用上免费的CA cert来安全expose我们自己的网站或者</description>

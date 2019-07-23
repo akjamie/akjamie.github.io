@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io/img/background-07.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io/img/background-07.jpg" />
+    
+
+    
+    <meta name="title" content="Spring Cloud Series" />
+    <meta property="og:title" content="Spring Cloud Series" />
+    <meta property="twitter:title" content="Spring Cloud Series" />
+    
+
+    
+    <meta name="description" content="通过一个demo，来综合运用spring cloud系列技术">
+    <meta property="og:description" content="通过一个demo，来综合运用spring cloud系列技术" />
+    <meta property="twitter:description" content="通过一个demo，来综合运用spring cloud系列技术" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Spring Cloud Series-Jamie&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/2019-07-15-spring-cloud-demo-overview/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+	
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/docco.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/categories/tech">tech</a>
+                    </li>
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/background-01.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/spring-cloud" title="Spring Cloud">
+                            Spring Cloud
+                        </a>
+                        
+                        <a class="tag" href="/tags/spring-boot" title="Spring Boot">
+                            Spring Boot
+                        </a>
+                        
+                        <a class="tag" href="/tags/docker" title="Docker">
+                            Docker
+                        </a>
+                        
+                    </div>
+                    <h1>Spring Cloud Series</h1>
+                    <h2 class="subheading">(1st) Demo Overview</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                            Jamie Zhang
+                         
+                        on 
+                        Tuesday, July 23, 2019
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#demo的介绍">Demo的介绍</a></li>
+<li><a href="#整体架构">整体架构</a></li>
+<li><a href="#spring-boot-项目列表">Spring boot 项目列表</a></li>
+<li><a href="#其他">其他</a></li>
+</ul>
+</nav>
+                
+                
+
+<h1 id="demo的介绍">Demo的介绍</h1>
+
+<p>本文主要通过一个小demo，来综合运用spring cloud系列技术，demo中主要包含如下模块/组建：
+1. Authorization service, 基于Spring Security Oauth2 + Spring Cloud Oauth2,提供集中授权服务,如Token 生成,校验等<br />
+2. API gateway, edge service, 提供统一的对外访问接口，集成了oauth2 安全校验，Netflix Hystrix服务降级，依赖隔离，断路保护功能<br />
+3. Service registry,基于Netflix Eureka的注册中心提供服务注册和服务发现功能<br />
+4. Config service, 采用了 Spring cloud config + Spring Cloud Bus提供简单的配置中心<br />
+5. Catalog service, 示例服务，模拟一个简单的商品服务目录，仅一维结构<br />
+6. Inventory service, 示例服务, 模拟简单的商品库存服务
+7. Hystrix dashboard, 聚合hystrix的metrics监控展示</p>
+
+<h1 id="整体架构">整体架构</h1>
+
+<p><img src="/img/2019-07-15-spring-cloud-demo-overview/architecture.png" alt="" /></p>
+
+<h1 id="spring-boot-项目列表">Spring boot 项目列表</h1>
+
+<ol>
+<li>authorization-service，<a href="https://github.com/cloud-poc/authorization-service">https://github.com/cloud-poc/authorization-service</a>
+backed by mysql database</li>
+<li>cloud-api-gateway，<a href="https://github.com/cloud-poc/api-gateway">https://github.com/cloud-poc/api-gateway</a>
+目前主要集成了oauth2 jwt授权认证，无valid token直接reject</li>
+<li>service-registry，<a href="https://github.com/cloud-poc/service-registry">https://github.com/cloud-poc/service-registry</a>
+eureka 服务端，外置话了部分参数，便于在docker/docker-compose部署时根据需要配置</li>
+<li>config-service，<a href="https://github.com/cloud-poc/config-service">https://github.com/cloud-poc/config-service</a>
+基于spring cloud config的配置中心，后续会考虑用携程apollo替换</li>
+<li>catalog-service， <a href="https://github.com/cloud-poc/catalog-service">https://github.com/cloud-poc/catalog-service</a>
+模拟一个简单的商品服务目录，用到了feign和netflix robin等框架</li>
+<li>inventory-service， <a href="https://github.com/cloud-poc/inventory-service">https://github.com/cloud-poc/inventory-service</a></li>
+<li>hystrix-turbine-dashboard，<a href="https://github.com/cloud-poc/hystrix-turbine-dashboard">https://github.com/cloud-poc/hystrix-turbine-dashboard</a>
+hystrix的集中dashboard， 目前turbine stream部分还有点问题，能从mq总拿到stream信息，但是dashboard展示有问题</li>
+<li>devops-config-service-repo， <a href="https://github.com/cloud-poc/devops-config-service-repo">https://github.com/cloud-poc/devops-config-service-repo</a>
+服务configs目录，主要存放cloud configs和docker compose files</li>
+<li>api-common, <a href="https://github.com/cloud-poc/api-common">https://github.com/cloud-poc/api-common</a>
+部分common代码，如generic exception的定义和controler advice，swagger的配置</li>
+</ol>
+
+<h1 id="其他">其他</h1>
+
+<p>主要项目都提供了docker打包的plugin，直接运行mvn clean compile jib:dockerBuild就能实现local build，如需要推送到远程docker registry，需要配置远端仓库信息。</p>
+
+<p>在gateway，catalog，inventory中都配置了调用链跟踪，抽样数据会汇总到zipkin上进行展示，目前是基于http 方式推送数据，后面会修改为rabbit mq方式推送，提高性能</p>
+
+<p>在gateway，catalog，inventory中都配置了prometheus的监控埋点，metrics会被拉取到prometheus上，并在kafana中展示，在deveops代码仓库中提供了一个简单的prometheus+alertmanager+kafana的docker compose file</p>
+
+<p>logging的统一收集和分析还没有开始</p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2019-07-21-spring-batch-single-process-remote-partitioning/" data-toggle="tooltip" data-placement="top" title="Spring batch - single process &amp; remote partitioning(multi instances)">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href="" rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2019
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

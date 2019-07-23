@@ -6,36 +6,72 @@
     <description>Recent content in Posts on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Jul 2019 13:36:10 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 23 Jul 2019 13:36:10 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>AWS Serveless Application Model</title>
-      <link>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</link>
-      <pubDate>Tue, 23 Jul 2019 13:36:10 +0800</pubDate>
+      <title>Spring Cloud Series</title>
+      <link>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</link>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</guid>
-      <description>AWS SAM - lambda demo Demo User Case User requirement: dynamically get regional mobile app feature availability status,status data is kept in AWS dynamodb. Projectcodes hierarchical structure presented as below ├── README.md -- This instructions file ├── event.json -- API Gateway Proxy Integration event payload ├── feature_availability -- Source code for a lambda function │ ├── __init__.py │ ├── app.py</description>
+      <guid>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</guid>
+      <description>Demo的介绍 本文主要通过一个小demo，来综合运用spring cloud系列技术，demo中主要包含如下模块/组建： 1. Authorization service, 基于Spring</description>
+    </item>
+    
+    <item>
+      <title>Spring batch - single process &amp; remote partitioning(multi instances)</title>
+      <link>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</link>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</guid>
+      <description>Spring batch是轻量级，全面的批处理框架，旨在开发对企业系统日常运营至关重要的强大批处理应用程序。 Spring Batch负责大量记录，包括日志记录/跟踪</description>
     </item>
     
     <item>
       <title>Free CA Certs setup using Certbot &#43; Docker &#43; Nginx</title>
       <link>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</link>
-      <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 14 Jul 2019 18:30:05 +0000</pubDate>
       
       <guid>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</guid>
       <description>Background Let&amp;rsquo;s Encrypt is a certificate authority that provides X.509 certificates for Transport Layer Security (TLS) encryption at no charge,The certificate is valid for 90 days, during which renewal can take place at anytime. 这样我们就可以用上免费的CA cert来安全expose我们自己的网站或者</description>
     </item>
     
     <item>
+      <title>Linux network proxy setup for desktop and terminal</title>
+      <link>http://akjamie.github.io/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/</link>
+      <pubDate>Sun, 14 Jul 2019 14:50:52 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/</guid>
+      <description>背景介绍 很多时候我们由于great firewall，我们无法访问某些网站，这时候就需要用到网络代理来应对一些比较urgent的case，本文</description>
+    </item>
+    
+    <item>
       <title>Harshicorp Vault Setup Config and integration with spring boot</title>
       <link>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</link>
-      <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 14 Jul 2019 12:10:27 +0000</pubDate>
       
       <guid>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</guid>
       <description>Install vault Prepare docker-compose.yml, content as below (just a sample here, please don&amp;rsquo;t use it for production, there are more aspects should be considered) version: &#39;3&#39; services: consul: container_name: consul.server command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect=1 image: consul:latest restart: always volumes: - ./consul.server/config:/consul/config - ./consul.server/data:/consul/data ports: - &amp;quot;9300:9300&amp;quot; - &amp;quot;9500:9500&amp;quot; - &amp;quot;9600:9600/udp&amp;quot; vault: container_name: vault.server image: vault ports: - &amp;quot;8200:8200&amp;quot; restart: always links: - consul:consul.server volumes: - ./vault.server/config:/mnt/vault/config</description>
+    </item>
+    
+    <item>
+      <title>AWS Serveless Application Model</title>
+      <link>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</link>
+      <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</guid>
+      <description>AWS SAM - lambda demo Demo User Case User requirement: dynamically get regional mobile app feature availability status,status data is kept in AWS dynamodb. Projectcodes hierarchical structure presented as below ├── README.md -- This instructions file ├── event.json -- API Gateway Proxy Integration event payload ├── feature_availability -- Source code for a lambda function │ ├── __init__.py │ ├── app.py</description>
+    </item>
+    
+    <item>
+      <title>How to invoke python scripts in UIPath</title>
+      <link>http://akjamie.github.io/2019/01/19/uipath-invoke-python-method/</link>
+      <pubDate>Sat, 19 Jan 2019 12:10:27 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/2019/01/19/uipath-invoke-python-method/</guid>
+      <description>UIPath是一个非常不错的RPA(Robotic Process Automation) 工具和平台，并且有开源社区版本可以方便RPA爱好者去尝试，本文是介绍如何在UIPath</description>
     </item>
     
   </channel>

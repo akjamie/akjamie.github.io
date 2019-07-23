@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io/img/background-07.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io/img/background-07.jpg" />
+    
+
+    
+    <meta name="title" content="Spring batch - single process &amp; remote partitioning(multi instances)" />
+    <meta property="og:title" content="Spring batch - single process &amp; remote partitioning(multi instances)" />
+    <meta property="twitter:title" content="Spring batch - single process &amp; remote partitioning(multi instances)" />
+    
+
+    
+    <meta name="description" content="spring batch 批处理poc">
+    <meta property="og:description" content="spring batch 批处理poc" />
+    <meta property="twitter:description" content="spring batch 批处理poc" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Spring batch - single process &amp; remote partitioning(multi instances)-Jamie&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/2019-07-21-spring-batch-single-process-remote-partitioning/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+	
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/docco.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/categories/tech">tech</a>
+                    </li>
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/background-03.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/spring-batch" title="Spring Batch">
+                            Spring Batch
+                        </a>
+                        
+                    </div>
+                    <h1>Spring batch - single process &amp; remote partitioning(multi instances)</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                            Jamie Zhang
+                         
+                        on 
+                        Tuesday, July 23, 2019
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#单个实例处理-且单个文件">单个实例处理(且单个文件)</a>
+<ul>
+<li><a href="#singleprocessconfiguration">SingleProcessConfiguration</a></li>
+<li><a href="#scheduledjoblancherconfiguration">ScheduledJobLancherConfiguration</a></li>
+</ul></li>
+<li><a href="#remote-partition主从架构">Remote partition主从架构</a>
+<ul>
+<li><a href="#partitioner-分区器">Partitioner 分区器</a></li>
+<li><a href="#amqp配置">AMQP配置</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<p>Spring batch是轻量级，全面的批处理框架，旨在开发对企业系统日常运营至关重要的强大批处理应用程序。</p>
+
+<p>Spring Batch负责大量记录，包括日志记录/跟踪，事务管理，作业处理统计，作业重启，跳过和资源管理。 它还提供更高级的技术服务和功能，通过优化和分区技术实现极高容量和高性能的批处理作业。 简单和复杂的大批量批处理作业可以高度可扩展的方式利用框架来处理大量信息。</p>
+
+<p>关于spring batch的细节介绍，请参加<a href="https://spring.io/projects/spring-batch">Spring batch</a>官网，本文主要是记录一个poc的过程，主要包含单个实例应用和远程分析多实例处理的cases。</p>
+
+<p>模拟demo的用户场景：<br />
+定时处理多个系统输出的csv文件，然后跑批处理到数据到DB，简要架构图如下:<br />
+<img src="/img/2019-07-21-spring-batch-single-process-remote-partitioning/20190721193530.png" alt="" /></p>
+
+<h1 id="单个实例处理-且单个文件">单个实例处理(且单个文件)</h1>
+
+<p>通过cron job定时调度batch job，整个job由两个step组成的一个flow，step1 - 清理目标数据库表(模拟场景，可能是数据备份，建立新的day表等); step2 - 加载文件，解析数据内容并转化为java对象,经processor处理，后倒入db存储.
+sequence diagram:<br />
+<img src="/img/2019-07-21-spring-batch-single-process-remote-partitioning/single-process-sequence.png" alt="" />
+主要配置文件</p>
+
+<h2 id="singleprocessconfiguration">SingleProcessConfiguration</h2>
+
+<pre><code>package org.akj.batch.configuration;
+
+import lombok.extern.slf4j.Slf4j;
+import org.akj.batch.constant.Constant;
+import org.akj.batch.entity.Person;
+import org.akj.batch.listener.CustomJobExcecutionListener;
+import org.akj.batch.processor.PersonItemProcessor;
+import org.akj.batch.repository.PeopleRepository;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepContribution;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.scope.context.ChunkContext;
+import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.item.data.RepositoryItemWriter;
+import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder;
+import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.repeat.RepeatStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.beans.PropertyEditor;
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+
+@Configuration
+@EnableBatchProcessing
+@Slf4j
+public class SingleSourceConfiguration {
+
+    @Autowired
+    public JobBuilderFactory jobBuilderFactory;
+
+    @Autowired
+    public StepBuilderFactory stepBuilderFactory;
+
+    @Autowired
+    private PeopleRepository repository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Value(&quot;${batch.job.name}&quot;)
+    private String jobName;
+
+    @Value(&quot;${batch.job.chunk.size}&quot;)
+    private int chunkSize;
+
+    @Value(&quot;${batch.job.input.path}&quot;)
+    private String inputFolder;
+
+    @Bean
+    public FlatFileItemReader&lt;Person&gt; reader() {
+        BeanWrapperFieldSetMapper&lt;Person&gt; beanMapper = new BeanWrapperFieldSetMapper&lt;Person&gt;();
+        beanMapper.setTargetType(Person.class);
+
+        Map&lt;String, PropertyEditor&gt; customEditors = new HashMap&lt;String, PropertyEditor&gt;();
+        DateFormat dateFormatter = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);
+        customEditors.put(&quot;java.util.Date&quot;, new CustomDateEditor(dateFormatter, false));
+        beanMapper.setCustomEditors(customEditors);
+        return new FlatFileItemReaderBuilder&lt;Person&gt;().name(&quot;personItemReader&quot;)
+                .resource(new FileSystemResource(inputFolder + File.separatorChar + Constant.FILE_SOURCE)).delimited()
+                .names(new String[]{&quot;pid&quot;, &quot;firstName&quot;, &quot;lastName&quot;, &quot;age&quot;, &quot;gender&quot;, &quot;dateOfBirth&quot;, &quot;height&quot;,
+                        &quot;weight&quot;})
+                .fieldSetMapper(beanMapper).build();
+    }
+
+    @Bean
+    public PersonItemProcessor processor() {
+        return new PersonItemProcessor();
+    }
+
+    @Bean
+    public RepositoryItemWriter&lt;Person&gt; writer() {
+        return new RepositoryItemWriterBuilder&lt;Person&gt;().repository(repository).methodName(&quot;save&quot;).build();
+    }
+
+    @Bean
+    public Job importUserJob(CustomJobExcecutionListener listener, Step step1) {
+        return jobBuilderFactory.get(jobName).incrementer(new RunIdIncrementer()).listener(listener).flow(step1).end()
+                .build();
+    }
+
+    @Bean
+    public Job importUserJobflow(CustomJobExcecutionListener listener, Step step1) {
+        return jobBuilderFactory.get(jobName).listener(listener).start(step1()).on(&quot;COMPLETED&quot;).to(step2(writer()))
+                .end().build();
+    }
+
+    @Bean
+    public Step step1() {
+        return stepBuilderFactory.get(&quot;step1&quot;).tasklet(new Tasklet() {
+            @Override
+            public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+                jdbcTemplate.execute(Constant.TRANCATE_TABLE_SQL);
+                log.debug(&quot;successfully execute sql: &quot; + Constant.TRANCATE_TABLE_SQL);
+                return RepeatStatus.FINISHED;
+            }
+        }).build();
+
+    }
+
+    @Bean
+    public Step step2(RepositoryItemWriter&lt;Person&gt; writer) {
+        return stepBuilderFactory.get(&quot;step2&quot;).&lt;Person, Person&gt;chunk(chunkSize).reader(reader()).processor(processor())
+                .writer(writer).taskExecutor(taskExecutor()).build();
+    }
+
+    @Bean
+    public TaskExecutor taskExecutor() {
+        return new SimpleAsyncTaskExecutor(&quot;spring batch&quot;);
+    }
+}
+</code></pre>
+
+<h2 id="scheduledjoblancherconfiguration">ScheduledJobLancherConfiguration</h2>
+
+<pre><code>package org.akj.batch.configuration;
+
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+
+@EnableScheduling
+@Configuration
+@ConditionalOnProperty(&quot;batch.scheduling.enabled&quot;)
+@Profile({&quot;master&quot;})
+public class ScheduledJobLancherConfiguration {
+    @Autowired
+    Job job;
+
+    @Value(&quot;${batch.job.name}&quot;)
+    private String jobName;
+
+    @Autowired
+    private JobRepository repository;
+
+    @Bean(&quot;scheduledJobLauncher&quot;)
+    public JobLauncher jobLauncher(JobRepository jobRepo) {
+        SimpleJobLauncher simpleJobLauncher = new SimpleJobLauncher();
+        simpleJobLauncher.setJobRepository(jobRepo);
+        return simpleJobLauncher;
+    }
+
+    @Scheduled(cron = &quot;${batch.job.scheduler.cron}&quot;)
+    public void perform() throws JobExecutionAlreadyRunningException, JobRestartException,
+            JobInstanceAlreadyCompleteException, JobParametersInvalidException {
+        JobParameters params = new JobParametersBuilder().addString(jobName, String.valueOf(System.currentTimeMillis()))
+                .toJobParameters();
+        jobLauncher(repository).run(job, params);
+    }
+}
+</code></pre>
+
+<p>配置文件 in application.yml</p>
+
+<pre><code>batch:
+  scheduling:
+    enabled: true
+  partitioner:
+    partition: 1 # partition count, grid size
+  job:
+    name: importUserDataTest
+    chunk.size: 20
+    input:
+      path: c:/temp/source
+      filter: '.csv'
+    ouput:
+      path: c:/temp/target
+    failure:
+      path: c:/temp/failure
+    scheduler:
+      cron: 0 */1 * * * ? #[s] [m] [h] [d] [m] [w] [y]
+</code></pre>
+
+<p>single process可以对应大部分场景了，并且可以通过设置taskExecutor来支持多线程处理</p>
+
+<pre><code>@Bean
+public TaskExecutor taskExecutor(){
+    return new SimpleAsyncTaskExecutor(&quot;spring_batch&quot;);
+}
+
+@Bean
+public Step sampleStep(TaskExecutor taskExecutor) {
+        return this.stepBuilderFactory.get(&quot;sampleStep&quot;)
+                                .&lt;String, String&gt;chunk(10)
+                                .reader(itemReader())
+                                .writer(itemWriter())
+                                .taskExecutor(taskExecutor)
+                                .build();
+</code></pre>
+
+<p>当数据量或者处理步骤更加复杂的场景时，JVM多线程都难以应对时，spring batch也提供了远程分块和远程分区支持，把task调度到远程instance上进行然后聚合，下面演示一个主从架构的多实例remote partition处理架构</p>
+
+<h1 id="remote-partition主从架构">Remote partition主从架构</h1>
+
+<p>在single process的基础进行修改，保留处理流程step，并将其修改为master/slave step结构，主要流程为:<br />
+1. cron task trigger jobLauncher 运行job任务
+2. 运行master step任务分区并存储在DB，public Map<String, ExecutionContext> partition(int gridSize)
+3. 通过AMQP协议，将partitioned task(StepExecution)分派到message queue
+4. Slave node通过监听message queue，接受partioned task，运行slave step并更新运行结果
+5. 所有step运行完成后，job complete.
+架构如下:
+<img src="/img/2019-07-21-spring-batch-single-process-remote-partitioning/remote-partition-diagram.png" alt="" /></p>
+
+<h2 id="partitioner-分区器">Partitioner 分区器</h2>
+
+<pre><code>package org.akj.batch.configuration.partitioner;
+
+import lombok.extern.slf4j.Slf4j;
+import org.akj.batch.util.PathMatchingResourcePatternResolver;
+import org.springframework.batch.core.partition.support.Partitioner;
+import org.springframework.batch.item.ExecutionContext;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+@Component
+@Slf4j
+public class CustomMultiResourcePartitioner implements Partitioner {
+
+	@Value(&quot;${batch.job.input.path}&quot;)
+	private String inputFolder;
+
+	@Value(&quot;${batch.job.input.filter}&quot;)
+	private String fileFilter;
+
+	@Value(&quot;${batch.partitioner.partition}&quot;)
+	private int partition;
+
+	@Override
+	public Map&lt;String, ExecutionContext&gt; partition(int gridSize) {
+		Map&lt;String, ExecutionContext&gt; map = new HashMap&lt;&gt;(gridSize);
+		AtomicInteger partitionNumber = new AtomicInteger(1);
+		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+		try {
+			String[] resources = resolver.getResources(inputFolder, fileFilter);
+			log.info(&quot;started partitioning, &quot; + resources.length + &quot; resources been found as input&quot;);
+			Arrays.stream(resources).forEach(filePath -&gt; {
+					ExecutionContext context = new ExecutionContext();
+					context.putString(&quot;fileName&quot;, filePath);
+					map.put(&quot;partition&quot; + partitionNumber.getAndIncrement(), context);
+			});
+		} catch (IOException e) {
+			log.error(&quot;system error, invalid input resource: &quot; + inputFolder + File.separatorChar + fileFilter);
+		}
+
+		return map;
+	}
+}
+
+</code></pre>
+
+<h2 id="amqp配置">AMQP配置</h2>
+
+<pre><code>package org.akj.batch.configuration.partitioner;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.AsyncRabbitTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.amqp.outbound.AsyncAmqpOutboundGateway;
+import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.channel.NullChannel;
+import org.springframework.integration.channel.QueueChannel;
+import org.springframework.integration.config.EnableIntegration;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.messaging.PollableChannel;
+
+@Configuration
+@EnableIntegration
+@Slf4j
+public class RemotePartitioningAMQPConfiguration {
+
+	@Bean
+	@ServiceActivator(inputChannel = &quot;outboundRequests&quot;)
+	public AsyncAmqpOutboundGateway amqpOutboundEndpoint(AsyncRabbitTemplate asyncTemplate) {
+		AsyncAmqpOutboundGateway gateway = new AsyncAmqpOutboundGateway(asyncTemplate);
+		gateway.setExchangeName(&quot;user-service.batch&quot;);
+		gateway.setRoutingKey(&quot;partition.requests&quot;);
+		gateway.setRequiresReply(false);
+
+		log.info(&quot;Created AMQP Outbound gateway---&gt; &quot; + gateway.toString());
+		return gateway;
+	}
+
+	@Bean
+	public AsyncRabbitTemplate asyncTemplate(RabbitTemplate rabbitTemplate) {
+		return new AsyncRabbitTemplate(rabbitTemplate);
+	}
+
+	@Bean
+	public QueueChannel inboundRequests() {
+		return new QueueChannel();
+	}
+
+	@Bean
+	public DirectChannel outboundRequests() {
+		return new DirectChannel();
+	}
+
+	@Bean
+	public PollableChannel outboundStaging() {
+		return new NullChannel();
+	}
+
+	@Bean
+	public Queue requestQueue() {
+		return new Queue(&quot;partition.requests&quot;, true);
+	}
+
+	@Bean
+	Binding binding(Queue queue, TopicExchange exchange) {
+		return BindingBuilder.bind(queue).to(exchange).with(&quot;partition.requests&quot;);
+	}
+
+	@Bean
+	public TopicExchange batch() {
+		return new TopicExchange(&quot;user-service.batch&quot;, true, false);
+	}
+
+	@Bean
+	public MessagingTemplate messageTemplate() {
+		MessagingTemplate messagingTemplate = new MessagingTemplate(outboundRequests());
+		messagingTemplate.setReceiveTimeout(200000l);
+		return messagingTemplate;
+	}
+	
+	 @Bean
+    @Profile({&quot;slave&quot;})
+    @ServiceActivator(inputChannel = &quot;inboundRequests&quot;, outputChannel = &quot;outboundStaging&quot;, async = &quot;true&quot;, poller = {@Poller(fixedRate = &quot;1000&quot;)})
+    public StepExecutionRequestHandler stepExecutionRequestHandler() {
+        StepExecutionRequestHandler stepExecutionRequestHandler = new StepExecutionRequestHandler();
+        BeanFactoryStepLocator stepLocator = new BeanFactoryStepLocator();
+        stepLocator.setBeanFactory(this.applicationContext);
+        stepExecutionRequestHandler.setStepLocator(stepLocator);
+        stepExecutionRequestHandler.setJobExplorer(this.jobExplorer);
+
+        return stepExecutionRequestHandler;
+    }
+
+    @Bean
+    @Profile({&quot;slave&quot;})
+    public AmqpInboundChannelAdapter inbound(SimpleMessageListenerContainer listenerContainer) {
+        AmqpInboundChannelAdapter adapter = new AmqpInboundChannelAdapter(listenerContainer);
+        adapter.setOutputChannel(inboundRequests);
+        adapter.afterPropertiesSet();
+
+        return adapter;
+    }
+
+    @Bean
+    public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory) {
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
+        container.setQueueNames(&quot;partition.requests&quot;);
+        // container.setConcurrency(&quot;10&quot;);
+        // container.setConcurrentConsumers(1);
+        container.setErrorHandler(t -&gt; {
+            log.error(&quot;message listener error,&quot; + t.getMessage());
+        });
+        container.setAutoStartup(false);
+
+        return container;
+    }
+}
+</code></pre>
+
+<p>demo中用profile进行了区分，可以主从方式，一主多从，暂时不支持mixed模式，主节点无法兼做从节点，理论上可以做到。<br />
+spring.profiles.active=master 主节点，可以进行batch任务调度和任务分区和job状态监控<br />
+spring.profiles.active-slace 从节点，从message queue中拉去任务并执行，更新任务完成情况到db<br />
+源码 - <a href="https://github.com/cloud-poc/springbatch-userservice">https://github.com/cloud-poc/springbatch-userservice</a></p>
+
+<p>参考资料:<br />
+<a href="https://blog.51cto.com/13501268/2177746">https://blog.51cto.com/13501268/2177746</a><br />
+<a href="https://cloud.tencent.com/developer/article/1096337">https://cloud.tencent.com/developer/article/1096337</a><br />
+<a href="https://asardana.com/2018/01/01/scaling-spring-batch-on-aws-with-remote-partitioning/">https://asardana.com/2018/01/01/scaling-spring-batch-on-aws-with-remote-partitioning/</a><br />
+<a href="https://docs.spring.io/spring-integration/docs/5.1.6.RELEASE/reference/html/#amqp">https://docs.spring.io/spring-integration/docs/5.1.6.RELEASE/reference/html/#amqp</a><br />
+<a href="https://www.docs4dev.com/docs/zh/spring-batch/4.1.x/reference/spring-batch-integration.html">https://www.docs4dev.com/docs/zh/spring-batch/4.1.x/reference/spring-batch-integration.html</a></p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/07/14/free-https-certs-docker-nginx/" data-toggle="tooltip" data-placement="top" title="Free CA Certs setup using Certbot &#43; Docker &#43; Nginx">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/2019-07-15-spring-cloud-demo-overview/" data-toggle="tooltip" data-placement="top" title="Spring Cloud Series">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href="" rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2019
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>
