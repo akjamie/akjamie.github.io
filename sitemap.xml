@@ -32,14 +32,31 @@
   </url>
   
   <url>
+    <loc>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</loc>
+    <lastmod>2019-07-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://akjamie.github.io/tags/harshicorp-vault/</loc>
     <lastmod>2019-07-14T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://akjamie.github.io/post/2019-07-14-harshicorp-vault-setup-config/</loc>
+    <loc>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</loc>
     <lastmod>2019-07-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://akjamie.github.io/tags/lets-encrypt/</loc>
+    <lastmod>2019-07-14T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://akjamie.github.io/tags/nginx/</loc>
+    <lastmod>2019-07-14T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>

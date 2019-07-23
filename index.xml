@@ -24,11 +24,20 @@ He is happy with his current job, but also willing to take new challenges if the
     </item>
     
     <item>
-      <title>Harshicorp Vault Setup Config and integration with spring boot</title>
-      <link>http://akjamie.github.io/post/2019-07-14-harshicorp-vault-setup-config/</link>
+      <title>Free CA Certs setup using Certbot &#43; Docker &#43; Nginx</title>
+      <link>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</link>
       <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2019-07-14-harshicorp-vault-setup-config/</guid>
+      <guid>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</guid>
+      <description>Background Let&amp;rsquo;s Encrypt is a certificate authority that provides X.509 certificates for Transport Layer Security (TLS) encryption at no charge,The certificate is valid for 90 days, during which renewal can take place at anytime. 这样我们就可以用上免费的CA cert来安全expose我们自己的网站或者</description>
+    </item>
+    
+    <item>
+      <title>Harshicorp Vault Setup Config and integration with spring boot</title>
+      <link>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</link>
+      <pubDate>Sun, 14 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</guid>
       <description>Install vault Prepare docker-compose.yml, content as below (just a sample here, please don&amp;rsquo;t use it for production, there are more aspects should be considered) version: &#39;3&#39; services: consul: container_name: consul.server command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect=1 image: consul:latest restart: always volumes: - ./consul.server/config:/consul/config - ./consul.server/data:/consul/data ports: - &amp;quot;9300:9300&amp;quot; - &amp;quot;9500:9500&amp;quot; - &amp;quot;9600:9600/udp&amp;quot; vault: container_name: vault.server image: vault ports: - &amp;quot;8200:8200&amp;quot; restart: always links: - consul:consul.server volumes: - ./vault.server/config:/mnt/vault/config</description>
     </item>
     

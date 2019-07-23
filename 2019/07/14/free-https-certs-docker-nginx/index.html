@@ -15,15 +15,15 @@
     
 
     
-    <meta name="title" content="" />
-    <meta property="og:title" content="" />
-    <meta property="twitter:title" content="" />
+    <meta name="title" content="Free CA Certs setup using Certbot &#43; Docker &#43; Nginx" />
+    <meta property="og:title" content="Free CA Certs setup using Certbot &#43; Docker &#43; Nginx" />
+    <meta property="twitter:title" content="Free CA Certs setup using Certbot &#43; Docker &#43; Nginx" />
     
 
     
-    <meta name="description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP,Scrum master">
-    <meta property="og:description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP,Scrum master" />
-    <meta property="twitter:description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP,Scrum master" />
+    <meta name="description" content="介绍用如何使用Let&#39;s Encrypt&#39;s Certbot生成CA证书，并配置在nginx中保护站点">
+    <meta property="og:description" content="介绍用如何使用Let&#39;s Encrypt&#39;s Certbot生成CA证书，并配置在nginx中保护站点" />
+    <meta property="twitter:description" content="介绍用如何使用Let&#39;s Encrypt&#39;s Certbot生成CA证书，并配置在nginx中保护站点" />
     
 
     
@@ -34,9 +34,9 @@
     <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Jamie&#39;s Blog</title>
+    <title>Free CA Certs setup using Certbot &#43; Docker &#43; Nginx-Jamie&#39;s Blog</title>
 
-    <link rel="canonical" href="/search/placeholder/">
+    <link rel="canonical" href="/2019/07/14/free-https-certs-docker-nginx/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -149,7 +149,7 @@
 
 <style type="text/css">
     header.intro-header {
-        background-image: url('/img/background-07.jpg')
+        background-image: url('/img/background-02.jpg')
     }
 </style>
 <header class="intro-header">
@@ -159,16 +159,28 @@
                 <div class="post-heading">
                     <div class="tags">
                         
+                        <a class="tag" href="/tags/docker" title="Docker">
+                            Docker
+                        </a>
+                        
+                        <a class="tag" href="/tags/lets-encrypt" title="Let’s Encrypt">
+                            Let’s Encrypt
+                        </a>
+                        
+                        <a class="tag" href="/tags/nginx" title="Nginx">
+                            Nginx
+                        </a>
+                        
                     </div>
-                    <h1></h1>
+                    <h1>Free CA Certs setup using Certbot &#43; Docker &#43; Nginx</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by 
                         
-                                Jamie&#39;s Blog
+                            Jamie Zhang
                          
                         on 
-                        Monday, January 1, 0001
+                        Sunday, July 14, 2019
                         
                         
                         
@@ -196,9 +208,230 @@
                 <header>
                     <h2>TOC</h2>
                 </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#background">Background</a></li>
+<li><a href="#objectives">Objectives</a></li>
+<li><a href="#not-in-scope">Not In Scope</a></li>
+<li><a href="#steps-to-configure-certs">Steps to configure certs</a>
+<ul>
+<li><a href="#generate-ca-cert">Generate CA cert</a>
+<ul>
+<li><a href="#安装certbot-客户端">安装Certbot 客户端</a></li>
+<li><a href="#验证域名所有权">验证域名所有权</a></li>
+</ul></li>
+<li><a href="#配置ssl监听-for-nginx">配置SSL监听 for Nginx</a></li>
+</ul></li>
+<li><a href="#cert-renew">Cert Renew</a></li>
+</ul>
+</nav>
                 
                 
-                
+
+<h1 id="background">Background</h1>
+
+<p><strong>Let&rsquo;s Encrypt</strong> is a <a href="https://en.wikipedia.org/wiki/Certificate_authority" title="Certificate authority">certificate authority</a> that provides <a href="https://en.wikipedia.org/wiki/X.509" title="X.509">X.509</a> <a href="https://en.wikipedia.org/wiki/Public_key_certificate" title="Public key certificate">certificates</a> for <a href="https://en.wikipedia.org/wiki/Transport_Layer_Security" title="Transport Layer Security">Transport Layer Security</a> (TLS) encryption at no charge,The certificate is valid for 90 days, during which renewal can take place at anytime.
+这样我们就可以用上免费的CA cert来安全expose我们自己的网站或者服务</p>
+
+<p><strong>基本的http和https</strong>知识请阅读<a href="https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/的‘背景知识’部分，作者讲述的非常很不错。">https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/的‘背景知识’部分，作者讲述的非常很不错。</a></p>
+
+<h1 id="objectives">Objectives</h1>
+
+<p>通过例子来demo如何生成和使用Internet Security Research Group推出的Let’s Encrypt 免费证书
+主要涉及如下:<br />
+1.  Docker, docker-compose用来部署nginx<br />
+2.  Certbot，用来为域名生成CA证书</p>
+
+<h1 id="not-in-scope">Not In Scope</h1>
+
+<p>Docker和docker compose的相关概念和安装，请参考<a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">docker官方文档</a></p>
+
+<h1 id="steps-to-configure-certs">Steps to configure certs</h1>
+
+<h2 id="generate-ca-cert">Generate CA cert</h2>
+
+<h3 id="安装certbot-客户端">安装Certbot 客户端</h3>
+
+<pre><code>wget https://dl.eff.org/certbot-auto
+chmod a+x ./certbot-auto
+./certbot-auto --help
+</code></pre>
+
+<h3 id="验证域名所有权">验证域名所有权</h3>
+
+<p>该步骤需要启动nginx:<br />
+a. 准备docker-compose file</p>
+
+<pre><code>version: '3.0'
+services:
+  nginx:
+    restart: always
+    image: nginx:1.15.6
+    ports:
+     - 80:80
+     - 443:443
+    volumes:
+     - ./conf.d:/etc/nginx/conf.d
+     - ./log:/var/log/nginx
+     - ./wwwroot:/var/www
+     - /etc/letsencrypt:/etc/letsencrypt
+</code></pre>
+
+<blockquote>
+<p><strong>Docker volume的映射关系</strong>
+./conf.d nginx的配置所在
+./log 日志文件位置
+./wwwroot 项目路径
+/etc/letsencrypt CA cert的父目录</p>
+</blockquote>
+
+<p>b. 修改nginx 配置文件 .conf.d/app.conf</p>
+
+<pre><code>server {
+    listen   80;
+    server_name   domain.com;
+    location ^~ /.well-known/acme-challenge/ {
+       default_type &quot;text/plain&quot;;
+       root     /var/www;
+    }
+    location = /.well-known/acme-challenge/ {
+       return 404;
+    }
+}
+</code></pre>
+
+<blockquote>
+<p>PS:
+如上两个location配置是为了通过 Let’s Encrypt 的验证，验证域名归属</p>
+</blockquote>
+
+<p>c. 启动nginx</p>
+
+<pre><code>root@aws-techpoc-c02:~/web# ls conf.d/app.conf
+root@aws-techpoc-c02:~/web# ls wwwroot/
+index.html
+root@aws-techpoc-c02:~/web# docker-compose up -d
+Creating network &quot;web_default&quot; with the default driver
+Creating web_nginx_1 ...
+Creating web_nginx_1 ... done
+</code></pre>
+
+<p>d. 生成Cert</p>
+
+<pre><code>./certbot-auto certonly -d domain1.com domain2.com
+</code></pre>
+
+<p><em>该步骤过程中会自动运行和安装很多linux的以来包，不用干预，其中有两布需要注意：
+i.选择用standalone的方式运行还是webroot，一般80端口已经备用了，无法使用standalone，所以选择webroot方式，然后输入webroot的地址，及上面指定的主机项目目录，如本例，/root/web/wwwroot
+2.有一步要求输入邮箱地址的提示，照着输入自己的邮箱即可，顺利完成的话，屏幕上会有提示信息。
+最后，证书成功成功后，会有如下信息:</em><br />
+IMPORTANT NOTES:
+ Congratulations! Your certificate and chain have been saved at
+   /etc/letsencrypt/live/<strong><domain.com></strong>/fullchain.pem. Your cert
+   will expire on xxxx-xx-xxxx. To obtain a new version of the
+   certificate in the future, simply run Let&rsquo;s Encrypt again.
+至此，证书就生成好了，接下来就可以去配置nginx ssl监听了</p>
+
+<h2 id="配置ssl监听-for-nginx">配置SSL监听 for Nginx</h2>
+
+<p>a. 修改nginx配置文件</p>
+
+<pre><code>server {
+    listen   443 ssl;
+    server_name  domain.com;
+    ssl_certificate        /etc/letsencrypt/live/domain.com/fullchain.pem;
+    ssl_certificate_key    /etc/letsencrypt/live/domain.com/privkey.pem;
+
+    location / {
+        root /var/www;
+        index index.jsp index.html index.htm index.php;
+    }
+
+    location /proxy/ {
+        root /var/www;
+        index index.jsp index.html index.htm index.php;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+
+        proxy_pass http://172.19.0.1:8080/;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+
+server {
+    listen   80;
+    server_name   domain.com www.domain.com;
+    return 301 https://$server_name$request_uri;            
+}
+</code></pre>
+
+<blockquote>
+<p>proxy_pass 指定代理地址，注意代理地址后面有没有’/‘,区别很大</p>
+</blockquote>
+
+<p>b. [optional]准备一个测试的html，用来检测nginx配置是否正常，./wwwroot/index.html</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+   &lt;head&gt;
+     &lt;title&gt;TEST WebSite&lt;/title&gt;
+   &lt;/head&gt;    
+   &lt;body&gt;
+       &lt;div&gt;Hello, this is a test web site&lt;/div&gt;
+    &lt;body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>c. Reload nginx config</p>
+
+<pre><code>docker container exec &lt;container&gt; nginx -s reload
+</code></pre>
+
+<p>然后就可以去测试了，https://<domain.com>,如果成功可以显示那个test html page，如果有问题，请使用docker logs -f <container>,或者查看日志目录先access.log 和 error.log</p>
+
+<h1 id="cert-renew">Cert Renew</h1>
+
+<p>Let’s Encrypt 签发的证书有效期只有 90 天，所以需要每隔三个月就要更新一次安全证书,为了能让你的网站能被安全的保护起来，所以是非常有必要去更新cert的。certbot-auto 支持手动和自动更新两种cert更新模式，我们来测试一下这两种模式
+首先运行测试一下能否更新,调试模式，不是真的更新</p>
+
+<pre><code>./certbot-auto renew --dry-run
+</code></pre>
+
+<p>获得的结果截图如下
+<img src="/img/2019-07-14-free-https-certs-docker-nginx/20190714194434.png" style="margin-left:20px" /></p>
+
+<p>手动更新模式：</p>
+
+<pre><code>./certbot-auto renew -v
+</code></pre>
+
+<p>自动更新模式：</p>
+
+<pre><code>./certbot-auto renew --quiet --no-self-upgrade
+</code></pre>
+
+<blockquote>
+<p>PS:该部分一般有运维人员集中进行处理，CA证书自动生成后还需要被加载一下去刷新，在本例中，需要运行docker container exec <container> nginx -s reload 去刷新</p>
+</blockquote>
+
+<p>更新后的结果展示
+<img src="/img/2019-07-14-free-https-certs-docker-nginx/20190714195417.png" style="margin-left:20px" /></p>
+
+<p>Q&amp;A:
+1. policy-forbids-issuing-for-name-on-amazon-ec2-domain
+<a href="https://community.letsencrypt.org/t/policy-forbids-issuing-for-name-on-amazon-ec2-domain/12692/3">issue related post</a><br />
+amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk domain names，及无法使用free cert for aws，可以考虑使用route53</p>
+
+<p>Related posts:
+<a href="https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/">https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/</a>
+<a href="https://www.jianshu.com/p/c136c7ec2572">https://www.jianshu.com/p/c136c7ec2572</a></p>
+
 
                 
                 
@@ -244,6 +477,11 @@
 
                 <hr>
                 <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/07/14/harshicorp-vault-setup-config/" data-toggle="tooltip" data-placement="top" title="Harshicorp Vault Setup Config and integration with spring boot">&larr;
+                            Previous Post</a>
+                    </li>
                     
                     
                 </ul>
