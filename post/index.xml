@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 14 Jul 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 23 Jul 2019 13:36:10 +0800</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>AWS Serveless Application Model</title>
+      <link>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</link>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0800</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</guid>
+      <description>AWS SAM - lambda demo Demo User Case User requirement: dynamically get regional mobile app feature availability status,status data is kept in AWS dynamodb. Projectcodes hierarchical structure presented as below ├── README.md -- This instructions file ├── event.json -- API Gateway Proxy Integration event payload ├── feature_availability -- Source code for a lambda function │ ├── __init__.py │ ├── app.py</description>
+    </item>
     
     <item>
       <title>Free CA Certs setup using Certbot &#43; Docker &#43; Nginx</title>

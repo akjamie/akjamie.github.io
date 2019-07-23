@@ -6,10 +6,37 @@
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 14 Jul 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 23 Jul 2019 13:36:10 +0800</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>AWS SAM</title>
+      <link>http://akjamie.github.io/tags/aws-sam/</link>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0800</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/aws-sam/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>http://akjamie.github.io/tags/python/</link>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0800</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Serveless</title>
+      <link>http://akjamie.github.io/tags/serveless/</link>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0800</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/serveless/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Docker</title>

@@ -15,15 +15,15 @@
     
 
     
-    <meta name="title" content="Free CA Certs setup using Certbot &#43; Docker &#43; Nginx" />
-    <meta property="og:title" content="Free CA Certs setup using Certbot &#43; Docker &#43; Nginx" />
-    <meta property="twitter:title" content="Free CA Certs setup using Certbot &#43; Docker &#43; Nginx" />
+    <meta name="title" content="AWS Serveless Application Model" />
+    <meta property="og:title" content="AWS Serveless Application Model" />
+    <meta property="twitter:title" content="AWS Serveless Application Model" />
     
 
     
-    <meta name="description" content="介绍用如何使用Let&#39;s Encrypt&#39;s Certbot生成CA证书，并配置在nginx中保护站点">
-    <meta property="og:description" content="介绍用如何使用Let&#39;s Encrypt&#39;s Certbot生成CA证书，并配置在nginx中保护站点" />
-    <meta property="twitter:description" content="介绍用如何使用Let&#39;s Encrypt&#39;s Certbot生成CA证书，并配置在nginx中保护站点" />
+    <meta name="description" content="基于python，演示AWS SAM的开发部署过程，含通过aws api gateway暴露api">
+    <meta property="og:description" content="基于python，演示AWS SAM的开发部署过程，含通过aws api gateway暴露api" />
+    <meta property="twitter:description" content="基于python，演示AWS SAM的开发部署过程，含通过aws api gateway暴露api" />
     
 
     
@@ -34,9 +34,9 @@
     <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Free CA Certs setup using Certbot &#43; Docker &#43; Nginx-Jamie&#39;s Blog</title>
+    <title>AWS Serveless Application Model-Jamie&#39;s Blog</title>
 
-    <link rel="canonical" href="/2019/07/14/free-https-certs-docker-nginx/">
+    <link rel="canonical" href="/post/2019-07-23-aws-server-application-model/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -149,7 +149,7 @@
 
 <style type="text/css">
     header.intro-header {
-        background-image: url('/img/background-02.jpg')
+        background-image: url('/img/background-06.jpg')
     }
 </style>
 <header class="intro-header">
@@ -159,28 +159,28 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/docker" title="Docker">
-                            Docker
+                        <a class="tag" href="/tags/python" title="Python">
+                            Python
                         </a>
                         
-                        <a class="tag" href="/tags/lets-encrypt" title="Let’s Encrypt">
-                            Let’s Encrypt
+                        <a class="tag" href="/tags/aws-sam" title="AWS SAM">
+                            AWS SAM
                         </a>
                         
-                        <a class="tag" href="/tags/nginx" title="Nginx">
-                            Nginx
+                        <a class="tag" href="/tags/serveless" title="Serveless">
+                            Serveless
                         </a>
                         
                     </div>
-                    <h1>Free CA Certs setup using Certbot &#43; Docker &#43; Nginx</h1>
-                    <h2 class="subheading"></h2>
+                    <h1>AWS Serveless Application Model</h1>
+                    <h2 class="subheading">AWS 无服务器应用程序模型 (AWS SAM) 是一个开源框架，可用于在 AWS 上构建无服务器应用程序。它包含用于定义无服务器应用程序的 AWS SAM 模板规范和用于构建、测试和部署无服务器应用程序的 AWS SAM 命令行界面 (AWS SAM CLI)</h2>
                     <span class="meta">
                         Posted by 
                         
                             Jamie Zhang
                          
                         on 
-                        Sunday, July 14, 2019
+                        Tuesday, July 23, 2019
                         
                         
                         
@@ -210,227 +210,243 @@
                 </header>
                 <nav id="TableOfContents">
 <ul>
-<li><a href="#background">Background</a></li>
-<li><a href="#objectives">Objectives</a></li>
-<li><a href="#not-in-scope">Not In Scope</a></li>
-<li><a href="#steps-to-configure-certs">Steps to configure certs</a>
+<li><a href="#aws-sam-lambda-demo">AWS SAM - lambda demo</a>
 <ul>
-<li><a href="#generate-ca-cert">Generate CA cert</a>
+<li><a href="#demo-user-case">Demo User Case</a>
 <ul>
-<li><a href="#安装certbot-客户端">安装Certbot 客户端</a></li>
-<li><a href="#验证域名所有权">验证域名所有权</a></li>
+<li><a href="#user-requirement">User requirement:</a></li>
+<li><a href="#business-flow">Business Flow</a></li>
 </ul></li>
-<li><a href="#配置ssl监听-for-nginx">配置SSL监听 for Nginx</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#setup-process">Setup process</a>
+<ul>
+<li><a href="#local-development">Local development</a></li>
 </ul></li>
-<li><a href="#cert-renew">Cert Renew</a></li>
+<li><a href="#packaging-and-deployment">Packaging and deployment</a></li>
+<li><a href="#fetch-tail-and-filter-lambda-function-logs">Fetch, tail, and filter Lambda function logs</a></li>
+<li><a href="#testing">Testing</a></li>
+<li><a href="#cleanup">Cleanup</a></li>
+<li><a href="#bringing-to-the-next-level">Bringing to the next level</a>
+<ul>
+<li><a href="#learn-how-sam-build-can-help-you-with-dependencies">Learn how SAM Build can help you with dependencies</a></li>
+<li><a href="#create-an-additional-api-resource">Create an additional API resource</a></li>
+<li><a href="#step-through-debugging">Step-through debugging</a></li>
+</ul></li>
+<li><a href="#appendix">Appendix</a>
+<ul>
+<li><a href="#building-the-project">Building the project</a></li>
+<li><a href="#sam-and-aws-cli-commands">SAM and AWS CLI commands</a></li>
+</ul></li>
+</ul></li>
 </ul>
 </nav>
                 
                 
 
-<h1 id="background">Background</h1>
+<h1 id="aws-sam-lambda-demo">AWS SAM - lambda demo</h1>
 
-<p><strong>Let&rsquo;s Encrypt</strong> is a <a href="https://en.wikipedia.org/wiki/Certificate_authority" title="Certificate authority">certificate authority</a> that provides <a href="https://en.wikipedia.org/wiki/X.509" title="X.509">X.509</a> <a href="https://en.wikipedia.org/wiki/Public_key_certificate" title="Public key certificate">certificates</a> for <a href="https://en.wikipedia.org/wiki/Transport_Layer_Security" title="Transport Layer Security">Transport Layer Security</a> (TLS) encryption at no charge,The certificate is valid for 90 days, during which renewal can take place at anytime.
-这样我们就可以用上免费的CA cert来安全expose我们自己的网站或者服务</p>
+<h2 id="demo-user-case">Demo User Case</h2>
 
-<p><strong>基本的http和https</strong>知识请阅读<a href="https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/的‘背景知识’部分，作者讲述的非常很不错。">https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/的‘背景知识’部分，作者讲述的非常很不错。</a></p>
+<h3 id="user-requirement">User requirement:</h3>
 
-<h1 id="objectives">Objectives</h1>
+<p>dynamically get regional mobile app feature availability status,status data is kept in AWS dynamodb.</p>
 
-<p>通过例子来demo如何生成和使用Internet Security Research Group推出的Let’s Encrypt 免费证书
-主要涉及如下:<br />
-1.  Docker, docker-compose用来部署nginx<br />
-2.  Certbot，用来为域名生成CA证书</p>
+<p>Projectcodes hierarchical structure presented as below</p>
 
-<h1 id="not-in-scope">Not In Scope</h1>
-
-<p>Docker和docker compose的相关概念和安装，请参考<a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">docker官方文档</a></p>
-
-<h1 id="steps-to-configure-certs">Steps to configure certs</h1>
-
-<h2 id="generate-ca-cert">Generate CA cert</h2>
-
-<h3 id="安装certbot-客户端">安装Certbot 客户端</h3>
-
-<pre><code>wget https://dl.eff.org/certbot-auto
-chmod a+x ./certbot-auto
-./certbot-auto --help
+<pre><code>├── README.md                   -- This instructions file
+├── event.json                  -- API Gateway Proxy Integration event payload
+├── feature_availability        -- Source code for a lambda function
+│   ├── __init__.py
+│   ├── app.py                  -- Lambda function code
+│   ├── requirements.txt        -- Lambda function code - dependencies list
+├── template.yaml               -- SAM Template
+└── tests                       -- Unit tests
+    ├── __init__.py
+    └── app_test.py
 </code></pre>
 
-<h3 id="验证域名所有权">验证域名所有权</h3>
+<h3 id="business-flow">Business Flow</h3>
 
-<p>该步骤需要启动nginx:<br />
-a. 准备docker-compose file</p>
+<p><img src="/img/2019-07-23-aws-server-application-model/architecture.png" alt="" /></p>
 
-<pre><code>version: '3.0'
-services:
-  nginx:
-    restart: always
-    image: nginx:1.15.6
-    ports:
-     - 80:80
-     - 443:443
-    volumes:
-     - ./conf.d:/etc/nginx/conf.d
-     - ./log:/var/log/nginx
-     - ./wwwroot:/var/www
-     - /etc/letsencrypt:/etc/letsencrypt
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>AWS CLI already configured with Administrator permission
+ <a href="httpswww.python.orgdownloads">Python 3 installed</a>
+ <a href="httpswww.docker.comcommunity-edition">Docker installed</a></p>
+
+<h2 id="setup-process">Setup process</h2>
+
+<h3 id="local-development">Local development</h3>
+
+<p>Invoking function locally using a local sample payload</p>
+
+<pre><code class="language-bash">sam local invoke GetEntityConfigFunction --event event.json
 </code></pre>
 
-<blockquote>
-<p><strong>Docker volume的映射关系</strong>
-./conf.d nginx的配置所在
-./log 日志文件位置
-./wwwroot 项目路径
-/etc/letsencrypt CA cert的父目录</p>
-</blockquote>
+<p>Invoking function locally through local API Gateway</p>
 
-<p>b. 修改nginx 配置文件 .conf.d/app.conf</p>
-
-<pre><code>server {
-    listen   80;
-    server_name   domain.com;
-    location ^~ /.well-known/acme-challenge/ {
-       default_type &quot;text/plain&quot;;
-       root     /var/www;
-    }
-    location = /.well-known/acme-challenge/ {
-       return 404;
-    }
-}
+<pre><code class="language-bash">sam local start-api
 </code></pre>
 
-<blockquote>
-<p>PS:
-如上两个location配置是为了通过 Let’s Encrypt 的验证，验证域名归属</p>
-</blockquote>
+<p>If the previous command ran successfully you should now be able to hit the following local endpoint to invoke your function <code>http://localhost:3000/ca</code></p>
 
-<p>c. 启动nginx</p>
+<p>SAM CLI is used to emulate both Lambda and API Gateway locally and uses our <code>template.yaml</code> to understand how to bootstrap this environment (runtime, where the source code is, etc.) - The following excerpt is what the CLI will read in order to initialize an API and its routes</p>
 
-<pre><code>root@aws-techpoc-c02:~/web# ls conf.d/app.conf
-root@aws-techpoc-c02:~/web# ls wwwroot/
-index.html
-root@aws-techpoc-c02:~/web# docker-compose up -d
-Creating network &quot;web_default&quot; with the default driver
-Creating web_nginx_1 ...
-Creating web_nginx_1 ... done
+<pre><code class="language-yaml">...
+Events
+    FeatureAvailability
+        Type Api # More info about API Event Source httpsgithub.comawslabsserverless-application-modelblobmasterversions2016-10-31.md#api
+        Properties
+            Path {entity}
+            Method get
 </code></pre>
 
-<p>d. 生成Cert</p>
+<h2 id="packaging-and-deployment">Packaging and deployment</h2>
 
-<pre><code>./certbot-auto certonly -d domain1.com domain2.com
+<p>AWS Lambda Python runtime requires a flat folder with all dependencies including the application. SAM will use <code>CodeUri</code> property to know where to look up for both application and dependencies</p>
+
+<pre><code class="language-yaml">...
+GetEntityConfigFunction
+    Type AWSServerlessFunction
+    Properties
+        CodeUri feature_availability
+        ...
 </code></pre>
 
-<p><em>该步骤过程中会自动运行和安装很多linux的以来包，不用干预，其中有两布需要注意：
-i.选择用standalone的方式运行还是webroot，一般80端口已经备用了，无法使用standalone，所以选择webroot方式，然后输入webroot的地址，及上面指定的主机项目目录，如本例，/root/web/wwwroot
-2.有一步要求输入邮箱地址的提示，照着输入自己的邮箱即可，顺利完成的话，屏幕上会有提示信息。
-最后，证书成功成功后，会有如下信息:</em><br />
-IMPORTANT NOTES:
- Congratulations! Your certificate and chain have been saved at
-   /etc/letsencrypt/live/<strong><domain.com></strong>/fullchain.pem. Your cert
-   will expire on xxxx-xx-xxxx. To obtain a new version of the
-   certificate in the future, simply run Let&rsquo;s Encrypt again.
-至此，证书就生成好了，接下来就可以去配置nginx ssl监听了</p>
+<p>Firstly, we need a <code>S3 bucket</code> where we can upload our Lambda functions packaged as ZIP before we deploy anything - If you don&rsquo;t have a S3 bucket to store code artifacts then this is a good time to create one</p>
 
-<h2 id="配置ssl监听-for-nginx">配置SSL监听 for Nginx</h2>
-
-<p>a. 修改nginx配置文件</p>
-
-<pre><code>server {
-    listen   443 ssl;
-    server_name  domain.com;
-    ssl_certificate        /etc/letsencrypt/live/domain.com/fullchain.pem;
-    ssl_certificate_key    /etc/letsencrypt/live/domain.com/privkey.pem;
-
-    location / {
-        root /var/www;
-        index index.jsp index.html index.htm index.php;
-    }
-
-    location /proxy/ {
-        root /var/www;
-        index index.jsp index.html index.htm index.php;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-
-        proxy_pass http://172.19.0.1:8080/;
-    }
-
-    error_page   500 502 503 504  /50x.html;
-
-    location = /50x.html {
-        root   /usr/share/nginx/html;
-    }
-}
-
-server {
-    listen   80;
-    server_name   domain.com www.domain.com;
-    return 301 https://$server_name$request_uri;            
-}
+<pre><code class="language-bash">aws s3 mb s3BUCKET_NAME
 </code></pre>
 
-<blockquote>
-<p>proxy_pass 指定代理地址，注意代理地址后面有没有’/‘,区别很大</p>
-</blockquote>
+<p>Next, run the following command to package our Lambda function to S3</p>
 
-<p>b. [optional]准备一个测试的html，用来检测nginx配置是否正常，./wwwroot/index.html</p>
-
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-   &lt;head&gt;
-     &lt;title&gt;TEST WebSite&lt;/title&gt;
-   &lt;/head&gt;    
-   &lt;body&gt;
-       &lt;div&gt;Hello, this is a test web site&lt;/div&gt;
-    &lt;body&gt;
-&lt;/html&gt;
+<pre><code class="language-bash">sam package 
+    --output-template-file packaged.yaml 
+    --s3-bucket REPLACE_THIS_WITH_YOUR_S3_BUCKET_NAME
 </code></pre>
 
-<p>c. Reload nginx config</p>
+<p>Next, the following command will create a Cloudformation Stack and deploy your SAM resources.</p>
 
-<pre><code>docker container exec &lt;container&gt; nginx -s reload
+<pre><code class="language-bash">sam deploy 
+    --template-file packaged.yaml 
+    --stack-name feature-availability-getentityconfig-api 
+    --capabilities CAPABILITY_IAM
 </code></pre>
 
-<p>然后就可以去测试了，https://<domain.com>,如果成功可以显示那个test html page，如果有问题，请使用docker logs -f <container>,或者查看日志目录先access.log 和 error.log</p>
+<p>See <a href="httpsdocs.aws.amazon.comserverless-application-modellatestdeveloperguideserverless-quick-start.html">Serverless Application Model (SAM) HOWTO Guide</a> for more details in how to get started.</p>
 
-<h1 id="cert-renew">Cert Renew</h1>
+<p>After deployment is complete you can run the following command to retrieve the API Gateway Endpoint URL</p>
 
-<p>Let’s Encrypt 签发的证书有效期只有 90 天，所以需要每隔三个月就要更新一次安全证书,为了能让你的网站能被安全的保护起来，所以是非常有必要去更新cert的。certbot-auto 支持手动和自动更新两种cert更新模式，我们来测试一下这两种模式
-首先运行测试一下能否更新,调试模式，不是真的更新</p>
-
-<pre><code>./certbot-auto renew --dry-run
+<pre><code class="language-bash">aws cloudformation describe-stacks 
+    --stack-name feature-availability-getentityconfig-api 
+    --query 'Stacks[].Outputs[OutputKey==`GetEntityConfigAPI`]' 
+    --output table
 </code></pre>
 
-<p>获得的结果截图如下
-<img src="/img/2019-07-14-free-https-certs-docker-nginx/20190714194434.png" style="margin-left:20px" /></p>
+<h2 id="fetch-tail-and-filter-lambda-function-logs">Fetch, tail, and filter Lambda function logs</h2>
 
-<p>手动更新模式：</p>
+<p>To simplify troubleshooting, SAM CLI has a command called sam logs. sam logs lets you fetch logs generated by your Lambda function from the command line. In addition to printing the logs on the terminal, this command has several nifty features to help you quickly find the bug.</p>
 
-<pre><code>./certbot-auto renew -v
+<p><code>NOTE</code> This command works for all AWS Lambda functions; not just the ones you deploy using SAM.</p>
+
+<pre><code class="language-bash">sam logs -n GetEntityConfigFunction --stack-name feature-availability-getentityconfig-api --tail
 </code></pre>
 
-<p>自动更新模式：</p>
+<p>You can find more information and examples about filtering Lambda function logs in the <a href="httpsdocs.aws.amazon.comserverless-application-modellatestdeveloperguideserverless-sam-cli-logging.html">SAM CLI Documentation</a>.</p>
 
-<pre><code>./certbot-auto renew --quiet --no-self-upgrade
+<h2 id="testing">Testing</h2>
+
+<p>Next, we install test dependencies and we run <code>pytest</code> against our <code>tests</code> folder to run our initial unit tests</p>
+
+<pre><code class="language-bash">pip install pytest pytest-mock --user
+python -m pytest tests -v
 </code></pre>
 
-<blockquote>
-<p>PS:该部分一般有运维人员集中进行处理，CA证书自动生成后还需要被加载一下去刷新，在本例中，需要运行docker container exec <container> nginx -s reload 去刷新</p>
-</blockquote>
+<h2 id="cleanup">Cleanup</h2>
 
-<p>更新后的结果展示
-<img src="/img/2019-07-14-free-https-certs-docker-nginx/20190714195417.png" style="margin-left:20px" /></p>
+<p>In order to delete our Serverless Application recently deployed you can use the following AWS CLI Command</p>
 
-<p>Q&amp;A:
-1. policy-forbids-issuing-for-name-on-amazon-ec2-domain
-<a href="https://community.letsencrypt.org/t/policy-forbids-issuing-for-name-on-amazon-ec2-domain/12692/3">issue related post</a><br />
-amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk domain names，及无法使用free cert for aws，可以考虑使用route53</p>
+<pre><code class="language-bash">aws cloudformation delete-stack --stack-name feature-availability-get-entityconfig-api
+</code></pre>
 
-<p>Related posts:
-<a href="https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/">https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/</a>
-<a href="https://www.jianshu.com/p/c136c7ec2572">https://www.jianshu.com/p/c136c7ec2572</a></p>
+<h2 id="bringing-to-the-next-level">Bringing to the next level</h2>
+
+<p>Here are a few things you can try to get more acquainted with building serverless applications using SAM</p>
+
+<h3 id="learn-how-sam-build-can-help-you-with-dependencies">Learn how SAM Build can help you with dependencies</h3>
+
+<p>Uncomment lines on <code>app.py</code>
+ Build the project with <code>sam build --use-container</code>
+ Invoke with <code>sam local invoke GetEntityConfigFunction --event event.json</code>
+ Update tests</p>
+
+<h3 id="create-an-additional-api-resource">Create an additional API resource</h3>
+
+<p>Create a catch all resource (e.g. hello{proxy+}) and return the name requested through this new path
+ Update tests</p>
+
+<h3 id="step-through-debugging">Step-through debugging</h3>
+
+<p><a href="(httpsdocs.aws.amazon.comserverless-application-modellatestdeveloperguideserverless-sam-cli-using-debugging.html)">Enable step-through debugging docs for supported runtimes</a></p>
+
+<p>Next, you can use AWS Serverless Application Repository to deploy ready to use Apps that go beyond hello world samples and learn how authors developed their applications <a href="httpsaws.amazon.comserverlessserverlessrepo">AWS Serverless Application Repository main page</a></p>
+
+<h2 id="appendix">Appendix</h2>
+
+<h3 id="building-the-project">Building the project</h3>
+
+<p><a href="httpsdocs.aws.amazon.comlambdalatestdglambda-python-how-to-create-deployment-package.html">AWS Lambda requires a flat folder</a> with the application as well as its dependencies in  deployment package. When you make changes to your source code or dependency manifest,
+run the following command to build your project local testing and deployment</p>
+
+<pre><code class="language-bash">sam build
+</code></pre>
+
+<p>If your dependencies contain native modules that need to be compiled specifically for the operating system running on AWS Lambda, use this command to build inside a Lambda-like Docker container instead</p>
+
+<pre><code class="language-bash">sam build --use-container
+</code></pre>
+
+<p>By default, this command writes built artifacts to <code>.aws-sambuild</code> folder.</p>
+
+<h3 id="sam-and-aws-cli-commands">SAM and AWS CLI commands</h3>
+
+<p>All commands used throughout this document</p>
+
+<pre><code class="language-bash"># Generate event.json via generate-event command
+sam local generate-event apigateway aws-proxy  event.json
+
+# Invoke function locally with event.json as an input
+sam local invoke HelloWorldFunction --event event.json
+
+# Run API Gateway locally
+sam local start-api
+
+# Create S3 bucket
+aws s3 mb s3BUCKET_NAME
+
+# Package Lambda function defined locally and upload to S3 as an artifact
+sam package 
+    --output-template-file packaged.yaml 
+    --s3-bucket REPLACE_THIS_WITH_YOUR_S3_BUCKET_NAME
+
+# Deploy SAM template as a CloudFormation stack
+sam deploy 
+    --template-file packaged.yaml 
+    --stack-name sam-app 
+    --capabilities CAPABILITY_IAM
+
+# Describe Output section of CloudFormation stack previously created
+aws cloudformation describe-stacks 
+    --stack-name sam-app 
+    --query 'Stacks[].Outputs[OutputKey==`HelloWorldApi`]' 
+    --output table
+
+# Tail Lambda function Logs using Logical name defined in SAM Template
+sam logs -n HelloWorldFunction --stack-name sam-app --tail
+</code></pre>
+
+<p>You can find source code on <a href="https://github.com/cloud-poc/py-lambda-sam-test.git">github</a></p>
 
 
                 
@@ -479,15 +495,10 @@ amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk 
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2019/07/14/harshicorp-vault-setup-config/" data-toggle="tooltip" data-placement="top" title="Harshicorp Vault Setup Config and integration with spring boot">&larr;
+                        <a href="/2019/07/14/free-https-certs-docker-nginx/" data-toggle="tooltip" data-placement="top" title="Free CA Certs setup using Certbot &#43; Docker &#43; Nginx">&larr;
                             Previous Post</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/post/2019-07-23-aws-server-application-model/" data-toggle="tooltip" data-placement="top" title="AWS Serveless Application Model">Next
-                            Post &rarr;</a>
-                    </li>
                     
                 </ul>
 
