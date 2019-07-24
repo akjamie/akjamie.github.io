@@ -18,3 +18,15 @@
 [0722/090429:WARNING:dns_config_service_win.cc(674)] Failed to read DnsConfig.
 [0722/090429:WARNING:dns_config_service_win.cc(674)] Failed to read DnsConfig.
 [0722/090429:WARNING:dns_config_service_win.cc(674)] Failed to read DnsConfig.
+[0723/224848:INFO:exception_record.cc(518)] [QB]Process ID: 18952 Type: 2
+[0723/230823:WARNING:webmediaplayer_impl.cc(341)] Using MultibufferDataSource
+[0723/230823:ERROR:ffmpeg_demuxer.cc(1510)] media::FFmpegDemuxer::OnReadFrameDone result=-541478725 IsMaxMemoryUsageReached=0
+[0723/230824:WARNING:webmediaplayer_impl.cc(341)] Using MultibufferDataSource
+[0723/230825:WARNING:webmediaplayer_impl.cc(341)] Using MultibufferDataSource
+[0723/230839:ERROR:ffmpeg_demuxer.cc(1510)] media::FFmpegDemuxer::OnReadFrameDone result=-541478725 IsMaxMemoryUsageReached=0
+[0723/230841:WARNING:webmediaplayer_impl.cc(341)] Using MultibufferDataSource
+[0723/230854:ERROR:ffmpeg_demuxer.cc(1510)] media::FFmpegDemuxer::OnReadFrameDone result=-541478725 IsMaxMemoryUsageReached=0
+[0723/230859:WARNING:webmediaplayer_impl.cc(341)] Using MultibufferDataSource
+[0723/230909:ERROR:ffmpeg_demuxer.cc(1510)] media::FFmpegDemuxer::OnReadFrameDone result=-541478725 IsMaxMemoryUsageReached=0
+[0723/231120:WARNING:webmediaplayer_impl.cc(341)] Using MultibufferDataSource
+[0723/231130:WARNING:webmediaplayer_impl.cc(341)] Using MultibufferDataSource

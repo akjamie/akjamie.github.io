@@ -4,24 +4,59 @@
   
   <url>
     <loc>http://akjamie.github.io/categories/</loc>
-    <lastmod>2019-07-23T13:36:10+00:00</lastmod>
+    <lastmod>2019-07-23T19:40:10+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://akjamie.github.io/tags/docker/</loc>
-    <lastmod>2019-07-23T13:36:10+00:00</lastmod>
+    <loc>http://akjamie.github.io/tags/design/</loc>
+    <lastmod>2019-07-23T19:40:10+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://akjamie.github.io/tags/distrubuted-transaction/</loc>
+    <lastmod>2019-07-23T19:40:10+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://akjamie.github.io/</loc>
-    <lastmod>2019-07-23T13:36:10+00:00</lastmod>
+    <lastmod>2019-07-23T19:40:10+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://akjamie.github.io/tags/microservice/</loc>
+    <lastmod>2019-07-23T19:40:10+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://akjamie.github.io/post/</loc>
+    <lastmod>2019-07-23T19:40:10+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://akjamie.github.io/tags/</loc>
+    <lastmod>2019-07-23T19:40:10+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://akjamie.github.io/categories/tech/</loc>
+    <lastmod>2019-07-23T19:40:10+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://akjamie.github.io/post/2019-07-24-one-distributed-transaction-user-case/</loc>
+    <lastmod>2019-07-23T19:40:10+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://akjamie.github.io/tags/docker/</loc>
     <lastmod>2019-07-23T13:36:10+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -52,18 +87,6 @@
   <url>
     <loc>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</loc>
     <lastmod>2019-07-23T13:36:10+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://akjamie.github.io/tags/</loc>
-    <lastmod>2019-07-23T13:36:10+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://akjamie.github.io/categories/tech/</loc>
-    <lastmod>2019-07-23T13:36:10+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>

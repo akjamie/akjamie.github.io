@@ -6,10 +6,37 @@
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Jul 2019 13:36:10 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 23 Jul 2019 19:40:10 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Design</title>
+      <link>http://akjamie.github.io/tags/design/</link>
+      <pubDate>Tue, 23 Jul 2019 19:40:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/design/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Distrubuted Transaction</title>
+      <link>http://akjamie.github.io/tags/distrubuted-transaction/</link>
+      <pubDate>Tue, 23 Jul 2019 19:40:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/distrubuted-transaction/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Microservice</title>
+      <link>http://akjamie.github.io/tags/microservice/</link>
+      <pubDate>Tue, 23 Jul 2019 19:40:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/microservice/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Docker</title>

@@ -15,15 +15,15 @@
     
 
     
-    <meta name="title" content="Linux network proxy setup for desktop and terminal" />
-    <meta property="og:title" content="Linux network proxy setup for desktop and terminal" />
-    <meta property="twitter:title" content="Linux network proxy setup for desktop and terminal" />
+    <meta name="title" content="微服务中的分布式事务" />
+    <meta property="og:title" content="微服务中的分布式事务" />
+    <meta property="twitter:title" content="微服务中的分布式事务" />
     
 
     
-    <meta name="description" content="Using Shadowsocks&#43;proxychain to build network proxy for personal learning purpose">
-    <meta property="og:description" content="Using Shadowsocks&#43;proxychain to build network proxy for personal learning purpose" />
-    <meta property="twitter:description" content="Using Shadowsocks&#43;proxychain to build network proxy for personal learning purpose" />
+    <meta name="description" content="分享一个遇到的分布式事务case, 以及部分引申思考">
+    <meta property="og:description" content="分享一个遇到的分布式事务case, 以及部分引申思考" />
+    <meta property="twitter:description" content="分享一个遇到的分布式事务case, 以及部分引申思考" />
     
 
     
@@ -34,9 +34,9 @@
     <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Linux network proxy setup for desktop and terminal-Jamie&#39;s Blog</title>
+    <title>微服务中的分布式事务-Jamie&#39;s Blog</title>
 
-    <link rel="canonical" href="/post/2019-07-14-linux-network-proxy-setup-desktopterminal/">
+    <link rel="canonical" href="/post/2019-07-24-one-distributed-transaction-user-case/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -149,7 +149,7 @@
 
 <style type="text/css">
     header.intro-header {
-        background-image: url('/img/background-07.jpg')
+        background-image: url('/img/background-05.jpg')
     }
 </style>
 <header class="intro-header">
@@ -159,24 +159,28 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/shadowsocks" title="Shadowsocks">
-                            Shadowsocks
+                        <a class="tag" href="/tags/design" title="Design">
+                            Design
                         </a>
                         
-                        <a class="tag" href="/tags/proxychain" title="Proxychain">
-                            Proxychain
+                        <a class="tag" href="/tags/distrubuted-transaction" title="Distrubuted Transaction">
+                            Distrubuted Transaction
+                        </a>
+                        
+                        <a class="tag" href="/tags/microservice" title="Microservice">
+                            Microservice
                         </a>
                         
                     </div>
-                    <h1>Linux network proxy setup for desktop and terminal</h1>
-                    <h2 class="subheading">setup network proxy on aws(free tier is enough)</h2>
+                    <h1>微服务中的分布式事务</h1>
+                    <h2 class="subheading">(1st)One Distrubuted transaction use case</h2>
                     <span class="meta">
                         Posted by 
                         
                             Jamie Zhang
                          
                         on 
-                        Sunday, July 14, 2019
+                        Tuesday, July 23, 2019
                         
                         
                         
@@ -206,158 +210,63 @@
                 </header>
                 <nav id="TableOfContents">
 <ul>
-<li><a href="#背景介绍">背景介绍</a></li>
-<li><a href="#ss-server-ss-local的配置">SS server &amp; SS local的配置</a>
-<ul>
-<li><a href="#预置条件">预置条件</a>
-<ul>
-<li><a href="#installed-python-3-pip">Installed Python 3 + pip</a></li>
-<li><a href="#installed-shadowsocks">Installed Shadowsocks</a></li>
-<li><a href="#一台可以访问-外网-的云主机-azure-aws-alicloud-hk等都可以">一台可以访问<strong>外网</strong>的云主机，Azure/AWS/Alicloud-HK等都可以</a></li>
-</ul></li>
-<li><a href="#ssserver的配置和启动">SSServer的配置和启动</a></li>
-<li><a href="#sslocal的配置和启动">SSLocal的配置和启动</a></li>
-</ul></li>
-<li><a href="#proxychain的配置">Proxychain的配置</a>
-<ul>
-<li><a href="#install-proxychain">Install proxychain</a></li>
-<li><a href="#update-proxychain的代理列表">Update proxychain的代理列表</a></li>
-</ul></li>
+<li><a href="#用户场景">用户场景</a></li>
+<li><a href="#问题和挑战">问题和挑战</a></li>
+<li><a href="#解决思路">解决思路</a></li>
+<li><a href="#解决方案">解决方案</a></li>
+<li><a href="#事后思考">事后思考</a></li>
 </ul>
 </nav>
                 
                 
 
-<h1 id="背景介绍">背景介绍</h1>
+<h1 id="用户场景">用户场景</h1>
 
-<p>很多时候我们由于great firewall，我们无法访问某些网站，这时候就需要用到网络代理来应对一些比较urgent的case，本文主要会介绍如何使用Shadowsocks 和 Proxychain来 setup linux network proxy，这样在命令行下都可以起到代理和转发的作用，而不仅限于浏览器的代理。</p>
+<p>在某企业app上做Payment业务，在app端准备好request data， 如debit account number, credit account number, amount, notes, 点击submit。<br />
+业务流程如下:<br />
+1) 用户提交payment 请求<br />
+2) server校验用户所在公司的每日转账限额(account level)<br />
+3) 如果限额可以满足，则发起转账，否则reject请求<br />
+<img src="/img/2019-07-24-one-distributed-transaction-user-case/overall-business-flow.png" alt="" /></p>
 
-<h1 id="ss-server-ss-local的配置">SS server &amp; SS local的配置</h1>
+<h1 id="问题和挑战">问题和挑战</h1>
 
-<h2 id="预置条件">预置条件</h2>
+<ol>
+<li>如何规避重复提交</li>
+<li>如何避免分布式事务</li>
+</ol>
 
-<h3 id="installed-python-3-pip">Installed Python 3 + pip</h3>
+<h1 id="解决思路">解决思路</h1>
 
-<p>安装命令如下:</p>
+<ol>
+<li>如何规避重复提交<br />
+采用前端/后端生成UUID(it will be used as payment id), 需要缓存起来便于request进来后的校验， 当然也可以不缓存，只是校验这个ID是否已经存在，如果存在就reject请求。<br /></li>
 
-<pre><code>sudo apt-get install python3-pip
-</code></pre>
+<li><p>如何避免分布式事务<br />
+本例中，主要的分布式事务check point有3个，<br />
+1)计算limit checking，在此过程中可能有新payment请求过来可能导致limit用尽或超支，这是业务上不能允许的;<br />
+采用乐观锁,把锁控制在payment db里面而不是对entitlement db中的transaction limit进行CRUD，这样会使整个事务处理变得复杂; 且兵并发性能有大幅度提升<br />
+2)payment data 写入transaction history db<br />
+Oracle RAC事务，用spring transaction 注解，@Transactional<br />
+3)update B/E system response - payment status(succ/fail)<br />
+Oracle RAC事务，用spring transaction 注解，@Transactional</p>
 
-<p><em>如果得到no packages found - python3-pip的错误，请添加相应的apt sources. 修改/etc/apt/sources.list文件，添加如下4条source信息</em></p>
+<h1 id="解决方案">解决方案</h1>
 
-<pre><code>  deb http://cn.archive.ubuntu.com/ubuntu bionic main multiverse restricted universe
-  deb http://cn.archive.ubuntu.com/ubuntu bionic-updates main multiverse restricted universe
-  deb http://cn.archive.ubuntu.com/ubuntu bionic-security main multiverse restricted universe
-  deb http://cn.archive.ubuntu.com/ubuntu bionic-proposed main multiverse restricted universe
-</code></pre>
+<p>一个方案proposal如下,主要针对limit checking部分加锁， payment data写入和status update 单独分开事务控制(主要由于如果B/E执行成功了，而update status failed导致payment数据回滚会导致数据丢失)<br />
+处理流程diagram如下:<br />
+<img src="/img/2019-07-24-one-distributed-transaction-user-case/solution.jpg" alt="" /></p></li>
+</ol>
 
-<h3 id="installed-shadowsocks">Installed Shadowsocks</h3>
+<h1 id="事后思考">事后思考</h1>
 
-<h3 id="一台可以访问-外网-的云主机-azure-aws-alicloud-hk等都可以">一台可以访问<strong>外网</strong>的云主机，Azure/AWS/Alicloud-HK等都可以</h3>
+<ol>
+<li>如果使用非oracle 集群，可能需要引入其他中间件来确保事务一致性，该部分思考中<br /></li>
+<li>上例中暂时缺少重试机制，如果payment status update failed， 是否可以再次幂等尝试，因为payment id/uuid是唯一的<br /></li>
+</ol>
 
-<pre><code>sudo pip install shadowsocks
-</code></pre>
-
-<h2 id="ssserver的配置和启动">SSServer的配置和启动</h2>
-
-<p>在云主机上创建sss 配置文件shadowsocks.json(推荐放置在/etc/shadowsocks/ 下面)，其内容如下：</p>
-
-<pre><code>{
-  &quot;server&quot;:&quot;0.0.0.0&quot;,
-  &quot;server_port&quot;:&quot;{port}&quot;,
-  &quot;local_address&quot;:&quot;127.0.0.1&quot;,
-  &quot;local_port&quot;:&quot;1080&quot;,
-  &quot;password&quot;:&quot;{password}&quot;,
-  &quot;timeout&quot;:1000,
-  &quot;method&quot;:&quot;aes-256-cfb&quot;,
-  &quot;fast_open&quot;:false
-}
-</code></pre>
-
-<p>ip,port,password这三个参数是必须参数
-配置好这个配置文件后，运行命令然SSS服务运行起来</p>
-
-<pre><code>nohup ssserver -c /etc/shadowsocks/shadowsocks.json start &amp;
-</code></pre>
-
-<h2 id="sslocal的配置和启动">SSLocal的配置和启动</h2>
-
-<p>在配置好了服务端之后，我们就可以开始配置客户端了，客户端也需要一个基本类似的配置文件，当然了你可以在windows或者手机上用shadowsocks的客户端来实现客户端代理，这个不是本文的重点
-在本地的linux机上创建shadowsocks.json，配置内容如下：</p>
-
-<pre><code>{
-  &quot;server&quot;:&quot;xxxx&quot;,
-  &quot;local_address&quot;: &quot;127.0.0.1&quot;,
-  &quot;local_port&quot;:1080,
-  &quot;server_port&quot;:xxxx,
-  &quot;password&quot;:&quot;xxxx&quot;,
-  &quot;timeout&quot;:300,
-  &quot;method&quot;:&quot;aes-256-cfb&quot;
-}
-</code></pre>
-
-<p>完成配置后，命令运行起来</p>
-
-<pre><code>nohup sslocal -c shadowsocks.json &amp;
-</code></pre>
-
-<p>到此，我们可以通过设置linux系统环境变量达到浏览器network代理的目的,这距离我们的最终目标命令行下的网络代理更近一步了
-&gt;export http_proxy=127.0.0.1:1080
-export https_proxy=127.0.0.1:1080
-export no_proxy=localhost, 127.0.0.1</p>
-
-<p>接下来我们进行proxychain的安装和配置</p>
-
-<h1 id="proxychain的配置">Proxychain的配置</h1>
-
-<h2 id="install-proxychain">Install proxychain</h2>
-
-<blockquote>
-<p>git clone <a href="https://github.com/rofl0r/proxychains-ng">https://github.com/rofl0r/proxychains-ng</a><br />
-cd proxychains-ng
-./configure &ndash;prefix=/usr &ndash;sysconfdir=/etc
-make
-make install
-make install-config
-按步骤执行如上命令完成后，proxychain安装完成，并且默认的配置为：/etc/proxychains.conf</p>
-
-<h2 id="update-proxychain的代理列表">Update proxychain的代理列表</h2>
-
-<p>vim /etc/proxychains.conf
-在文件尾部增加一行：socks5    127.0.0.1  1080
-<img src="/img/2019-07-14-linux-network-proxy-setup-desktop&terminal/15532408-1405d25f0bcee21b.png" style="margin-left:25px" />
-现在你可以测试了，测试命令如下：
-proxychains4 curl <a href="https://www.google.com">https://www.google.com</a></p>
-</blockquote>
-
-<p>如果你能看到服务器返回了html相关的东西，说明代理是工作的，恭喜你
-截至目前，你可以做到在命令下来代理网络了，可以应对很多的使用场景了，但是依然有场景你无法满足，例如，在某个应用的内需要走代理，前提是你无法添加proxychains4的前缀，如docker daemon里面去下载image，这时候需要一个‘全局’的代理，使到全部的流量都走代理，不管是inbound或者outbound，你会问可以做到吗？
-答案是Yes，很简单，只需要一个命令去打开bash并在这个bash下面所有的流量都走代理
-&gt; proxychains4 -q /bin/bash</p>
-
-<p>到此为止，我们基本实现了基于浏览器代理和命令行下的全局代理，自己去试试吧，good luck</p>
-
-<p>最后一点补充，可以把SS做成linux服务，这样随系统启动使用起来会更加的方便，做法如下：
-&gt;sudo vim /etc/systemd/system/shadowsocks.service
-内容如下：
-<em>[Unit]
-Description=Shadowsocks Client Service
-After=network.target
-[Service]
-Type=simple
-User=root
-ExecStart=/usr/local/bin/sslocal -c /xxx/shadowsocks.json
-[Install]
-WantedBy=multi-user.target</em></p>
-
-<p>激活SS服务随系统自动启动
-&gt;systemctl enable /etc/systemd/system/shadowsocks.service</p>
-
-<p>然后就可以像其他linux服务那样使用 systemctl来管理了
-如果在上述添加SS服务的过程中遇到这个错误的话
-/usr/lib/x86_64-linux-gnu/libcrypto.so.1.1: undefined symbol: EVP_CIPHER
-请修改/usr/local/lib/python3.6/dist-packages/shadowsocks/crypto/openssl.py，更新第55行和111行
-将libcrypto.EVP_CIPHER_CTX_cleanup(self._ctx) 修改为 <label style="color:blue">libcrypto.EVP_CIPHER_CTX_reset(self._ctx)</label></p>
+<p>参考文章:<br />
+<a href="https://yq.aliyun.com/articles/284728">https://yq.aliyun.com/articles/284728</a></p>
 
 
                 
@@ -406,15 +315,10 @@ WantedBy=multi-user.target</em></p>
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/" data-toggle="tooltip" data-placement="top" title="Linux network proxy setup for desktop and terminal">&larr;
+                        <a href="/post/2019-07-15-spring-cloud-demo-overview/" data-toggle="tooltip" data-placement="top" title="Spring Cloud Series">&larr;
                             Previous Post</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/2019/07/14/free-https-certs-docker-nginx/" data-toggle="tooltip" data-placement="top" title="Free CA Certs setup using Certbot &#43; Docker &#43; Nginx">Next
-                            Post &rarr;</a>
-                    </li>
                     
                 </ul>
 
@@ -436,6 +340,22 @@ WantedBy=multi-user.target</em></p>
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
                         
                         
                         
