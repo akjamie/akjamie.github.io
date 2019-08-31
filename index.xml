@@ -6,10 +6,19 @@
     <description>Recent content on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 30 Aug 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Spring Transaction</title>
+      <link>http://akjamie.github.io/post/2019-08-30-spring-local-transaction/</link>
+      <pubDate>Fri, 30 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2019-08-30-spring-local-transaction/</guid>
+      <description>事务特性和隔离级别 事务基础 事务特性 - 原子性(Atomicity) 事务包含的所有操作是一个原子单元，要么全部成功，要么全部失败 - 一致性（Con</description>
+    </item>
     
     <item>
       <title>NoSQL DB &amp; Distributed cache - Redis</title>

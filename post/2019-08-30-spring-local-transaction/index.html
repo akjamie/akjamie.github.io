@@ -15,15 +15,15 @@
     
 
     
-    <meta name="title" content="How to invoke python scripts in UIPath" />
-    <meta property="og:title" content="How to invoke python scripts in UIPath" />
-    <meta property="twitter:title" content="How to invoke python scripts in UIPath" />
+    <meta name="title" content="Spring Transaction" />
+    <meta property="og:title" content="Spring Transaction" />
+    <meta property="twitter:title" content="Spring Transaction" />
     
 
     
-    <meta name="description" content="simple demostration about how to implement python script invocation in UIPath">
-    <meta property="og:description" content="simple demostration about how to implement python script invocation in UIPath" />
-    <meta property="twitter:description" content="simple demostration about how to implement python script invocation in UIPath" />
+    <meta name="description" content="Spring Transaction 之 Local Transaction实现原理">
+    <meta property="og:description" content="Spring Transaction 之 Local Transaction实现原理" />
+    <meta property="twitter:description" content="Spring Transaction 之 Local Transaction实现原理" />
     
 
     
@@ -34,9 +34,9 @@
     <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>How to invoke python scripts in UIPath-Jamie&#39;s Blog</title>
+    <title>Spring Transaction-Jamie&#39;s Blog</title>
 
-    <link rel="canonical" href="/2019/01/19/UIPath-invoke-python-method/">
+    <link rel="canonical" href="/post/2019-08-30-spring-local-transaction/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 	
@@ -159,24 +159,24 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/python" title="Python">
-                            Python
+                        <a class="tag" href="/tags/spring" title="Spring">
+                            Spring
                         </a>
                         
-                        <a class="tag" href="/tags/uipath" title="UIPath">
-                            UIPath
+                        <a class="tag" href="/tags/transaction-management" title="Transaction Management">
+                            Transaction Management
                         </a>
                         
                     </div>
-                    <h1>How to invoke python scripts in UIPath</h1>
-                    <h2 class="subheading"></h2>
+                    <h1>Spring Transaction</h1>
+                    <h2 class="subheading">Local Transaction</h2>
                     <span class="meta">
                         Posted by 
                         
-                            Jamie Zhang
+                                 &#34;Jamie Zhang&#34;
                          
                         on 
-                        Saturday, January 19, 2019
+                        Friday, August 30, 2019
                         
                         
                         
@@ -206,93 +206,206 @@
                 </header>
                 <nav id="TableOfContents">
 <ul>
-<li><a href="#模拟问题场景">模拟问题场景</a></li>
-<li><a href="#解决步骤">解决步骤</a>
+<li><a href="#事务特性和隔离级别">事务特性和隔离级别</a>
 <ul>
-<li><a href="#预置条件">预置条件：</a></li>
-<li><a href="#设置python-home并用变量保存">设置PYTHON_HOME并用变量保存</a></li>
-<li><a href="#使用python-activities下面的组件来调用python脚本">使用Python activities下面的组件来调用python脚本</a></li>
+<li><a href="#事务基础">事务基础</a>
+<ul>
+<li><a href="#事务特性">事务特性</a></li>
+<li><a href="#事务的隔离级别">事务的隔离级别</a></li>
+</ul></li>
+<li><a href="#sql事务测试举例-mysql">SQL事务测试举例 - mysql</a></li>
+</ul></li>
+<li><a href="#spring-事务">Spring 事务</a>
+<ul>
+<li><a href="#local-transaction-及原理">Local transaction 及原理</a>
+<ul>
+<li><a href="#本地事务解析配置加载过程">本地事务解析配置加载过程</a></li>
+<li><a href="#事务工作流程">事务工作流程</a></li>
+</ul></li>
+<li><a href="#手动开启事务的方式-非jdbc">手动开启事务的方式 - 非jdbc</a></li>
+<li><a href="#注意事项">注意事项</a></li>
 </ul></li>
 </ul>
 </nav>
                 
                 
 
-<p>UIPath是一个非常不错的RPA(Robotic Process Automation) 工具和平台，并且有开源社区版本可以方便RPA爱好者去尝试，本文是介绍如何在UIPath下调用python的脚本中的方法并提取返回值</p>
+<h1 id="事务特性和隔离级别">事务特性和隔离级别</h1>
 
-<h1 id="模拟问题场景">模拟问题场景</h1>
+<h2 id="事务基础">事务基础</h2>
 
-<p>uipath加载python脚本，并根据传入的配置文件，返回配置文件中的符合条件的配置信息</p>
+<h3 id="事务特性">事务特性</h3>
 
-<h1 id="解决步骤">解决步骤</h1>
-
-<h2 id="预置条件">预置条件：</h2>
-
-<p>a. python脚本pmt_detection.py， 内容如下：</p>
-
-<pre><code>from configparser import ConfigParser
-def getPmtReqsStatToBeSync(configFilePath):
-	&quot;&quot;&quot;
-	read config item in rpa-config.ini
-	:param: configFilePath - config file
-	:return: PMT.sync_scan_on_status
-	&quot;&quot;&quot;
-	cfg = ConfigParser()
-	cfg.read(configFilePath)
-
-	return cfg.get(&quot;PMT&quot;, &quot;sync_scan_on_status&quot;).split(',')
+<pre><code>- 原子性(Atomicity)
+事务包含的所有操作是一个原子单元，要么全部成功，要么全部失败
+- 一致性（Consistency）
+A给B转钱，A减和B增这两个操作必须保持一致
+- 隔离性（Isolation）
+事务中的数据可见性，不同隔离级别，确保了不同的可见性级别，防止脏读，幻读等
+- 持久性（Durability）
+事务操作结果将被持久化到存储磁盘上
 </code></pre>
 
-<p>b. 配置文件rpa-config.ini,内容如下：</p>
+<h3 id="事务的隔离级别">事务的隔离级别</h3>
 
-<pre><code>[PMT]
-sync_scan_on_status=SUBMITTED,INPROGRESS
-rm_scan_on_status=CANCELLED,COMPLETED
-
-[XXX]
-doc_type_list=ID,PASSPORT
+<pre><code>- Read Uncommitted，可以读取其它事务未完成的结果
+- Read Committed，在该事务完成后，才能读取该事务的数据更新后的结果
+- Repeatable Read，可以保证在整个事务的过程中，对同一笔数据的读取结果是相同的，不管其他事务是否同时在对同一笔数据进行更新，也不管其他事务对同一笔数 据的更新提交与否
+- Serializable，最严格的事务隔离控制，类似于表级别锁，所有事务操作依次有序执行
 </code></pre>
 
-<p>我们本次的目标是，用getPmtReqsStatToBeSync去拿到配置文件中的key sync_scan_on_status对应的value，即SUBMITTED,INPROGRESS<br />
-c.uipath项目已创建且python activities已安装</p>
+<h2 id="sql事务测试举例-mysql">SQL事务测试举例 - mysql</h2>
 
-<h2 id="设置python-home并用变量保存">设置PYTHON_HOME并用变量保存</h2>
+<pre><code>查看事务隔离级别, 默认是REPEATABLE-READ
+select @@global.transaction_isolation,@@transaction_isolation; 
 
-<p>避免每次调用python脚本的时候都要hardcode python env home 地址，及python.exe所在的目录<br />
-a. 我们现在系统环境变量中设置PYTHON_HOME,如下图
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-48a93520172f1317.png" alt="" />
-b. 在UIpath activities中找到&rsquo;Get Environment Variable&rsquo;并拖入使用，配置如下图，用变量保存下python home的地址
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-b9231e50939f7b28.png" alt="" /></p>
-
-<h2 id="使用python-activities下面的组件来调用python脚本">使用Python activities下面的组件来调用python脚本</h2>
-
-<p>a. 添加python scope及配置
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-b3d0136be36e7810.png" alt="" />
-截了其它例子中的图(请姑且认为py_home跟python_home是同一个变量)
-需要补充说明的是,除了Path需要配置之外，Target和Version也请选择正确否则会得到无法加载script的错误且没有具体的错误日志<br />
-b. 在python scope的Do区域添加Load Python Script并设置脚本路径和result - 变量保存python object
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-91e3fecb9fd03402.png" alt="" /><br />
-c. 在添加invoke python method组件，配置如下
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-aa7b7078eba0b3e7.png" alt="" />
-Instance即 在上一步加载进来的脚本对象，Name即方法名，本例中方法名为：getPmtReqsStatToBeSync，输出同样是pythonObject
-&gt; 在我们的需求场景中，需要传递一个配置文件地址，即使它与脚本放在同一个目录下(e.g 项目的根目录，与Main.xaml)，uipath-python也无法加载到（os.path.dirname(os.path.abspath(<strong>file</strong>)) or os.getcwd(), both failed）
-所以我们假设rpa-config.ini 和pmt_detection.py放在项目的根目录下，首先需要获取项目的当前path，所以最后Input parameters的配置为：{Environment.CurrentDirectory + “/rpa-config.ini”}
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-8f34731c7c4b4884.png" alt="" /></p>
-
-<p>d. 拿到了方法的执行之后的返回对象之后，我们还需要添加get python object来获取到返回值，我们的例子中返回值是个tuple即数组或者ArrayList。
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-f29b169d4d7b725d.png" alt="" />
-Input 为‘invoke python method’的返回对象，TypeArgument是要转化的对象类型，本例为：System.String[],输出到变量中。
-至此，调用python 方法完成，返回结果变量可以在后面的flow正常使用了</p>
-
-<p>打印日志可以查看输出结果：</p>
-
-<pre><code>&quot;[&quot; +correlationid +&quot;] Payment sync config loaded, payment sync status are: &quot; +&quot;&quot;.Join(&quot;,&quot;,pmt_sync_status) 
+设置事务隔离级别
+SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+level: { REPEATABLE READ | READ COMMITTED | READ UNCOMMITTED | SERIALIZABLE }
 </code></pre>
 
-<p><img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-d07d7cb65ed442b0.png" alt="" /></p>
+<p>通过设置mysql的session或者全局事务隔离级别，来查看事务执行结果</p>
 
-<p><em>备注</em>
-欢迎多多指正</p>
+<p>以上为基本的事务知识回顾，下面我们进入spring事务。</p>
+
+<h1 id="spring-事务">Spring 事务</h1>
+
+<p>Spring并不会直接管理事务，而是提供了事务管理器，将事务管理的职责委托给JPA JDBC JTA DataSourceTransaction JMSTransactionManager 等框架提供的事务来实现。</p>
+
+<p>Spring支持两种事务，及全局事务和本地事务。</p>
+
+<h2 id="local-transaction-及原理">Local transaction 及原理</h2>
+
+<p>本地事务，指定resource的事务，跟应用服务器无关，如DataSourceTransactionManager</p>
+
+<p>spring事务的顶层接口为：PlatformTransactionManager</p>
+
+<pre><code>public interface PlatformTransactionManager {
+    TransactionStatus getTransaction(@Nullable TransactionDefinition var1) throws TransactionException;
+
+    void commit(TransactionStatus var1) throws TransactionException;
+
+    void rollback(TransactionStatus var1) throws TransactionException;
+}
+</code></pre>
+
+<p>由定义可见，该接口主要提供了如上3个主要事务接口，那么他们在使用过程如何工作的呢</p>
+
+<p>以springboot 2.1.x版本为例：我们一般在方法上添加@transactional去开启事务，那spring是如何解析并处理事务的呢？</p>
+
+<h3 id="本地事务解析配置加载过程">本地事务解析配置加载过程</h3>
+
+<ul>
+<li><p>TransactionManager的加载：
+springboot工厂加载机制： 在spring-boot-autoconfigure jar包下面的spring 工厂配置文件中可以找到</p>
+
+<pre><code>org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+</code></pre>
+
+<p>在这个配置类总可以找到transactionmanager的bean定义</p>
+
+<pre><code>@Bean
+@ConditionalOnMissingBean({PlatformTransactionManager.class})
+public DataSourceTransactionManager transactionManager(DataSourceProperties properties) {
+DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(this.dataSource);
+if (this.transactionManagerCustomizers != null) {
+    this.transactionManagerCustomizers.customize(transactionManager);
+}
+
+return transactionManager;
+}
+</code></pre></li>
+
+<li><p>配置切面来拦截@transactional</p>
+
+<pre><code>@Configuration
+public class AspectJTransactionManagementConfiguration extends AbstractTransactionManagementConfiguration {
+
+@Bean(name = TransactionManagementConfigUtils.TRANSACTION_ASPECT_BEAN_NAME)
+@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+public AnnotationTransactionAspect transactionAspect() {
+    AnnotationTransactionAspect txAspect = AnnotationTransactionAspect.aspectOf();
+    if (this.txManager != null) {
+        txAspect.setTransactionManager(this.txManager);
+    }
+    return txAspect;
+}
+
+}
+</code></pre></li>
+</ul>
+
+<p>在AnnotationTransactionAspect中，它定义了如下pointcuts
+ <img src="/img/2019-08-30-spring-local-transaction/txn-pointcut.png" alt="" /></p>
+
+<h3 id="事务工作流程">事务工作流程</h3>
+
+<p>在AnnotationTransactionAspect的父类AbstractTransactionAspect中定义advise - around，实现如下：</p>
+
+<pre><code>Object around(final Object txObject): transactionalMethodExecution(txObject) {
+        MethodSignature methodSignature = (MethodSignature) thisJoinPoint.getSignature();
+        // Adapt to TransactionAspectSupport's invokeWithinTransaction...
+        try {
+            return invokeWithinTransaction(methodSignature.getMethod(), txObject.getClass(), new InvocationCallback() {
+                public Object proceedWithInvocation() throws Throwable {
+                    return proceed(txObject);
+                }
+            });
+        }
+        catch (RuntimeException | Error ex) {
+            throw ex;
+        }
+        catch (Throwable thr) {
+            Rethrower.rethrow(thr);
+            throw new IllegalStateException(&quot;Should never get here&quot;, thr);
+        }
+    }
+</code></pre>
+
+<p>由上面around advise可以看到其实主要实现在invokeWithinTransaction中，我们继续跟踪invokeWithinTransaction的实现
+<img src="/img/2019-08-30-spring-local-transaction/txn-aspect-working-model.png" alt="" /></p>
+
+<h2 id="手动开启事务的方式-非jdbc">手动开启事务的方式 - 非jdbc</h2>
+
+<p>了解了上面@transactional之后，我们再来看看如何在spring中手动开启事务
+部分实例代码如下：</p>
+
+<pre><code> @Autowired
+private PlatformTransactionManager transactionManager;
+
+...
+
+@Transactional
+public Customer add(Customer customer) {
+    DefaultTransactionDefinition definition = new DefaultTransactionDefinition();
+    definition.setIsolationLevel(TransactionDefinition.ISOLATION_REPEATABLE_READ);
+    definition.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+    TransactionStatus transactionStatus = transactionManager.getTransaction(definition);
+
+    try {
+        customer = repository.save(customer);
+        simulateException();
+        transactionManager.commit(transactionStatus);
+    } catch (Exception e) {
+        transactionManager.rollback(transactionStatus);
+        throw e;
+    }
+</code></pre>
+
+<ul>
+<li>注入Spring事务接口PlatformTransactionManager</li>
+<li>创建transactionDefinition,主要用来配置事务隔离级别，传播特性等</li>
+<li>调用 事务接口获取transaction</li>
+<li>根据业务执行情况进行commit/rollback方法调用</li>
+</ul>
+
+<h2 id="注意事项">注意事项</h2>
+
+<p>在查看DataSourceTransactionManager的过程中，你会发现DataSourceTransactionObject是被绑定到ThreadLocal中的，也就是说在webflux中则无法使用。</p>
+
+<p>参考文章：
+<a href="https://zhuanlan.zhihu.com/p/57746720">https://zhuanlan.zhihu.com/p/57746720</a><br />
+<a href="https://www.jianshu.com/p/d7bfd6c1115f">https://www.jianshu.com/p/d7bfd6c1115f</a></p>
 
 
                 
@@ -340,11 +453,11 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
                 <hr>
                 <ul class="pager">
                     
-                    
-                    <li class="next">
-                        <a href="/post/2019-07-23-aws-server-application-model/" data-toggle="tooltip" data-placement="top" title="AWS Serveless Application Model">Next
-                            Post &rarr;</a>
+                    <li class="previous">
+                        <a href="/post/2019-08-04-redis-primary-knowledge/" data-toggle="tooltip" data-placement="top" title="NoSQL DB &amp; Distributed cache - Redis">&larr;
+                            Previous Post</a>
                     </li>
+                    
                     
                 </ul>
 
