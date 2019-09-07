@@ -6,10 +6,19 @@
     <description>Recent content in Transaction Management on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 30 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 31 Aug 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/transaction-management/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Spring Transaction</title>
+      <link>http://akjamie.github.io/post/2019-08-31-spring-global-transaction/</link>
+      <pubDate>Sat, 31 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2019-08-31-spring-global-transaction/</guid>
+      <description>先回顾上一篇sprint local transaction的内容，本地事务是用于指定资源，即单一数据源，其主要结构如下： 那么我们来看看spring的g</description>
+    </item>
     
     <item>
       <title>Spring Transaction</title>

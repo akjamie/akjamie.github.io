@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io/img/background-07.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io/img/background-07.jpg" />
+    
+
+    
+    <meta name="title" content="Spring Transaction" />
+    <meta property="og:title" content="Spring Transaction" />
+    <meta property="twitter:title" content="Spring Transaction" />
+    
+
+    
+    <meta name="description" content="Spring Transaction 之 JTA事务管理">
+    <meta property="og:description" content="Spring Transaction 之 JTA事务管理" />
+    <meta property="twitter:description" content="Spring Transaction 之 JTA事务管理" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Spring Transaction-Jamie&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/2019-08-31-spring-global-transaction/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+	
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/docco.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/categories/tech">tech</a>
+                    </li>
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/background-03.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/spring" title="Spring">
+                            Spring
+                        </a>
+                        
+                        <a class="tag" href="/tags/transaction-management" title="Transaction Management">
+                            Transaction Management
+                        </a>
+                        
+                    </div>
+                    <h1>Spring Transaction</h1>
+                    <h2 class="subheading">Global Transaction</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                 &#34;Jamie Zhang&#34;
+                         
+                        on 
+                        Saturday, August 31, 2019
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#xa-与-jta">XA 与 JTA</a>
+<ul>
+<li><a href="#什么是xa">什么是XA</a></li>
+<li><a href="#xa与jta的联系">XA与JTA的联系</a></li>
+</ul></li>
+<li><a href="#全局-jta事务">全局/JTA事务</a>
+<ul>
+<li><a href="#jta事务的两种支持方式">JTA事务的两种支持方式</a></li>
+<li><a href="#atomikos-配置多数据源支持jta事务">Atomikos 配置多数据源支持jta事务</a></li>
+<li><a href="#track-atomikos的工作流程">Track atomikos的工作流程</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<p>先回顾上一篇sprint local transaction的内容，本地事务是用于指定资源，即单一数据源，其主要结构如下：
+ <img src="/img/2019-08-31-spring-global-transaction/spring-txn-local.png" alt="" />
+ 那么我们来看看spring的global transaction管理，其主要用于多数据源的业务场景中，如mysql + mysql, oracle + mysql + rabbitmq等，但是说到全局事务，我们需要先来谈谈xa。</p>
+
+<h1 id="xa-与-jta">XA 与 JTA</h1>
+
+<h2 id="什么是xa">什么是XA</h2>
+
+<pre><code>XA 是指由 X/Open 组织提出的分布式事务处理的规范. XA 规范主要定义了事务管理器(Transaction Manager)和局部资源管理器(Local Resource Manager)之间的接口.
+目前，Oracle、Informix、DB2和Sybase等各大数据库厂家都提供对XA的支持。XA协议采用两阶段提交方式来管理分布式事务。
+</code></pre>
+
+<p>由如上的信息中我们能看到，在xa的规范中定义了如下3个方面：<br />
+1. Transaction manager, 统筹管理多个resource manager
+2. Resource manager, 管理具体的XA resource
+3. Two-phase commit, 两阶段提交的方式
+<strong>4.</strong>Xid, 事务ID 用于区分事务</p>
+
+<h2 id="xa与jta的联系">XA与JTA的联系</h2>
+
+<p>jta是xa规范在java中的实现
+<img src='/img/2019-08-31-spring-global-transaction/xa-jta.png' style="height: 317px;margin-left: 15px;"/></p>
+
+<h1 id="全局-jta事务">全局/JTA事务</h1>
+
+<h2 id="jta事务的两种支持方式">JTA事务的两种支持方式</h2>
+
+<ol>
+<li>基于j2ee 应用服务器的jta，事务管理器和xa资源管理器均由应用服务器来管理，如jboss, ibm web sphere</li>
+
+<li><p>采用非应用服务器的方式，如采用atomikos,Bitronix等
+<img src="/img/2019-08-31-spring-global-transaction/spring-txn-global.png" alt="" /></p>
+
+<h2 id="atomikos-配置多数据源支持jta事务">Atomikos 配置多数据源支持jta事务</h2>
+
+<p>环境准备：<br />
+. 两台mysql数据库
+主要配置：<br />
+. datasource 配置文件</p>
+
+<pre><code>spring:
+datasource:
+user:
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/xa?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;charset=utf8
+  username: xxx
+  password: xxx
+audit:
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://xxx.rds.amazonaws.com:3306/xa?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;charset=utf8
+  username: xxx
+  password: xxx
+</code></pre>
+
+<p>. 核心配置bean - transaction interface</p>
+
+<pre><code>@Bean(name = &quot;userTransaction&quot;)
+public UserTransaction userTransaction() throws Throwable {
+UserTransactionImp userTransactionImp = new UserTransactionImp();
+userTransactionImp.setTransactionTimeout(10000);
+return userTransactionImp;
+}
+
+@Bean(name = &quot;atomikosTransactionManager&quot;)
+public TransactionManager atomikosTransactionManager() throws Throwable {
+UserTransactionManager userTransactionManager = new UserTransactionManager();
+userTransactionManager.setForceShutdown(false);
+AtomikosJtaPlatform.transactionManager = userTransactionManager;
+return userTransactionManager;
+}
+
+@Bean(name = &quot;transactionManager&quot;)
+@DependsOn({&quot;userTransaction&quot;, &quot;atomikosTransactionManager&quot;})
+public PlatformTransactionManager transactionManager() throws Throwable {
+UserTransaction userTransaction = userTransaction();
+AtomikosJtaPlatform.transaction = userTransaction;
+TransactionManager atomikosTransactionManager = atomikosTransactionManager();
+
+return new JtaTransactionManager(userTransaction, atomikosTransactionManager);
+}
+</code></pre></li>
+</ol>
+
+<p>. 核心配置bean datasource - user,需要指定一组为@primary，高优先级装配的的datasource，否则spring在初始化transaction manager的时候会报错。</p>
+
+<pre><code>@Bean
+@Primary
+@ConfigurationProperties(prefix = &quot;spring.datasource.user&quot;)
+public org.springframework.boot.autoconfigure.jdbc.DataSourceProperties customerDataSourceProperties() {
+    return new org.springframework.boot.autoconfigure.jdbc.DataSourceProperties();
+}
+
+@Bean(name = &quot;customerDataSource&quot;)
+@Primary
+public DataSource customerDataSource() throws SQLException {
+    MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
+    mysqlXaDataSource.setURL(customerDataSourceProperties().getUrl());
+    mysqlXaDataSource.setUser(customerDataSourceProperties().getUsername());
+    mysqlXaDataSource.setPassword(customerDataSourceProperties().getPassword());
+    mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
+
+    AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
+    xaDataSource.setXaDataSource(mysqlXaDataSource);
+    xaDataSource.setUniqueResourceName(&quot;customerDataSource&quot;);
+    xaDataSource.setMaxPoolSize(100);
+    xaDataSource.setMinPoolSize(20);
+    return xaDataSource;
+}
+
+@Bean(name = &quot;customerEntityManager&quot;)
+@DependsOn(&quot;transactionManager&quot;)
+@Primary
+public LocalContainerEntityManagerFactoryBean customerEntityManager() throws Throwable {
+    HashMap&lt;String, Object&gt; properties = new HashMap&lt;String, Object&gt;();
+    properties.put(&quot;hibernate.transaction.jta.platform&quot;, AtomikosJtaPlatform.class.getName());
+    properties.put(&quot;javax.persistence.transactionType&quot;, &quot;JTA&quot;);
+
+    LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
+    entityManager.setJtaDataSource(customerDataSource());
+    entityManager.setJpaVendorAdapter(jpaVendorAdapter);
+    entityManager.setPackagesToScan(&quot;org.akj.springboot.tx.entity.customer&quot;);
+    entityManager.setPersistenceUnitName(&quot;customerPersistenceUnit&quot;);
+    entityManager.setJpaPropertyMap(properties);
+
+    return entityManager;
+}
+</code></pre>
+
+<p>. 核心配置bean datasource - audit</p>
+
+<pre><code>@Configuration
+@EnableJpaRepositories(basePackages = &quot;org.akj.springboot.tx.entity.audit&quot;, entityManagerFactoryRef =
+        &quot;auditEntityManager&quot;, transactionManagerRef = &quot;transactionManager&quot;)
+@DependsOn(&quot;transactionManager&quot;)
+public class AuditDataSourceConfiguration {
+
+    @Autowired
+    private JpaVendorAdapter jpaVendorAdapter;
+
+    @Bean
+    @ConfigurationProperties(prefix = &quot;spring.datasource.audit&quot;)
+    public org.springframework.boot.autoconfigure.jdbc.DataSourceProperties auditDataSourceProperties() {
+        return new org.springframework.boot.autoconfigure.jdbc.DataSourceProperties();
+    }
+
+    @Bean(name = &quot;auditDataSource&quot;)
+    public DataSource auditDataSource() throws SQLException {
+        MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
+        mysqlXaDataSource.setURL(auditDataSourceProperties().getUrl());
+        mysqlXaDataSource.setUser(auditDataSourceProperties().getUsername());
+        mysqlXaDataSource.setPassword(auditDataSourceProperties().getPassword());
+        mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
+
+        AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
+        xaDataSource.setXaDataSource(mysqlXaDataSource);
+        xaDataSource.setUniqueResourceName(&quot;auditDataSource&quot;);
+        xaDataSource.setMaxPoolSize(100);
+        xaDataSource.setMinPoolSize(20);
+        return xaDataSource;
+    }
+
+    @Bean(name = &quot;auditEntityManager&quot;)
+    @DependsOn(&quot;transactionManager&quot;)
+    public LocalContainerEntityManagerFactoryBean auditEntityManager() throws Throwable {
+        HashMap&lt;String, Object&gt; properties = new HashMap&lt;String, Object&gt;();
+        properties.put(&quot;hibernate.transaction.jta.platform&quot;, AtomikosJtaPlatform.class.getName());
+        properties.put(&quot;javax.persistence.transactionType&quot;, &quot;JTA&quot;);
+
+        LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
+        entityManager.setJtaDataSource(auditDataSource());
+        entityManager.setJpaVendorAdapter(jpaVendorAdapter);
+        entityManager.setPackagesToScan(&quot;org.akj.springboot.tx.entity.audit&quot;);
+        entityManager.setPersistenceUnitName(&quot;auditPersistenceUnit&quot;);
+        entityManager.setJpaPropertyMap(properties);
+
+        return entityManager;
+    }
+}
+</code></pre>
+
+<p><em>@EnableJpaRepositories, 仓储bean的扫描和注册，并且使用了这个之后，两个db都能支持auto ddl</em></p>
+
+<h2 id="track-atomikos的工作流程">Track atomikos的工作流程</h2>
+
+<p>JTA的事务加载和切面拦截流程跟local transaction是一样的，本次过重分析一下atomikos的两阶段提交的工作流程和重点代码分析：<br />
+1. 搞清楚UserTransaction, TransactionManager 和 Transaction<br />
+ - TransactionManager, 将应用对分布式事务的使用映射到实际的事务资源并在事务资源间进行协调与控制<br />
+ - Transaction, 代表了一个物理意义上的事务，在开发人员调用 UserTransaction.begin() 方法时 TransactionManager 会创建一个 Transaction 事务对象（标志着事务的开始）并把此对象通过 ThreadLocale 关联到当前线程。<strong>UserTransaction 接口中的 commit()、rollback()，getStatus() 等方法都将最终委托给 Transaction 类的对应方法执行</strong><br />
+ - UserTransaction, 面向开发人员的接口, 直接使用该接口实现JTA事务管理<br />
+2. 查看启动日志，观察atomikos下的相关事务配置<br />
+o.s.t.jta.JtaTransactionManager          : Using JTA UserTransaction: <strong>com.atomikos.icatch.jta.UserTransactionImp@5ba90d8a</strong><br />
+2019-09-07 18:02:39.918 DEBUG 24695 &mdash; [           main] o.s.t.jta.JtaTransactionManager          : Using JTA TransactionManager: <strong>com.atomikos.icatch.jta.UserTransactionManager@4d93f75b</strong><br />
+接着会打印AtomikosDataSoureBean的配置，即初始化我们在上面的datasource配置bean<br />
+3. 部分源码分析</p>
+
+<pre><code>org.springframework.transaction.interceptor.TransactionAspectSupport#createTransactionIfNecessary
+    // 获取trsanction
+    org.springframework.transaction.support.AbstractPlatformTransactionManager#getTransaction
+        // 获取&lt;JtaTransactionObject&gt;transaction
+        org.springframework.transaction.jta.JtaTransactionManager#doGetTransaction --&gt; return UserTransactionImpl
+            org.springframework.transaction.jta.JtaTransactionManager#doGetJtaTransaction  --&gt; wrap up the UserTransactionImpl as JtaTransactionObject
+        // 
+        org.springframework.transaction.support.AbstractPlatformTransactionManager#isExistingTransaction --&gt; txObject.getUserTransaction().getStatus() != Status.STATUS_NO_TRANSACTION
+
+        // 创建事务TransactionStatus
+        DefaultTransactionStatus status = new TransactionStatus(
+                        definition, transaction, true, newSynchronization, debugEnabled, suspendedResources);
+
+        // 开启事务
+        doBegin(transaction, definition);
+            org.springframework.transaction.jta.JtaTransactionManager#doBegin
+                // 设置隔离机制和timeout
+                org.springframework.transaction.jta.JtaTransactionManager#doJtaBegin
+                    // 检查transationmanager的初始化
+                    com.atomikos.icatch.jta.UserTransactionImp#begin
+                        com.atomikos.icatch.jta.TransactionManagerImp#begin
+                            com.atomikos.icatch.imp.CompositeTransactionManagerImp#createCompositeTransaction
+                            // 创建 CompositeTransaction， 并
+                            ret = getTransactionService().createCompositeTransaction ( timeout )
+                                - 检查maxNumberOfActiveTransactions &lt; maxNumberOfActiveTransactions.  &lt;-- com.atomikos.icatch.max_actives= 300 in jta.properties
+                                - 获取tid
+                                - CoordinatorImp cc = createCC ( null, tid, true, false, timeout ) 创建事务协调器
+                                - 创建 CompositeTransaction
+
+                                com.atomikos.icatch.imp.CompositeTransactionManagerImp#setThreadMappings
+                                    // 用hashmap保存了线程和CompositeTransaction的关系
+                                    if ( TxState.ACTIVE.equals ( ct.getState() )) {
+                                        Stack&lt;CompositeTransaction&gt; txs = threadtotxmap_.get ( thread );
+                                        if ( txs == null )
+                                            txs = new Stack&lt;CompositeTransaction&gt;();
+                                        txs.push ( ct );
+                                        threadtotxmap_.put ( thread, txs );
+                                        txtothreadmap_.put ( ct, thread );
+                                    }
+                            // 创建 TransactionImp，保存tid和transactionImpl的关系
+                            com.atomikos.icatch.jta.TransactionManagerImp#recreateCompositeTransactionAsJtaTransaction
+</code></pre>
+
+<p><p>
+4. 过程日志分析<br />
+ - Create transaction<br />
+ - Participant in existing transaction for &lsquo;customer&rsquo; datasource<br />
+ - XAResource.start for &lsquo;customer&rsquo;<br />
+ - XAResource.end for &lsquo;customer&rsquo;<br />
+ - Participant in existing transaction for &lsquo;audit&rsquo; datasource<br />
+ - XAResource.start for &lsquo;audit&rsquo;<br />
+ - XAResource.end for &lsquo;audit&rsquo;<br />
+ - Initiating transaction commit<br />
+ - XAResource.prepare for &lsquo;customer&rsquo;<br />
+ - XAResource.prepare for &lsquo;audit&rsquo;<br />
+ - XAResource.commit for &lsquo;customer&rsquo;<br />
+ - XAResource.commit for &lsquo;audit&rsquo;<br />
+<img src="/img/2019-08-31-spring-global-transaction/txn-01.png" style="margin-left: 15px"/>
+<img src="/img/2019-08-31-spring-global-transaction/txn-02.png" style="margin-left: 15px"/>
+</p>
+ 参考文章:<br />
+ <a href="https://www.ibm.com/developerworks/cn/java/j-lo-jta/index.html">https://www.ibm.com/developerworks/cn/java/j-lo-jta/index.html</a></p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2019-08-30-spring-local-transaction/" data-toggle="tooltip" data-placement="top" title="Spring Transaction">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href="" rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2019
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>
