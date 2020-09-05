@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io/img/background-07.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io/img/background-07.jpg" />
+    
+
+    
+    <meta name="title" content="Mongo DB Basics (1)" />
+    <meta property="og:title" content="Mongo DB Basics (1)" />
+    <meta property="twitter:title" content="Mongo DB Basics (1)" />
+    
+
+    
+    <meta name="description" content="Mongodb 基本操作 - Insert/Find/Update/Remove">
+    <meta property="og:description" content="Mongodb 基本操作 - Insert/Find/Update/Remove" />
+    <meta property="twitter:description" content="Mongodb 基本操作 - Insert/Find/Update/Remove" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Mongo DB Basics (1)-Jamie&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/2020-09-05-mongo-basics/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/cloud">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others">others</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/spring">spring</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/background-08.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/nosql" title="NoSQL">
+                            NoSQL
+                        </a>
+                        
+                        <a class="tag" href="/tags/mongo" title="Mongo">
+                            Mongo
+                        </a>
+                        
+                    </div>
+                    <h1>Mongo DB Basics (1)</h1>
+                    <h2 class="subheading">Mongodb Series - NoSQL(NoSQL = Not Only SQL)</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                 &#34;Jamie Zhang&#34;
+                         
+                        on 
+                        Saturday, September 5, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#mongo-installation-for-test">Mongo installation(for test)</a>
+<ul>
+<li><a href="#docker-command-for-local-mongo-installation">docker command for local mongo installation</a></li>
+<li><a href="#check-mongo-running-status">check mongo running status</a></li>
+<li><a href="#mongo-shell-installation">mongo Shell installation</a></li>
+</ul></li>
+<li><a href="#crud-operations">CRUD operations</a>
+<ul>
+<li><a href="#insertone-vs-insertmany">insertOne vs insertMany</a>
+<ul>
+<li><a href="#samples">samples</a></li>
+</ul></li>
+<li><a href="#find">Find</a>
+<ul>
+<li><a href="#basic-grammer-you-should-know">basic grammer you should know</a></li>
+<li><a href="#samples-1">samples</a></li>
+</ul></li>
+<li><a href="#remove">Remove</a></li>
+<li><a href="#update">Update</a>
+<ul>
+<li><a href="#basic-grammers">basic grammers</a></li>
+<li><a href="#samples-2">samples</a></li>
+</ul></li>
+<li><a href="#drop-collection">Drop Collection</a></li>
+<li><a href="#drop-database">Drop database</a></li>
+</ul></li>
+<li><a href="#java-api-to-do-crud">JAVA api to do CRUD</a>
+<ul>
+<li><a href="#use-document-object-to-do-crud">use Document object to do CRUD</a></li>
+<li><a href="#use-gson-pojo-to-do-crud">use gson + POJO to do CRUD</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<h1 id="mongo-installation-for-test">Mongo installation(for test)</h1>
+
+<h2 id="docker-command-for-local-mongo-installation">docker command for local mongo installation</h2>
+
+<pre><code>docker run -p 27017:27017 -v /Users/jamie/Documents/work-benches/mongo/test:/data/db --name mongo -d mongo:latest
+</code></pre>
+
+<h2 id="check-mongo-running-status">check mongo running status</h2>
+
+<blockquote>
+<p>docker ps | grep mongo<br />
+9161bd4811a8        mongo:latest        &ldquo;docker-entrypoint.s…&rdquo;   6 days ago          Up 6 days           0.0.0.0:27017-&gt;27017/tcp   mongo</p>
+</blockquote>
+
+<h2 id="mongo-shell-installation">mongo Shell installation</h2>
+
+<p>please refer to <a href="https://docs.mongodb.com/manual/tutorial/configure-mongo-shell/">https://docs.mongodb.com/manual/tutorial/configure-mongo-shell/</a></p>
+
+<h1 id="crud-operations">CRUD operations</h1>
+
+<h2 id="insertone-vs-insertmany">insertOne vs insertMany</h2>
+
+<p>insertOne - since version 3.2<br />
+insertMany - since version 3.2</p>
+
+<p>MongoShell command format:
+<img src='/img/2020-09-05-mongo-basics/mongo-shell-command-format.png' style="height: 77px;margin-left: 15px;"/></p>
+
+<h3 id="samples">samples</h3>
+
+<p>to provide some samples and corresponded shell command for better understand &amp; master each params &amp; grammer</p>
+
+<p>1&gt; insert one document to inventory</p>
+
+<pre><code>db.inventory.insertOne({&quot;item&quot;: &quot;canvas&quot;,
+           &quot;qty&quot;: 100,
+           &quot;tags&quot;: [&quot;cotton&quot;],
+           size: {&quot;h&quot;:28,&quot;w&quot;:100,&quot;uom&quot;: &quot;mm&quot;}
+           })
+</code></pre>
+
+<p><img src='/img/2020-09-05-mongo-basics/insert-one-1.png' style="height: 90px;margin-left: 15px;"/></p>
+
+<p>2&gt; insert many records in same command</p>
+
+<pre><code>db.inventory.insertMany([{&quot;item&quot;: &quot;canvas-new&quot;,
+       &quot;qty&quot;: 100,
+       &quot;tags&quot;: [&quot;cotton&quot;],
+       size: {&quot;h&quot;:28,&quot;w&quot;:100,&quot;uom&quot;: &quot;mm&quot;}
+     },{&quot;item&quot;: &quot;ipad2021&quot;,
+       &quot;qty&quot;:20,
+       &quot;tags&quot;:[&quot;ios&quot;,&quot;HIFI&quot;],
+       size:{&quot;h&quot;:20,&quot;w&quot;:30,&quot;uom&quot;: &quot;cm&quot;}
+     }])
+</code></pre>
+
+<p><img src='/img/2020-09-05-mongo-basics/insert-many-1.png' style="height: 160px;margin-left: 15px;"/></p>
+
+<blockquote>
+<p>Insert Behavior:<br />
+. Collection Creation, if the collection does not exist, the insert operation will create the collection.<br />
+. _id Field - it acts as the primary key, if an inserted document omits _id, MongoDB driver automatically generates and ObjectId for the _id fields.<br />
+. Atomicity - all wirte operation in MongoDB are automic on the level of a single document.</p>
+</blockquote>
+
+<h2 id="find">Find</h2>
+
+<p>it&rsquo;s equative to SELECT in SQL, and return data in cursor.</p>
+
+<h3 id="basic-grammer-you-should-know">basic grammer you should know</h3>
+
+<p><img src='/img/2020-09-05-mongo-basics/find-grammer-01.png' style="height: 180px;margin-left: 15px;"/></p>
+
+<table>
+<thead>
+<tr>
+<th align="left">SQL</th>
+<th align="left">MQL</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">a = 1</td>
+<td align="left">{a: 1}</td>
+</tr>
+
+<tr>
+<td align="left">a &lt;&gt; 1</td>
+<td align="left">{a: {$ne: 1}}</td>
+</tr>
+
+<tr>
+<td align="left">a &gt; 1</td>
+<td align="left">{a: {$gt: 1}}</td>
+</tr>
+
+<tr>
+<td align="left">a &gt;= 1</td>
+<td align="left">{a: {$gte: 1}}</td>
+</tr>
+
+<tr>
+<td align="left">a &lt; 1</td>
+<td align="left">{a: {$1t: 1}}</td>
+</tr>
+
+<tr>
+<td align="left">a &lt;= 1</td>
+<td align="left">{a: {$lte: 1}}</td>
+</tr>
+
+<tr>
+<td align="left">a = 1 and b = 1</td>
+<td align="left">{a: 1, b: 1} or {$and: [{a: 1}, {b: 1}]}</td>
+</tr>
+
+<tr>
+<td align="left">a = 1 or b = 1</td>
+<td align="left">{$or: [{a: 1}, {b: 1}]}</td>
+</tr>
+
+<tr>
+<td align="left">a IS NULL</td>
+<td align="left">{a: {$exists: false}}</td>
+</tr>
+
+<tr>
+<td align="left">a IN (1,2,3)</td>
+<td align="left">{a: {$in: [1,2,3]}}</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="samples-1">samples</h3>
+
+<p>1&gt; find users who&rsquo;s userName starts with &lsquo;jamie&rsquo;</p>
+
+<pre><code>b.users.find({&quot;userName&quot;: /^jamie/}).pretty()
+</code></pre>
+
+<p><img src='/img/2020-09-05-mongo-basics/find-mql-01.png' style="height: 250px;margin-left: 15px;"/>
+2&gt; find users which userName starts with &lsquo;Test&rsquo; and &lsquo;authType&rsquo; is &lsquo;PASSWORD&rsquo;</p>
+
+<pre><code>db.users.find({&quot;userName&quot;: /^Test/, &quot;authType&quot;: &quot;PASSWORD&quot;}).pretty()
+</code></pre>
+
+<p><img src='/img/2020-09-05-mongo-basics/find-mql-02.png' style="height: 300px;margin-left: 15px;"/>
+<img src='/img/2020-09-05-mongo-basics/find-mql-03.png' style="height: 80px;margin-left: 15px;"/></p>
+
+<p>3&gt; find users who&rsquo;s userName starts with &lsquo;Test&rsquo; and &lsquo;authType&rsquo; is &lsquo;PASSWORD&rsquo; and his/her age between 18 and 45.</p>
+
+<pre><code>db.users.find({&quot;userName&quot;: /^Test/, &quot;authType&quot;: &quot;PASSWORD&quot;,&quot;userInfo.age&quot;: {$gt: 18, $lte: 45}}).count()
+</code></pre>
+
+<p><img src='/img/2020-09-05-mongo-basics/find-mql-04.png' style="height: 55px;margin-left: 15px;"/></p>
+
+<p>4&gt; find users which userName start with &lsquo;Test&rsquo; and &lsquo;authType&rsquo; is &lsquo;PASSWORD&rsquo; and meet either of below two conditions:<br />
+&ndash; &lsquo;userInfo.gender&rsquo; = &lsquo;FEMALE&rsquo; and age &gt;=3  and age &lt; 10<br />
+&ndash; &lsquo;userInfo.gender&rsquo; = &lsquo;MALE&rsquo; and age &gt;= 18 and age &lt; 45</p>
+
+<pre><code>db.getCollection(&quot;users&quot;).find({&quot;authType&quot;:&quot;PASSWORD&quot;, $or: [{
+       &quot;userInfo.gender&quot;: &quot;MALE&quot;, &quot;userInfo.age&quot;: {$gte: 18, $lt: 45}},{
+        &quot;userInfo.gender&quot;: &quot;FEMAIL&quot;, &quot;userInfo.age&quot;: {$gte: 3, $lt: 10}
+}]}).count()
+</code></pre>
+
+<p>5&gt; distinct, to find the possible values for &lsquo;authType&rsquo;</p>
+
+<pre><code>db.users.distinct('authType', {&quot;userName&quot;: /^Test/})
+</code></pre>
+
+<p><img src='/img/2020-09-05-mongo-basics/find-mql-05.png' style="height: 40px;margin-left: 0px;"/>
+6&gt; find users whose authType is OTP or WECHAT</p>
+
+<pre><code>db.getCollection(&quot;users&quot;).find({&quot;authType&quot;: {$in : ['OTP','WECHAT']}}).limit(2).pretty()
+</code></pre>
+
+<p>7&gt; find users which gender is null</p>
+
+<pre><code>db.getCollection(&quot;users&quot;).find({&quot;userInfo.gender&quot;: {$exists : false}}).limit(2).pretty()
+</code></pre>
+
+<p><img src='/img/2020-09-05-mongo-basics/find-mql-06.png' style="height: 120px;margin-left: 0px;"/></p>
+
+<p>8&gt; projection, specify the fields we need</p>
+
+<pre><code>db.getCollection(&quot;users&quot;).find({&quot;userInfo.gender&quot;: &quot;MALE&quot;, 
+    &quot;userInfo.age&quot;: {$gte: 18, $lt: 30}
+   },{&quot;_id&quot;: 0, 
+    &quot;userName&quot;: 1,
+    &quot;authType&quot;: 1, 
+    &quot;schemaVersion&quot;: 1, 
+    &quot;userInfo.firstName&quot;: 1, 
+    &quot;userInfo.phone&quot;: 1
+    }).limit(2).pretty()
+</code></pre>
+
+<p><img src='/img/2020-09-05-mongo-basics/find-mql-07.png' style="height: 200px;margin-left: 0px;"/></p>
+
+<h2 id="remove">Remove</h2>
+
+<p><img src='/img/2020-09-05-mongo-basics/remove-grammer-01.png' style="height: 150px;margin-left: 0px;"/></p>
+
+<h2 id="update">Update</h2>
+
+<h3 id="basic-grammers">basic grammers</h3>
+
+<p><img src='/img/2020-09-05-mongo-basics/update-grammer-01.png' style="height: 30px;margin-left: 0px;"/></p>
+
+<p><img src='/img/2020-09-05-mongo-basics/update-grammer-02.png' style="height: 160px;margin-left: 0px;"/></p>
+
+<p><img src='/img/2020-09-05-mongo-basics/update-grammer-03.png' style="height: 240px;margin-left: 0px;"/></p>
+
+<p><img src='/img/2020-09-05-mongo-basics/update-grammer-04.png' style="height: 250px;margin-left: 0px;"/></p>
+
+<h3 id="samples-2">samples</h3>
+
+<p>1&gt; update the authType from &lsquo;string&rsquo; to &lsquo;ALIPAY&rsquo;</p>
+
+<pre><code>db.users.updateOne({&quot;authType&quot;: &quot;string&quot;}, {$set: {&quot;authType&quot;: &quot;ALIPAY&quot;}})
+</code></pre>
+
+<p><img src='/img/2020-09-05-mongo-basics/update-mql-01.png' style="height: 65px;margin-left: 0px;"/></p>
+
+<p>2&gt; update all the documents -  the &lsquo;schemaVersion&rsquo; to &lsquo;0.1&rsquo; if does not exist in document</p>
+
+<pre><code>db.users.updateMany({&quot;schemaVersion&quot;: {$exists: false}}, {$set: {&quot;schemaVersion&quot;: &quot;0.1&quot;}})
+</code></pre>
+
+<p>4&gt;.add one item to an array in document</p>
+
+<pre><code>db.users.update({&quot;userName&quot;: 'Annie-01'}, {$push: {&quot;userInfo.tags&quot;: 'Springboot'}})
+</code></pre>
+
+<p><img src='/img/2020-09-05-mongo-basics/update-mql-02.png' style="height: 220px;margin-left: 0px;"/></p>
+
+<p>5&gt;Add more than one items(does not exists) to an array in one go</p>
+
+<pre><code>var newTags = ['Mongodb','Angular','BlockChain']
+db.users.update({&quot;userName&quot;: 'Annie-01', 'userInfo.tags': {$ne: {$each: newTags}}}, {$addToSet: {&quot;userInfo.tags&quot;:{$each: newTags} }})
+</code></pre>
+
+<p><img src='/img/2020-09-05-mongo-basics/update-mql-03.png' style="height: 260px;margin-left: 0px;"/>
+<strong>notes:</strong> <em>this approach can also prevent duplicated data added into array</em></p>
+
+<p>6&gt; update the indexed data in an array</p>
+
+<pre><code>db.users.update({&quot;userName&quot;: 'Annie-01'}, {$set: {'userInfo.tags.3': 'Mysql'}})
+</code></pre>
+
+<p><img src='/img/2020-09-05-mongo-basics/update-mql-04.png' style="height: 260px;margin-left: 0px;"/></p>
+
+<h2 id="drop-collection">Drop Collection</h2>
+
+<p>db.<collection>.drop()<br />
+all the documents in the collection, including the indexes, will be deleted.</p>
+
+<h2 id="drop-database">Drop database</h2>
+
+<p>db.dropDatabase()</p>
+
+<h1 id="java-api-to-do-crud">JAVA api to do CRUD</h1>
+
+<h2 id="use-document-object-to-do-crud">use Document object to do CRUD</h2>
+
+<p>MongoDB driver</p>
+
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.mongodb&lt;/groupId&gt;
+    &lt;artifactId&gt;mongo-java-driver&lt;/artifactId&gt;
+    &lt;version&gt;${mongo.driver.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>insert document</p>
+
+<pre><code>@Test
+public void testInsert() {
+    String id = UUID.randomUUID().toString();
+    Document userInfo = new Document().append(&quot;tags&quot;, Arrays.asList(&quot;Springboot&quot;, &quot;Mongo&quot;));
+    Document document = new Document().append(&quot;_id&quot;, id)
+            .append(&quot;userName&quot;, &quot;Test-&quot; + id.replace(&quot;-&quot;, &quot;&quot;).substring(0, 8))
+            .append(&quot;authType&quot;, &quot;WECHAT&quot;).append(&quot;createDate&quot;, new Date()).append(&quot;schemaVersion&quot;, &quot;1.0.0&quot;).append(&quot;userInfo&quot;, userInfo);
+
+    collection.insertOne(document);
+
+
+    //verify the insertion
+    FindIterable iterable = collection.find(new BasicDBObject().append(&quot;_id&quot;, id));
+    Document first = (Document) iterable.first();
+
+    assertNotNull(first);
+    assertEquals(id, first.getString(&quot;_id&quot;));
+}
+</code></pre>
+
+<p>update document</p>
+
+<pre><code>@Test
+public void testUpdate() {
+    // insert one document
+    String id = UUID.randomUUID().toString();
+    Document userInfo = new Document().append(&quot;tags&quot;, Arrays.asList(&quot;Springboot&quot;, &quot;Mongo&quot;));
+    Document document = new Document().append(&quot;_id&quot;, id)
+            .append(&quot;userName&quot;, &quot;Test-&quot; + id.replace(&quot;-&quot;, &quot;&quot;).substring(0, 8))
+            .append(&quot;authType&quot;, &quot;WECHAT&quot;).append(&quot;createDate&quot;, new Date()).append(&quot;schemaVersion&quot;, &quot;1.0.0&quot;).append(&quot;userInfo&quot;, userInfo);
+    collection.insertOne(document);
+
+
+    // try to update it
+    //Document update = new Document().append(&quot;tags&quot;, Arrays.asList(&quot;Mysql&quot;,&quot;Scala&quot;));
+    collection.updateOne(document, new Document(&quot;$addToSet&quot;, new Document(&quot;userInfo.tags&quot;, new Document(&quot;$each&quot;, Arrays.asList(&quot;Mysql&quot;, &quot;Scala&quot;)))));
+
+    // find the document and check the update
+    FindIterable iterable = collection.find(new BasicDBObject().append(&quot;_id&quot;, id));
+    Document first = (Document) iterable.first();
+
+    assertNotNull(first);
+    assertEquals(4, ((List&lt;String&gt;) (((Document) first.get(&quot;userInfo&quot;)).get(&quot;tags&quot;))).size());
+}
+</code></pre>
+
+<h2 id="use-gson-pojo-to-do-crud">use gson + POJO to do CRUD</h2>
+
+<p>1&gt; define customize codec if need to do the date type that does not support by MongoDB by default</p>
+
+<pre><code>public class DateCodec implements Codec&lt;Date&gt; {
+    @Override
+    public Date decode(BsonReader reader, DecoderContext decoderContext) {
+        Date date = null;
+        try {
+            reader.readStartDocument();
+            date = new SimpleDateFormat(&quot;yyyy-mm-dd hh:MM:ss&quot;).parse(reader.readString(&quot;dateTime&quot;));
+            reader.readEndDocument();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
+    }
+
+    @Override
+    public void encode(BsonWriter writer, Date value, EncoderContext encoderContext) {
+        writer.writeStartDocument();
+        writer.writeString(&quot;dateTime&quot;, new SimpleDateFormat(&quot;yyyy-mm-dd hh:MM:ss&quot;).format(value));
+        writer.writeEndDocument();
+    }
+
+    @Override
+    public Class&lt;Date&gt; getEncoderClass() {
+        return Date.class;
+    }
+}
+</code></pre>
+
+<p>2&gt; POJO</p>
+
+<pre><code>@Data
+public class User implements Serializable {
+    @BsonId
+    @BsonProperty(&quot;_id&quot;)
+    private String id;
+
+    private UserInfo userInfo;
+
+    private String userName;
+
+    private String authType;
+
+    private String password;
+
+    @BsonProperty(&quot;createDate&quot;)
+    private Date createDate;
+
+    private Date lastUpdateDate;
+}
+
+@Data
+public class UserInfo implements Serializable {
+    private String firstName;
+
+    private String middleName;
+
+    private String lastName;
+
+    private int age;
+
+    private GenderEnum gender;
+
+    private String phone;
+
+    private String telPhone;
+
+}
+
+public enum GenderEnum {
+    MALE,FEMALE,OTHER;
+}
+
+</code></pre>
+
+<p>3&gt; test cases</p>
+
+<pre><code>public class MongoClientTest {
+    private MongoClient client;
+    private static final String url = &quot;mongodb://localhost:27017&quot;;
+    private static final String DATABASE = &quot;test&quot;;
+    private static final String COLLECTION = &quot;users&quot;;
+    private MongoCollection collection;
+
+    @BeforeEach
+    public void setup() {
+        MongoClientURI clientURI = new MongoClientURI(url);
+        client = new MongoClient(clientURI);
+
+        PojoCodecProvider pojoCodecProvider =
+                PojoCodecProvider.builder().register(&quot;org.akj.mongo.bean&quot;).conventions(Arrays.asList(Conventions.ANNOTATION_CONVENTION, Conventions.OBJECT_ID_GENERATORS, Conventions.CLASS_AND_PROPERTY_CONVENTION)).build();
+        CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(),
+                fromProviders(pojoCodecProvider));
+
+        MongoDatabase database = client.getDatabase(MongoClientTest.DATABASE);
+
+        boolean collectionExists = client.getDatabase(DATABASE).listCollectionNames()
+                .into(new ArrayList&lt;String&gt;()).contains(COLLECTION);
+        if (!collectionExists) {
+            database.createCollection(&quot;users&quot;);
+            collection =
+                    database.getCollection(&quot;users&quot;, User.class).withCodecRegistry(pojoCodecRegistry);
+            IndexOptions indexOptions = new IndexOptions();
+            indexOptions.unique(true);
+            indexOptions.name(&quot;users_uni_username&quot;);
+
+            collection.createIndex(new Document(&quot;userName&quot;, 1), indexOptions);
+        }
+
+        collection =
+                database.getCollection(MongoClientTest.COLLECTION).withCodecRegistry(pojoCodecRegistry);
+
+    }
+
+    @Test
+    public void testConnection() {
+        Assertions.assertNotNull(client, &quot;mongo db connection issue&quot;);
+        MongoIterable&lt;String&gt; actual = client.listDatabaseNames();
+        Assertions.assertNotNull(actual);
+
+        log.info(&quot;{}&quot;, actual);
+        actual.forEach((Consumer&lt;? super String&gt;) s -&gt; log.info(s));
+    }
+
+    @Test
+    public void testInsert() {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setFirstName(&quot;Jamie&quot;);
+        userInfo.setLastName(&quot;Zhang&quot;);
+        userInfo.setAge(31);
+        userInfo.setGender(GenderEnum.MALE);
+        userInfo.setPhone(&quot;13991999999&quot;);
+
+        User u = new User();
+        u.setUserInfo(userInfo);
+        u.setAuthType(&quot;PASSWORD&quot;);
+        u.setUserName(&quot;jamie-002&quot;);
+        u.setPassword(&quot;123456&quot;);
+        Date date = new Date();
+        u.setCreateDate(date);
+        u.setLastUpdateDate(date);
+
+        Gson gson = new Gson();
+        Document document = Document.parse(gson.toJson(u));
+        collection.insertOne(document);
+    }
+
+    @Test
+    public void testDuplicateKey() {
+        Assertions.assertThrows(MongoWriteException.class, () -&gt; {
+            testInsert();
+            testInsert();
+        });
+    }
+
+    @Test
+    public void testFindOne() {
+        Gson gson = new Gson();
+        FindIterable iterable = collection.find();
+        MongoCursor cursor = iterable.cursor();
+
+        while (cursor.hasNext()) {
+            Object obj = cursor.next();
+            Document doc = (Document) obj;
+            String json = doc.toJson(JsonWriterSettings.builder().build());
+            User u = gson.fromJson(json, User.class);
+            log.debug(&quot;{}&quot;, u);
+        }
+    }
+
+    @Test
+    public void testDropCollection() {
+        MongoDatabase database = client.getDatabase(MongoClientTest.DATABASE);
+        MongoCollection&lt;Document&gt; collection = database.getCollection(MongoClientTest.COLLECTION);
+        if (null != collection) collection.drop();
+
+        Assertions.assertNull(database.getCollection(MongoClientTest.COLLECTION));
+    }
+}
+</code></pre>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2019-10-20-liquibase-introduction/" data-toggle="tooltip" data-placement="top" title="Liquibase">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

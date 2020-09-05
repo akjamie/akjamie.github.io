@@ -6,10 +6,46 @@
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 31 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 05 Sep 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Mongo</title>
+      <link>http://akjamie.github.io/tags/mongo/</link>
+      <pubDate>Sat, 05 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/mongo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>NoSQL</title>
+      <link>http://akjamie.github.io/tags/nosql/</link>
+      <pubDate>Sat, 05 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/nosql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Database migration</title>
+      <link>http://akjamie.github.io/tags/database-migration/</link>
+      <pubDate>Sun, 20 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/database-migration/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Liquibase</title>
+      <link>http://akjamie.github.io/tags/liquibase/</link>
+      <pubDate>Sun, 20 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/liquibase/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Spring</title>
@@ -26,15 +62,6 @@
       <pubDate>Sat, 31 Aug 2019 00:00:00 +0000</pubDate>
       
       <guid>http://akjamie.github.io/tags/transaction-management/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>NoSQL</title>
-      <link>http://akjamie.github.io/tags/nosql/</link>
-      <pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate>
-      
-      <guid>http://akjamie.github.io/tags/nosql/</guid>
       <description></description>
     </item>
     
