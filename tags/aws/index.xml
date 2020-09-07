@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>AWS on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/aws/</link>
+    <description>Recent content in AWS on Jamie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 07 Sep 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://akjamie.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>GCP network connections(1)</title>
+      <link>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</link>
+      <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</guid>
+      <description>To document the setup process for VPC peering accross different GCP project VPCs for demo purpose only.
+Setup VPC peering accross two GCP projects in this demo, will create two GCP projects, and setup VPC network peering to work as network bridge to make sure the vm in one of GCP project can access the MongoDB installed on VM of another GCP project. preparation Mongo backups 1&amp;gt; backup MongoDB</description>
+    </item>
+    
+  </channel>
+</rss>
