@@ -18,7 +18,9 @@
       
       <guid>http://akjamie.github.io/post/2020-11-29-run-application-on-k8s/</guid>
       <description>this page shows how to run a spring boot application on local K8S environment.
-Objectives 1.create spring boot application and build a docker image 2.create local persistent volume to share the files from host 3.create deployment and service to run this application and expose for external access.
+Objectives 1.create spring boot application and build a docker image
+2.create local persistent volume to share the files from host
+3.create deployment and service to run this application and expose for external access.
 Before you begin install docker desktop in local and enable local k8s cluster, more details please refer to docker official guide or k8s local cluster setup guide.</description>
     </item>
     

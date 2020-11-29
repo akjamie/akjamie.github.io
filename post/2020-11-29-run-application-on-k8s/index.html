@@ -246,8 +246,8 @@
 
 <h1 id="objectives">Objectives</h1>
 
-<p>1.create spring boot application and build a docker image
-2.create local persistent volume to share the files from host
+<p>1.create spring boot application and build a docker image<br />
+2.create local persistent volume to share the files from host<br />
 3.create deployment and service to run this application and expose for external access.</p>
 
 <h1 id="before-you-begin">Before you begin</h1>
@@ -261,7 +261,7 @@ cluster setup <a href="https://kubernetes.io/docs/tasks/tools/">guide</a>.</p>
 
 <h2 id="spring-boot-application-config-service">Spring boot application - config-service</h2>
 
-<p>1.use Spring Cloud Config to quickly implement a config service, please refer to spring cloud documents.
+<p>1.use Spring Cloud Config to quickly implement a config service, please refer to spring cloud documents.<br />
 2.create a service config repos on git, in this demo, we will use the native config rather than points to git directly as
 network delay caused by GFW.</p>
 
@@ -295,7 +295,7 @@ config.root-path: /Users/jamie/Documents/work-benches/workspace-20190524/service
 <img src='/img/2020-11-29-run-application-on-k8s/config-repo-01.png' style="height: 150px;margin-left: 0px;"/></p></li>
 </ul>
 
-<p>3.test if works
+<p>3.test if works<br />
 to test if you can get the configs configured in above steps.<br />
 <img src='/img/2020-11-29-run-application-on-k8s/config-test-01.png' style="height: 600px;margin-left: 0px;"/>
 from above screenshot, the configs correctly responded from config server, then let&rsquo;s move to docker image build.</p>
