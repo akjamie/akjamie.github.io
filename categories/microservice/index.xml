@@ -6,10 +6,39 @@
     <description>Recent content in Microservice on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Jul 2019 19:40:10 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 29 Nov 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/categories/microservice/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Kubernates - Practice</title>
+      <link>http://akjamie.github.io/post/2020-11-29-run-application-on-k8s/</link>
+      <pubDate>Sun, 29 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2020-11-29-run-application-on-k8s/</guid>
+      <description>this page shows how to run a spring boot application on local K8S environment.
+Objectives 1.create spring boot application and build a docker image 2.create local persistent volume to share the files from host 3.create deployment and service to run this application and expose for external access.
+Before you begin install docker desktop in local and enable local k8s cluster, more details please refer to docker official guide or k8s local cluster setup guide.</description>
+    </item>
+    
+    <item>
+      <title>Spring Transaction</title>
+      <link>http://akjamie.github.io/post/2019-08-31-spring-global-transaction/</link>
+      <pubDate>Sat, 31 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2019-08-31-spring-global-transaction/</guid>
+      <description>先回顾上一篇sprint local transaction的内容，本地事务是用于指定资源，即单一数据源，其主要结构如下： 那么我们来看看spring的g</description>
+    </item>
+    
+    <item>
+      <title>Spring Transaction</title>
+      <link>http://akjamie.github.io/post/2019-08-30-spring-local-transaction/</link>
+      <pubDate>Fri, 30 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2019-08-30-spring-local-transaction/</guid>
+      <description>事务特性和隔离级别 事务基础 事务特性 - 原子性(Atomicity) 事务包含的所有操作是一个原子单元，要么全部成功，要么全部失败 - 一致性（Con</description>
+    </item>
     
     <item>
       <title>微服务中的分布式事务</title>
@@ -18,6 +47,24 @@
       
       <guid>http://akjamie.github.io/post/2019-07-24-one-distributed-transaction-user-case/</guid>
       <description>用户场景 在某企业app上做Payment业务，在app端准备好request data， 如debit account number, credit account number, amount, notes, 点击submit。 业务流程如</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Series</title>
+      <link>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</link>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</guid>
+      <description>Demo的介绍 本文主要通过一个小demo，来综合运用spring cloud系列技术，demo中主要包含如下模块/组建： 1. Authorization service, 基于Spring</description>
+    </item>
+    
+    <item>
+      <title>Spring batch - single process &amp; remote partitioning(multi instances)</title>
+      <link>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</link>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</guid>
+      <description>Spring batch是轻量级，全面的批处理框架，旨在开发对企业系统日常运营至关重要的强大批处理应用程序。 Spring Batch负责大量记录，包括日志记录/跟踪</description>
     </item>
     
   </channel>

@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    
+
+    
+    <meta name="title" content="Kubernates - Practice" />
+    <meta property="og:title" content="Kubernates - Practice" />
+    <meta property="twitter:title" content="Kubernates - Practice" />
+    
+
+    
+    <meta name="description" content="to run a cloud config service which built using spring boot cloud config">
+    <meta property="og:description" content="to run a cloud config service which built using spring boot cloud config" />
+    <meta property="twitter:description" content="to run a cloud config service which built using spring boot cloud config" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Kubernates - Practice-Jamie&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/2020-11-29-run-application-on-k8s/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+    
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/cloud">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others">others</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/background-03.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/spring-cloud" title="Spring Cloud">
+                            Spring Cloud
+                        </a>
+                        
+                        <a class="tag" href="/tags/k8s" title="K8S">
+                            K8S
+                        </a>
+                        
+                    </div>
+                    <h1>Kubernates - Practice</h1>
+                    <h2 class="subheading">Run Spring boot application on local K8s cluster</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                            Jamie Zhang
+                         
+                        on 
+                        Sunday, November 29, 2020
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#objectives">Objectives</a></li>
+<li><a href="#before-you-begin">Before you begin</a></li>
+<li><a href="#create-spring-boot-application-and-build-docker-image">Create spring boot application and build docker image</a>
+<ul>
+<li><a href="#spring-boot-application-config-service">Spring boot application - config-service</a></li>
+<li><a href="#docker-image-build-push">Docker image build &amp; push</a></li>
+</ul></li>
+<li><a href="#use-local-persistent-volume-to-share-the-service-configs">Use Local Persistent Volume to share the service configs</a>
+<ul>
+<li><a href="#create-storage-class">create storage class</a></li>
+<li><a href="#create-persistent-volume">create persistent volume</a></li>
+<li><a href="#create-pvc">create PVC</a></li>
+<li><a href="#verify-the-resource-created">verify the resource created</a></li>
+</ul></li>
+<li><a href="#deploy-application-and-share-the-access-entry">Deploy application and share the access entry</a>
+<ul>
+<li><a href="#application-deployment">application deployment</a></li>
+</ul></li>
+<li><a href="#create-service-to-expose-service-access">Create service to expose service access</a></li>
+</ul>
+</nav>
+                
+                
+
+<p>this page shows how to run a spring boot application on local K8S environment.</p>
+
+<h1 id="objectives">Objectives</h1>
+
+<p>1.create spring boot application and build a docker image
+2.create local persistent volume to share the files from host
+3.create deployment and service to run this application and expose for external access.</p>
+
+<h1 id="before-you-begin">Before you begin</h1>
+
+<p>install docker desktop in local and enable local k8s cluster, more details please refer to docker official guide or k8s local
+cluster setup <a href="https://kubernetes.io/docs/tasks/tools/">guide</a>.</p>
+
+<h1 id="create-spring-boot-application-and-build-docker-image">Create spring boot application and build docker image</h1>
+
+<p>in this demo, created a simple config service using spring boot cloud config, source code on <a href="https://github.com/cloud-poc/config-service/tree/dev-k8s">git</a></p>
+
+<h2 id="spring-boot-application-config-service">Spring boot application - config-service</h2>
+
+<p>1.use Spring Cloud Config to quickly implement a config service, please refer to spring cloud documents.
+2.create a service config repos on git, in this demo, we will use the native config rather than points to git directly as
+network delay caused by GFW.</p>
+
+<ul>
+<li><p>service configs - spring:</p>
+
+<pre><code>server:
+port: 8888
+
+spring:
+application:
+name: config-service
+profiles:
+active: native
+cloud:
+config:
+  server:
+    native:
+      search-locations: ${CONFIG_ROOT_PATH:${config.root-path}}/config/{application}
+    bootstrap: true
+#        git:
+#          uri: ${CONFIG_REPOSITORY_URL:https://github.com/cloud-poc/service-config.git}
+#          clone-on-start: true
+#          #cannot work when use place-holder(not just '{application}')
+#          search-paths: 'config/{application}'
+
+config.root-path: /Users/jamie/Documents/work-benches/workspace-20190524/service-config
+</code></pre></li>
+
+<li><p>config repo:
+<img src='/img/2020-11-29-run-application-on-k8s/config-repo-01.png' style="height: 150px;margin-left: 0px;"/></p></li>
+</ul>
+
+<p>3.test if works
+to test if you can get the configs configured in above steps.<br />
+<img src='/img/2020-11-29-run-application-on-k8s/config-test-01.png' style="height: 600px;margin-left: 0px;"/>
+from above screenshot, the configs correctly responded from config server, then let&rsquo;s move to docker image build.</p>
+
+<h2 id="docker-image-build-push">Docker image build &amp; push</h2>
+
+<p>There are several most widely used Maven plugins for Docker in the open source community, for example, fabric8’s docker-maven-plugin,
+Spotify’s docker-maven-plugin, Spotify’s dockerfile-maven, and Google’s jib-maven-plugin,etc. We&rsquo;ll use the jib-maven-plugin
+for our application, let&rsquo;s start with its configuration.</p>
+
+<ul>
+<li><p>jib-maven-plugin in pom.xml</p>
+
+<pre><code>&lt;plugin&gt;
+&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+&lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+&lt;/plugin&gt;
+&lt;plugin&gt;
+&lt;groupId&gt;com.google.cloud.tools&lt;/groupId&gt;
+&lt;artifactId&gt;jib-maven-plugin&lt;/artifactId&gt;
+&lt;version&gt;${jib.version}&lt;/version&gt;
+&lt;configuration&gt;
+    &lt;from&gt;
+        &lt;image&gt;openjdk:alpine&lt;/image&gt;
+    &lt;/from&gt;
+    &lt;to&gt;
+        &lt;image&gt;docker.io/akjamie/${artifactId}:${project.version}&lt;/image&gt;
+        &lt;!-- &lt;credHelper&gt;wincred&lt;/credHelper&gt; --&gt;
+        &lt;credHelper&gt;desktop&lt;/credHelper&gt;
+    &lt;/to&gt;
+    &lt;container&gt;
+        &lt;creationTime&gt;USE_CURRENT_TIMESTAMP&lt;/creationTime&gt;
+    &lt;/container&gt;
+    &lt;allowInsecureRegistries&gt;true&lt;/allowInsecureRegistries&gt;
+&lt;/configuration&gt;
+&lt;/plugin&gt;
+</code></pre></li>
+
+<li><p>command run to build image and push</p>
+
+<pre><code>mvn clean compile jib:build
+</code></pre>
+
+<p>after finishes, check the result in local and docker hub:
+<img src='/img/2020-11-29-run-application-on-k8s/docker-image-01.png' style="height: 45px;margin-left: 0px;"/>
+<img src='/img/2020-11-29-run-application-on-k8s/docker-image-02.png' style="height: 330px;margin-left: 0px;"/></p></li>
+</ul>
+
+<h1 id="use-local-persistent-volume-to-share-the-service-configs">Use Local Persistent Volume to share the service configs</h1>
+
+<p>In our application, we&rsquo;re using the native mode for config server to load the application configs, hence we need to share
+the files to the pod or container in Kubernates cluster. to achive this goal, what we need to do as following:<br />
+1. create storage class - sc<br />
+2. create persistent volume - pv<br />
+3. create persistent volume claim - pvc</p>
+
+<h2 id="create-storage-class">create storage class</h2>
+
+<p>config file - k8s-localpv-storage-class.yml</p>
+
+<pre><code>kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+</code></pre>
+
+<p>detailed configs please refer to <a href="https://kubernetes.io/docs/concepts/storage/storage-classes/">https://kubernetes.io/docs/concepts/storage/storage-classes/</a></p>
+
+<p>use command to create storage class</p>
+
+<pre><code>kubectl apply -f k8s-localpv-storage-class.yml
+</code></pre>
+
+<h2 id="create-persistent-volume">create persistent volume</h2>
+
+<p>config file - k8s-localpv-persistent-volume.yml</p>
+
+<pre><code>apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv-service-config
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /Users/jamie/Documents/work-benches/k8s-sandbox
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - docker-desktop
+</code></pre>
+
+<blockquote>
+<p>1.spec.local.path, specify the path in host you want to share with k8s cluster<br />
+2.spec.accessModes, here we want to share the service configs for centralized configuration management, only allow
+pod/container to consume it rather than modify.</p>
+</blockquote>
+
+<p>similar command should use here to create PV.</p>
+
+<pre><code>kubectl apply -f k8s-localpv-persistent-volume.yml
+</code></pre>
+
+<p><a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">https://kubernetes.io/docs/concepts/storage/persistent-volumes/</a></p>
+
+<h2 id="create-pvc">create PVC</h2>
+
+<p>config file - k8s-localpv-pv-claim.yml</p>
+
+<pre><code>kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-config-service
+spec:
+  accessModes:
+    - ReadOnlyMany
+  storageClassName: local-storage
+  resources:
+    requests:
+      storage: 100Mi
+</code></pre>
+
+<h2 id="verify-the-resource-created">verify the resource created</h2>
+
+<p>use kubectl command to check the resource we created in above 3 steps.</p>
+
+<pre><code>Jamies-MacBook-Pro:scripts jamie$ kubectl get sc
+NAME                 PROVISIONER                    AGE
+hostpath (default)   docker.io/hostpath             174d
+local-storage        kubernetes.io/no-provisioner   21h
+Jamies-MacBook-Pro:scripts jamie$ kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                         STORAGECLASS    REASON   AGE
+local-pv-service-config                    100Mi      ROX            Retain           Bound    default/pvc-config-service    local-storage            10h
+pvc-8fa57c9e-b10d-4ee4-ae9a-f794189e16e2   100Mi      RWO            Delete           Bound    default/example-local-claim   hostpath                 172d
+Jamies-MacBook-Pro:scripts jamie$ kubectl get pvc
+NAME                  STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS    AGE
+example-local-claim   Bound    pvc-8fa57c9e-b10d-4ee4-ae9a-f794189e16e2   100Mi      RWO            hostpath        172d
+pvc-config-service    Bound    local-pv-service-config                    100Mi      ROX            local-storage   10h
+Jamies-MacBook-Pro:scripts jamie$ kubectl describe sc/local-storage
+Name:            local-storage
+IsDefaultClass:  No
+Annotations:     kubectl.kubernetes.io/last-applied-configuration={&quot;apiVersion&quot;:&quot;storage.k8s.io/v1&quot;,&quot;kind&quot;:&quot;StorageClass&quot;,&quot;metadata&quot;:{&quot;annotations&quot;:{},&quot;name&quot;:&quot;local-storage&quot;},&quot;provisioner&quot;:&quot;kubernetes.io/no-provisioner&quot;,&quot;volumeBindingMode&quot;:&quot;WaitForFirstConsumer&quot;}
+
+Provisioner:           kubernetes.io/no-provisioner
+Parameters:            &lt;none&gt;
+AllowVolumeExpansion:  &lt;unset&gt;
+MountOptions:          &lt;none&gt;
+ReclaimPolicy:         Delete
+VolumeBindingMode:     WaitForFirstConsumer
+Events:                &lt;none&gt;
+</code></pre>
+
+<h1 id="deploy-application-and-share-the-access-entry">Deploy application and share the access entry</h1>
+
+<h2 id="application-deployment">application deployment</h2>
+
+<p>config for deployment in K8S</p>
+
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-service-deployment
+  labels:
+    app: config-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: config-service
+  template:
+    metadata:
+      labels:
+        app: config-service
+    spec:
+      containers:
+        - name: config-service
+          image: docker.io/akjamie/config-service:2.0.0
+          env:
+            - name: CONFIG_ROOT_PATH
+              value: &quot;/app/data/service-configs&quot;
+          ports:
+            - containerPort: 8888
+          volumeMounts:
+            - mountPath: &quot;/app/data&quot;
+              name: storage
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: pvc-config-service
+</code></pre>
+
+<blockquote>
+<p>1.spec.replicas, as name depicts, how many replicas of the application you want to run
+2.spec.containers.volumeMounts.mountPath, we mount the service configs path defined in local persistent volume to
+&lsquo;/app/data/service-configs&rsquo;, so that use it to set the env variable CONFIG_ROOT_PATH, CONFIG_ROOT_PATH will override the <em>&lsquo;search-locations&rsquo;</em> defined in
+bootstrap.yml</p>
+</blockquote>
+
+<p>run command to create deployment to create pods.</p>
+
+<pre><code>Jamies-MacBook-Pro:scripts jamie$ kubectl get pods
+NAME                                         READY   STATUS    RESTARTS   AGE
+config-service-deployment-84c8fc544b-g8clz   1/1     Running   1          10h
+config-service-deployment-84c8fc544b-rbjww   1/1     Running   1          10h
+</code></pre>
+
+<p>use &lsquo;kubectl logs -f pod config-service-deployment-84c8fc544b-g8clz&rsquo; to check the application startup logs if you want.
+now, two replicas are running for config-services on port 8888, it can be accessible to other applications within K8s
+cluster but cannot access from outside either local host, then let&rsquo;s move to the last steps.</p>
+
+<h1 id="create-service-to-expose-service-access">Create service to expose service access</h1>
+
+<p>there are few ways to route external traffic into k8s cluster to reach pod at where the request really be handled. please
+refer to <a href="https://kubernetes.io/docs/concepts/services-networking/service/">https://kubernetes.io/docs/concepts/services-networking/service/</a>. We choose NodePort here for demonstration purpose.</p>
+
+<p>config:</p>
+
+<pre><code>apiVersion: v1
+kind: Service
+metadata:
+  name: config-service-service
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 8888
+      targetPort: 8888
+      nodePort: 30001
+      protocol: TCP
+  selector:
+    app: config-service
+</code></pre>
+
+<p>nodePort: external access port, like <a href="http://localhost:30001">http://localhost:30001</a><br />
+targetPort: port on container<br />
+port: service port, it can be used to access config-service within cluster.</p>
+
+<p>create and verify the result:</p>
+
+<pre><code>Jamies-MacBook-Pro:scripts jamie$ kubectl get services
+NAME                     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+config-service-service   NodePort    10.108.51.175   &lt;none&gt;        8888:30001/TCP   10h
+kubernetes               ClusterIP   10.96.0.1       &lt;none&gt;        443/TCP          174d
+Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/dev/
+{&quot;name&quot;:&quot;catalog-service&quot;,&quot;profiles&quot;:[&quot;dev&quot;],&quot;label&quot;:null,&quot;version&quot;:null,&quot;state&quot;:null,
+</code></pre>
+
+<p>Referred article/blogs:
+<a href="https://www.jianshu.com/p/8275f2031c83">https://www.jianshu.com/p/8275f2031c83</a><br />
+<a href="https://blog.csdn.net/kenkao/article/details/86764788">https://blog.csdn.net/kenkao/article/details/86764788</a></p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2020-09-07-gcp-network-connection/" data-toggle="tooltip" data-placement="top" title="GCP Network Connection (1)">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mongo" title="mongo">
+                            mongo
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring-cloud">
+                            spring-cloud
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction-management">
+                            transaction-management
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2020
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>

@@ -6,19 +6,18 @@
     <description>Recent content in AWS on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Sep 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 10 Jun 2019 13:36:10 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>GCP network connections(1)</title>
-      <link>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</link>
-      <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
+      <title>AWS Serveless Application Model</title>
+      <link>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</link>
+      <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</guid>
-      <description>To document the setup process for VPC peering accross different GCP project VPCs for demo purpose only.
-Setup VPC peering accross two GCP projects in this demo, will create two GCP projects, and setup VPC network peering to work as network bridge to make sure the vm in one of GCP project can access the MongoDB installed on VM of another GCP project. preparation Mongo backups 1&amp;gt; backup MongoDB</description>
+      <guid>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</guid>
+      <description>AWS SAM - lambda demo Demo User Case User requirement: dynamically get regional mobile app feature availability status,status data is kept in AWS dynamodb. Projectcodes hierarchical structure presented as below ├── README.md -- This instructions file ├── event.json -- API Gateway Proxy Integration event payload ├── feature_availability -- Source code for a lambda function │ ├── __init__.py │ ├── app.py</description>
     </item>
     
   </channel>

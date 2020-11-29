@@ -6,10 +6,28 @@
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Sep 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 29 Nov 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>K8S</title>
+      <link>http://akjamie.github.io/tags/k8s/</link>
+      <pubDate>Sun, 29 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/k8s/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud</title>
+      <link>http://akjamie.github.io/tags/spring-cloud/</link>
+      <pubDate>Sun, 29 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/spring-cloud/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>GCP</title>
@@ -102,20 +120,11 @@
     </item>
     
     <item>
-      <title>Distrubuted Transaction</title>
-      <link>http://akjamie.github.io/tags/distrubuted-transaction/</link>
+      <title>Distributed Transaction</title>
+      <link>http://akjamie.github.io/tags/distributed-transaction/</link>
       <pubDate>Tue, 23 Jul 2019 19:40:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/distrubuted-transaction/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Microservice</title>
-      <link>http://akjamie.github.io/tags/microservice/</link>
-      <pubDate>Tue, 23 Jul 2019 19:40:10 +0000</pubDate>
-      
-      <guid>http://akjamie.github.io/tags/microservice/</guid>
+      <guid>http://akjamie.github.io/tags/distributed-transaction/</guid>
       <description></description>
     </item>
     
@@ -143,15 +152,6 @@
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       
       <guid>http://akjamie.github.io/tags/spring-boot/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Spring Cloud</title>
-      <link>http://akjamie.github.io/tags/spring-cloud/</link>
-      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
-      
-      <guid>http://akjamie.github.io/tags/spring-cloud/</guid>
       <description></description>
     </item>
     
@@ -201,11 +201,11 @@
     </item>
     
     <item>
-      <title>AWS SAM</title>
-      <link>http://akjamie.github.io/tags/aws-sam/</link>
+      <title>AWS</title>
+      <link>http://akjamie.github.io/tags/aws/</link>
       <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/aws-sam/</guid>
+      <guid>http://akjamie.github.io/tags/aws/</guid>
       <description></description>
     </item>
     
