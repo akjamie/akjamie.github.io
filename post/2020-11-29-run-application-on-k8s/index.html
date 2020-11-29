@@ -227,14 +227,14 @@
 </ul></li>
 <li><a href="#use-local-persistent-volume-to-share-the-service-configs">Use Local Persistent Volume to share the service configs</a>
 <ul>
-<li><a href="#create-storage-class">create storage class</a></li>
-<li><a href="#create-persistent-volume">create persistent volume</a></li>
-<li><a href="#create-pvc">create PVC</a></li>
-<li><a href="#verify-the-resource-created">verify the resource created</a></li>
+<li><a href="#create-storage-class">Create storage class</a></li>
+<li><a href="#create-persistent-volume">Create persistent volume</a></li>
+<li><a href="#create-pvc">Create PVC</a></li>
+<li><a href="#verify-the-resource-created">Verify the resource created</a></li>
 </ul></li>
 <li><a href="#deploy-application-and-share-the-access-entry">Deploy application and share the access entry</a>
 <ul>
-<li><a href="#application-deployment">application deployment</a></li>
+<li><a href="#application-deployment">Application deployment</a></li>
 </ul></li>
 <li><a href="#create-service-to-expose-service-access">Create service to expose service access</a></li>
 </ul>
@@ -352,7 +352,7 @@ the files to the pod or container in Kubernates cluster. to achive this goal, wh
 2. create persistent volume - pv<br />
 3. create persistent volume claim - pvc</p>
 
-<h2 id="create-storage-class">create storage class</h2>
+<h2 id="create-storage-class">Create storage class</h2>
 
 <p>config file - k8s-localpv-storage-class.yml</p>
 
@@ -371,7 +371,7 @@ volumeBindingMode: WaitForFirstConsumer
 <pre><code>kubectl apply -f k8s-localpv-storage-class.yml
 </code></pre>
 
-<h2 id="create-persistent-volume">create persistent volume</h2>
+<h2 id="create-persistent-volume">Create persistent volume</h2>
 
 <p>config file - k8s-localpv-persistent-volume.yml</p>
 
@@ -411,7 +411,7 @@ pod/container to consume it rather than modify.</p>
 
 <p><a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">https://kubernetes.io/docs/concepts/storage/persistent-volumes/</a></p>
 
-<h2 id="create-pvc">create PVC</h2>
+<h2 id="create-pvc">Create PVC</h2>
 
 <p>config file - k8s-localpv-pv-claim.yml</p>
 
@@ -428,7 +428,7 @@ spec:
       storage: 100Mi
 </code></pre>
 
-<h2 id="verify-the-resource-created">verify the resource created</h2>
+<h2 id="verify-the-resource-created">Verify the resource created</h2>
 
 <p>use kubectl command to check the resource we created in above 3 steps.</p>
 
@@ -460,7 +460,7 @@ Events:                &lt;none&gt;
 
 <h1 id="deploy-application-and-share-the-access-entry">Deploy application and share the access entry</h1>
 
-<h2 id="application-deployment">application deployment</h2>
+<h2 id="application-deployment">Application deployment</h2>
 
 <p>config for deployment in K8S</p>
 
