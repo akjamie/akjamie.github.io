@@ -6,10 +6,19 @@
     <description>Recent content on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 29 Nov 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 09 Mar 2021 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How i prepare the Google Cloud Professional Cloud Architect Certificate</title>
+      <link>http://akjamie.github.io/post/2021-03-09-gcp-professional-cerified-architecture-prep/</link>
+      <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2021-03-09-gcp-professional-cerified-architecture-prep/</guid>
+      <description>Today i took Google Cloud Certified Professional Cloud Architect exam, the result is pass，through the final result is being reviewed for compliance with exam terms and conditions, i&amp;rsquo;d like to summarize the preparation path i went through for this exam, hope that could help others who want to take the same exam. About the exam Professional Cloud Architect is</description>
+    </item>
     
     <item>
       <title>Kubernates - Practice</title>
@@ -41,16 +50,6 @@ Setup VPC peering accross two GCP projects in this demo, will create two GCP pro
       
       <guid>http://akjamie.github.io/post/2020-09-05-mongo-basics/</guid>
       <description>Mongo installation(for test) docker command for local mongo installation docker run -p 27017:27017 -v /Users/jamie/Documents/work-benches/mongo/test:/data/db --name mongo -d mongo:latest check mongo running status docker ps | grep mongo 9161bd4811a8 mongo:latest &amp;ldquo;docker-entrypoint.s…&amp;rdquo; 6 days ago Up 6 days</description>
-    </item>
-    
-    <item>
-      <title>Liquibase</title>
-      <link>http://akjamie.github.io/post/2019-10-20-liquibase-introduction/</link>
-      <pubDate>Sun, 20 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>http://akjamie.github.io/post/2019-10-20-liquibase-introduction/</guid>
-      <description>Simple introduction Liquibase is open source tool for database change and deployment management. provides a database agnostic way to deliver fast, safe, repeatable database deployments, more details please refer to Liquibase website
-Support more than 10 databases, like Mysql, Oracle, SQL Server,DB2,etc.</description>
     </item>
     
     <item>

@@ -15,15 +15,15 @@
     
 
     
-    <meta name="title" content="Free CA Certs setup using Certbot &#43; Docker &#43; Nginx" />
-    <meta property="og:title" content="Free CA Certs setup using Certbot &#43; Docker &#43; Nginx" />
-    <meta property="twitter:title" content="Free CA Certs setup using Certbot &#43; Docker &#43; Nginx" />
+    <meta name="title" content="How i prepare the Google Cloud Professional Cloud Architect Certificate" />
+    <meta property="og:title" content="How i prepare the Google Cloud Professional Cloud Architect Certificate" />
+    <meta property="twitter:title" content="How i prepare the Google Cloud Professional Cloud Architect Certificate" />
     
 
     
-    <meta name="description" content="介绍用如何使用Let&#39;s Encrypt&#39;s Certbot生成CA证书，并配置在nginx中保护站点">
-    <meta property="og:description" content="介绍用如何使用Let&#39;s Encrypt&#39;s Certbot生成CA证书，并配置在nginx中保护站点" />
-    <meta property="twitter:description" content="介绍用如何使用Let&#39;s Encrypt&#39;s Certbot生成CA证书，并配置在nginx中保护站点" />
+    <meta name="description" content="个人经验分享">
+    <meta property="og:description" content="个人经验分享" />
+    <meta property="twitter:description" content="个人经验分享" />
     
 
     
@@ -34,9 +34,9 @@
     <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Free CA Certs setup using Certbot &#43; Docker &#43; Nginx-Jamie&#39;s Blog</title>
+    <title>How i prepare the Google Cloud Professional Cloud Architect Certificate-Jamie&#39;s Blog</title>
 
-    <link rel="canonical" href="/2019/07/14/free-https-certs-docker-nginx/">
+    <link rel="canonical" href="/post/2021-03-09-gcp-professional-cerified-architecture-prep/">
 
     <link rel="stylesheet" href="/css/iDisqus.min.css"/>
 
@@ -161,7 +161,7 @@
 
 <style type="text/css">
     header.intro-header {
-        background-image: url('/img/background-02.jpg')
+        background-image: url('/img/background-06.jpg')
     }
 </style>
 <header class="intro-header">
@@ -171,28 +171,24 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/docker" title="Docker">
-                            Docker
+                        <a class="tag" href="/tags/gcp" title="GCP">
+                            GCP
                         </a>
                         
-                        <a class="tag" href="/tags/lets-encrypt" title="Let’s Encrypt">
-                            Let’s Encrypt
-                        </a>
-                        
-                        <a class="tag" href="/tags/nginx" title="Nginx">
-                            Nginx
+                        <a class="tag" href="/tags/certificate" title="Certificate">
+                            Certificate
                         </a>
                         
                     </div>
-                    <h1>Free CA Certs setup using Certbot &#43; Docker &#43; Nginx</h1>
+                    <h1>How i prepare the Google Cloud Professional Cloud Architect Certificate</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by 
                         
-                            Jamie Zhang
+                                 &#34;Jamie Zhang&#34;
                          
                         on 
-                        Sunday, July 14, 2019
+                        Tuesday, March 9, 2021
                         
                         
                         
@@ -222,227 +218,59 @@
                 </header>
                 <nav id="TableOfContents">
 <ul>
-<li><a href="#background">Background</a></li>
-<li><a href="#objectives">Objectives</a></li>
-<li><a href="#not-in-scope">Not In Scope</a></li>
-<li><a href="#steps-to-configure-certs">Steps to configure certs</a>
-<ul>
-<li><a href="#generate-ca-cert">Generate CA cert</a>
-<ul>
-<li><a href="#安装certbot-客户端">安装Certbot 客户端</a></li>
-<li><a href="#验证域名所有权">验证域名所有权</a></li>
-</ul></li>
-<li><a href="#配置ssl监听-for-nginx">配置SSL监听 for Nginx</a></li>
-</ul></li>
-<li><a href="#cert-renew">Cert Renew</a></li>
+<li><a href="#about-the-exam">About the exam</a></li>
+<li><a href="#prerequisites-for-this-exam">Prerequisites for this exam</a></li>
+<li><a href="#how-i-prepare-it">How I prepare it</a></li>
+<li><a href="#userful-links-blog-videos">Userful links/blog/videos</a></li>
 </ul>
 </nav>
                 
                 
 
-<h1 id="background">Background</h1>
+<p>Today i took <a href="https://cloud.google.com/certification/cloud-architect">Google Cloud Certified Professional Cloud Architect</a> exam, the result is pass，through the final result is being reviewed for compliance with exam terms and conditions, i&rsquo;d like to summarize the preparation path i went through for this exam, hope that could help others who want to take the same exam.</p>
 
-<p><strong>Let&rsquo;s Encrypt</strong> is a <a href="https://en.wikipedia.org/wiki/Certificate_authority" title="Certificate authority">certificate authority</a> that provides <a href="https://en.wikipedia.org/wiki/X.509" title="X.509">X.509</a> <a href="https://en.wikipedia.org/wiki/Public_key_certificate" title="Public key certificate">certificates</a> for <a href="https://en.wikipedia.org/wiki/Transport_Layer_Security" title="Transport Layer Security">Transport Layer Security</a> (TLS) encryption at no charge,The certificate is valid for 90 days, during which renewal can take place at anytime.
-这样我们就可以用上免费的CA cert来安全expose我们自己的网站或者服务</p>
+<h1 id="about-the-exam">About the exam</h1>
 
-<p><strong>基本的http和https</strong>知识请阅读<a href="https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/的‘背景知识’部分，作者讲述的非常很不错。">https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/的‘背景知识’部分，作者讲述的非常很不错。</a></p>
+<p><strong>Professional Cloud Architect</strong> is one of the google cloud professonal cerficates, it requires a thorough understanding of cloud architecture and Google Cloud Platform, and verifies the capability of design, develop, and manage robust, secure, scalable, highly available, and dynamic solutions to drive business objectives. so it assesses the ability of:<br />
+ - Design and plan a cloud solution architecture<br />
+ - Analyze and optimize technical and business processes<br />
+ - Manage and provision the cloud solution infrastructure<br />
+ - Manage implementations of cloud architecture<br />
+ - Design for security and compliance<br />
+ - Ensure solution and operations reliability</p>
 
-<h1 id="objectives">Objectives</h1>
+<p>The exam is 2 hours duration and totally 50 questions, the cost is 200$.  seems google will launch the Professional Cloud Architect <strong>BETA</strong>, which cost lower but with long duration and different sample study cases.</p>
 
-<p>通过例子来demo如何生成和使用Internet Security Research Group推出的Let’s Encrypt 免费证书
-主要涉及如下:<br />
-1.  Docker, docker-compose用来部署nginx<br />
-2.  Certbot，用来为域名生成CA证书</p>
+<h1 id="prerequisites-for-this-exam">Prerequisites for this exam</h1>
 
-<h1 id="not-in-scope">Not In Scope</h1>
+<p>there is no any prerequisites for this exam. While if you have any other cloud service experience or have been working with GCP service, these would be very helpful for you to pass the exam.</p>
 
-<p>Docker和docker compose的相关概念和安装，请参考<a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">docker官方文档</a></p>
+<h1 id="how-i-prepare-it">How I prepare it</h1>
 
-<h1 id="steps-to-configure-certs">Steps to configure certs</h1>
+<p>Firstly, i registered Coursera Courses - <a href="https://www.coursera.org/specializations/gcp-architecture">Architecting with Google Compute Engine Specialization</a>, which consists of 5 courses as shown in below.
+<img src='/img/2021-03-09-gcp-professional-cerified-architecture-prep/coursera-course-list.png' style="height: 380px;margin-left: 0px; margin-top: 0px;"/></p>
 
-<h2 id="generate-ca-cert">Generate CA cert</h2>
+<p>it covers the basic knowleage you should know and also there are logs of solution design tree and practices, as well as the free labs on qwiklabs. The labs are very useful to understand what&rsquo;s the service and how it works, it&rsquo;s the fast approach to get hands-on experience.</p>
 
-<h3 id="安装certbot-客户端">安装Certbot 客户端</h3>
+<p>Secondly, register GCP service account, which has free credit, you could try some cases for free.</p>
 
-<pre><code>wget https://dl.eff.org/certbot-auto
-chmod a+x ./certbot-auto
-./certbot-auto --help
-</code></pre>
+<p>Thirdly, walk through the official docs - <a href="https://cloud.google.com/products">products</a>, mainly focus on the concepts and best practices. it would take around 2 weeks(1~2 hours per day).  i also would like to recommand to do some practices on the GCP with your free account.</p>
 
-<h3 id="验证域名所有权">验证域名所有权</h3>
+<p>Fourthly, to master the sample study cases which will appear in your later exam.<br />
+<a href="https://jayendrapatil.com/google-cloud-mountkirk-games-case-study/">MountKrik</a>
+<a href="https://jayendrapatil.com/google-cloud-dress4win-case-study/">Dress4Win</a><br />
+<a href="https://jayendrapatil.com/google-cloud-terramearth-case-study/">TerramEarth</a></p>
 
-<p>该步骤需要启动nginx:<br />
-a. 准备docker-compose file</p>
+<p>Fifthly, learned Coursera course - <a href="https://www.coursera.org/learn/preparing-cloud-professional-cloud-architect-exam/home/welcome">https://www.coursera.org/learn/preparing-cloud-professional-cloud-architect-exam/home/welcome</a>, it will give you some design best practice and suggestions.</p>
 
-<pre><code>version: '3.0'
-services:
-  nginx:
-    restart: always
-    image: nginx:1.15.6
-    ports:
-     - 80:80
-     - 443:443
-    volumes:
-     - ./conf.d:/etc/nginx/conf.d
-     - ./log:/var/log/nginx
-     - ./wwwroot:/var/www
-     - /etc/letsencrypt:/etc/letsencrypt
-</code></pre>
+<p>Last but not the least, take the <a href="https://cloud.google.com/certification/sample-questions/cloud-architect">sample questions test</a> to verify the knowledge matering status, try to get 80+% correctness.</p>
 
-<blockquote>
-<p><strong>Docker volume的映射关系</strong>
-./conf.d nginx的配置所在
-./log 日志文件位置
-./wwwroot 项目路径
-/etc/letsencrypt CA cert的父目录</p>
-</blockquote>
+<h1 id="userful-links-blog-videos">Userful links/blog/videos</h1>
 
-<p>b. 修改nginx 配置文件 .conf.d/app.conf</p>
-
-<pre><code>server {
-    listen   80;
-    server_name   domain.com;
-    location ^~ /.well-known/acme-challenge/ {
-       default_type &quot;text/plain&quot;;
-       root     /var/www;
-    }
-    location = /.well-known/acme-challenge/ {
-       return 404;
-    }
-}
-</code></pre>
-
-<blockquote>
-<p>PS:
-如上两个location配置是为了通过 Let’s Encrypt 的验证，验证域名归属</p>
-</blockquote>
-
-<p>c. 启动nginx</p>
-
-<pre><code>root@aws-techpoc-c02:~/web# ls conf.d/app.conf
-root@aws-techpoc-c02:~/web# ls wwwroot/
-index.html
-root@aws-techpoc-c02:~/web# docker-compose up -d
-Creating network &quot;web_default&quot; with the default driver
-Creating web_nginx_1 ...
-Creating web_nginx_1 ... done
-</code></pre>
-
-<p>d. 生成Cert</p>
-
-<pre><code>./certbot-auto certonly -d domain1.com domain2.com
-</code></pre>
-
-<p><em>该步骤过程中会自动运行和安装很多linux的以来包，不用干预，其中有两布需要注意：
-i.选择用standalone的方式运行还是webroot，一般80端口已经备用了，无法使用standalone，所以选择webroot方式，然后输入webroot的地址，及上面指定的主机项目目录，如本例，/root/web/wwwroot
-2.有一步要求输入邮箱地址的提示，照着输入自己的邮箱即可，顺利完成的话，屏幕上会有提示信息。
-最后，证书成功成功后，会有如下信息:</em><br />
-IMPORTANT NOTES:
- Congratulations! Your certificate and chain have been saved at
-   /etc/letsencrypt/live/<strong><domain.com></strong>/fullchain.pem. Your cert
-   will expire on xxxx-xx-xxxx. To obtain a new version of the
-   certificate in the future, simply run Let&rsquo;s Encrypt again.
-至此，证书就生成好了，接下来就可以去配置nginx ssl监听了</p>
-
-<h2 id="配置ssl监听-for-nginx">配置SSL监听 for Nginx</h2>
-
-<p>a. 修改nginx配置文件</p>
-
-<pre><code>server {
-    listen   443 ssl;
-    server_name  domain.com;
-    ssl_certificate        /etc/letsencrypt/live/domain.com/fullchain.pem;
-    ssl_certificate_key    /etc/letsencrypt/live/domain.com/privkey.pem;
-
-    location / {
-        root /var/www;
-        index index.jsp index.html index.htm index.php;
-    }
-
-    location /proxy/ {
-        root /var/www;
-        index index.jsp index.html index.htm index.php;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-
-        proxy_pass http://172.19.0.1:8080/;
-    }
-
-    error_page   500 502 503 504  /50x.html;
-
-    location = /50x.html {
-        root   /usr/share/nginx/html;
-    }
-}
-
-server {
-    listen   80;
-    server_name   domain.com www.domain.com;
-    return 301 https://$server_name$request_uri;            
-}
-</code></pre>
-
-<blockquote>
-<p>proxy_pass 指定代理地址，注意代理地址后面有没有’/‘,区别很大</p>
-</blockquote>
-
-<p>b. [optional]准备一个测试的html，用来检测nginx配置是否正常，./wwwroot/index.html</p>
-
-<pre><code>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-   &lt;head&gt;
-     &lt;title&gt;TEST WebSite&lt;/title&gt;
-   &lt;/head&gt;    
-   &lt;body&gt;
-       &lt;div&gt;Hello, this is a test web site&lt;/div&gt;
-    &lt;body&gt;
-&lt;/html&gt;
-</code></pre>
-
-<p>c. Reload nginx config</p>
-
-<pre><code>docker container exec &lt;container&gt; nginx -s reload
-</code></pre>
-
-<p>然后就可以去测试了，https://<domain.com>,如果成功可以显示那个test html page，如果有问题，请使用docker logs -f <container>,或者查看日志目录先access.log 和 error.log</p>
-
-<h1 id="cert-renew">Cert Renew</h1>
-
-<p>Let’s Encrypt 签发的证书有效期只有 90 天，所以需要每隔三个月就要更新一次安全证书,为了能让你的网站能被安全的保护起来，所以是非常有必要去更新cert的。certbot-auto 支持手动和自动更新两种cert更新模式，我们来测试一下这两种模式
-首先运行测试一下能否更新,调试模式，不是真的更新</p>
-
-<pre><code>./certbot-auto renew --dry-run
-</code></pre>
-
-<p>获得的结果截图如下
-<img src="/img/2019-07-14-free-https-certs-docker-nginx/20190714194434.png" style="margin-left:20px" /></p>
-
-<p>手动更新模式：</p>
-
-<pre><code>./certbot-auto renew -v
-</code></pre>
-
-<p>自动更新模式：</p>
-
-<pre><code>./certbot-auto renew --quiet --no-self-upgrade
-</code></pre>
-
-<blockquote>
-<p>PS:该部分一般有运维人员集中进行处理，CA证书自动生成后还需要被加载一下去刷新，在本例中，需要运行docker container exec <container> nginx -s reload 去刷新</p>
-</blockquote>
-
-<p>更新后的结果展示
-<img src="/img/2019-07-14-free-https-certs-docker-nginx/20190714195417.png" style="margin-left:20px" /></p>
-
-<p>Q&amp;A:
-1. policy-forbids-issuing-for-name-on-amazon-ec2-domain
-<a href="https://community.letsencrypt.org/t/policy-forbids-issuing-for-name-on-amazon-ec2-domain/12692/3">issue related post</a><br />
-amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk domain names，及无法使用free cert for aws，可以考虑使用route53</p>
-
-<p>Related posts:
-<a href="https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/">https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/</a>
-<a href="https://www.jianshu.com/p/c136c7ec2572">https://www.jianshu.com/p/c136c7ec2572</a></p>
+<ol>
+<li><a href="https://jayendrapatil.com/google-cloud-professional-cloud-architect-certification-learning-path/">https://jayendrapatil.com/google-cloud-professional-cloud-architect-certification-learning-path/</a></li>
+<li>Youtube videos - <a href="https://www.youtube.com/channel/UCL8vwy2jhEtQrC-Rx6qzCZg">Learn GCP with Mahesh</a>, including demo for the MountKrik/Dress4Win/TerramEarth and userful tips or summaries.</li>
+</ol>
 
 
                 
@@ -491,15 +319,10 @@ amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk 
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/" data-toggle="tooltip" data-placement="top" title="Linux network proxy setup for desktop and terminal">&larr;
+                        <a href="/post/2020-11-29-run-application-on-k8s/" data-toggle="tooltip" data-placement="top" title="Kubernates - Practice">&larr;
                             Previous Post</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/post/2019-07-21-spring-batch-single-process-remote-partitioning/" data-toggle="tooltip" data-placement="top" title="Spring batch - single process &amp; remote partitioning(multi instances)">Next
-                            Post &rarr;</a>
-                    </li>
                     
                 </ul>
 
