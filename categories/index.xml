@@ -2,48 +2,48 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on Jamie&#39;s Blog</title>
-    <link>http://akjamie.github.io/categories/</link>
+    <link>http://localhost:1313/categories/</link>
     <description>Recent content in Categories on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 09 Mar 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 08 May 2021 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://akjamie.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Cloud</title>
-      <link>http://akjamie.github.io/categories/cloud/</link>
-      <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
+      <title>Microservice</title>
+      <link>http://localhost:1313/categories/microservice/</link>
+      <pubDate>Sat, 08 May 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/categories/cloud/</guid>
+      <guid>http://localhost:1313/categories/microservice/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Microservice</title>
-      <link>http://akjamie.github.io/categories/microservice/</link>
-      <pubDate>Sun, 29 Nov 2020 00:00:00 +0000</pubDate>
+      <title>Cloud</title>
+      <link>http://localhost:1313/categories/cloud/</link>
+      <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/categories/microservice/</guid>
+      <guid>http://localhost:1313/categories/cloud/</guid>
       <description></description>
     </item>
     
     <item>
       <title>NoSQL</title>
-      <link>http://akjamie.github.io/categories/nosql/</link>
+      <link>http://localhost:1313/categories/nosql/</link>
       <pubDate>Sat, 05 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/categories/nosql/</guid>
+      <guid>http://localhost:1313/categories/nosql/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Others</title>
-      <link>http://akjamie.github.io/categories/others/</link>
+      <link>http://localhost:1313/categories/others/</link>
       <pubDate>Sun, 14 Jul 2019 18:30:05 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/categories/others/</guid>
+      <guid>http://localhost:1313/categories/others/</guid>
       <description></description>
     </item>
     

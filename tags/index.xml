@@ -2,228 +2,246 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Jamie&#39;s Blog</title>
-    <link>http://akjamie.github.io/tags/</link>
+    <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 09 Mar 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 08 May 2021 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Batch</title>
+      <link>http://localhost:1313/tags/batch/</link>
+      <pubDate>Sat, 08 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/batch/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Microservice</title>
+      <link>http://localhost:1313/tags/microservice/</link>
+      <pubDate>Sat, 08 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/microservice/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Certificate</title>
-      <link>http://akjamie.github.io/tags/certificate/</link>
+      <link>http://localhost:1313/tags/certificate/</link>
       <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/certificate/</guid>
+      <guid>http://localhost:1313/tags/certificate/</guid>
       <description></description>
     </item>
     
     <item>
       <title>GCP</title>
-      <link>http://akjamie.github.io/tags/gcp/</link>
+      <link>http://localhost:1313/tags/gcp/</link>
       <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/gcp/</guid>
+      <guid>http://localhost:1313/tags/gcp/</guid>
       <description></description>
     </item>
     
     <item>
       <title>K8S</title>
-      <link>http://akjamie.github.io/tags/k8s/</link>
+      <link>http://localhost:1313/tags/k8s/</link>
       <pubDate>Sun, 29 Nov 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/k8s/</guid>
+      <guid>http://localhost:1313/tags/k8s/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Spring Cloud</title>
-      <link>http://akjamie.github.io/tags/spring-cloud/</link>
+      <link>http://localhost:1313/tags/spring-cloud/</link>
       <pubDate>Sun, 29 Nov 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/spring-cloud/</guid>
+      <guid>http://localhost:1313/tags/spring-cloud/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Mongo</title>
-      <link>http://akjamie.github.io/tags/mongo/</link>
+      <link>http://localhost:1313/tags/mongo/</link>
       <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/mongo/</guid>
+      <guid>http://localhost:1313/tags/mongo/</guid>
       <description></description>
     </item>
     
     <item>
       <title>VPC</title>
-      <link>http://akjamie.github.io/tags/vpc/</link>
+      <link>http://localhost:1313/tags/vpc/</link>
       <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/vpc/</guid>
+      <guid>http://localhost:1313/tags/vpc/</guid>
       <description></description>
     </item>
     
     <item>
       <title>NoSQL</title>
-      <link>http://akjamie.github.io/tags/nosql/</link>
+      <link>http://localhost:1313/tags/nosql/</link>
       <pubDate>Sat, 05 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/nosql/</guid>
+      <guid>http://localhost:1313/tags/nosql/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Spring</title>
-      <link>http://akjamie.github.io/tags/spring/</link>
+      <link>http://localhost:1313/tags/spring/</link>
       <pubDate>Sat, 31 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/spring/</guid>
+      <guid>http://localhost:1313/tags/spring/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Transaction Management</title>
-      <link>http://akjamie.github.io/tags/transaction-management/</link>
+      <link>http://localhost:1313/tags/transaction-management/</link>
       <pubDate>Sat, 31 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/transaction-management/</guid>
+      <guid>http://localhost:1313/tags/transaction-management/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Redis</title>
-      <link>http://akjamie.github.io/tags/redis/</link>
+      <link>http://localhost:1313/tags/redis/</link>
       <pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/redis/</guid>
+      <guid>http://localhost:1313/tags/redis/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Design</title>
-      <link>http://akjamie.github.io/tags/design/</link>
+      <link>http://localhost:1313/tags/design/</link>
       <pubDate>Tue, 23 Jul 2019 19:40:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/design/</guid>
+      <guid>http://localhost:1313/tags/design/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Distributed Transaction</title>
-      <link>http://akjamie.github.io/tags/distributed-transaction/</link>
+      <link>http://localhost:1313/tags/distributed-transaction/</link>
       <pubDate>Tue, 23 Jul 2019 19:40:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/distributed-transaction/</guid>
+      <guid>http://localhost:1313/tags/distributed-transaction/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Docker</title>
-      <link>http://akjamie.github.io/tags/docker/</link>
+      <link>http://localhost:1313/tags/docker/</link>
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/docker/</guid>
+      <guid>http://localhost:1313/tags/docker/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Spring Batch</title>
-      <link>http://akjamie.github.io/tags/spring-batch/</link>
+      <link>http://localhost:1313/tags/spring-batch/</link>
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/spring-batch/</guid>
+      <guid>http://localhost:1313/tags/spring-batch/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Spring Boot</title>
-      <link>http://akjamie.github.io/tags/spring-boot/</link>
+      <link>http://localhost:1313/tags/spring-boot/</link>
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/spring-boot/</guid>
+      <guid>http://localhost:1313/tags/spring-boot/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Let’s Encrypt</title>
-      <link>http://akjamie.github.io/tags/lets-encrypt/</link>
+      <link>http://localhost:1313/tags/lets-encrypt/</link>
       <pubDate>Sun, 14 Jul 2019 18:30:05 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/lets-encrypt/</guid>
+      <guid>http://localhost:1313/tags/lets-encrypt/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Nginx</title>
-      <link>http://akjamie.github.io/tags/nginx/</link>
+      <link>http://localhost:1313/tags/nginx/</link>
       <pubDate>Sun, 14 Jul 2019 18:30:05 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/nginx/</guid>
+      <guid>http://localhost:1313/tags/nginx/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Proxychain</title>
-      <link>http://akjamie.github.io/tags/proxychain/</link>
+      <link>http://localhost:1313/tags/proxychain/</link>
       <pubDate>Sun, 14 Jul 2019 14:50:52 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/proxychain/</guid>
+      <guid>http://localhost:1313/tags/proxychain/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Shadowsocks</title>
-      <link>http://akjamie.github.io/tags/shadowsocks/</link>
+      <link>http://localhost:1313/tags/shadowsocks/</link>
       <pubDate>Sun, 14 Jul 2019 14:50:52 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/shadowsocks/</guid>
+      <guid>http://localhost:1313/tags/shadowsocks/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Harshicorp Vault</title>
-      <link>http://akjamie.github.io/tags/harshicorp-vault/</link>
+      <link>http://localhost:1313/tags/harshicorp-vault/</link>
       <pubDate>Sun, 14 Jul 2019 12:10:27 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/harshicorp-vault/</guid>
+      <guid>http://localhost:1313/tags/harshicorp-vault/</guid>
       <description></description>
     </item>
     
     <item>
       <title>AWS</title>
-      <link>http://akjamie.github.io/tags/aws/</link>
+      <link>http://localhost:1313/tags/aws/</link>
       <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/aws/</guid>
+      <guid>http://localhost:1313/tags/aws/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Python</title>
-      <link>http://akjamie.github.io/tags/python/</link>
+      <link>http://localhost:1313/tags/python/</link>
       <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/python/</guid>
+      <guid>http://localhost:1313/tags/python/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Serveless</title>
-      <link>http://akjamie.github.io/tags/serveless/</link>
+      <link>http://localhost:1313/tags/serveless/</link>
       <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/serveless/</guid>
+      <guid>http://localhost:1313/tags/serveless/</guid>
       <description></description>
     </item>
     
     <item>
       <title>UIPath</title>
-      <link>http://akjamie.github.io/tags/uipath/</link>
+      <link>http://localhost:1313/tags/uipath/</link>
       <pubDate>Sat, 19 Jan 2019 12:10:27 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/tags/uipath/</guid>
+      <guid>http://localhost:1313/tags/uipath/</guid>
       <description></description>
     </item>
     

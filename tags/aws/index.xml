@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>AWS on Jamie&#39;s Blog</title>
-    <link>http://akjamie.github.io/tags/aws/</link>
+    <link>http://localhost:1313/tags/aws/</link>
     <description>Recent content in AWS on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 10 Jun 2019 13:36:10 +0000</lastBuildDate>
     
-	<atom:link href="http://akjamie.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/tags/aws/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>AWS Serveless Application Model</title>
-      <link>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</link>
+      <link>http://localhost:1313/post/2019-07-23-aws-server-application-model/</link>
       <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</guid>
+      <guid>http://localhost:1313/post/2019-07-23-aws-server-application-model/</guid>
       <description>AWS SAM - lambda demo Demo User Case User requirement: dynamically get regional mobile app feature availability status,status data is kept in AWS dynamodb. Projectcodes hierarchical structure presented as below ├── README.md -- This instructions file ├── event.json -- API Gateway Proxy Integration event payload ├── feature_availability -- Source code for a lambda function │ ├── __init__.py │ ├── app.py</description>
     </item>
     

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://localhost:1313//img/background-09.jpg">
+    <meta property="twitter:image" content="http://localhost:1313//img/background-09.jpg" />
+    
+
+    
+    <meta name="title" content="Microservice design - practice" />
+    <meta property="og:title" content="Microservice design - practice" />
+    <meta property="twitter:title" content="Microservice design - practice" />
+    
+
+    
+    <meta name="description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP,Scrum master">
+    <meta property="og:description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP,Scrum master" />
+    <meta property="twitter:description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP,Scrum master" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Microservice design - practice-Jamie&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/2021-05-08-microservice-data-sync/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/cloud">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others">others</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/background-05.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/microservice" title="Microservice">
+                            Microservice
+                        </a>
+                        
+                        <a class="tag" href="/tags/batch" title="Batch">
+                            Batch
+                        </a>
+                        
+                    </div>
+                    <h1>Microservice design - practice</h1>
+                    <h2 class="subheading">Data sync between systems</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                 &#34;Jamie Zhang&#34;
+                         
+                        on 
+                        Saturday, May 8, 2021
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#techniques-used">Techniques used</a></li>
+<li><a href="#key-components">Key Components</a>
+<ul>
+<li><a href="#scheduling-platform">Scheduling Platform</a></li>
+<li><a href="#data-provider">Data Provider</a></li>
+<li><a href="#data-consumer">Data Consumer</a></li>
+</ul></li>
+<li><a href="#solution">Solution</a>
+<ul>
+<li><a href="#day-1-solution">Day 1 solution</a>
+<ul>
+<li><a href="#process-flow">Process Flow</a></li>
+<li><a href="#advantages-and-drawbacks">Advantages and drawbacks</a></li>
+</ul></li>
+<li><a href="#day-2-solution-not-verified">Day 2 solution(not verified)</a></li>
+</ul></li>
+<li><a href="#the-end">The end</a></li>
+</ul>
+</nav>
+                
+                
+
+<h1 id="summary">Summary</h1>
+
+<p>To mark down a batch data sync accross system solution, tested daily sync data volume is around 10w.<br />
+In this solution, adopted the message driven batch processing rather than traditional fixed time schedule batch.<br />
+Also applied the microservice design to eliminate the system dependency and well protect the data/system boundry,which is also aligned with the DEVOPS,,both team could focus on their own domain/services&rsquo; development and maintenance.</p>
+
+<h1 id="techniques-used">Techniques used</h1>
+
+<ul>
+<li>Springboot + Spring cloud config, constrained by infra, services are running on in hourse VM instances.</li>
+<li>Quartz, based on java, easy to custom against requirements, also support clustering.</li>
+<li>Oracle database</li>
+<li>JWT is adopted for system to system authentication and authorization.
+<br /></li>
+</ul>
+
+<h1 id="key-components">Key Components</h1>
+
+<h2 id="scheduling-platform">Scheduling Platform</h2>
+
+<p>The platform is implemented using Springboot + Quartz + JDBC, store the all the Quartz related configs in database, it support clustering and easy to build support portal to server better user experience on operation angle.</p>
+
+<h2 id="data-provider">Data Provider</h2>
+
+<p>To provide restful API to expose the data rather than database directly, well protected data security and integrity, especially for golden source data.</p>
+
+<h2 id="data-consumer">Data Consumer</h2>
+
+<p>Springboot appliation, mainly to load data for data calculation and aggregation, output data per requirement.</p>
+
+<h1 id="solution">Solution</h1>
+
+<p>There are two solutions i proposed, day 1 solution is the one using on production, day 2 solution is what i laterly think about after leave the project.</p>
+
+<h2 id="day-1-solution">Day 1 solution</h2>
+
+<h3 id="process-flow">Process Flow</h3>
+
+<ol>
+<li>One schedule task for data sync configured in Scheduling Platform, triggers by upstream system message.<br /></li>
+<li>Once triggered, a work task will be added into working queue and keep scheduled at preconfigured interval untill it&rsquo;s in completed status.<br /></li>
+<li>In each round scheduling, it calls downstream rest API to start the data sync process, Downstream api must support idompotent feature and calling Scheduling Platform callback api to report process status.<br /></li>
+<li>In downstream internal processing, main thread distributes the workload to sub thread for the each file to be synced, and aggregate the finaly process status, report the reconcilation result back to Scheduling Platform.<br /></li>
+<li>Alert mechanism is leveraged in Scheduling Platform to report the exceptional cases like overdue, failure according the collected task process status.<br />
+More details please refer to below diagram.
+<img src='/img/2021-05-08-microservice-data-sync/micro-service-data-sync-s1.jpg' style="height: 831px; margin-left: 0px;"/></li>
+</ol>
+
+<h3 id="advantages-and-drawbacks">Advantages and drawbacks</h3>
+
+<p>1.<strong>Advantages</strong><br />
+- Centralized task scheduling, and task scheduling implementation in Scheduling Platform is not complex.<br />
+- Task sync status is managed in downstream, it&rsquo;s stateless for Scheduling Platform, it&rsquo;s good to decouple the downstream and Scheduling Platform.<br />
+2.<strong>Drawbacks</strong><br />
+- Resource utilization rate is quite slow, only one instance is handling the whole data process at a time.<br />
+- It&rsquo;s hard to do extension to support more data sync source, like to sync a new file from another data provider(in rest services), especially on the system to system trust mechanism design.</p>
+
+<h2 id="day-2-solution-not-verified">Day 2 solution(not verified)</h2>
+
+<p>based on the solution one, day2 solution aims to resolve the drawbacks to better optimize the existing data sync and scheduling flow.<br />
+Improvements are:<br />
+1. Bring in task group concept(or actions under task), to enrich the scheduling platform to support both single task and task group, and add SYNC/ASYNC flag in the config, if all the tasks under group are in ASYNC way, then scheduling platform could handle the tasks in async way, so that the traffic could be route the multiple downstream instances to get better resource untilization.<br />
+2. Decoupled the file sync processes, each file has it&rsquo;s own task schedule and status, it&rsquo;s independent with each other, no matter the data source from same system or different system.
+3. Each file sync api could have it&rsquo;s separate authentication setting.
+<img src='/img/2021-05-08-microservice-data-sync/micro-service-data-sync-s2.jpg' style="height: 688px; margin-left: 0px;"/></p>
+
+<h1 id="the-end">The end</h1>
+
+<p>No matter what techniques are used in the behind, the solution could support business requirement is good solution, at the beginning, not every architect could put all the scenarios identified and unidentified into consideration to good support user&rsquo;s needs. Hence continue to fine tune it is required</p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://localhost:1313/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2021-03-09-gcp-professional-cerified-architecture-prep/" data-toggle="tooltip" data-placement="top" title="How i prepare the Google Cloud Professional Cloud Architect Certificate">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mongo" title="mongo">
+                            mongo
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring-cloud">
+                            spring-cloud
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction-management">
+                            transaction-management
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2021
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script data-no-instant>document.write('<script src="/livereload.js?port=1313&mindelay=10&v=2"></' + 'script>')</script></body>
+</html>

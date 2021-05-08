@@ -2,30 +2,42 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Jamie&#39;s Blog</title>
-    <link>http://akjamie.github.io/</link>
+    <link>http://localhost:1313/</link>
     <description>Recent content on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 09 Mar 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 08 May 2021 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://akjamie.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Microservice design - practice</title>
+      <link>http://localhost:1313/post/2021-05-08-microservice-data-sync/</link>
+      <pubDate>Sat, 08 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/2021-05-08-microservice-data-sync/</guid>
+      <description>Summary To mark down a batch data sync accross system solution, tested daily sync data volume is around 10w.
+In this solution, adopted the message driven batch processing rather than traditional fixed time schedule batch.
+Also applied the microservice design to eliminate the system dependency and well protect the data/system boundry,which is also aligned with the DEVOPS,,both team could focus on their own domain/services&amp;rsquo; development and maintenance.
+Techniques used  Springboot + Spring cloud config, constrained by infra, services are running on in hourse VM instances.</description>
+    </item>
+    
+    <item>
       <title>How i prepare the Google Cloud Professional Cloud Architect Certificate</title>
-      <link>http://akjamie.github.io/post/2021-03-09-gcp-professional-cerified-architecture-prep/</link>
+      <link>http://localhost:1313/post/2021-03-09-gcp-professional-cerified-architecture-prep/</link>
       <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2021-03-09-gcp-professional-cerified-architecture-prep/</guid>
+      <guid>http://localhost:1313/post/2021-03-09-gcp-professional-cerified-architecture-prep/</guid>
       <description>Today i took Google Cloud Certified Professional Cloud Architect exam, the result is pass，through the final result is being reviewed for compliance with exam terms and conditions, i&amp;rsquo;d like to summarize the preparation path i went through for this exam, hope that could help others who want to take the same exam. About the exam Professional Cloud Architect is</description>
     </item>
     
     <item>
       <title>Kubernates - Practice</title>
-      <link>http://akjamie.github.io/post/2020-11-29-run-application-on-k8s/</link>
+      <link>http://localhost:1313/post/2020-11-29-run-application-on-k8s/</link>
       <pubDate>Sun, 29 Nov 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2020-11-29-run-application-on-k8s/</guid>
+      <guid>http://localhost:1313/post/2020-11-29-run-application-on-k8s/</guid>
       <description>this page shows how to run a spring boot application on local K8S environment.
 Objectives 1.create spring boot application and build a docker image
 2.create local persistent volume to share the files from host
@@ -35,110 +47,110 @@ Before you begin install docker desktop in local and enable local k8s cluster, m
     
     <item>
       <title>GCP Network Connection (1)</title>
-      <link>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</link>
+      <link>http://localhost:1313/post/2020-09-07-gcp-network-connection/</link>
       <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</guid>
+      <guid>http://localhost:1313/post/2020-09-07-gcp-network-connection/</guid>
       <description>To document the setup process for VPC peering accross different GCP project VPCs for demo purpose only.
 Setup VPC peering accross two GCP projects in this demo, will create two GCP projects, and setup VPC network peering to work as network bridge to make sure the vm in one of GCP project can access the MongoDB installed on VM of another GCP project. preparation Mongo backups 1&amp;gt; backup MongoDB</description>
     </item>
     
     <item>
       <title>Mongo DB Basics (1)</title>
-      <link>http://akjamie.github.io/post/2020-09-05-mongo-basics/</link>
+      <link>http://localhost:1313/post/2020-09-05-mongo-basics/</link>
       <pubDate>Sat, 05 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2020-09-05-mongo-basics/</guid>
+      <guid>http://localhost:1313/post/2020-09-05-mongo-basics/</guid>
       <description>Mongo installation(for test) docker command for local mongo installation docker run -p 27017:27017 -v /Users/jamie/Documents/work-benches/mongo/test:/data/db --name mongo -d mongo:latest check mongo running status docker ps | grep mongo 9161bd4811a8 mongo:latest &amp;ldquo;docker-entrypoint.s…&amp;rdquo; 6 days ago Up 6 days</description>
     </item>
     
     <item>
       <title>Spring Transaction</title>
-      <link>http://akjamie.github.io/post/2019-08-31-spring-global-transaction/</link>
+      <link>http://localhost:1313/post/2019-08-31-spring-global-transaction/</link>
       <pubDate>Sat, 31 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2019-08-31-spring-global-transaction/</guid>
+      <guid>http://localhost:1313/post/2019-08-31-spring-global-transaction/</guid>
       <description>先回顾上一篇sprint local transaction的内容，本地事务是用于指定资源，即单一数据源，其主要结构如下： 那么我们来看看spring的g</description>
     </item>
     
     <item>
       <title>Spring Transaction</title>
-      <link>http://akjamie.github.io/post/2019-08-30-spring-local-transaction/</link>
+      <link>http://localhost:1313/post/2019-08-30-spring-local-transaction/</link>
       <pubDate>Fri, 30 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2019-08-30-spring-local-transaction/</guid>
+      <guid>http://localhost:1313/post/2019-08-30-spring-local-transaction/</guid>
       <description>事务特性和隔离级别 事务基础 事务特性 - 原子性(Atomicity) 事务包含的所有操作是一个原子单元，要么全部成功，要么全部失败 - 一致性（Con</description>
     </item>
     
     <item>
       <title>NoSQL DB &amp; Distributed cache - Redis</title>
-      <link>http://akjamie.github.io/post/2019-08-04-redis-primary-knowledge/</link>
+      <link>http://localhost:1313/post/2019-08-04-redis-primary-knowledge/</link>
       <pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2019-08-04-redis-primary-knowledge/</guid>
+      <guid>http://localhost:1313/post/2019-08-04-redis-primary-knowledge/</guid>
       <description>redis是一个key-value存储系统，它支持存储的value类型相对更多，包括string(字符串)、list(链表)、set(集合)</description>
     </item>
     
     <item>
       <title>微服务中的分布式事务</title>
-      <link>http://akjamie.github.io/post/2019-07-24-one-distributed-transaction-user-case/</link>
+      <link>http://localhost:1313/post/2019-07-24-one-distributed-transaction-user-case/</link>
       <pubDate>Tue, 23 Jul 2019 19:40:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2019-07-24-one-distributed-transaction-user-case/</guid>
+      <guid>http://localhost:1313/post/2019-07-24-one-distributed-transaction-user-case/</guid>
       <description>用户场景 在某企业app上做Payment业务，在app端准备好request data， 如debit account number, credit account number, amount, notes, 点击submit。 业务流程如</description>
     </item>
     
     <item>
       <title>Spring Cloud Series</title>
-      <link>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</link>
+      <link>http://localhost:1313/post/2019-07-15-spring-cloud-demo-overview/</link>
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</guid>
+      <guid>http://localhost:1313/post/2019-07-15-spring-cloud-demo-overview/</guid>
       <description>Demo的介绍 本文主要通过一个小demo，来综合运用spring cloud系列技术，demo中主要包含如下模块/组建： 1. Authorization service, 基于Spring</description>
     </item>
     
     <item>
       <title>Spring batch - single process &amp; remote partitioning(multi instances)</title>
-      <link>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</link>
+      <link>http://localhost:1313/post/2019-07-21-spring-batch-single-process-remote-partitioning/</link>
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</guid>
+      <guid>http://localhost:1313/post/2019-07-21-spring-batch-single-process-remote-partitioning/</guid>
       <description>Spring batch是轻量级，全面的批处理框架，旨在开发对企业系统日常运营至关重要的强大批处理应用程序。 Spring Batch负责大量记录，包括日志记录/跟踪</description>
     </item>
     
     <item>
       <title>Free CA Certs setup using Certbot &#43; Docker &#43; Nginx</title>
-      <link>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</link>
+      <link>http://localhost:1313/2019/07/14/free-https-certs-docker-nginx/</link>
       <pubDate>Sun, 14 Jul 2019 18:30:05 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</guid>
+      <guid>http://localhost:1313/2019/07/14/free-https-certs-docker-nginx/</guid>
       <description>Background Let&amp;rsquo;s Encrypt is a certificate authority that provides X.509 certificates for Transport Layer Security (TLS) encryption at no charge,The certificate is valid for 90 days, during which renewal can take place at anytime. 这样我们就可以用上免费的CA cert来安全expose我们自己的网站或者</description>
     </item>
     
     <item>
       <title>Linux network proxy setup for desktop and terminal</title>
-      <link>http://akjamie.github.io/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/</link>
+      <link>http://localhost:1313/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/</link>
       <pubDate>Sun, 14 Jul 2019 14:50:52 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/</guid>
+      <guid>http://localhost:1313/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/</guid>
       <description>背景介绍 很多时候我们由于great firewall，我们无法访问某些网站，这时候就需要用到网络代理来应对一些比较urgent的case，本文</description>
     </item>
     
     <item>
       <title>Harshicorp Vault Setup Config and integration with spring boot</title>
-      <link>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</link>
+      <link>http://localhost:1313/2019/07/14/harshicorp-vault-setup-config/</link>
       <pubDate>Sun, 14 Jul 2019 12:10:27 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</guid>
+      <guid>http://localhost:1313/2019/07/14/harshicorp-vault-setup-config/</guid>
       <description>Install vault Prepare docker-compose.yml, content as below (just a sample here, please don&amp;rsquo;t use it for production, there are more aspects should be considered) version: &#39;3&#39; services: consul: container_name: consul.server command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect=1 image: consul:latest restart: always volumes: - ./consul.server/config:/consul/config - ./consul.server/data:/consul/data ports: - &amp;quot;9300:9300&amp;quot; - &amp;quot;9500:9500&amp;quot; - &amp;quot;9600:9600/udp&amp;quot; vault: container_name: vault.server image: vault ports: - &amp;quot;8200:8200&amp;quot; restart: always links: - consul:consul.server volumes: - ./vault.server/config:/mnt/vault/config</description>
     </item>
     
     <item>
       <title>Jamie</title>
-      <link>http://akjamie.github.io/top/about/</link>
+      <link>http://localhost:1313/top/about/</link>
       <pubDate>Sun, 14 Jul 2019 09:54:06 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/top/about/</guid>
+      <guid>http://localhost:1313/top/about/</guid>
       <description>Jamie Zhang is from Shannxi China. He has more than 9 years of experience in web/mobile application development and management, participated in a number of large-scale projects in Huawei &amp;amp; HSBC.
 He loves open source and likes learning new technologies.
 He also has strong interests in various tech stuff such as Artificial Intelligence, Microservice, Cloud native.
@@ -147,28 +159,28 @@ He is happy with his current job, but also willing to take new challenges if the
     
     <item>
       <title>AWS Serveless Application Model</title>
-      <link>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</link>
+      <link>http://localhost:1313/post/2019-07-23-aws-server-application-model/</link>
       <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</guid>
+      <guid>http://localhost:1313/post/2019-07-23-aws-server-application-model/</guid>
       <description>AWS SAM - lambda demo Demo User Case User requirement: dynamically get regional mobile app feature availability status,status data is kept in AWS dynamodb. Projectcodes hierarchical structure presented as below ├── README.md -- This instructions file ├── event.json -- API Gateway Proxy Integration event payload ├── feature_availability -- Source code for a lambda function │ ├── __init__.py │ ├── app.py</description>
     </item>
     
     <item>
       <title>How to invoke python scripts in UIPath</title>
-      <link>http://akjamie.github.io/2019/01/19/uipath-invoke-python-method/</link>
+      <link>http://localhost:1313/2019/01/19/uipath-invoke-python-method/</link>
       <pubDate>Sat, 19 Jan 2019 12:10:27 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/2019/01/19/uipath-invoke-python-method/</guid>
+      <guid>http://localhost:1313/2019/01/19/uipath-invoke-python-method/</guid>
       <description>UIPath是一个非常不错的RPA(Robotic Process Automation) 工具和平台，并且有开源社区版本可以方便RPA爱好者去尝试，本文是介绍如何在UIPath</description>
     </item>
     
     <item>
       <title></title>
-      <link>http://akjamie.github.io/search/placeholder/</link>
+      <link>http://localhost:1313/search/placeholder/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/search/placeholder/</guid>
+      <guid>http://localhost:1313/search/placeholder/</guid>
       <description></description>
     </item>
     

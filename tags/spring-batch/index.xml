@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Spring Batch on Jamie&#39;s Blog</title>
-    <link>http://akjamie.github.io/tags/spring-batch/</link>
+    <link>http://localhost:1313/tags/spring-batch/</link>
     <description>Recent content in Spring Batch on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 23 Jul 2019 13:36:10 +0000</lastBuildDate>
     
-	<atom:link href="http://akjamie.github.io/tags/spring-batch/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/tags/spring-batch/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Spring batch - single process &amp; remote partitioning(multi instances)</title>
-      <link>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</link>
+      <link>http://localhost:1313/post/2019-07-21-spring-batch-single-process-remote-partitioning/</link>
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</guid>
+      <guid>http://localhost:1313/post/2019-07-21-spring-batch-single-process-remote-partitioning/</guid>
       <description>Spring batch是轻量级，全面的批处理框架，旨在开发对企业系统日常运营至关重要的强大批处理应用程序。 Spring Batch负责大量记录，包括日志记录/跟踪</description>
     </item>
     
