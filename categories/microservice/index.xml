@@ -6,10 +6,22 @@
     <description>Recent content in Microservice on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 29 Nov 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 08 May 2021 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/categories/microservice/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Microservice design - practice</title>
+      <link>http://akjamie.github.io/post/2021-05-08-microservice-data-sync/</link>
+      <pubDate>Sat, 08 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2021-05-08-microservice-data-sync/</guid>
+      <description>Summary To mark down a batch data sync accross system solution, tested daily sync data volume is around 10w.
+In this solution, adopted the message driven batch processing rather than traditional fixed time schedule batch.
+Also applied the microservice design to eliminate the system dependency and well protect the data/system boundry,which is also aligned with the DEVOPS,,both team could focus on their own domain/services&amp;rsquo; development and maintenance.
+Techniques used  Springboot + Spring cloud config, constrained by infra, services are running on in hourse VM instances.</description>
+    </item>
     
     <item>
       <title>Kubernates - Practice</title>
