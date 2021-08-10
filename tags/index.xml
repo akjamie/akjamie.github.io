@@ -6,10 +6,28 @@
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 08 May 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 09 Aug 2021 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>AWS</title>
+      <link>http://akjamie.github.io/tags/aws/</link>
+      <pubDate>Mon, 09 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Cloud</title>
+      <link>http://akjamie.github.io/tags/cloud/</link>
+      <pubDate>Mon, 09 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/cloud/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Batch</title>
@@ -206,15 +224,6 @@
       <pubDate>Sun, 14 Jul 2019 12:10:27 +0000</pubDate>
       
       <guid>http://akjamie.github.io/tags/harshicorp-vault/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>AWS</title>
-      <link>http://akjamie.github.io/tags/aws/</link>
-      <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
-      
-      <guid>http://akjamie.github.io/tags/aws/</guid>
       <description></description>
     </item>
     

@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    
+
+    
+    <meta name="title" content="Demo - AWS EC2 instance auto scaling" />
+    <meta property="og:title" content="Demo - AWS EC2 instance auto scaling" />
+    <meta property="twitter:title" content="Demo - AWS EC2 instance auto scaling" />
+    
+
+    
+    <meta name="description" content="To mark down some key steps for later review">
+    <meta property="og:description" content="To mark down some key steps for later review" />
+    <meta property="twitter:description" content="To mark down some key steps for later review" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Demo - AWS EC2 instance auto scaling-Jamie&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/2021-08-09-aws-demo-01-autoscale-test/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/cloud">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others">others</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/tech">tech</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search">SEARCH <img src="/img/search.png" height="15" style="cursor: pointer;" alt="Search"></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/background-09.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/aws" title="AWS">
+                            AWS
+                        </a>
+                        
+                        <a class="tag" href="/tags/cloud" title="Cloud">
+                            Cloud
+                        </a>
+                        
+                    </div>
+                    <h1>Demo - AWS EC2 instance auto scaling</h1>
+                    <h2 class="subheading">AWS PCA Prep Series</h2>
+                    <span class="meta">
+                        Posted by 
+                        
+                                 &#34;Jamie Zhang&#34;
+                         
+                        on 
+                        Monday, August 9, 2021
+                        
+                        
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li><a href="#objective">Objective</a></li>
+<li><a href="#architecture-diagram">Architecture diagram</a></li>
+<li><a href="#implementation">Implementation</a>
+<ul>
+<li><a href="#prepare-the-docker-image">Prepare the Docker image</a></li>
+<li><a href="#create-infrastructure">Create infrastructure</a></li>
+<li><a href="#create-instance-templete-and-auto-scaling-group">Create instance templete and auto scaling group</a></li>
+<li><a href="#test-connectivity">Test connectivity</a></li>
+</ul></li>
+<li><a href="#pressure-testing">Pressure testing</a></li>
+<li><a href="#others">Others</a>
+<ul>
+<li><a href="#issues-encountered">Issues encountered</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<p>I&rsquo;m on the path of AWS Professinal Certified Architect exam preparation, want to document some key points in the demos for later review to enhance the understanding of knowledge. In this demo, i&rsquo;m going to test the AWS auto scaling and utilize the EC2 network knowledges.</p>
+
+<h1 id="objective">Objective</h1>
+
+<ol>
+<li>To build a health checking springboot application and package as docker image hosted on AWS ECR.<br /></li>
+<li>Setup basic network infrastructure, VPC, Subnet, Internet Gateway, Route table,Security group, etc.<br /></li>
+<li>Create Auto Scaling Group using prepred Lanuch Template, and expose the access entry through Application Loader Balancer.<br /></li>
+<li>To use Apache HTTP server benchmarking tool(ab) to trigger billions of request to test the instance scale out/in.<br /></li>
+</ol>
+
+<h1 id="architecture-diagram">Architecture diagram</h1>
+
+<p>high level architecture diagram is for easier understanding of this demo. The diagram illustrates an application load balancers to route traffic to EC2 instances hosted in subnet-a(ap-northeast-1c) and subnet-c(ap-northeast-1d), these EC2 instances also are managed by auto scaling group which could automate the capacity management and fault tolerance and ensure the capacity to handle the current traffic demand. Also notification service configured on auto scaling group to timely notify the scaling machanism.
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/aws-auto-sacle-test-arch.png' style="height: 810px;margin-left: 0px;"/></p>
+
+<h1 id="implementation">Implementation</h1>
+
+<h2 id="prepare-the-docker-image">Prepare the Docker image</h2>
+
+<p>build a simple springboot application and expose a /health interface. let&rsquo;s see the controller.</p>
+
+<pre><code>@GetMapping(&quot;/health&quot;)
+public ResponseEntity hello(HttpServletRequest request) {
+    final String sourceIp = Utils.getIpAddr(request);
+    final String localIp = Utils.getLocalIpAddress();
+    final String hostName = Utils.getHostName();
+
+    HashMap&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+    map.put(&quot;sourceIp&quot;, sourceIp);
+    map.put(&quot;targetIp&quot;, localIp);
+    map.put(&quot;hostName&quot;, hostName);
+    map.put(&quot;status&quot;, &quot;UP&quot;);
+
+    return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(map);
+}
+</code></pre>
+
+<p>use jib-maven-plugin to build docker image and push the docker image to aws ECR(create a repository first), configure the build plugin as below shown.</p>
+
+<pre><code>&lt;plugin&gt;
+    &lt;groupId&gt;com.google.cloud.tools&lt;/groupId&gt;
+    &lt;artifactId&gt;jib-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;${jib.version}&lt;/version&gt;
+    &lt;configuration&gt;
+        &lt;from&gt;
+            &lt;image&gt;openjdk:alpine&lt;/image&gt;
+        &lt;/from&gt;
+        &lt;to&gt;
+            &lt;image&gt;public.ecr.aws/a0i4s5a9/${project.artifactId}:${project.version}&lt;/image&gt;
+            &lt;credHelper&gt;ecr-login&lt;/credHelper&gt;
+        &lt;/to&gt;
+        &lt;container&gt;
+            &lt;creationTime&gt;USE_CURRENT_TIMESTAMP&lt;/creationTime&gt;
+        &lt;/container&gt;
+        &lt;allowInsecureRegistries&gt;true&lt;/allowInsecureRegistries&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;
+</code></pre>
+
+<p>after tested the interface, use <strong>mvn clean compile jib:build</strong> to build the image, once done you could see the image in AWS ECR.
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/aws-ecr-image-health.png' style="height: 87px;margin-left: 0px;"/></p>
+
+<h2 id="create-infrastructure">Create infrastructure</h2>
+
+<p>To create below resources for this demo:</p>
+
+<table>
+<thead>
+<tr>
+<th align="left">Types</th>
+<th align="left">Resource(ID/Name)</th>
+<th align="left">Region/AZ</th>
+<th align="left">Remark</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">VPC</td>
+<td align="left">vpc-0e4918ac3af48cba4</td>
+<td align="left">ap-northeast-1(Tokyo)</td>
+<td align="left">CIDR: 172.32.0.0/16, DNS hostnames enabled</td>
+</tr>
+
+<tr>
+<td align="left">Internet Gateway</td>
+<td align="left">igw-018b97e71d32a2ecd</td>
+<td align="left">ap-northeast-1</td>
+<td align="left">attach to VPC and subnet Route Table to enable internet access</td>
+</tr>
+
+<tr>
+<td align="left">Subnet</td>
+<td align="left">subnet-a</td>
+<td align="left">ap-northeast-1c</td>
+<td align="left">CIDR: 172.32.0.0/20, public subnet</td>
+</tr>
+
+<tr>
+<td align="left">Subnet</td>
+<td align="left">subnet-b</td>
+<td align="left">ap-northeast-1c</td>
+<td align="left">CIDR: 172.32.16.0/20, public subnet</td>
+</tr>
+
+<tr>
+<td align="left">Subnet</td>
+<td align="left">subnet-c</td>
+<td align="left">ap-northeast-1d</td>
+<td align="left">CIDR: 172.32.32.0/20, public subnet</td>
+</tr>
+
+<tr>
+<td align="left">Security Group</td>
+<td align="left">sg-0e5aae3682dea4349/security-group-external</td>
+<td align="left"></td>
+<td align="left">inboound: all ICMP - ipv4 and http/https</td>
+</tr>
+
+<tr>
+<td align="left">Security Group</td>
+<td align="left">sg-044e680ce2a997f4a/security-group-external-management</td>
+<td align="left"></td>
+<td align="left">quite open and should add IP range constrains</td>
+</tr>
+
+<tr>
+<td align="left">Security Group</td>
+<td align="left">sg-0112367fdf4f05fe5/security-group-internal</td>
+<td align="left"></td>
+<td align="left">inboound: all traffic from sg-044e680ce2a997f4a and http/https from sg-0e5aae3682dea4349</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="create-instance-templete-and-auto-scaling-group">Create instance templete and auto scaling group</h2>
+
+<p>create instance template to use t2.micro instance type and disable public ipv4, the ec2 instance backed by auto scaling group are only accessible from the bastion host secured by security-group-external-management. for the instance count, minumum: 1, desired: 2, maxium: 3</p>
+
+<p>no much details here on this step, the wizard page on aws console is quite clear to guide you create these parts, you can also try Terra form for these resource creation.</p>
+
+<p>notes: the customer AMI may bring additional charges to your account free tier limit, hence i use user data to init the docker run environement instead, the content of user data is listed in below:</p>
+
+<pre><code>#! /bin/sh
+sudo yum update -y
+sudo amazon-linux-extras install docker
+sudo service docker start
+sudo usermod -a -G docker ec2-user
+
+docker run -d -p 80:8080 --name health-check public.ecr.aws/a0i4s5a9/utilities-healthcheck:1.0.1
+</code></pre>
+
+<h2 id="test-connectivity">Test connectivity</h2>
+
+<p>when goes to this step, that mean the ELB and auto scaling group as well the target group/health check related configuration have been done, now test the connectivity.
+access the FQDN display on the ELB detail page on browser directly, if get expected response, then great, if not, dont be sad, please check the security group settings and the subnet routes again.</p>
+
+<h1 id="pressure-testing">Pressure testing</h1>
+
+<p>install apacke ab to make request, please see below picture
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/ab-test.png' style="height: 400px;margin-left: 0px;"/></p>
+
+<p>check the traffic change status on the ELB monitoring dashboard, capture a screenshot for reference:
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/picture-requests.png' style="height: 400px;margin-left: 0px;"/></p>
+
+<p>CPU utilization on the auto scale group monitoring dashboard:
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/cpu-utilization.png' style="height: 426px;margin-left: 0px;"/></p>
+
+<p>Instances count during the peak traffic volume:
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/instance-list.png' style="height: 320px;margin-left: 0px;"/></p>
+
+<p>last but not the least, during the test preparation, some additional changes generated, here paste the bills for reference, hope helps.
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/bills.png' style="height: 629px;margin-left: 0px;"/></p>
+
+<h1 id="others">Others</h1>
+
+<h2 id="issues-encountered">Issues encountered</h2>
+
+<p>The whole demo process is not smooth as write a blog, actually encountered lots of issues, for example:<br />
+1. Load balancer only could point to instance in public subnet, at the beginning i set the subnet-a and subnet-c as private subnet, and create NAT for out bound access since installation of docker.<br />
+2. Bation host created in the subnet-b cannot ssh to the ec2 instance created by the auto scaling group, lately i found i didn&rsquo;t configure the private key on the bastion host. because all the instance shared the same RAS key pair, so once i stall the private key on the bastion host, i can ssh to any instances created using the key pair by given security access is allowed<br />
+3. NAT is not free of charge, it charges by hour!!<br />
+4. EC2 instance created but cannot access even allow PUBLIC IPV4 or associate elastic IP, because there is no internet routing config in the Route Table for self created subnets.<br />
+5. User data specified on the EC2 instance does not work, check the EC2 logs found it cannot execute the user date correctly, after investigation, the root cause is missing <strong>#! /bin/sh</strong> on the first line of the user data.</p>
+
+<p>there are some other security group configure issue, while these are eaiser to fix ^_^.</p>
+
+<p>Thank you for reading.</p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2021-05-08-microservice-data-sync/" data-toggle="tooltip" data-placement="top" title="Microservice design - practice">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-11 col-lg-offset-1
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mongo" title="mongo">
+                            mongo
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring-cloud">
+                            spring-cloud
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction-management">
+                            transaction-management
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2021
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>
