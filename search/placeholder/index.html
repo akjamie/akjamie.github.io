@@ -489,7 +489,7 @@
 
 
 <script>
-    function async(u, c) {
+    function loadAsync(u, c) {
       var d = document, t = 'script',
           o = d.createElement(t),
           s = d.getElementsByTagName(t)[0];
@@ -507,7 +507,7 @@
 <script>
     
     if($('#tag_cloud').length !== 0){
-        async("/js/jquery.tagcloud.js",function(){
+        loadAsync("/js/jquery.tagcloud.js",function(){
             $.fn.tagcloud.defaults = {
                 
                 color: {start: '#bbbbee', end: '#0085a1'},
@@ -519,7 +519,7 @@
 
 
 <script>
-    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+    loadAsync("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
         var $nav = document.querySelector("nav");
         if($nav) FastClick.attach($nav);
     })
