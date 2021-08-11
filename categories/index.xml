@@ -12,11 +12,11 @@
     
     
     <item>
-      <title>Tech</title>
-      <link>http://akjamie.github.io/categories/tech/</link>
+      <title>Cloud</title>
+      <link>http://akjamie.github.io/categories/cloud/</link>
       <pubDate>Mon, 09 Aug 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/categories/tech/</guid>
+      <guid>http://akjamie.github.io/categories/cloud/</guid>
       <description></description>
     </item>
     
@@ -26,15 +26,6 @@
       <pubDate>Sat, 08 May 2021 00:00:00 +0000</pubDate>
       
       <guid>http://akjamie.github.io/categories/microservice/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Cloud</title>
-      <link>http://akjamie.github.io/categories/cloud/</link>
-      <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
-      
-      <guid>http://akjamie.github.io/categories/cloud/</guid>
       <description></description>
     </item>
     
