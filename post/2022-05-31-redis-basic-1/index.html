@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    
+
+    
+    <meta name="title" content="NoSQL DB &amp; Distributed cache - Redis" />
+    <meta property="og:title" content="NoSQL DB &amp; Distributed cache - Redis" />
+    <meta property="twitter:title" content="NoSQL DB &amp; Distributed cache - Redis" />
+    
+
+    
+    <meta name="description" content="Redis基础知识回顾">
+    <meta property="og:description" content="Redis基础知识回顾" />
+    <meta property="twitter:description" content="Redis基础知识回顾" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>NoSQL DB &amp; Distributed cache - Redis | Jamie&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/2022-05-31-redis-basic-1/">
+
+    
+    
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@5.15.1/css/all.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/cloud">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others">others</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/background-05.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/redis" title="Redis">
+                            Redis
+                        </a>
+                        
+                        <a class="tag" href="/tags/nosql" title="NoSQL">
+                            NoSQL
+                        </a>
+                        
+                    </div>
+                    <h1>NoSQL DB &amp; Distributed cache - Redis</h1>
+                    <h2 class="subheading">Redis basic knowledge - 2</h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Monday, May 30, 2022
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                
+
+<h1 id="redis基础回顾">Redis基础回顾</h1>
+
+<ul>
+<li>Redis  有16个数据库，一般都使用0号库，使用select dbid 来切换db。</li>
+<li>Redis是单线程 + 多路io服用技术</li>
+
+<li><p>Redis vs memcache</p>
+
+<p>| Product| 架构模型 | 数据类型支持|<br />
+ | :&mdash;&mdash;&mdash; | :&mdash;&mdash;&mdash;&mdash;- | :&mdash;&mdash;&mdash;- |<br />
+ | Redis | 单线程 + 多路io复用|  多种数据类型|<br />
+ | Memcached | 多线程+锁|  单一数据类型 |</p></li>
+
+<li><p>Key 操作</p>
+
+<ul>
+<li>keys * - list keys</li>
+<li>expire key duration - set expire duration for key</li>
+<li>exists key - verify if key exists</li>
+<li>del key - delete key-value pair via key</li>
+<li>unlink key - delete data in non-blocking way</li>
+
+<li><p>ttl key - check remaining expiry duration</p>
+
+<pre><code>127.0.0.1:6379&gt; dbsize
+(integer) 7
+127.0.0.1:6379&gt; type test-set-1
+set
+127.0.0.1:6379&gt; type test-zset-1
+zset
+127.0.0.1:6379&gt; exists test-set-1
+(integer) 1
+127.0.0.1:6379&gt; set test-string-1 &quot;test&quot; 
+OK
+127.0.0.1:6379&gt; expire test-string-1 100
+(integer) 1
+127.0.0.1:6379&gt; ttl test-string-1
+(integer) 95
+</code></pre></li>
+</ul></li>
+
+<li><p> 重要命令</p>
+
+<ul>
+<li>select - select db</li>
+<li>dbsize - check total key size in current db</li>
+<li>flushdb - cleanup current db</li>
+<li>flushall - cleanup all dbs</li>
+</ul></li>
+
+<li><p>String 是redis最基本的类型，redis中字符串key和value最大可以存放512m</p>
+
+<ul>
+<li>setex key ttl value</li>
+<li>存储方式为预分配冗余空间来减少内存的频繁分配</li>
+</ul></li>
+
+<li><p>List - 双向链表，一键多值</p>
+
+<ul>
+<li>quickList, 元素少的时候是连续空间存储 - ziplist，多个ziplist</li>
+<li>ziplist - 内存紧凑，访问效率高，缺点是更新效率低，并且数据量较大时，可能导致大量的内存复制</li>
+<li>linkedlist - 节点修改的效率高，但是需要额外的内存开销，并且节点较多时，会产生大量的内存碎片</li>
+<li>quicklist -  linkedlist 与 ziplist 的结合</li>
+</ul></li>
+
+<li><p>Set -自动排除数据重复</p>
+
+<ul>
+<li>数据架构师dict，基于hash表实现</li>
+<li>Java 中HashSet的所有key指向同一个value，插入的元素即为key</li>
+</ul></li>
+
+<li><p>Hash</p>
+
+<ul>
+<li><p>数据结构，ziplist和hashtable，当field-value 长度 &lt;=64,  默认使用ziplist，大于64位则自动使用hashtable</p>
+
+<pre><code>127.0.0.1:6379&gt; object encoding test-hash-1
+&quot;ziplist&quot;
+127.0.0.1:6379&gt; hset test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1 date 2022-05-30 event 'this is a testing event for redis hash testing' publisher 'system'
+(integer) 3
+127.0.0.1:6379&gt; object encoding test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1
+&quot;ziplist&quot;
+127.0.0.1:6379&gt; hset test-hash-2 test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1 'test data encoding in redis'
+(integer) 1
+127.0.0.1:6379&gt; object encoding test-hash-2
+&quot;hashtable&quot;
+</code></pre></li>
+</ul></li>
+
+<li><p>Zset</p>
+
+<ul>
+<li>底层数据结构，类似于Map<String, Double>/TreeSet内部元素按照score进行排序</li>
+<li>hash，关联元素value和权重，保证value的唯一性</li>
+<li>skiplist，给value排序，根据score的范围获取元素</li>
+</ul></li>
+
+<li><p>有序链表和跳跃表
+<img src='/img/2022-05-26-redis-basic/linkedlist-vs-skiplist.png style="height: 379px; margin-left: 0px;"/></p></li>
+</ul>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2021-08-09-aws-demo-01-autoscale-test/" data-toggle="tooltip" data-placement="top" title="Demo - AWS EC2 instance auto scaling">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mongo" title="mongo">
+                            mongo
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring-cloud">
+                            spring-cloud
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction-management">
+                            transaction-management
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">                  
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2022
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>PSM-I on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/psm-i/</link>
+    <description>Recent content in PSM-I on Jamie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 19 Dec 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://akjamie.github.io/tags/psm-i/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>How to prepare the Professinal Scrum Master I</title>
+      <link>http://akjamie.github.io/post/2021-12-19-professional-scrum-master-i/</link>
+      <pubDate>Sun, 19 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2021-12-19-professional-scrum-master-i/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

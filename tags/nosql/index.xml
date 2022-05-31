@@ -6,10 +6,19 @@
     <description>Recent content in NoSQL on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 05 Sep 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 30 May 2022 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/nosql/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>NoSQL DB &amp; Distributed cache - Redis</title>
+      <link>http://akjamie.github.io/post/2022-05-31-redis-basic-1/</link>
+      <pubDate>Mon, 30 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2022-05-31-redis-basic-1/</guid>
+      <description>Redis基础回顾 Redis 有16个数据库，一般都使用0号库，使用select dbid 来切换db。 Redis是单线程 + 多路io服用技术 Redis vs memcache | Product| 架构模型 |</description>
+    </item>
     
     <item>
       <title>Mongo DB Basics (1)</title>
