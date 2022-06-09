@@ -331,7 +331,159 @@ OK
 <p>简单比较如下图，查找51，跳跃表的查找性能相较于链表效会更好。
 <img src='/img/2022-05-26-redis-basic/linkedlist-vs-skiplist.png' style="height: 379px; margin-left: 0px;" /></p>
 
-<p>待续</p>
+<h2 id="新数据类型">新数据类型</h2>
+
+<ul>
+<li><p>Bitmaps - 对位的操作</p>
+
+<ul>
+<li>其本身不是一种数据类型，实际上就是字符串</li>
+<li>可以对字符串的位进行操作</li>
+<li>提供了单独的操作命令集</li>
+
+<li><p>与set相比极大的节省内存空间，但存储内容有限</p>
+
+<pre><code>127.0.0.1:6379&gt; setbit test:bitmaps:2 1 0
+(integer) 0
+127.0.0.1:6379&gt; setbit test:bitmaps:2 2 0
+(integer) 0
+127.0.0.1:6379&gt; setbit test:bitmaps:2 3 1
+(integer) 0
+127.0.0.1:6379&gt; getbit test:bitmaps:1 1
+(integer) 0
+127.0.0.1:6379&gt; getbit test:bitmaps:1 0
+(integer) 1
+</code></pre></li>
+</ul></li>
+
+<li><p>HyperLogLog - 做基数统计，耗费12kb内存，可以计算近2^64个不同元素的技术</p>
+
+<ul>
+<li>相较于distinct，hash，set，bitmaps，更少的空间占用</li>
+
+<li><p>用降低数据精确度来换存储空间</p>
+
+<pre><code>127.0.0.1:6379&gt; pfadd hyperloglog:pageview:001 'jamie' 'james' 'edward'
+(integer) 1
+127.0.0.1:6379&gt; pfadd hyperloglog:pageview:001 'jamie' 
+(integer) 0
+127.0.0.1:6379&gt; pfadd hyperloglog:pageview:001 'john' 'edward'
+(integer) 1
+127.0.0.1:6379&gt; pfcount hyperloglog:pageview:001
+(integer) 4
+127.0.0.1:6379&gt; pfadd hyperloglog:pageview:002 'john' 'edward'
+(integer) 1
+127.0.0.1:6379&gt; pfmerge hyperloglog:pageview:summ hyperloglog:pageview:001 hyperloglog:pageview:002
+OK
+127.0.0.1:6379&gt; pfcount hyperloglog:pageview:summ
+(integer) 4
+127.0.0.1:6379&gt; get hyperloglog:pageview:summ
+&quot;HYLL\x01\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00M\xca\x84^\xa1\x80I\x86\x84E]\x84D\xa9&quot;
+</code></pre></li>
+</ul></li>
+
+<li><p>Geospatial - 地理经纬度</p>
+
+<ul>
+<li>geohash保存地理位置的坐标</li>
+<li>geohash计算的字符串，可以反向解码出原来的经纬度</li>
+
+<li><p>有序集合（zset）保存地理位置数据, member + geohash</p>
+
+<pre><code>127.0.0.1:6379&gt; geoadd china:city:xian 108.84067296981812 34.23806027872841 lvdi
+(integer) 1
+127.0.0.1:6379&gt; geoadd china:city:xian 108.88047695159912 34.22972243813365 gaoxinhospital
+(integer) 1
+127.0.0.1:6379&gt; geoadd china:city:xian 108.84039402008057 34.2350800390342 zhenguanfu
+(integer) 1
+127.0.0.1:6379&gt; geoadd china:city:xian 108.85704517364502 34.245226613720426 mincheng
+(integer) 1
+127.0.0.1:6379&gt; geoadd china:city:xian 108.8686752319336 34.22915472534989 waishi
+(integer) 1
+127.0.0.1:6379&gt; geopos china:city:xian lvdi
+1) 1) &quot;108.84067565202713013&quot;
+2) &quot;34.23805909783406065&quot;
+127.0.0.1:6379&gt; geodist china:city:xian lvdi zhenguanfu km
+&quot;0.3323&quot;
+127.0.0.1:6379&gt; geodist china:city:xian lvdi gaoxinhospital km
+&quot;3.7758&quot;
+127.0.0.1:6379&gt; georadius china:city:xian 108.84067565202713013 34.23805909783406065 3 km
+1) &quot;zhenguanfu&quot;
+2) &quot;lvdi&quot;
+3) &quot;waishi&quot;
+4) &quot;mincheng&quot;
+127.0.0.1:6379&gt; GEORADIUSBYMEMBER china:city:xian lvdi 3 km
+1) &quot;zhenguanfu&quot;
+2) &quot;lvdi&quot;
+3) &quot;waishi&quot;
+4) &quot;mincheng&quot;
+127.0.0.1:6379&gt; GEOHASH china:city:xian lvdi
+1) &quot;wqj6u8z75s0&quot;
+127.0.0.1:6379&gt; OBJECT ENCODING china:city:xian
+&quot;ziplist&quot;
+</code></pre></li>
+</ul></li>
+</ul>
+
+<h1 id="redis-重要配置">Redis 重要配置</h1>
+
+<h2 id="redis-conf">redis.conf</h2>
+
+<ul>
+<li>timeout - Close the connection after a client is idle for N seconds</li>
+<li>pidfile - /var/run/redis_6379.pid</li>
+<li>loglevel - debug/verbose/notice/warning</li>
+<li>databases - the number of databases</li>
+
+<li><p>requirepass - setting password for default user</p>
+
+<pre><code>root@d5ff6116c0ab:/# redis-cli
+127.0.0.1:6379&gt; config get requirepass
+1) &quot;requirepass&quot;
+2) &quot;&quot;
+127.0.0.1:6379&gt; config set requirepass '123456'
+OK
+127.0.0.1:6379&gt; config get requirepass
+1) &quot;requirepass&quot;
+2) &quot;123456&quot;
+127.0.0.1:6379&gt; auth '123456'
+OK
+</code></pre></li>
+
+<li><p>maxclients - the max number of connected clients at the same time</p></li>
+
+<li><p>maxmemory - memory usage limit, 强烈推荐设置，否则可能会内存耗尽而宕机</p></li>
+
+<li><p>maxmemory-policy - how Redis will select what to remove when maxmemory is reached</p>
+
+<ul>
+<li>volatile-lru - Least Recently Used, 只对设置了ttl的keys</li>
+<li>allkeys-lru - all keys</li>
+<li>volatile-lfu - Least Frequently Used, 只对设置了ttl的keys</li>
+<li>allkeys-lfu</li>
+<li>volatile-random - 只对设置了ttl的keys</li>
+<li>allkeys-random</li>
+<li>volatile-ttl - 只对设置了ttl的keys</li>
+<li>noeviction - 不移除，写入时返回错误</li>
+</ul></li>
+
+<li><p>maxmemory-samples - LRU, LFU and minimal TTL algorithms are not precise algorithms but approximated，by default redis Redis will check five keys and pick the one that was used least recently</p></li>
+</ul>
+
+<h1 id="发布与订阅">发布与订阅</h1>
+
+<p><img src='/img/2022-05-26-redis-basic/pub-sub-01.jpg' style="height: 294px; margin-left: 0px;" /></p>
+
+<h1 id="refered-articles">Refered Articles</h1>
+
+<ul>
+<li><a href="https://www.cnblogs.com/LBSer/p/3310455.html">https://www.cnblogs.com/LBSer/p/3310455.html</a>
+
+
+
+
+<br /></li>
+</ul>
 
 
                 
