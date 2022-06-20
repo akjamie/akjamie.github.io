@@ -474,16 +474,122 @@ OK
 
 <p><img src='/img/2022-05-26-redis-basic/pub-sub-01.jpg' style="height: 294px; margin-left: 0px;" /></p>
 
-<h1 id="refered-articles">Refered Articles</h1>
+<h1 id="示例场景">示例场景</h1>
 
 <ul>
-<li><a href="https://www.cnblogs.com/LBSer/p/3310455.html">https://www.cnblogs.com/LBSer/p/3310455.html</a>
+<li>短信验证码</li>
+</ul>
 
+<blockquote>
+<p>主要思路：<br />
+1&gt;  随机生成6位数字码<br />
+2&gt; 存储验证码到redis，且设置ttl(如2mins), sample key pattern: <app-name/system-name>:<phone-number>:<verificaiton-code>, e.g. &lsquo;user-service:13992590000:678325&rsquo;<br />
+3&gt; 其他限制，如每天每个手机号可以发送的验证码的次数，设置单独的key来管理发送次数，sample key pattern：<app-name/system-name>:<phone-number>:count， 如果次数超过limit则不生成验证码返回exception<br />
+4&gt; 调用短信服务商接口发送短信<br />
+<a href="https://github.com/cloud-poc/redis-test">redis-test-sample</a></p>
+</blockquote>
 
-
-
+<ul>
+<li>静态数据缓存加速前端访问或者缓冲db的i/o压力
 <br /></li>
 </ul>
+
+<h1 id="redis-事务">Redis 事务</h1>
+
+<h2 id="事务概念和基本操作">事务概念和基本操作</h2>
+
+<p>其为命令提供一个单独的隔离环境，事务中所有的命令都会序列化，按顺序地执行，执行过程中不会被其他客户端发送过来的命令请求打断。
+与dbms事物不同，redis事务的作用就是串联多个命令防止被其他命令插队</p>
+
+<ul>
+<li><p>discard sample</p>
+
+<pre><code>127.0.0.1:6379[1]&gt; keys *
+(empty array)
+127.0.0.1:6379[1]&gt; multi
+OK
+127.0.0.1:6379[1]&gt; set key-1 test-1
+QUEUED
+127.0.0.1:6379[1]&gt; mset key-2 test-2 key-3 test-3
+QUEUED
+127.0.0.1:6379[1]&gt; discard
+OK
+127.0.0.1:6379[1]&gt; keys *
+(empty array)
+</code></pre></li>
+
+<li><p>exec succ</p>
+
+<pre><code>127.0.0.1:6379[1]&gt; keys *
+(empty array)
+127.0.0.1:6379[1]&gt; multi
+OK
+127.0.0.1:6379[1]&gt; mset key-2 test-2 key-3 test-3
+QUEUED
+127.0.0.1:6379[1]&gt; exec
+1) OK
+127.0.0.1:6379[1]&gt; keys *
+1) &quot;key-2&quot;
+2) &quot;key-3&quot;
+127.0.0.1:6379[1]&gt;
+</code></pre></li>
+
+<li><p>error in middle of exec</p>
+
+<pre><code>127.0.0.1:6379[1]&gt; multi
+OK
+127.0.0.1:6379[1]&gt; hget hkey-1 color
+QUEUED
+127.0.0.1:6379[1]&gt; incr key-2
+QUEUED
+127.0.0.1:6379[1]&gt; hset hkey-1 color blue
+QUEUED
+127.0.0.1:6379[1]&gt; exec
+1) (nil)
+2) (error) ERR value is not an integer or out of range
+3) (integer) 1
+127.0.0.1:6379[1]&gt; hget hkey-1 color
+&quot;blue&quot;
+</code></pre></li>
+</ul>
+
+<h2 id="redis-乐观锁">Redis 乐观锁</h2>
+
+<p>watch key - monitor one or more key</p>
+
+<ul>
+<li><p>sample</p>
+
+<pre><code>127.0.0.1:6379[1]&gt; watch key-1 lkey-1
+OK
+127.0.0.1:6379[1]&gt; incrby key-1 100
+(integer) 300
+127.0.0.1:6379[1]&gt; multi
+OK
+127.0.0.1:6379[1]&gt; incrby key-1 100
+QUEUED
+127.0.0.1:6379[1]&gt; lpush lkey-1 400
+QUEUED
+127.0.0.1:6379[1]&gt; exec
+(nil)
+127.0.0.1:6379[1]&gt;
+</code></pre>
+
+<p>ps: the keys &lsquo;watched&rsquo; has been changed by other client, hence the transaction executed failed.</p></li>
+</ul>
+
+<h2 id="redis-transaction-summary">Redis Transaction Summary</h2>
+
+<ul>
+<li>All the operations in transaction will be executed sequentially and won&rsquo;t be interuptted by other clients.</li>
+<li>All the operations queued won&rsquo;t take effect until &lsquo;exec&rsquo; is executed</li>
+<li>Redis cannot guarantee the atomicity.</li>
+</ul>
+
+<h1 id="referred-articles">Referred Articles</h1>
+
+<p><a href="https://www.cnblogs.com/LBSer/p/3310455.html">https://www.cnblogs.com/LBSer/p/3310455.html</a><br />
+<a href="http://redisbook.com/preview/object/sorted_set.html">http://redisbook.com/preview/object/sorted_set.html</a></p>
 
 
                 
