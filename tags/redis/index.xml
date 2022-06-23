@@ -6,10 +6,19 @@
     <description>Recent content in Redis on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 30 May 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 23 Jun 2022 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/redis/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>NoSQL DB &amp; Distributed cache - Redis</title>
+      <link>http://akjamie.github.io/post/2022-06-23-redis-advance-1/</link>
+      <pubDate>Thu, 23 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2022-06-23-redis-advance-1/</guid>
+      <description>bitmap 在前面的基础回顾中提到了bitmap这种数据结构，主要用来应对string的位操作，简单高效 适用场景：单状态统计，如每天系统用户登录情况统</description>
+    </item>
     
     <item>
       <title>NoSQL DB &amp; Distributed cache - Redis</title>
