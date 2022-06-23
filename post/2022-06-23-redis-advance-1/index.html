@@ -222,8 +222,8 @@
 
 <h1 id="bitmap">bitmap</h1>
 
-<p>在前面的基础回顾中提到了bitmap这种数据结构，主要用来应对string的位操作，简单高效
-适用场景：单状态统计，如每天系统用户登录情况统计，github commit
+<p>在前面的基础回顾中提到了bitmap这种数据结构，主要用来应对string的位操作，简单高效<br />
+适用场景：单状态统计，如每天系统用户登录情况统计，github commit.<br />
 其常用命令有 setbit, getbit, bitcount, bitop.</p>
 
 <pre><code>127.0.0.1:6379&gt; setbit test:bitmaps:2 0 1
@@ -258,7 +258,8 @@
 8bit = 1b， offset maximum = 2^32 -1 = 4294967295,即最大的下标为4294967295
 - 将整型数据直接offset设置到bitmap存储结构中，即setbit key value 1</p>
 
-<p>简易示例，发现放进数据容易，取出来还是比较麻烦，不过bitmap主要用来应对状态统计之类的场景，所以设计上本也不在此。</p>
+<p>简易示例:<br />
+发现放进数据容易，取出来还是比较麻烦，不过bitmap主要用来应对状态统计之类的场景，所以设计上本也不在此。</p>
 
 <pre><code>@Test  
 public void test() {  
@@ -283,8 +284,8 @@ public void test() {
 
 <h3 id="其他互联网场景"> 其他互联网场景</h3>
 
-<p>在互联网场景下使用bitmap能取得出其不意的效果，
-- 活跃用户统计(id为int类型)，如果活跃用户数据比较少，bitmap结构反而更加浪费存储空间
+<p>在互联网场景下使用bitmap能取得出其不意的效果，<br />
+- 活跃用户统计(id为int类型)，如果活跃用户数据比较少，bitmap结构反而更加浪费存储空间<br />
 - 点赞以及统计</p>
 
 <h1 id="基于redis的秒杀">基于redis的秒杀</h1>
