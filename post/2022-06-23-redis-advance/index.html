@@ -21,9 +21,9 @@
     
 
     
-    <meta name="description" content="Redis基础知识回顾">
-    <meta property="og:description" content="Redis基础知识回顾" />
-    <meta property="twitter:description" content="Redis基础知识回顾" />
+    <meta name="description" content="Redis进阶知识总结">
+    <meta property="og:description" content="Redis进阶知识总结" />
+    <meta property="twitter:description" content="Redis进阶知识总结" />
     
 
     
@@ -36,7 +36,7 @@
 
     <title>Redis学习笔记 | Jamie&#39;s Blog</title>
 
-    <link rel="canonical" href="/post/2022-05-31-redis-basic-1/">
+    <link rel="canonical" href="/post/2022-06-23-redis-advance/">
 
     
     
@@ -184,7 +184,7 @@
                         
                     </div>
                     <h1>Redis学习笔记</h1>
-                    <h2 class="subheading">Redis basic knowledge - 2</h2>
+                    <h2 class="subheading">Redis advanced knowledge</h2>
                     <span class="meta">
                         
                             Posted by 
@@ -192,7 +192,7 @@
                                 Jamie Zhang
                              
                             on 
-                            Monday, May 30, 2022
+                            Thursday, June 23, 2022
                             
                             
                             
@@ -220,419 +220,141 @@
                 
                 
 
-<h1 id="redis基础">Redis基础</h1>
+<h1 id="bitmap">bitmap</h1>
 
-<h2 id="common知识"> Common知识</h2>
+<p>在前面的基础回顾中提到了bitmap这种数据结构，主要用来应对string的位操作，简单高效<br />
+适用场景：单状态统计，如每天系统用户登录情况统计，github commit.<br />
+其常用命令有 setbit, getbit, bitcount, bitop.</p>
 
-<ul>
-<li>Redis  有16个数据库，一般都使用0号库，使用select dbid 来切换db。</li>
-<li>Redis是单线程 + 多路io服用技术</li>
-
-<li><p>Redis vs memcache</p>
-
-<ul>
-<li>Redis -&gt;  单线程 + 多路io复用 + 灵活支持多种数据类型</li>
-<li>Memcached -&gt; 多线程+锁 + 单一数据类型</li>
-</ul></li>
-
-<li><p>Key 操作</p>
-
-<ul>
-<li>keys * - list keys</li>
-<li>expire key duration - set expire duration for key</li>
-<li>exists key - verify if key exists</li>
-<li>del key - delete key-value pair via key</li>
-<li>unlink key - delete data in non-blocking way</li>
-
-<li><p>ttl key - check remaining expiry duration</p>
-
-<pre><code>127.0.0.1:6379&gt; dbsize
-(integer) 7
-127.0.0.1:6379&gt; type test-set-1
-set
-127.0.0.1:6379&gt; type test-zset-1
-zset
-127.0.0.1:6379&gt; exists test-set-1
-(integer) 1
-127.0.0.1:6379&gt; set test-string-1 &quot;test&quot; 
-OK
-127.0.0.1:6379&gt; expire test-string-1 100
-(integer) 1
-127.0.0.1:6379&gt; ttl test-string-1
-(integer) 95
-</code></pre></li>
-</ul></li>
-
-<li><p> 重要命令</p>
-
-<ul>
-<li>select - select db</li>
-<li>dbsize - check total key size in current db</li>
-<li>flushdb - cleanup current db</li>
-<li>flushall - cleanup all dbs
-<br /></li>
-</ul></li>
-</ul>
-
-<h2 id="5大数据结构">5大数据结构</h2>
-
-<ul>
-<li>String 是redis最基本的类型，redis中字符串key和value最大可以存放512m
-
-<ul>
-<li>setex key ttl value</li>
-<li>存储方式为预分配冗余空间来减少内存的频繁分配</li>
-</ul></li>
-<li>List - 双向链表，一键多值
-
-<ul>
-<li>quickList, 元素少的时候是连续空间存储 - ziplist，多个ziplist</li>
-<li>ziplist - 内存紧凑，访问效率高，缺点是更新效率低，并且数据量较大时，可能导致大量的内存复制</li>
-<li>linkedlist - 节点修改的效率高，但是需要额外的内存开销，并且节点较多时，会产生大量的内存碎片</li>
-<li>quicklist -  linkedlist 与 ziplist 的结合</li>
-</ul></li>
-<li>Set -自动排除数据重复
-
-<ul>
-<li>数据架构师dict，基于hash表实现</li>
-<li>Java 中HashSet的所有key指向同一个value，插入的元素即为key</li>
-</ul></li>
-
-<li><p>Hash</p>
-
-<ul>
-<li><p>数据结构，ziplist和hashtable，当field-value 长度 &lt;=64,  默认使用ziplist，大于64位则自动使用hashtable</p>
-
-<pre><code>127.0.0.1:6379&gt; object encoding test-hash-1
-&quot;ziplist&quot;
-127.0.0.1:6379&gt; hset test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1 date 2022-05-30 event 'this is a testing event for redis hash testing' publisher 'system'
-(integer) 3
-127.0.0.1:6379&gt; object encoding test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1
-&quot;ziplist&quot;
-127.0.0.1:6379&gt; hset test-hash-2 test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1 'test data encoding in redis'
-(integer) 1
-127.0.0.1:6379&gt; object encoding test-hash-2
-&quot;hashtable&quot;
-</code></pre></li>
-</ul></li>
-
-<li><p>Zset</p>
-
-<ul>
-<li>底层数据结构，类似于Map<String, Double>/TreeSet内部元素按照score进行排序</li>
-<li>hash，关联元素value和权重，保证value的唯一性</li>
-<li>skiplist，给value排序，根据score的范围获取元素
-<br /></li>
-</ul></li>
-</ul>
-
-<h2 id="有序链表和跳跃表">有序链表和跳跃表</h2>
-
-<p>简单比较如下图，查找51，跳跃表的查找性能相较于链表效会更好。
-<img src='/img/2022-05-26-redis-basic/linkedlist-vs-skiplist.png' style="height: 379px; margin-left: 0px;" /></p>
-
-<h2 id="新数据类型">新数据类型</h2>
-
-<ul>
-<li><p>Bitmaps - 对位的操作</p>
-
-<ul>
-<li>其本身不是一种数据类型，实际上就是字符串</li>
-<li>可以对字符串的位进行操作</li>
-<li>提供了单独的操作命令集</li>
-
-<li><p>与set相比极大的节省内存空间，但存储内容有限</p>
-
-<pre><code>127.0.0.1:6379&gt; setbit test:bitmaps:2 1 0
+<pre><code>127.0.0.1:6379&gt; setbit test:bitmaps:2 0 1
 (integer) 0
-127.0.0.1:6379&gt; setbit test:bitmaps:2 2 0
+127.0.0.1:6379&gt; bitcount test:bitmaps:2
+(integer) 1
+127.0.0.1:6379&gt; setbit test:bitmaps:2 0 2   --&gt; the value on each bit is only 0 and 1
+(error) ERR bit is not an integer or out of range
+127.0.0.1:6379&gt; setbit test:bitmaps:2 1 1
 (integer) 0
 127.0.0.1:6379&gt; setbit test:bitmaps:2 3 1
 (integer) 0
-127.0.0.1:6379&gt; getbit test:bitmaps:1 1
+127.0.0.1:6379&gt; bitcount test:bitmaps:2    --&gt; 1101
+(integer) 3
+127.0.0.1:6379&gt; bitop not notValue test:bitmaps:2 --&gt; 0010
+(integer) 1
+127.0.0.1:6379&gt; getbit notValue 0
 (integer) 0
-127.0.0.1:6379&gt; getbit test:bitmaps:1 0
-(integer) 1
-</code></pre></li>
-</ul></li>
-
-<li><p>HyperLogLog - 做基数统计，耗费12kb内存，可以计算近2^64个不同元素的技术</p>
-
-<ul>
-<li>相较于distinct，hash，set，bitmaps，更少的空间占用</li>
-
-<li><p>用降低数据精确度来换存储空间</p>
-
-<pre><code>127.0.0.1:6379&gt; pfadd hyperloglog:pageview:001 'jamie' 'james' 'edward'
-(integer) 1
-127.0.0.1:6379&gt; pfadd hyperloglog:pageview:001 'jamie' 
+127.0.0.1:6379&gt; getbit notValue 1
 (integer) 0
-127.0.0.1:6379&gt; pfadd hyperloglog:pageview:001 'john' 'edward'
+127.0.0.1:6379&gt; getbit notValue 2
 (integer) 1
-127.0.0.1:6379&gt; pfcount hyperloglog:pageview:001
-(integer) 4
-127.0.0.1:6379&gt; pfadd hyperloglog:pageview:002 'john' 'edward'
-(integer) 1
-127.0.0.1:6379&gt; pfmerge hyperloglog:pageview:summ hyperloglog:pageview:001 hyperloglog:pageview:002
-OK
-127.0.0.1:6379&gt; pfcount hyperloglog:pageview:summ
-(integer) 4
-127.0.0.1:6379&gt; get hyperloglog:pageview:summ
-&quot;HYLL\x01\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00M\xca\x84^\xa1\x80I\x86\x84E]\x84D\xa9&quot;
-</code></pre></li>
-</ul></li>
-
-<li><p>Geospatial - 地理经纬度</p>
-
-<ul>
-<li>geohash保存地理位置的坐标</li>
-<li>geohash计算的字符串，可以反向解码出原来的经纬度</li>
-
-<li><p>有序集合（zset）保存地理位置数据, member + geohash</p>
-
-<pre><code>127.0.0.1:6379&gt; geoadd china:city:xian 108.84067296981812 34.23806027872841 lvdi
-(integer) 1
-127.0.0.1:6379&gt; geoadd china:city:xian 108.88047695159912 34.22972243813365 gaoxinhospital
-(integer) 1
-127.0.0.1:6379&gt; geoadd china:city:xian 108.84039402008057 34.2350800390342 zhenguanfu
-(integer) 1
-127.0.0.1:6379&gt; geoadd china:city:xian 108.85704517364502 34.245226613720426 mincheng
-(integer) 1
-127.0.0.1:6379&gt; geoadd china:city:xian 108.8686752319336 34.22915472534989 waishi
-(integer) 1
-127.0.0.1:6379&gt; geopos china:city:xian lvdi
-1) 1) &quot;108.84067565202713013&quot;
-2) &quot;34.23805909783406065&quot;
-127.0.0.1:6379&gt; geodist china:city:xian lvdi zhenguanfu km
-&quot;0.3323&quot;
-127.0.0.1:6379&gt; geodist china:city:xian lvdi gaoxinhospital km
-&quot;3.7758&quot;
-127.0.0.1:6379&gt; georadius china:city:xian 108.84067565202713013 34.23805909783406065 3 km
-1) &quot;zhenguanfu&quot;
-2) &quot;lvdi&quot;
-3) &quot;waishi&quot;
-4) &quot;mincheng&quot;
-127.0.0.1:6379&gt; GEORADIUSBYMEMBER china:city:xian lvdi 3 km
-1) &quot;zhenguanfu&quot;
-2) &quot;lvdi&quot;
-3) &quot;waishi&quot;
-4) &quot;mincheng&quot;
-127.0.0.1:6379&gt; GEOHASH china:city:xian lvdi
-1) &quot;wqj6u8z75s0&quot;
-127.0.0.1:6379&gt; OBJECT ENCODING china:city:xian
-&quot;ziplist&quot;
-</code></pre></li>
-</ul></li>
-</ul>
-
-<h1 id="redis-重要配置">Redis 重要配置</h1>
-
-<h2 id="redis-conf">redis.conf</h2>
-
-<ul>
-<li>timeout - Close the connection after a client is idle for N seconds</li>
-<li>pidfile - /var/run/redis_6379.pid</li>
-<li>loglevel - debug/verbose/notice/warning</li>
-<li>databases - the number of databases</li>
-
-<li><p>requirepass - setting password for default user</p>
-
-<pre><code>root@d5ff6116c0ab:/# redis-cli
-127.0.0.1:6379&gt; config get requirepass
-1) &quot;requirepass&quot;
-2) &quot;&quot;
-127.0.0.1:6379&gt; config set requirepass '123456'
-OK
-127.0.0.1:6379&gt; config get requirepass
-1) &quot;requirepass&quot;
-2) &quot;123456&quot;
-127.0.0.1:6379&gt; auth '123456'
-OK
-</code></pre></li>
-
-<li><p>maxclients - the max number of connected clients at the same time</p></li>
-
-<li><p>maxmemory - memory usage limit, 强烈推荐设置，否则可能会内存耗尽而宕机</p></li>
-
-<li><p>maxmemory-policy - how Redis will select what to remove when maxmemory is reached</p>
-
-<ul>
-<li>volatile-lru - Least Recently Used, 只对设置了ttl的keys</li>
-<li>allkeys-lru - all keys</li>
-<li>volatile-lfu - Least Frequently Used, 只对设置了ttl的keys</li>
-<li>allkeys-lfu</li>
-<li>volatile-random - 只对设置了ttl的keys</li>
-<li>allkeys-random</li>
-<li>volatile-ttl - 只对设置了ttl的keys</li>
-<li>noeviction - 不移除，写入时返回错误</li>
-</ul></li>
-
-<li><p>maxmemory-samples - LRU, LFU and minimal TTL algorithms are not precise algorithms but approximated，by default redis Redis will check five keys and pick the one that was used least recently</p></li>
-</ul>
-
-<h1 id="发布与订阅">发布与订阅</h1>
-
-<p><img src='/img/2022-05-26-redis-basic/pub-sub-01.jpg' style="height: 294px; margin-left: 0px;" /></p>
-
-<h1 id="示例场景">示例场景</h1>
-
-<ul>
-<li>短信验证码</li>
-</ul>
-
-<blockquote>
-<p>主要思路：<br />
-1&gt;  随机生成6位数字码<br />
-2&gt; 存储验证码到redis，且设置ttl(如2mins), sample key pattern: <app-name/system-name>:<phone-number>:<verificaiton-code>, e.g. &lsquo;user-service:13992590000:678325&rsquo;<br />
-3&gt; 其他限制，如每天每个手机号可以发送的验证码的次数，设置单独的key来管理发送次数，sample key pattern：<app-name/system-name>:<phone-number>:count， 如果次数超过limit则不生成验证码返回exception<br />
-4&gt; 调用短信服务商接口发送短信<br />
-<a href="https://github.com/cloud-poc/redis-test">redis-test-sample</a></p>
-</blockquote>
-
-<ul>
-<li>静态数据缓存加速前端访问或者缓冲db的i/o压力
-<br /></li>
-</ul>
-
-<h1 id="redis-事务">Redis 事务</h1>
-
-<h2 id="事务概念和基本操作">事务概念和基本操作</h2>
-
-<p>其为命令提供一个单独的隔离环境，事务中所有的命令都会序列化，按顺序地执行，执行过程中不会被其他客户端发送过来的命令请求打断。
-与dbms事物不同，redis事务的作用就是串联多个命令防止被其他命令插队</p>
-
-<ul>
-<li><p>discard sample</p>
-
-<pre><code>127.0.0.1:6379[1]&gt; keys *
-(empty array)
-127.0.0.1:6379[1]&gt; multi
-OK
-127.0.0.1:6379[1]&gt; set key-1 test-1
-QUEUED
-127.0.0.1:6379[1]&gt; mset key-2 test-2 key-3 test-3
-QUEUED
-127.0.0.1:6379[1]&gt; discard
-OK
-127.0.0.1:6379[1]&gt; keys *
-(empty array)
-</code></pre></li>
-
-<li><p>exec succ</p>
-
-<pre><code>127.0.0.1:6379[1]&gt; keys *
-(empty array)
-127.0.0.1:6379[1]&gt; multi
-OK
-127.0.0.1:6379[1]&gt; mset key-2 test-2 key-3 test-3
-QUEUED
-127.0.0.1:6379[1]&gt; exec
-1) OK
-127.0.0.1:6379[1]&gt; keys *
-1) &quot;key-2&quot;
-2) &quot;key-3&quot;
-127.0.0.1:6379[1]&gt;
-</code></pre></li>
-
-<li><p>error in middle of exec</p>
-
-<pre><code>127.0.0.1:6379[1]&gt; multi
-OK
-127.0.0.1:6379[1]&gt; hget hkey-1 color
-QUEUED
-127.0.0.1:6379[1]&gt; incr key-2
-QUEUED
-127.0.0.1:6379[1]&gt; hset hkey-1 color blue
-QUEUED
-127.0.0.1:6379[1]&gt; exec
-1) (nil)
-2) (error) ERR value is not an integer or out of range
-3) (integer) 1
-127.0.0.1:6379[1]&gt; hget hkey-1 color
-&quot;blue&quot;
-</code></pre></li>
-</ul>
-
-<h2 id="redis-乐观锁">Redis 乐观锁</h2>
-
-<p>watch key - monitor one or more key</p>
-
-<ul>
-<li><p>sample</p>
-
-<pre><code>127.0.0.1:6379[1]&gt; watch key-1 lkey-1
-OK
-127.0.0.1:6379[1]&gt; incrby key-1 100
-(integer) 300
-127.0.0.1:6379[1]&gt; multi
-OK
-127.0.0.1:6379[1]&gt; incrby key-1 100
-QUEUED
-127.0.0.1:6379[1]&gt; lpush lkey-1 400
-QUEUED
-127.0.0.1:6379[1]&gt; exec
-(nil)
-127.0.0.1:6379[1]&gt;
 </code></pre>
 
-<p>ps: the keys &lsquo;watched&rsquo; has been changed by other client, hence the transaction executed failed.</p></li>
+<h2 id="业务用例">业务用例</h2>
+
+<h3 id="整型数据排序-去重">整型数据排序/去重</h3>
+
+<p>(这个其实不算做bitmap的一个用例场景)<br />
+思路分析:</p>
+
+<ul>
+<li>bitmap是用每一个位来记录事物的状态，最大长度512Mb = 512 * 1024 * 1024 * 8 = 2^32, 即
+8bit = 1byte， offset maximum = 2^32 -1 = 4294967295,即最大的下标为4294967295<br /></li>
+<li>将整型数据直接offset设置到bitmap存储结构中，即setbit key value 1<br /></li>
 </ul>
 
-<h2 id="redis-transaction-summary">Redis Transaction Summary</h2>
+<p>简易示例:<br />
+发现放进数据容易，取出来还是比较麻烦，不过bitmap主要用来应对状态统计之类的场景，所以设计上本也不在此。</p>
+
+<pre><code>@Test  
+public void test() {  
+    String key = &quot;test:bitmaps:comparison&quot;;  
+    List&lt;Integer&gt; list = List.of(10, 39, 44, 20, 75, 63, 25, 44, 29, 21, 65, 20);  
+    log.info(&quot;List before sorting,[{}]&quot;, list);  
+    RedisCommands&lt;String, String&gt; syncCommands = connection.sync();  
+  
+    list.forEach(v -&gt; {  
+        syncCommands.setbit(key, v, 1);  
+    });  
+  
+    List&lt;Integer&gt; sortedList = new ArrayList&lt;&gt;(list.size());  
+    IntStream.range(1, list.stream().max(Integer::compareTo).get() + 1).forEach(i -&gt; {  
+        if (list.contains(i) &amp;&amp; syncCommands.getbit(key, Integer.valueOf(i)).intValue() == 1) {  
+            sortedList.add(i);  
+        }  
+    });  
+    log.info(&quot;List after sorting,[{}]&quot;, sortedList);  
+}
+</code></pre>
+
+<h3 id="其他互联网场景"> 其他互联网场景</h3>
+
+<p>在互联网场景下使用bitmap能取得出其不意的效果，  典型用例场景如</p>
 
 <ul>
-<li>All the operations in transaction will be executed sequentially and won&rsquo;t be interuptted by other clients.</li>
-<li>All the operations queued won&rsquo;t take effect until &lsquo;exec&rsquo; is executed</li>
-<li>Redis cannot guarantee the atomicity.
-<br /></li>
+<li>活跃用户统计(id为int类型)，如果活跃用户数据比较少，bitmap结构反而更加浪费存储空间<br /></li>
+<li>点赞以及统计<br /></li>
 </ul>
 
-<h1 id="redis-持久化">Redis 持久化</h1>
+<h1 id="基于redis的秒杀">基于redis的秒杀</h1>
 
-<h2 id="rdb">RDB</h2>
-
-<p>指定时间间隔内讲内存中的快照写到硬盘中。
-具体步骤</p>
+<p>需要考虑的设计点：</p>
 
 <ul>
-<li>fork 一个进程作为原进程的子进程</li>
-<li>写数据到临时区域/文件</li>
-<li>覆盖临时文件到持久化dump.rdb文件，更好的保证数据完整性<br />
-整个过程不影响主进程，缺点是最后一次持久化的数据可能会丢失<br /></li>
+<li>高并发下的缓存雪崩和缓存穿透<br /></li>
+<li>超卖<br /></li>
+<li>恶意请求<br /></li>
+<li>链接暴露<br /></li>
+<li>降级、限流、熔断<br /></li>
 </ul>
 
-<blockquote>
-<p>stop-writes-on-bgsave-error yes  停止接受写入命令如果rdb开启了并且最近一次后台save失败
-rdbcompression yes 压缩string object using lzf when dump .rdb databases.
-rdbchecksum yes CRC64算法进行数据校验
-save 900 1  - 900秒内有一个key变化就进行持久化
-    save 300 10 - 300秒内有10个key变化就吃法持久化</p>
-</blockquote>
+<p>应对方案思路：</p>
 
 <ul>
-<li>优点
+<li>单一职责，设计单独的秒杀服务和数据库<br /></li>
+<li>前端限流 + 后段限流 + 按钮控制<br />
 
 <ul>
-<li>适合大规模数据恢复</li>
-<li>对数据完整性和一致性要求不高更合适使用</li>
-<li>节省磁盘空间</li>
-<li>回复速度快</li>
+<li>没有开始之前按钮置灰 + 延迟几秒开始 + 每次点击完之后的短暂等待=&gt; 解决开始之前的大流量刷新以及其导致的缓存穿透<br /></li>
+<li>限流组件(hystrix/sentinel) + 及时秒杀结束(前后端)<br /></li>
 </ul></li>
-<li>缺点
+<li>防刷控制<br />
 
 <ul>
-<li>fork操作导致了两倍的数据膨胀</li>
-<li>最后一次进行持久化后的数据可能会丢失，key的变化还没有来得及刷新到rdb文件
-<br />
-<br />
-<br /></li>
+<li>动态URL，商品链接加盐或者加密<br /></li>
+<li>恶意ip拦截，请求次数&gt;阈值<br /></li>
+<li>秒杀成功白名单，保证每个id最多秒杀成功一次<br /></li>
 </ul></li>
+<li>流量洪峰应对，保证系统运行<br />
+
+<ul>
+<li>nginx+预热扩容+结束后的缩容<br /></li>
+<li>资源静态化 - cdn缓存<br /></li>
+</ul></li>
+<li>存储预热<br />
+
+<ul>
+<li>redis集群<br /></li>
+<li>商品库存和秒杀开关缓存到redis</li>
+<li>redis事务解决库存判断,扣减和秒杀开关更新 -&gt;lua 脚本</li>
+</ul></li>
+<li>超卖控制
+
+<ul>
+<li>redis lua 脚本 - redis事务<br /></li>
+<li>数据库秒杀记录唯一索引 （redis扣减成功但数据库更新失败的case可以忽略不计，对商家来说无损失，反正已经宣传了自己）<br /></li>
+</ul></li>
+<li>秒杀成功的订单入队列异步处理后续流程，如邮寄地址/付款/etc.<br /></li>
 </ul>
 
-<h1 id="referred-articles">Referred Articles</h1>
+<p>动态url示例:</p>
 
-<p><a href="https://www.cnblogs.com/LBSer/p/3310455.html">https://www.cnblogs.com/LBSer/p/3310455.html</a><br />
-<a href="http://redisbook.com/preview/object/sorted_set.html">http://redisbook.com/preview/object/sorted_set.html</a></p>
+<ol>
+<li>获取url  &ndash;&gt; GET:/{goodId}/url, 返回的是混淆字符串(hash)，如sha2(goodId+salt)</li>
+<li>秒杀下单&ndash;&gt; POST:/{goodId}/{hash}/execution. 比较hash是否正确。</li>
+</ol>
+
+<h1 id="reference">Reference</h1>
+
+<p><a href="https://zhuanlan.zhihu.com/p/480386998">https://zhuanlan.zhihu.com/p/480386998</a></p>
 
 
                 
@@ -681,15 +403,10 @@ save 900 1  - 900秒内有一个key变化就进行持久化
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/2021-08-09-aws-demo-01-autoscale-test/" data-toggle="tooltip" data-placement="top" title="Demo - AWS EC2 instance auto scaling">&larr;
+                        <a href="/post/2022-05-31-redis-basic-1/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">&larr;
                             Previous Post</a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/post/2022-06-23-redis-advance/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">Next
-                            Post &rarr;</a>
-                    </li>
                     
                 </ul>
                 
