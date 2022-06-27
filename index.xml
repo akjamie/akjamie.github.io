@@ -6,10 +6,19 @@
     <description>Recent content on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Jun 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 27 Jun 2022 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Redis学习笔记</title>
+      <link>http://akjamie.github.io/post/2022-06-27-redis-basic-2/</link>
+      <pubDate>Mon, 27 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2022-06-27-redis-basic-2/</guid>
+      <description>Redis 事务 事务概念和基本操作 其为命令提供一个单独的隔离环境，事务中所有的命令都会序列化，按顺序地执行，执行过程中不会被其他客户端发送过来的命令请</description>
+    </item>
     
     <item>
       <title>Redis学习笔记</title>
