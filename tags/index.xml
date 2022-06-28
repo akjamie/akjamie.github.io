@@ -30,6 +30,24 @@
     </item>
     
     <item>
+      <title>DevOps</title>
+      <link>http://akjamie.github.io/tags/devops/</link>
+      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/devops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>K8S</title>
+      <link>http://akjamie.github.io/tags/k8s/</link>
+      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/k8s/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>AWS</title>
       <link>http://akjamie.github.io/tags/aws/</link>
       <pubDate>Mon, 09 Aug 2021 00:00:00 +0000</pubDate>
@@ -80,15 +98,6 @@
       <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>http://akjamie.github.io/tags/gcp/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>K8S</title>
-      <link>http://akjamie.github.io/tags/k8s/</link>
-      <pubDate>Sun, 29 Nov 2020 00:00:00 +0000</pubDate>
-      
-      <guid>http://akjamie.github.io/tags/k8s/</guid>
       <description></description>
     </item>
     

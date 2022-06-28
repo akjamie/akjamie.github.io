@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    
+
+    
+    <meta name="title" content="Kubernetes dashboard deployment" />
+    <meta property="og:title" content="Kubernetes dashboard deployment" />
+    <meta property="twitter:title" content="Kubernetes dashboard deployment" />
+    
+
+    
+    <meta name="description" content="Deploy K8S dashboard with TLS enabled">
+    <meta property="og:description" content="Deploy K8S dashboard with TLS enabled" />
+    <meta property="twitter:description" content="Deploy K8S dashboard with TLS enabled" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Kubernetes dashboard deployment | Jamie&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/2022-04-12-kubernetes-dashboard/">
+
+    
+    
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@5.15.1/css/all.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/cloud">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others">others</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/background-10.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/k8s" title="K8S">
+                            K8S
+                        </a>
+                        
+                        <a class="tag" href="/tags/devops" title="DevOps">
+                            DevOps
+                        </a>
+                        
+                    </div>
+                    <h1>Kubernetes dashboard deployment</h1>
+                    <h2 class="subheading">Deploy K8S dashboard with TLS enabled and Cluster Admin role user access.</h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                     &#34;Jamie Zhang&#34;
+                             
+                            on 
+                            Tuesday, April 12, 2022
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                
+
+<h1 id="install-dashboard">Install dashboard</h1>
+
+<p>To run the following command to deploy dashboard</p>
+
+<pre><code class="language-bash">kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
+</code></pre>
+
+<p>once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully.
+<img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-01.png' style="height: 484px;margin-left: 0px;"/>
+ps:</p>
+
+<ol>
+<li>On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service,  the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</li>
+
+<li><p>Brower(Chrome) will block the dasboard access though the <a href="https://192.168.58.156">https://192.168.58.156</a> since the tls cert is generated by kubernetes during installation, it can not be trusted by CA, this issue will be resolved in later step.</p>
+
+<h1 id="generate-tls-cert">Generate TLS Cert</h1>
+
+<p>Suppose you have already a domain name, or buy a domain name from Alicloud, AWS, or godady,etc.
+Here i will use Alicould for instance, my Domain name is it-meta.space.</p>
+
+<h2 id="create-free-tsl-cert">Create free TSL cert</h2>
+
+<p>the menu naviagation is in below:
+Aliyun Console &gt;&gt; Certificate Management Service &gt;&gt; SSL Certificates &gt;&gt; Manage Free Certificates</p></li>
+</ol>
+
+<p>on the Free cert management page, you can create 20 free certs, after raising request, the cert will be ready within minutes.
+<img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-02.png' style="height: 311px;margin-left: 0px;"/></p>
+
+<h2 id="download-the-cert">Download the cert</h2>
+
+<p>On the right hand side of the cert generated, you can trigger the cert download after click the &lsquo;Download&rsquo; or 3 dot mean.
+in the package downloaded, there are two files, 1 key file and 1 cert.
+<img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-02.png' style="width: 1310px;margin-left: 0px;"/></p>
+
+<h1 id="replace-tsl-cert">Replace TSL cert</h1>
+
+<p>Run following command to relace the TSL certs with newly downloaded in above steps.</p>
+
+<pre><code class="language-bash"># check existing secert
+kubectl get secret kubernetes-dashboard-certs -n kubernetes-dashboard
+# remove the current secert
+kubectl delete secret kubernetes-dashboard-certs -n kubernetes-dashboard
+# create a secert with same name - kubernetes-dashboard-certs
+kubectl create secret generic kubernetes-dashboard-certs --from-file=7588655_dashboard.it-meta.space.key --from-file=7588655_dashboard.it-meta.space.pem -n kubernetes-dashboard
+# delete the kubernetes pod to force system to auto schedule a new one and applying the new secret.
+kubectl delete pod/${kubectl get pod -n kubernetes-dashboard|grep kubernetes-dashboard-|awk '{print $1}'}
+</code></pre>
+
+<h1 id="setup-ingress-for-the-dashboard">Setup Ingress for the dashboard</h1>
+
+<p>In order to expose the dashboard endpoint with https protocol, here will leverage the Ingress-nginx to support TLS connection.</p>
+
+<h2 id="create-secret-for-ingress">Create Secret for ingress</h2>
+
+<p>To run following command to do the creation.</p>
+
+<pre><code class="language-bash">kubectl create secret tls k8s-dashboard --key 7588655_dashboard.it-meta.space.key --cert 7588655_dashboard.it-meta.space.pem -n kubernetes-dashboard
+kubectl get secret -n kubernetes-dashboard
+</code></pre>
+
+<p>Captured screenshot for reference.
+<img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-04.png' style="height: 634px;margin-left: 0px;"/></p>
+
+<h2 id="create-ingress-for-dashboard">Create Ingress for dashboard</h2>
+
+<p>here is the sample of yaml file - k8s-dashboard-ingress.yaml</p>
+
+<pre><code class="language-bash">apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8s-dashboard-ingress
+  namespace: kubernetes-dashboard
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: &quot;true&quot;
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: &quot;true&quot;
+    nginx.ingress.kubernetes.io/backend-protocol: &quot;HTTPS&quot;
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: dashboard.it-meta.space
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kubernetes-dashboard
+            port:
+              number: 443
+  tls:
+  - secretName: k8s-dashboard
+    hosts:
+    - dashboard.it-meta.space
+</code></pre>
+
+<p>kubectl apply -f k8s-dashboard-ingress.yaml</p>
+
+<p>After the ingress creation, if you want to know the nginx config, you can enter log into the ingress-nginx-controller pod to check the nginx.conf.</p>
+
+<pre><code class="language-bash">Jamies-MacBook-Pro:dashboard jamie$ kubectl get pod -n ingress-nginx
+NAME                                               READY   STATUS    RESTARTS      AGE
+ingress-ingress-nginx-controller-c8b8497fb-559sg   1/1     Running   1 (13h ago)   24h
+
+Jamies-MacBook-Pro:dashboard jamie$ kubectl exec -it ingress-ingress-nginx-controller-c8b8497fb-559sg -n ingress-nginx -- bash 
+bash-5.1$ ls
+fastcgi.conf            koi-win                 nginx.conf              template
+fastcgi.conf.default    lua                     nginx.conf.default      uwsgi_params
+fastcgi_params          mime.types              opentracing.json        uwsgi_params.default
+fastcgi_params.default  mime.types.default      owasp-modsecurity-crs   win-utf
+geoip                   modsecurity             scgi_params
+koi-utf                 modules                 scgi_params.default
+
+bash-5.1$ cat nginx.conf
+...
+## start server dashboard.it-meta.space
+	server {
+		server_name dashboard.it-meta.space ;
+		
+		listen 80  ;
+		listen 443  ssl http2 ;
+		
+		set $proxy_upstream_name &quot;-&quot;;
+		
+		ssl_certificate_by_lua_block {
+			certificate.call()
+		}
+...
+</code></pre>
+
+<h1 id="access-the-dashboard">Access the dashboard</h1>
+
+<h2 id="dns-resolve-for-local-optional">DNS resolve for local(Optional)</h2>
+
+<p>if you are doing the setup on VM/machine which  has public access, then you could access the dashboard url directly.</p>
+
+<p>if you are doing it in local with host only network, then you have to take care of the DNS resolve, what need to do is to change the hosts file directly, thus for my case, i&rsquo;m using vmware fusion on Macbook, i have to change the hosts file to make the FQDN to point to the EXTERNAL-IP of the ingress nginx controller service.</p>
+
+<pre><code class="language-bash">192.168.58.155 dashboard.it-meta.space
+</code></pre>
+
+<h2 id="access-the-dashboard-1">Access the dashboard</h2>
+
+<p>Until now, the setup is almost done, let&rsquo;s try the dashboard.
+<img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-05.png' style="height: 620px;margin-left: 0px;"/></p>
+
+<p>It looks good, now trying to get token and login it.<br />
+Using below command to get login token and use it to login the dashboard console.<br />
+<span style="color:green;font-weight:bold">kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep kubernetes-dashboard | awk &lsquo;{print $1}&rsquo;)</span></p>
+
+<h2 id="optional-create-a-new-user-with-cluster-admin-role">Optional -  create a new user with cluster-admin role</h2>
+
+<p>Becuase the existing user kubernetes-dashboard has very limited access right to cluster resources, hence suggest to create a new service account.</p>
+
+<pre><code class="language-bash">apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: k8s-admin-dashboard
+  namespace: kubernetes-dashboard
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: k8s-admin-dashboard
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: k8s-admin-dashboard
+  namespace: kubernetes-dashboard
+</code></pre>
+
+<p>once done, can use this new user to get token to login dashboard.
+<span style="color:green;font-weight:bold">kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep k8s-admin-dashboard | awk &lsquo;{print $1}&rsquo;) </span></p>
+
+<p>after login, you can see the resources running on the clusers and do the operation work through this dashboard.
+<img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-06.png' style="height: 587px;margin-left: 0px;"/></p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2021-08-09-aws-demo-01-autoscale-test/" data-toggle="tooltip" data-placement="top" title="Demo - AWS EC2 instance auto scaling">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/2022-05-31-redis-basic-1/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+                
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mongo" title="mongo">
+                            mongo
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring-cloud">
+                            spring-cloud
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction-management">
+                            transaction-management
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">                  
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2022
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+</body>
+</html>

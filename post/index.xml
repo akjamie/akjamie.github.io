@@ -39,6 +39,17 @@
     </item>
     
     <item>
+      <title>Kubernetes dashboard deployment</title>
+      <link>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</link>
+      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</guid>
+      <description>Install dashboard To run the following command to deploy dashboard
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml  once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully. ps:
+ On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service, the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</description>
+    </item>
+    
+    <item>
       <title>Demo - AWS EC2 instance auto scaling</title>
       <link>http://akjamie.github.io/post/2021-08-09-aws-demo-01-autoscale-test/</link>
       <pubDate>Mon, 09 Aug 2021 00:00:00 +0000</pubDate>
