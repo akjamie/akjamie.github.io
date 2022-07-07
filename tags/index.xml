@@ -6,15 +6,42 @@
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 27 Jun 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 04 Jul 2022 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>K8S</title>
+      <link>http://akjamie.github.io/tags/k8s/</link>
+      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/k8s/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spring-stomp</title>
+      <link>http://akjamie.github.io/tags/spring-stomp/</link>
+      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/spring-stomp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Websocket</title>
+      <link>http://akjamie.github.io/tags/websocket/</link>
+      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/websocket/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>NoSQL</title>
       <link>http://akjamie.github.io/tags/nosql/</link>
-      <pubDate>Mon, 27 Jun 2022 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate>
       
       <guid>http://akjamie.github.io/tags/nosql/</guid>
       <description></description>
@@ -23,7 +50,7 @@
     <item>
       <title>Redis</title>
       <link>http://akjamie.github.io/tags/redis/</link>
-      <pubDate>Mon, 27 Jun 2022 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate>
       
       <guid>http://akjamie.github.io/tags/redis/</guid>
       <description></description>
@@ -35,15 +62,6 @@
       <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>http://akjamie.github.io/tags/devops/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>K8S</title>
-      <link>http://akjamie.github.io/tags/k8s/</link>
-      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
-      
-      <guid>http://akjamie.github.io/tags/k8s/</guid>
       <description></description>
     </item>
     

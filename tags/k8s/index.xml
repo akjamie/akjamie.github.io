@@ -6,10 +6,28 @@
     <description>Recent content in K8S on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Apr 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 04 Jul 2022 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Websocket集成</title>
+      <link>http://akjamie.github.io/post/2022-07-04-spring-websocket-stomp/</link>
+      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2022-07-04-spring-websocket-stomp/</guid>
+      <description>Background 最近在做一个类似于快速竞价的功能的技术设计，即在很短的时间内通过一个集中的平台拿到各家的报价，类似于支付宝上的那个车险报价，发送完汽车信息</description>
+    </item>
+    
+    <item>
+      <title>Redis学习笔记</title>
+      <link>http://akjamie.github.io/post/2022-06-28-redis-master-slave-replication/</link>
+      <pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2022-06-28-redis-master-slave-replication/</guid>
+      <description>主从复制 基本概念 主机数据更新后根据配置和策略，自动同步到备份机的master/slave机制，其中master以写为主，而slave主要以读</description>
+    </item>
     
     <item>
       <title>Kubernetes dashboard deployment</title>

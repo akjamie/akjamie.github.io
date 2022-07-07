@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    
+
+    
+    <meta name="title" content="Redis学习笔记" />
+    <meta property="og:title" content="Redis学习笔记" />
+    <meta property="twitter:title" content="Redis学习笔记" />
+    
+
+    
+    <meta name="description" content="Redis主从复制">
+    <meta property="og:description" content="Redis主从复制" />
+    <meta property="twitter:description" content="Redis主从复制" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Redis学习笔记 | Jamie&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/2022-06-28-redis-master-slave-replication/">
+
+    
+    
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@5.15.1/css/all.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/cloud">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others">others</a>
+                        </li>
+                        
+                    
+                    
+		    
+
+                    
+		    <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/background-05.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/redis" title="Redis">
+                            Redis
+                        </a>
+                        
+                        <a class="tag" href="/tags/nosql" title="NoSQL">
+                            NoSQL
+                        </a>
+                        
+                        <a class="tag" href="/tags/k8s" title="K8S">
+                            K8S
+                        </a>
+                        
+                    </div>
+                    <h1>Redis学习笔记</h1>
+                    <h2 class="subheading">Redis basic knowledge - Master/slave replication</h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Tuesday, June 28, 2022
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                
+
+<h1 id="主从复制">主从复制</h1>
+
+<h2 id="基本概念">基本概念</h2>
+
+<p>主机数据更新后根据配置和策略，自动同步到备份机的master/slave机制，其中master以写为主，而slave主要以读为主。<br />
+该机制使<br />
+1》读写分离，性能获得提升<br />
+2》容灾快速恢复</p>
+
+<h2 id="环境搭建">环境搭建</h2>
+
+<p>快速demo搭建一主两从的主从复制集群，准备3份配置文件：<br />
+- redis-6379.conf<br />
+- redis-6380.conf<br />
+- redis-6381.conf</p>
+
+<pre><code># -----------------------------------------------------------------------
+# redis-6379.conf ==&gt; master node
+# include original redis config - full version
+include /Users/jamie/Documents/work-benches/redis/redis-6.0.6/redis.conf
+
+#pidfile path
+pidfile /var/run/redis-6379.pid
+
+#redis listening port
+port 6379
+
+#rdb filename
+dbfilename dump-6379.rdb
+
+#appendonly filename
+appendfilename appendonly-6379.aof
+
+daemonize yes
+# -----------------------------------------------------------------------
+
+# redis-6380.conf ==&gt; slave node
+# include original redis config - full version
+include /Users/jamie/Documents/work-benches/redis/redis-6.0.6/redis.conf
+
+#pidfile path
+pidfile /var/run/redis-6380.pid
+
+#redis listening port
+port 6380
+
+#rdb filename
+dbfilename dump-6380.rdb
+
+#appendonly filename
+appendfilename appendonly-6380.aof
+
+daemonize yes
+
+# slave of master node
+replicaof 127.0.0.1 6379
+# -----------------------------------------------------------------------
+
+# redis-6381.conf ==&gt; slave node
+# include original redis config - full version
+include /Users/jamie/Documents/work-benches/redis/redis-6.0.6/redis.conf
+
+#pidfile path
+pidfile /var/run/redis-6381.pid
+
+#redis listening port
+port 6381
+
+#rdb filename
+dbfilename dump-6381.rdb
+
+#appendonly filename
+appendfilename appendonly-6381.aof
+
+daemonize yes
+
+replicaof 127.0.0.1 6379
+# -----------------------------------------------------------------------
+</code></pre>
+
+<p>启动redis实例  &lsquo;nohup redis-server ./config/redis-<port>.conf&rsquo;, 当3个实例启动完成后, 在master 上检查replication的配置,看到如下信息则主从配置成功
+<img src='/img/2022-06-28-redis-master-slave-replication/replica-01.png' style="height: 428px;margin-left: 0px;"/></p>
+
+<p>3中加入到复制集的方式<br />
+- 依赖于config文件中的<strong>replicaof {masterhost} {masterport}</strong>命令把节点加入到集群<br />
+- 通过 redis-server &ndash;slaveof {masterhost} {masterport}进行添加<br />
+- 在slave节点上运行redis 命令 slaveof {masterhost} {masterport}进行添加</p>
+
+<h2 id="注意问题或重点">注意问题或重点</h2>
+
+<ol>
+<li>从服务器挂掉之后重新启动，已经不再是从模式(只有在conf中没有replicaof的情况下)，需要重新手动添加到集群，主服务器重新集群模式仍然不变。<br /></li>
+<li>主从复制原理
+
+<ul>
+<li>salve连接上master之后，salve向master请求数据同步sync</li>
+<li>master收到同步数据请求后，进行数据持久化到rdb文件，发送rdb文件给slave</li>
+<li>每次master写操作，主动同步到slave</li>
+</ul></li>
+<li>slave 上可以添加slave，形成树形结构</li>
+<li>主从切换，当master挂掉，slave可以升级为master
+
+<ul>
+<li>手动进行切换 &ndash;〉 slaveof no one</li>
+<li>哨兵模式 sentinel
+<br /></li>
+</ul></li>
+</ol>
+
+<h2 id="哨兵模式-sentinel">哨兵模式 sentinel</h2>
+
+<p>哨兵模式是一种特殊的模式，首先Redis提供了哨兵的命令，哨兵是一个独立的进程，作为进程，它会独立运行。其原理是<strong>哨兵通过发送命令，等待Redis服务器响应，从而监控运行的多个Redis实例</strong>.</p>
+
+<h3 id="启动哨兵">启动哨兵</h3>
+
+<p>copy redis安装目录下的sentinel.conf配置修改如下：</p>
+
+<pre><code># protection mode
+protected-mode no
+# monitor master node
+sentinel monitor mymaster 127.0.0.1 6379 1	
+</code></pre>
+
+<p>启动哨兵 - <strong>redis-sentinel ./config/sentinel.conf</strong>, 如果启动正常可以在日志中看到master和slave节点的信息。
+<img src='/img/2022-06-28-redis-master-slave-replication/sentinel-01.png' style="weight: 1450px;height: 132px;margin-left: 0px;"/></p>
+
+<h3 id="验证failover">验证failover</h3>
+
+<h4 id="验证前server信息">验证前server信息</h4>
+
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>端口</th>
+<th>角色</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>127.0.0.1</td>
+<td>6379</td>
+<td>master</td>
+</tr>
+
+<tr>
+<td>127.0.0.1</td>
+<td>6380</td>
+<td>slave</td>
+</tr>
+
+<tr>
+<td>127.0.0.1</td>
+<td>6381</td>
+<td>slave</td>
+</tr>
+
+<tr>
+<td>127.0.0.1</td>
+<td>26379</td>
+<td><span style='color:red'>sentinel</span></td>
+</tr>
+</tbody>
+</table>
+
+<p>输出replication详情如下：</p>
+
+<pre><code>Jamies-MacBook-Pro:workspace-20190620 jamie$ redis-cli -p 6379
+127.0.0.1:6379&gt; info replication
+# Replication
+role:master
+connected_slaves:2
+slave0:ip=127.0.0.1,port=6380,state=online,offset=43115,lag=0
+slave1:ip=127.0.0.1,port=6381,state=online,offset=43115,lag=1
+master_replid:e2dd09590dc64383a7a97d439ca70ae61a8f13b0
+master_replid2:0000000000000000000000000000000000000000
+master_repl_offset:43115
+second_repl_offset:-1
+repl_backlog_active:1
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:1
+repl_backlog_histlen:43115
+</code></pre>
+
+<h4 id="failover后的server-信息">failover后的server 信息</h4>
+
+<p>手动shutdown 6379，查看sentinel日志获取新的主节点信息，并输出新主节点上的replication info.
+<img src='/img/2022-06-28-redis-master-slave-replication/sentinel-02.png' style="weight: 1852px;height: 654px;margin-left: 0px;"/>
+由上图所示，新的master 为6380.</p>
+
+<pre><code>Jamies-MacBook-Pro:workspace-20190620 jamie$ redis-cli -p 6380
+127.0.0.1:6380&gt; info replication
+# Replication
+role:master
+connected_slaves:1
+slave0:ip=127.0.0.1,port=6381,state=online,offset=90136,lag=1
+</code></pre>
+
+<p>综上所述，新的server info 为</p>
+
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>端口</th>
+<th>角色</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>127.0.0.1</td>
+<td>6379</td>
+<td>slave after restarted</td>
+</tr>
+
+<tr>
+<td>127.0.0.1</td>
+<td>6380</td>
+<td>master</td>
+</tr>
+
+<tr>
+<td>127.0.0.1</td>
+<td>6381</td>
+<td>slave</td>
+</tr>
+
+<tr>
+<td>127.0.0.1</td>
+<td>26379</td>
+<td><span style='color:red'>sentinel</span></td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="spring-lettuce-测试failover">Spring + Lettuce 测试failover</h3>
+
+<p>配置如下：</p>
+
+<pre><code># application.yml ==&gt;
+spring:  
+  redis:  
+    host: localhost  
+    port: 6380  
+    lettuce:  
+      pool:  
+        max-active: 3  
+        max-idle: 2  
+        min-idle: 1  
+        max-wait: 10000  
+    sentinel:  
+      master: mymaster  
+    client-type: lettuce
+</code></pre>
+
+<p>Test case - 每间隔1分钟向redis写一条数据，在过程shutdown 6380，等待sentinel发现并切换主节点然后应用恢复连接并继续写入数据。</p>
+
+<pre><code>@SpringBootTest  
+@Slf4j  
+public class RedisWriteOperationWithFailover {  
+    @Autowired  
+    RedisTemplate&lt;Object, Object&gt; redisTemplate;  
+  
+    @Test  
+    public void test() {  
+        final String testKeyPrefix = &quot;test:sentinel:sequence:&quot;;  
+        IntStream.range(0, 20).forEach(i -&gt; {  
+            String key = testKeyPrefix + i;  
+            log.info(&quot;write record to redis, key: {}, value:{}&quot;, key, i);  
+            redisTemplate.opsForValue().set(key, i, Duration.ofMinutes(1));  
+            try {  
+                TimeUnit.MINUTES.sleep(1);  
+            } catch (InterruptedException e) {  
+                throw new RuntimeException(e);  
+            }  
+        });  
+    }  
+}
+</code></pre>
+
+<p>测试结果如图
+<img src='/img/2022-06-28-redis-master-slave-replication/sentinel-03.png' style="height: 727px;margin-left: 0px;"/>
+从上图中得知：<br />
+- 2022-07-07 23:34:58发现master down机，然后尝试重新连接一直fail。<br />
+- sentinel在30秒后进行投票选举新的master 并切换到新master 6379。<br />
+- 应用自动连接到新的master回复数据写入。</p>
+
+<h1 id="refference-articles">Refference Articles</h1>
+
+<p><a href="https://www.jianshu.com/p/f2cb77e7a402">https://www.jianshu.com/p/f2cb77e7a402</a></p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2022-06-27-redis-basic-2/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/2022-07-04-spring-websocket-stomp/" data-toggle="tooltip" data-placement="top" title="Websocket集成">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+                
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mongo" title="mongo">
+                            mongo
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring-cloud">
+                            spring-cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction-management">
+                            transaction-management
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">                  
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2022
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+</body>
+</html>
