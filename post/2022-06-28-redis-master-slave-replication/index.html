@@ -513,6 +513,10 @@ public class RedisWriteOperationWithFailover {
 - sentinel在30秒后进行投票选举新的master 并切换到新master 6379。<br />
 - 应用自动连接到新的master回复数据写入。</p>
 
+<blockquote>
+<p>sentinel down-after-milliseconds mymaster 30000</p>
+</blockquote>
+
 <h1 id="refference-articles">Refference Articles</h1>
 
 <p><a href="https://www.jianshu.com/p/f2cb77e7a402">https://www.jianshu.com/p/f2cb77e7a402</a></p>
