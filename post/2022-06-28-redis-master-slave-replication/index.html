@@ -511,7 +511,7 @@ public class RedisWriteOperationWithFailover {
 从上图中得知：<br />
 - 2022-07-07 23:34:58发现master down机，然后尝试重新连接一直fail。<br />
 - sentinel在30秒后进行投票选举新的master 并切换到新master 6379。<br />
-- 应用自动连接到新的master回复数据写入。</p>
+- 应用自动连接到新的master恢复数据写入。</p>
 
 <blockquote>
 <p>sentinel down-after-milliseconds mymaster 30000</p>
@@ -647,6 +647,8 @@ public class RedisWriteOperationWithFailover {
                         
                         
                         
+                        
+                        
                         <a href="/tags/k8s" title="k8s">
                             k8s
                         </a>
@@ -702,6 +704,8 @@ public class RedisWriteOperationWithFailover {
                         <a href="/tags/spring-cloud" title="spring-cloud">
                             spring-cloud
                         </a>
+                        
+                        
                         
                         
                         

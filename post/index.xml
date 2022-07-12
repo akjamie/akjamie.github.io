@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 04 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 09 Jul 2022 23:03:30 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Redis学习笔记</title>
+      <link>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</link>
+      <pubDate>Sat, 09 Jul 2022 23:03:30 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</guid>
+      <description>What&amp;rsquo;s Redis Cluster Redis Cluster is a distributed implementation of Redis with the following goals in order of importance in the design: High performance and linear scalability up to 1000 nodes. There are no proxies, asynchronous replication is used, and no merge operations are performed on values. 在多达 1000 个节点的时候仍能保持高性能及线性的可扩</description>
+    </item>
     
     <item>
       <title>Websocket集成</title>
@@ -229,6 +238,17 @@ Setup VPC peering accross two GCP projects in this demo, will create two GCP pro
       
       <guid>http://akjamie.github.io/2019/01/19/uipath-invoke-python-method/</guid>
       <description>UIPath是一个非常不错的RPA(Robotic Process Automation) 工具和平台，并且有开源社区版本可以方便RPA爱好者去尝试，本文是介绍如何在UIPath</description>
+    </item>
+    
+    <item>
+      <title>Spring Data &amp; Data Persistent</title>
+      <link>http://akjamie.github.io/post/2022-07-08-spring-data-series-01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2022-07-08-spring-data-series-01/</guid>
+      <description>What is JPA? &amp;ldquo;The Java Persistence API is the Java API for the management of persistence and object/relational mapping in Java EE and Java SE environments. It provides an object/relational mapping facility for the Java application developer using a Java domain model to manage a relational database.&amp;rdquo;
+It&amp;rsquo;s quoted from JSR(Java Specification Request) managed by Java Community Process.
+This is just the definition of what&amp;rsquo;s JPA, let&amp;rsquo;s recall how we persist data before adopting JPA.</description>
     </item>
     
   </channel>

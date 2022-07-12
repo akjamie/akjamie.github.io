@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spring Data on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/spring-data/</link>
+    <description>Recent content in Spring Data on Jamie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="http://akjamie.github.io/tags/spring-data/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Spring Data &amp; Data Persistent</title>
+      <link>http://akjamie.github.io/post/2022-07-08-spring-data-series-01/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2022-07-08-spring-data-series-01/</guid>
+      <description>What is JPA? &amp;ldquo;The Java Persistence API is the Java API for the management of persistence and object/relational mapping in Java EE and Java SE environments. It provides an object/relational mapping facility for the Java application developer using a Java domain model to manage a relational database.&amp;rdquo;
+It&amp;rsquo;s quoted from JSR(Java Specification Request) managed by Java Community Process.
+This is just the definition of what&amp;rsquo;s JPA, let&amp;rsquo;s recall how we persist data before adopting JPA.</description>
+    </item>
+    
+  </channel>
+</rss>

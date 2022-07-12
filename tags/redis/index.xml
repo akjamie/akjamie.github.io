@@ -6,10 +6,19 @@
     <description>Recent content in Redis on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 28 Jun 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 09 Jul 2022 23:03:30 +0000</lastBuildDate>
     
 	<atom:link href="http://akjamie.github.io/tags/redis/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Redis学习笔记</title>
+      <link>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</link>
+      <pubDate>Sat, 09 Jul 2022 23:03:30 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</guid>
+      <description>What&amp;rsquo;s Redis Cluster Redis Cluster is a distributed implementation of Redis with the following goals in order of importance in the design: High performance and linear scalability up to 1000 nodes. There are no proxies, asynchronous replication is used, and no merge operations are performed on values. 在多达 1000 个节点的时候仍能保持高性能及线性的可扩</description>
+    </item>
     
     <item>
       <title>Redis学习笔记</title>
