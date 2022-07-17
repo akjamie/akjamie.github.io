@@ -414,6 +414,34 @@ this is testing message
 redis
 </code></pre>
 
+<h1 id="典型缓存问题">典型缓存问题</h1>
+
+<h2 id="缓存穿透">缓存穿透</h2>
+
+<p>缓存中无数据，数据库中也无数据<br />
+如恶意攻击，使用没有的key访问导致数据库压力过大。<br />
+应对办法：<br />
+- 通过鉴权，过滤不合理的请求<br />
+- 查询不到的数据加入缓存，value为空切设置过期时间 （不常用，无法防止动态key导致的缓存浪费）<br />
+- bitmap或者bloomer filter.</p>
+
+<h2 id="缓存击穿">缓存击穿</h2>
+
+<p>缓存中无数据，但是数据库中有数据<br />
+高并发下hot key过期导致大量请求流到数据库，导致数据库访问过载<br />
+应对办法：
+- ttl hot-key 不过期<br />
+- 后台线程更新缓存数据且分布式加锁互斥</p>
+
+<h2 id="缓存雪崩">缓存雪崩</h2>
+
+<p>缓存中无数据，但是数据库中有数据<br />
+高并发下，缓存同一时刻失效（down机或者设置了相同的过期时间），所有请求都会到数据库导致数据负载过高或者down机，重启后可能立即又down机。<br />
+应对办法：
+- 缓存失效时间设置为随机值，避免同时失效<br />
+- redis clsuter， 或者主从+sentinel<br />
+- 服务限流，降级，避免数据库被压垮</p>
+
 <h1 id="reference">Reference</h1>
 
 <p><a href="https://zhuanlan.zhihu.com/p/480386998">https://zhuanlan.zhihu.com/p/480386998</a></p>
