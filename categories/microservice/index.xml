@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Microservice on Jamie&#39;s Blog</title>
@@ -6,11 +6,7 @@
     <description>Recent content in Microservice on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 04 Jul 2022 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="http://akjamie.github.io/categories/microservice/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 04 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/categories/microservice/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Websocket集成</title>
       <link>http://akjamie.github.io/post/2022-07-04-spring-websocket-stomp/</link>
@@ -29,7 +25,7 @@
       <description>Summary To mark down a batch data sync accross system solution, tested daily sync data volume is around 10w.
 In this solution, adopted the message driven batch processing rather than traditional fixed time schedule batch.
 Also applied the microservice design to eliminate the system dependency and well protect the data/system boundry,which is also aligned with the DEVOPS,,both team could focus on their own domain/services&amp;rsquo; development and maintenance.
-Techniques used  Springboot + Spring cloud config, constrained by infra, services are running on in hourse VM instances.</description>
+Techniques used Springboot + Spring cloud config, constrained by infra, services are running on in hourse VM instances.</description>
     </item>
     
     <item>
@@ -73,21 +69,21 @@ Before you begin install docker desktop in local and enable local k8s cluster, m
     </item>
     
     <item>
-      <title>Spring Cloud Series</title>
-      <link>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</link>
-      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
-      
-      <guid>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</guid>
-      <description>Demo的介绍 本文主要通过一个小demo，来综合运用spring cloud系列技术，demo中主要包含如下模块/组建： 1. Authorization service, 基于Spring</description>
-    </item>
-    
-    <item>
       <title>Spring batch - single process &amp; remote partitioning(multi instances)</title>
       <link>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</link>
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       
       <guid>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</guid>
       <description>Spring batch是轻量级，全面的批处理框架，旨在开发对企业系统日常运营至关重要的强大批处理应用程序。 Spring Batch负责大量记录，包括日志记录/跟踪</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Series</title>
+      <link>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</link>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</guid>
+      <description>Demo的介绍 本文主要通过一个小demo，来综合运用spring cloud系列技术，demo中主要包含如下模块/组建： Authorization service, 基于Spring Security</description>
     </item>
     
     <item>

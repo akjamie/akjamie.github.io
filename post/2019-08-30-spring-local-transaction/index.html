@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-03.jpg">
+    <meta property="twitter:image" content="/img/background-03.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -218,14 +220,9 @@
                 post-container">
 
                 
-                
-
-<h1 id="事务特性和隔离级别">事务特性和隔离级别</h1>
-
+                <h1 id="事务特性和隔离级别">事务特性和隔离级别</h1>
 <h2 id="事务基础">事务基础</h2>
-
 <h3 id="事务特性">事务特性</h3>
-
 <pre><code>- 原子性(Atomicity)
 事务包含的所有操作是一个原子单元，要么全部成功，要么全部失败
 - 一致性（Consistency）
@@ -235,17 +232,13 @@ A给B转钱，A减和B增这两个操作必须保持一致
 - 持久性（Durability）
 事务操作结果将被持久化到存储磁盘上
 </code></pre>
-
 <h3 id="事务的隔离级别">事务的隔离级别</h3>
-
 <pre><code>- Read Uncommitted，可以读取其它事务未完成的结果
 - Read Committed，在该事务完成后，才能读取该事务的数据更新后的结果
 - Repeatable Read，可以保证在整个事务的过程中，对同一笔数据的读取结果是相同的，不管其他事务是否同时在对同一笔数据进行更新，也不管其他事务对同一笔数 据的更新提交与否
 - Serializable，最严格的事务隔离控制，类似于表级别锁，所有事务操作依次有序执行
 </code></pre>
-
-<h2 id="sql事务测试举例-mysql">SQL事务测试举例 - mysql</h2>
-
+<h2 id="sql事务测试举例---mysql">SQL事务测试举例 - mysql</h2>
 <pre><code>查看事务隔离级别, 默认是REPEATABLE-READ
 select @@global.transaction_isolation,@@transaction_isolation; 
 
@@ -253,88 +246,67 @@ select @@global.transaction_isolation,@@transaction_isolation;
 SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 level: { REPEATABLE READ | READ COMMITTED | READ UNCOMMITTED | SERIALIZABLE }
 </code></pre>
-
 <p>通过设置mysql的session或者全局事务隔离级别，来查看事务执行结果</p>
-
 <p>以上为基本的事务知识回顾，下面我们进入spring事务。</p>
-
 <h1 id="spring-事务">Spring 事务</h1>
-
 <p>Spring并不会直接管理事务，而是提供了事务管理器，将事务管理的职责委托给JPA JDBC JTA DataSourceTransaction JMSTransactionManager 等框架提供的事务来实现。</p>
-
 <p>Spring支持两种事务，及全局事务和本地事务。</p>
-
 <h2 id="local-transaction-及原理">Local transaction 及原理</h2>
-
 <p>本地事务，指定resource的事务，跟应用服务器无关，如DataSourceTransactionManager</p>
-
 <p>spring事务的顶层接口为：PlatformTransactionManager</p>
-
-<pre><code>public interface PlatformTransactionManager {
+<pre tabindex="0"><code>public interface PlatformTransactionManager {
     TransactionStatus getTransaction(@Nullable TransactionDefinition var1) throws TransactionException;
 
     void commit(TransactionStatus var1) throws TransactionException;
 
     void rollback(TransactionStatus var1) throws TransactionException;
 }
-</code></pre>
-
-<p>由定义可见，该接口主要提供了如上3个主要事务接口，那么他们在使用过程如何工作的呢</p>
-
+</code></pre><p>由定义可见，该接口主要提供了如上3个主要事务接口，那么他们在使用过程如何工作的呢</p>
 <p>以springboot 2.1.x版本为例：我们一般在方法上添加@transactional去开启事务，那spring是如何解析并处理事务的呢？</p>
-
 <h3 id="本地事务解析配置加载过程">本地事务解析配置加载过程</h3>
-
 <ul>
-<li><p>TransactionManager的加载：
-springboot工厂加载机制： 在spring-boot-autoconfigure jar包下面的spring 工厂配置文件中可以找到</p>
-
-<pre><code>org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
-</code></pre>
-
-<p>在这个配置类总可以找到transactionmanager的bean定义</p>
-
-<pre><code>@Bean
+<li>TransactionManager的加载：
+springboot工厂加载机制： 在spring-boot-autoconfigure jar包下面的spring 工厂配置文件中可以找到</li>
+</ul>
+<pre tabindex="0"><code>org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+</code></pre><p>在这个配置类总可以找到transactionmanager的bean定义</p>
+<pre tabindex="0"><code>@Bean
 @ConditionalOnMissingBean({PlatformTransactionManager.class})
 public DataSourceTransactionManager transactionManager(DataSourceProperties properties) {
-DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(this.dataSource);
-if (this.transactionManagerCustomizers != null) {
-    this.transactionManagerCustomizers.customize(transactionManager);
+   DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(this.dataSource);
+   if (this.transactionManagerCustomizers != null) {
+       this.transactionManagerCustomizers.customize(transactionManager);
+   }
+
+   return transactionManager;
 }
-
-return transactionManager;
-}
-</code></pre></li>
-
-<li><p>配置切面来拦截@transactional</p>
-
-<pre><code>@Configuration
+</code></pre><ul>
+<li>配置切面来拦截@transactional</li>
+</ul>
+<pre tabindex="0"><code>@Configuration
 public class AspectJTransactionManagementConfiguration extends AbstractTransactionManagementConfiguration {
 
-@Bean(name = TransactionManagementConfigUtils.TRANSACTION_ASPECT_BEAN_NAME)
-@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-public AnnotationTransactionAspect transactionAspect() {
-    AnnotationTransactionAspect txAspect = AnnotationTransactionAspect.aspectOf();
-    if (this.txManager != null) {
-        txAspect.setTransactionManager(this.txManager);
-    }
-    return txAspect;
-}
+   @Bean(name = TransactionManagementConfigUtils.TRANSACTION_ASPECT_BEAN_NAME)
+   @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+   public AnnotationTransactionAspect transactionAspect() {
+       AnnotationTransactionAspect txAspect = AnnotationTransactionAspect.aspectOf();
+       if (this.txManager != null) {
+           txAspect.setTransactionManager(this.txManager);
+       }
+       return txAspect;
+   }
 
 }
-</code></pre></li>
-</ul>
+</code></pre><p>在AnnotationTransactionAspect中，它定义了如下pointcuts
 
-<p>在AnnotationTransactionAspect中，它定义了如下pointcuts
- <img src="/img/2019-08-30-spring-local-transaction/txn-pointcut.png" alt="" /></p>
+  <img src="/img/2019-08-30-spring-local-transaction/txn-pointcut.png" alt="">
 
+</p>
 <h3 id="事务工作流程">事务工作流程</h3>
-
 <p>在AnnotationTransactionAspect的父类AbstractTransactionAspect中定义advise - around，实现如下：</p>
-
-<pre><code>Object around(final Object txObject): transactionalMethodExecution(txObject) {
+<pre tabindex="0"><code>Object around(final Object txObject): transactionalMethodExecution(txObject) {
         MethodSignature methodSignature = (MethodSignature) thisJoinPoint.getSignature();
-        // Adapt to TransactionAspectSupport's invokeWithinTransaction...
+        // Adapt to TransactionAspectSupport&#39;s invokeWithinTransaction...
         try {
             return invokeWithinTransaction(methodSignature.getMethod(), txObject.getClass(), new InvocationCallback() {
                 public Object proceedWithInvocation() throws Throwable {
@@ -347,20 +319,18 @@ public AnnotationTransactionAspect transactionAspect() {
         }
         catch (Throwable thr) {
             Rethrower.rethrow(thr);
-            throw new IllegalStateException(&quot;Should never get here&quot;, thr);
+            throw new IllegalStateException(&#34;Should never get here&#34;, thr);
         }
     }
-</code></pre>
+</code></pre><p>由上面around advise可以看到其实主要实现在invokeWithinTransaction中，我们继续跟踪invokeWithinTransaction的实现
 
-<p>由上面around advise可以看到其实主要实现在invokeWithinTransaction中，我们继续跟踪invokeWithinTransaction的实现
-<img src="/img/2019-08-30-spring-local-transaction/txn-aspect-working-model.png" alt="" /></p>
+  <img src="/img/2019-08-30-spring-local-transaction/txn-aspect-working-model.png" alt="">
 
-<h2 id="手动开启事务的方式-非jdbc">手动开启事务的方式 - 非jdbc</h2>
-
+</p>
+<h2 id="手动开启事务的方式---非jdbc">手动开启事务的方式 - 非jdbc</h2>
 <p>了解了上面@transactional之后，我们再来看看如何在spring中手动开启事务
 部分实例代码如下：</p>
-
-<pre><code> @Autowired
+<pre tabindex="0"><code> @Autowired
 private PlatformTransactionManager transactionManager;
 
 ...
@@ -380,21 +350,16 @@ public Customer add(Customer customer) {
         transactionManager.rollback(transactionStatus);
         throw e;
     }
-</code></pre>
-
-<ul>
+</code></pre><ul>
 <li>注入Spring事务接口PlatformTransactionManager</li>
 <li>创建transactionDefinition,主要用来配置事务隔离级别，传播特性等</li>
 <li>调用 事务接口获取transaction</li>
 <li>根据业务执行情况进行commit/rollback方法调用</li>
 </ul>
-
 <h2 id="注意事项">注意事项</h2>
-
 <p>在查看DataSourceTransactionManager的过程中，你会发现DataSourceTransactionObject是被绑定到ThreadLocal中的，也就是说在webflux中则无法使用。</p>
-
 <p>参考文章：
-<a href="https://zhuanlan.zhihu.com/p/57746720">https://zhuanlan.zhihu.com/p/57746720</a><br />
+<a href="https://zhuanlan.zhihu.com/p/57746720">https://zhuanlan.zhihu.com/p/57746720</a><br>
 <a href="https://www.jianshu.com/p/d7bfd6c1115f">https://www.jianshu.com/p/d7bfd6c1115f</a></p>
 
 
@@ -440,11 +405,12 @@ public Customer add(Customer customer) {
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/2019-08-04-redis-basic/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">&larr;
+                        <a href="/post/2019-08-04-redis-basic/" data-toggle="tooltip" data-placement="top" title="Redis foundation - I">&larr;
                             Previous Post</a>
                     </li>
                     
@@ -456,6 +422,10 @@ public Customer add(Customer customer) {
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -535,6 +505,8 @@ public Customer add(Customer customer) {
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -590,6 +562,8 @@ public Customer add(Customer customer) {
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -694,7 +668,7 @@ public Customer add(Customer customer) {
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -747,9 +721,6 @@ public Customer add(Customer customer) {
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -812,6 +783,7 @@ public Customer add(Customer customer) {
         });
     });
 </script>
+
 
 
 

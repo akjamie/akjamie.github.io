@@ -10,14 +10,14 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-05.jpg">
+    <meta property="twitter:image" content="/img/background-05.jpg" />
     
 
     
-    <meta name="title" content="Redis学习笔记" />
-    <meta property="og:title" content="Redis学习笔记" />
-    <meta property="twitter:title" content="Redis学习笔记" />
+    <meta name="title" content="Redis foundation - III" />
+    <meta property="og:title" content="Redis foundation - III" />
+    <meta property="twitter:title" content="Redis foundation - III" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Redis学习笔记 | Jamie&#39;s Blog</title>
+    <title>Redis foundation - III | Jamie&#39;s Blog</title>
 
     <link rel="canonical" href="/post/2022-06-27-redis-basic-2/">
 
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -183,8 +185,8 @@
                         </a>
                         
                     </div>
-                    <h1>Redis学习笔记</h1>
-                    <h2 class="subheading">Redis basic knowledge - transaction &amp; data persitence</h2>
+                    <h1>Redis foundation - III</h1>
+                    <h2 class="subheading">Redis basic knowledge - transaction &amp; data persistence</h2>
                     <span class="meta">
                         
                             Posted by 
@@ -218,19 +220,14 @@
                 post-container">
 
                 
-                
-
-<h1 id="redis-事务">Redis 事务</h1>
-
+                <h1 id="redis-事务">Redis 事务</h1>
 <h2 id="事务概念和基本操作">事务概念和基本操作</h2>
-
 <p>其为命令提供一个单独的隔离环境，事务中所有的命令都会序列化，按顺序地执行，执行过程中不会被其他客户端发送过来的命令请求打断。
 与dbms事物不同，redis事务的作用就是串联多个命令防止被其他命令插队</p>
-
 <ul>
-<li><p>discard sample</p>
-
-<pre><code>127.0.0.1:6379[1]&gt; keys *
+<li>discard sample</li>
+</ul>
+<pre tabindex="0"><code>127.0.0.1:6379[1]&gt; keys *
 (empty array)
 127.0.0.1:6379[1]&gt; multi
 OK
@@ -242,11 +239,10 @@ QUEUED
 OK
 127.0.0.1:6379[1]&gt; keys *
 (empty array)
-</code></pre></li>
-
-<li><p>exec succ</p>
-
-<pre><code>127.0.0.1:6379[1]&gt; keys *
+</code></pre><ul>
+<li>exec succ</li>
+</ul>
+<pre tabindex="0"><code>127.0.0.1:6379[1]&gt; keys *
 (empty array)
 127.0.0.1:6379[1]&gt; multi
 OK
@@ -255,14 +251,13 @@ QUEUED
 127.0.0.1:6379[1]&gt; exec
 1) OK
 127.0.0.1:6379[1]&gt; keys *
-1) &quot;key-2&quot;
-2) &quot;key-3&quot;
+1) &#34;key-2&#34;
+2) &#34;key-3&#34;
 127.0.0.1:6379[1]&gt;
-</code></pre></li>
-
-<li><p>error in middle of exec</p>
-
-<pre><code>127.0.0.1:6379[1]&gt; multi
+</code></pre><ul>
+<li>error in middle of exec</li>
+</ul>
+<pre tabindex="0"><code>127.0.0.1:6379[1]&gt; multi
 OK
 127.0.0.1:6379[1]&gt; hget hkey-1 color
 QUEUED
@@ -275,18 +270,13 @@ QUEUED
 2) (error) ERR value is not an integer or out of range
 3) (integer) 1
 127.0.0.1:6379[1]&gt; hget hkey-1 color
-&quot;blue&quot;
-</code></pre></li>
-</ul>
-
-<h2 id="redis-乐观锁">Redis 乐观锁</h2>
-
+&#34;blue&#34;
+</code></pre><h2 id="redis-乐观锁">Redis 乐观锁</h2>
 <p>watch key - monitor one or more key</p>
-
 <ul>
-<li><p>sample</p>
-
-<pre><code>127.0.0.1:6379[1]&gt; watch key-1 lkey-1
+<li>sample</li>
+</ul>
+<pre tabindex="0"><code>127.0.0.1:6379[1]&gt; watch key-1 lkey-1
 OK
 127.0.0.1:6379[1]&gt; incrby key-1 100
 (integer) 300
@@ -299,110 +289,94 @@ QUEUED
 127.0.0.1:6379[1]&gt; exec
 (nil)
 127.0.0.1:6379[1]&gt;
-</code></pre>
-
-<p>ps: the keys &lsquo;watched&rsquo; has been changed by other client, hence the transaction executed failed.</p></li>
+</code></pre><p>ps: the keys &lsquo;watched&rsquo; has been changed by other client, hence the transaction executed failed.</p>
+<p>Redis Transaction Summary</p>
+<ul>
+<li>All the operations in transaction will be executed sequentially and won&rsquo;t be interuptted by other clients.</li>
+<li>All the operations queued won&rsquo;t take effect until &rsquo;exec&rsquo; is executed</li>
+<li>Redis cannot guarantee the atomicity.</li>
 </ul>
-
-<p>Redis Transaction Summary<br />
-- All the operations in transaction will be executed sequentially and won&rsquo;t be interuptted by other clients.<br />
-- All the operations queued won&rsquo;t take effect until &lsquo;exec&rsquo; is executed<br />
-- Redis cannot guarantee the atomicity.</p>
-
 <h1 id="redis-持久化">Redis 持久化</h1>
-
-<h2 id="rdb-redis-database">RDB - Redis Database</h2>
-
+<h2 id="rdb---redis-database">RDB - Redis Database</h2>
 <p>指定时间间隔内讲内存中的快照写到硬盘中。
 具体步骤</p>
-
 <ul>
 <li>fork 一个进程作为原进程的子进程</li>
 <li>写数据到临时区域/文件</li>
-<li>覆盖临时文件到持久化dump.rdb文件，更好的保证数据完整性<br />
-整个过程不影响主进程，缺点是最后一次持久化的数据可能会丢失<br /></li>
+<li>覆盖临时文件到持久化dump.rdb文件，更好的保证数据完整性<br>
+整个过程不影响主进程，缺点是最后一次持久化的数据可能会丢失</li>
 </ul>
-
 <blockquote>
-<p>stop-writes-on-bgsave-error yes  停止接受写入命令如果rdb开启了并且最近一次后台save失败<br />
-rdbcompression yes 压缩string object using lzf when dump .rdb databases.<br />
-rdbchecksum yes CRC64算法进行数据校验,增加大约10%的性能消耗<br />
-save 900 1  - 900秒内有一个key变化就进行持久化<br />
-    save 300 10 - 300秒内有10个key变化就吃法持久化</p>
+<p>stop-writes-on-bgsave-error yes  停止接受写入命令如果rdb开启了并且最近一次后台save失败<br>
+rdbcompression yes 压缩string object using lzf when dump .rdb databases.<br>
+rdbchecksum yes CRC64算法进行数据校验,增加大约10%的性能消耗<br>
+save 900 1  - 900秒内有一个key变化就进行持久化<br>
+save 300 10 - 300秒内有10个key变化就吃法持久化</p>
 </blockquote>
-
 <ul>
 <li>优点
-
 <ul>
 <li>适合大规模数据恢复</li>
 <li>对数据完整性和一致性要求不高更合适使用</li>
 <li>节省磁盘空间
 -恢复速度快</li>
-</ul></li>
-
-<li><p>缺点</p>
-
+</ul>
+</li>
+<li>缺点
 <ul>
 <li>fork操作导致了两倍的数据膨胀</li>
-
-<li><p>最后一次进行持久化后的数据可能会丢失，key的变化还没有来得及刷新到rdb文件.</p>
-
-<h3 id="rdb备份">RDB备份</h3>
-
-<p>备份过程比较简单，根据save point time的设置，达到条件的改动就会被自动snapshot到dump.rdb, 备份即为备份dump.rdb文件，如果有故障发生则停掉redis，copy 备份的dump.rdb覆盖原dump.rdb，然后重新启动redis就回到了期望的版本。</p>
-
-<pre><code># 获取dump.rdb的目录
-127.0.0.1:6379&gt; config get dir
-1) &quot;dir&quot;
-2) &quot;/data&quot;
-</code></pre></li>
-</ul></li>
+<li>最后一次进行持久化后的数据可能会丢失，key的变化还没有来得及刷新到rdb文件.</li>
 </ul>
-
-<h2 id="aof-append-only-file">AOF - append only file</h2>
-
+</li>
+</ul>
+<h3 id="rdb备份">RDB备份</h3>
+<p>备份过程比较简单，根据save point time的设置，达到条件的改动就会被自动snapshot到dump.rdb, 备份即为备份dump.rdb文件，如果有故障发生则停掉redis，copy 备份的dump.rdb覆盖原dump.rdb，然后重新启动redis就回到了期望的版本。</p>
+<pre tabindex="0"><code># 获取dump.rdb的目录
+127.0.0.1:6379&gt; config get dir
+1) &#34;dir&#34;
+2) &#34;/data&#34;
+</code></pre><h2 id="aof---append-only-file">AOF - append only file</h2>
 <p>以日志的形式来记录每个写操作(增量),只许追加不允许修改，redis启动时会读取文件重新构建数据。
-具体步骤<br />
-- 客户端写请求被append到 AOF缓冲区<br />
-- AOF缓冲区根据持久化策略将操作sync到磁盘的AOF文件中<br />
-- AOF文件大小超过重写策略或手动重写时，会对AOF文件rewrite重新以压缩文件大小。</p>
-
+具体步骤</p>
+<ul>
+<li>客户端写请求被append到 AOF缓冲区</li>
+<li>AOF缓冲区根据持久化策略将操作sync到磁盘的AOF文件中</li>
+<li>AOF文件大小超过重写策略或手动重写时，会对AOF文件rewrite重新以压缩文件大小。</li>
+</ul>
 <blockquote>
-<p>AOF默认不开启,主要配置如下(redis.conf)：<br />
-    - appendonly no   &ndash; on/off switch<br />
-    - appendfilename &ldquo;appendonly.aof&rdquo;<br />
-    - appendfsync everysec  &ndash; sync data from aof buffer to disk<br />
-    - auto-aof-rewrite-percentage 100<br />
-    - auto-aof-rewrite-min-size 64mb  &ndash; minimal size for the AOF file to be rewritten even if the percentage increase is reached but it is still pretty small</p>
+<p>AOF默认不开启,主要配置如下(redis.conf)：<br>
+- appendonly no   &ndash; on/off switch<br>
+- appendfilename &ldquo;appendonly.aof&rdquo;<br>
+- appendfsync everysec  &ndash; sync data from aof buffer to disk<br>
+- auto-aof-rewrite-percentage 100<br>
+- auto-aof-rewrite-min-size 64mb  &ndash; minimal size for the AOF file to be rewritten even if the percentage increase is reached but it is still pretty small</p>
 </blockquote>
-
 <p><strong>important</strong> if both RDB &amp; AOF are enabled, redis restart will take &ldquo;appendonly.aof&rdquo; to restore data.</p>
-
 <p>异常恢复，如果aof文件损坏，可以尝试/usr/local/bin/redis-check-aof &ndash;fix appendonly.aof 进行恢复，然后重新重新启动redis。</p>
-
-<p>AOF同步策略：<br />
-- appendfsync always   &ndash;  write log to appendonly.aof for each write operation immediately, performance is bad but good for data integrity.<br />
-- appendfsync everysev   &ndash; write logs on every seconds frequency, the last sec data might loss<br />
-- appendfsync no  &ndash; redis don&rsquo;t fsync data proactively, leave it to OS.</p>
-
+<p>AOF同步策略：</p>
+<ul>
+<li>appendfsync always   &ndash;  write log to appendonly.aof for each write operation immediately, performance is bad but good for data integrity.</li>
+<li>appendfsync everysev   &ndash; write logs on every seconds frequency, the last sec data might loss</li>
+<li>appendfsync no  &ndash; redis don&rsquo;t fsync data proactively, leave it to OS.</li>
+</ul>
 <h3 id="rewrite-压缩">Rewrite 压缩</h3>
-
 <p>应对AOF文件越来越大，当大小超过阈值(文件大小和增加比例)，redis启动AOF内容压缩，保留恢复数据的最小指令集，可以强制压缩bgrewriteaof。</p>
-
-<p>重写的流程：<br />
-- fork出进程将文件重写(先写临时文件，然后在merge)，<span style="color:red"><strong>redis 4.0</strong>版本以后，是指把rdb的快照以二进制的形式附在新aof头部，作为已有的历史数据，替换掉原来的operation log</span></p>
-
-<p>优点：<br />
-- 备份机制更稳健，丢失数据的概率更低<br />
-- 可读的日志文件通过AOF稳健减少处理错误操作</p>
-
-<p>缺点：<br />
-- 比起rdb占用更多的磁盘空间<br />
-- 恢复备份速度慢<br />
-- 每次读写都同步的话，有一定的性能压力</p>
-
-<p>推荐两种持久化方式都启用，通常情况下用AOF文件内容来恢复数据，因为AOF文件保存的数据集要比RDB文件保存的数据集更加完整。<br />
+<p>重写的流程：</p>
+<ul>
+<li>fork出进程将文件重写(先写临时文件，然后在merge)，<!-- raw HTML omitted --><strong>redis 4.0</strong>版本以后，是指把rdb的快照以二进制的形式附在新aof头部，作为已有的历史数据，替换掉原来的operation log<!-- raw HTML omitted --></li>
+</ul>
+<p>优点：</p>
+<ul>
+<li>备份机制更稳健，丢失数据的概率更低</li>
+<li>可读的日志文件通过AOF稳健减少处理错误操作</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>比起rdb占用更多的磁盘空间</li>
+<li>恢复备份速度慢</li>
+<li>每次读写都同步的话，有一定的性能压力</li>
+</ul>
+<p>推荐两种持久化方式都启用，通常情况下用AOF文件内容来恢复数据，因为AOF文件保存的数据集要比RDB文件保存的数据集更加完整。<br>
 RDB更适合数据库备份。</p>
 
 
@@ -448,22 +422,27 @@ RDB更适合数据库备份。</p>
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/2022-06-23-redis-advance/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">&larr;
+                        <a href="/post/2022-06-23-redis-advance/" data-toggle="tooltip" data-placement="top" title="Redis advance I">&larr;
                             Previous Post</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/post/2022-06-28-redis-master-slave-replication/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">Next
+                        <a href="/post/2022-06-28-redis-master-slave-replication/" data-toggle="tooltip" data-placement="top" title="Redis advance II">Next
                             Post &rarr;</a>
                     </li>
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -543,6 +522,8 @@ RDB更适合数据库备份。</p>
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -598,6 +579,8 @@ RDB更适合数据库备份。</p>
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -702,7 +685,7 @@ RDB更适合数据库备份。</p>
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -755,9 +738,6 @@ RDB更适合数据库备份。</p>
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -820,6 +800,7 @@ RDB更适合数据库备份。</p>
         });
     });
 </script>
+
 
 
 

@@ -10,14 +10,14 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-05.jpg">
+    <meta property="twitter:image" content="/img/background-05.jpg" />
     
 
     
-    <meta name="title" content="Redis学习笔记" />
-    <meta property="og:title" content="Redis学习笔记" />
-    <meta property="twitter:title" content="Redis学习笔记" />
+    <meta name="title" content="Redis advance I" />
+    <meta property="og:title" content="Redis advance I" />
+    <meta property="twitter:title" content="Redis advance I" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Redis学习笔记 | Jamie&#39;s Blog</title>
+    <title>Redis advance I | Jamie&#39;s Blog</title>
 
     <link rel="canonical" href="/post/2022-06-23-redis-advance/">
 
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -183,7 +185,7 @@
                         </a>
                         
                     </div>
-                    <h1>Redis学习笔记</h1>
+                    <h1>Redis advance I</h1>
                     <h2 class="subheading">Redis advanced knowledge</h2>
                     <span class="meta">
                         
@@ -218,15 +220,11 @@
                 post-container">
 
                 
-                
-
-<h1 id="bitmap">bitmap</h1>
-
-<p>在前面的基础回顾中提到了bitmap这种数据结构，主要用来应对string的位操作，简单高效<br />
-适用场景：单状态统计，如每天系统用户登录情况统计，github commit.<br />
+                <h1 id="bitmap">bitmap</h1>
+<p>在前面的基础回顾中提到了bitmap这种数据结构，主要用来应对string的位操作，简单高效<br>
+适用场景：单状态统计，如每天系统用户登录情况统计，github commit.<br>
 其常用命令有 setbit, getbit, bitcount, bitop.</p>
-
-<pre><code>127.0.0.1:6379&gt; setbit test:bitmaps:2 0 1
+<pre tabindex="0"><code>127.0.0.1:6379&gt; setbit test:bitmaps:2 0 1
 (integer) 0
 127.0.0.1:6379&gt; bitcount test:bitmaps:2
 (integer) 1
@@ -246,29 +244,22 @@
 (integer) 0
 127.0.0.1:6379&gt; getbit notValue 2
 (integer) 1
-</code></pre>
-
-<h2 id="业务用例">业务用例</h2>
-
-<h3 id="整型数据排序-去重">整型数据排序/去重</h3>
-
-<p>(这个其实不算做bitmap的一个用例场景)<br />
+</code></pre><h2 id="业务用例">业务用例</h2>
+<h3 id="整型数据排序去重">整型数据排序/去重</h3>
+<p>(这个其实不算做bitmap的一个用例场景)<br>
 思路分析:</p>
-
 <ul>
 <li>bitmap是用每一个位来记录事物的状态，最大长度512Mb = 512 * 1024 * 1024 * 8 = 2^32, 即
-8bit = 1byte， offset maximum = 2^32 -1 = 4294967295,即最大的下标为4294967295<br /></li>
-<li>将整型数据直接offset设置到bitmap存储结构中，即setbit key value 1<br /></li>
+8bit = 1byte， offset maximum = 2^32 -1 = 4294967295,即最大的下标为4294967295</li>
+<li>将整型数据直接offset设置到bitmap存储结构中，即setbit key value 1</li>
 </ul>
-
-<p>简易示例:<br />
+<p>简易示例:<br>
 发现放进数据容易，取出来还是比较麻烦，不过bitmap主要用来应对状态统计之类的场景，所以设计上本也不在此。</p>
-
-<pre><code>@Test  
+<pre tabindex="0"><code>@Test  
 public void test() {  
-    String key = &quot;test:bitmaps:comparison&quot;;  
+    String key = &#34;test:bitmaps:comparison&#34;;  
     List&lt;Integer&gt; list = List.of(10, 39, 44, 20, 75, 63, 25, 44, 29, 21, 65, 20);  
-    log.info(&quot;List before sorting,[{}]&quot;, list);  
+    log.info(&#34;List before sorting,[{}]&#34;, list);  
     RedisCommands&lt;String, String&gt; syncCommands = connection.sync();  
   
     list.forEach(v -&gt; {  
@@ -281,96 +272,86 @@ public void test() {
             sortedList.add(i);  
         }  
     });  
-    log.info(&quot;List after sorting,[{}]&quot;, sortedList);  
+    log.info(&#34;List after sorting,[{}]&#34;, sortedList);  
 }
-</code></pre>
-
-<h3 id="其他互联网场景"> 其他互联网场景</h3>
-
+</code></pre><h3 id="其他互联网场景"> 其他互联网场景</h3>
 <p>在互联网场景下使用bitmap能取得出其不意的效果，  典型用例场景如</p>
-
 <ul>
-<li>活跃用户统计(id为int类型)，如果活跃用户数据比较少，bitmap结构反而更加浪费存储空间<br /></li>
-<li>点赞以及统计<br /></li>
+<li>活跃用户统计(id为int类型)，如果活跃用户数据比较少，bitmap结构反而更加浪费存储空间</li>
+<li>点赞以及统计</li>
 </ul>
-
 <h1 id="基于redis的秒杀">基于redis的秒杀</h1>
-
 <p>需要考虑的设计点：</p>
-
 <ul>
-<li>高并发下的缓存雪崩和缓存穿透<br /></li>
-<li>超卖<br /></li>
-<li>恶意请求<br /></li>
-<li>链接暴露<br /></li>
-<li>降级、限流、熔断<br /></li>
+<li>高并发下的缓存雪崩和缓存穿透</li>
+<li>超卖</li>
+<li>恶意请求</li>
+<li>链接暴露</li>
+<li>降级、限流、熔断</li>
 </ul>
-
 <p>应对方案思路：</p>
-
 <ul>
-<li>单一职责，设计单独的秒杀服务和数据库<br /></li>
-<li>前端限流 + 后段限流 + 按钮控制<br />
-
+<li>单一职责，设计单独的秒杀服务和数据库</li>
+<li>前端限流 + 后段限流 + 按钮控制
 <ul>
-<li>没有开始之前按钮置灰 + 延迟几秒开始 + 每次点击完之后的短暂等待=&gt; 解决开始之前的大流量刷新以及其导致的缓存穿透<br /></li>
-<li>限流组件(hystrix/sentinel) + 及时秒杀结束(前后端)<br /></li>
-</ul></li>
-<li>防刷控制<br />
-
+<li>没有开始之前按钮置灰 + 延迟几秒开始 + 每次点击完之后的短暂等待=&gt; 解决开始之前的大流量刷新以及其导致的缓存穿透</li>
+<li>限流组件(hystrix/sentinel) + 及时秒杀结束(前后端)</li>
+</ul>
+</li>
+<li>防刷控制
 <ul>
-<li>动态URL，商品链接加盐或者加密<br /></li>
-<li>恶意ip拦截，请求次数&gt;阈值<br /></li>
-<li>秒杀成功白名单，保证每个id最多秒杀成功一次<br /></li>
-</ul></li>
-<li>流量洪峰应对，保证系统运行<br />
-
+<li>动态URL，商品链接加盐或者加密</li>
+<li>恶意ip拦截，请求次数&gt;阈值</li>
+<li>秒杀成功白名单，保证每个id最多秒杀成功一次</li>
+</ul>
+</li>
+<li>流量洪峰应对，保证系统运行
 <ul>
-<li>nginx+预热扩容+结束后的缩容<br /></li>
-<li>资源静态化 - cdn缓存<br /></li>
-</ul></li>
-<li>存储预热<br />
-
+<li>nginx+预热扩容+结束后的缩容</li>
+<li>资源静态化 - cdn缓存</li>
+</ul>
+</li>
+<li>存储预热
 <ul>
-<li>redis集群<br /></li>
+<li>redis集群</li>
 <li>商品库存和秒杀开关缓存到redis</li>
 <li>redis事务解决库存判断,扣减和秒杀开关更新 -&gt;lua 脚本</li>
-</ul></li>
-<li>超卖控制
-
-<ul>
-<li>redis lua 脚本 - redis事务<br /></li>
-<li>数据库秒杀记录唯一索引 （redis扣减成功但数据库更新失败的case可以忽略不计，对商家来说无损失，反正已经宣传了自己）<br /></li>
-</ul></li>
-<li>秒杀成功的订单入队列异步处理后续流程，如邮寄地址/付款/etc.<br /></li>
 </ul>
-
+</li>
+<li>超卖控制
+<ul>
+<li>redis lua 脚本 - redis事务</li>
+<li>数据库秒杀记录唯一索引 （redis扣减成功但数据库更新失败的case可以忽略不计，对商家来说无损失，反正已经宣传了自己）</li>
+</ul>
+</li>
+<li>秒杀成功的订单入队列异步处理后续流程，如邮寄地址/付款/etc.</li>
+</ul>
 <p>动态url示例:</p>
-
 <ol>
 <li>获取url  &ndash;&gt; GET:/{goodId}/url, 返回的是混淆字符串(hash)，如sha2(goodId+salt)</li>
 <li>秒杀下单&ndash;&gt; POST:/{goodId}/{hash}/execution. 比较hash是否正确。</li>
 </ol>
-
 <h1 id="数据缓存">数据缓存</h1>
-
-<p>记录一个分布式缓存的用例场景<br />
+<p>记录一个分布式缓存的用例场景<br>
 需求： 一个债券订单系统， 为了提升债券的检索性能(毫秒级返回)以提升用户体验，债券信息检索方案由直查db替换为缓存债券信息到redis缓存。</p>
-
-<p>主要设计点：<br />
-1. 每天后台定时任务多线程更新缓存，如工作日6:00am<br />
-2. 分布式锁，确保只有一个实例负责更新缓存<br />
-3. <String,String> key,value 存储，key中包含常用搜索字段，如债券搜索的常用字段为债券id，货币类型，债券名称，那么对应的redis key设计为，bond:{bondId}:{bondName}:{currency}, value则为债券对象的json<br />
-4. 用keys 或者scan来进行模糊查询<br />
-    - keys命令是阻塞的方式<br />
-    - 推荐使用scan</p>
-
-<pre><code>/*
+<p>主要设计点：</p>
+<ol>
+<li>每天后台定时任务多线程更新缓存，如工作日6:00am</li>
+<li>分布式锁，确保只有一个实例负责更新缓存</li>
+<li>&lt;String,String&gt; key,value 存储，key中包含常用搜索字段，如债券搜索的常用字段为债券id，货币类型，债券名称，那么对应的redis key设计为，bond:{bondId}:{bondName}:{currency}, value则为债券对象的json</li>
+<li>用keys 或者scan来进行模糊查询
+<ul>
+<li>keys命令是阻塞的方式</li>
+<li>推荐使用scan</li>
+</ul>
+</li>
+</ol>
+<pre tabindex="0"><code>/*
 **Input**
 127.0.0.1:6379&gt; keys test-string-*
-1) &quot;test-string-1&quot;
-2) &quot;test-string-2&quot;
-3) &quot;test-string-3&quot;
+1) &#34;test-string-1&#34;
+2) &#34;test-string-2&#34;
+3) &#34;test-string-3&#34;
 127.0.0.1:6379&gt;
 */
 	
@@ -378,7 +359,7 @@ public void test() {
 @SneakyThrows  
 @Test  
 public void test() {  
-    String queryKey = &quot;test-string-*&quot;;  
+    String queryKey = &#34;test-string-*&#34;;  
     RedisCommands&lt;String, String&gt; syncCommands = connection.sync();  
     List&lt;String&gt; keys = new ArrayList&lt;&gt;();  
     List&lt;String&gt; values = new ArrayList&lt;&gt;();  
@@ -402,7 +383,7 @@ public void test() {
         values.add(syncCommands.get(k));  
     });  
   
-    log.info(&quot;Matched records, count: {}&quot;, values.size());  
+    log.info(&#34;Matched records, count: {}&#34;, values.size());  
     values.forEach(System.out::println);  
 }
 	
@@ -412,38 +393,34 @@ public void test() {
 this is for quick search testing
 this is testing message
 redis
-</code></pre>
-
-<h1 id="典型缓存问题">典型缓存问题</h1>
-
+</code></pre><h1 id="典型缓存问题">典型缓存问题</h1>
 <h2 id="缓存穿透">缓存穿透</h2>
-
-<p>缓存中无数据，数据库中也无数据<br />
-如恶意攻击，使用没有的key访问导致数据库压力过大。<br />
-应对办法：<br />
-- 通过鉴权，过滤不合理的请求<br />
-- 查询不到的数据加入缓存，value为空切设置过期时间 （不常用，无法防止动态key导致的缓存浪费）<br />
-- bitmap或者bloomer filter.</p>
-
+<p>缓存中无数据，数据库中也无数据<br>
+如恶意攻击，使用没有的key访问导致数据库压力过大。<br>
+应对办法：</p>
+<ul>
+<li>通过鉴权，过滤不合理的请求</li>
+<li>查询不到的数据加入缓存，value为空切设置过期时间 （不常用，无法防止动态key导致的缓存浪费）</li>
+<li>bitmap或者bloomer filter.</li>
+</ul>
 <h2 id="缓存击穿">缓存击穿</h2>
-
-<p>缓存中无数据，但是数据库中有数据<br />
-高并发下hot key过期导致大量请求流到数据库，导致数据库访问过载<br />
-应对办法：
-- ttl hot-key 不过期<br />
-- 后台线程更新缓存数据且分布式加锁互斥</p>
-
+<p>缓存中无数据，但是数据库中有数据<br>
+高并发下hot key过期导致大量请求流到数据库，导致数据库访问过载<br>
+应对办法：</p>
+<ul>
+<li>ttl hot-key 不过期</li>
+<li>后台线程更新缓存数据且分布式加锁互斥</li>
+</ul>
 <h2 id="缓存雪崩">缓存雪崩</h2>
-
-<p>缓存中无数据，但是数据库中有数据<br />
-高并发下，缓存同一时刻失效（down机或者设置了相同的过期时间），所有请求都会到数据库导致数据负载过高或者down机，重启后可能立即又down机。<br />
-应对办法：
-- 缓存失效时间设置为随机值，避免同时失效<br />
-- redis clsuter， 或者主从+sentinel<br />
-- 服务限流，降级，避免数据库被压垮</p>
-
+<p>缓存中无数据，但是数据库中有数据<br>
+高并发下，缓存同一时刻失效（down机或者设置了相同的过期时间），所有请求都会到数据库导致数据负载过高或者down机，重启后可能立即又down机。<br>
+应对办法：</p>
+<ul>
+<li>缓存失效时间设置为随机值，避免同时失效</li>
+<li>redis clsuter， 或者主从+sentinel</li>
+<li>服务限流，降级，避免数据库被压垮</li>
+</ul>
 <h1 id="reference">Reference</h1>
-
 <p><a href="https://zhuanlan.zhihu.com/p/480386998">https://zhuanlan.zhihu.com/p/480386998</a></p>
 
 
@@ -489,22 +466,27 @@ redis
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/2022-05-31-redis-basic-1/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">&larr;
+                        <a href="/post/2022-05-31-redis-basic-1/" data-toggle="tooltip" data-placement="top" title="Redis foundation - II">&larr;
                             Previous Post</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/post/2022-06-27-redis-basic-2/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">Next
+                        <a href="/post/2022-06-27-redis-basic-2/" data-toggle="tooltip" data-placement="top" title="Redis foundation - III">Next
                             Post &rarr;</a>
                     </li>
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -584,6 +566,8 @@ redis
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -639,6 +623,8 @@ redis
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -743,7 +729,7 @@ redis
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -796,9 +782,6 @@ redis
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -861,6 +844,7 @@ redis
         });
     });
 </script>
+
 
 
 

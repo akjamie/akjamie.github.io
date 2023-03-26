@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -218,49 +220,36 @@
                 post-container">
 
                 
-                
-
-<p>I&rsquo;m on the path of AWS Professinal Certified Architect exam preparation, want to document some key points in the demos for later review to enhance the understanding of knowledge. In this demo, i&rsquo;m going to test the AWS auto scaling and utilize the EC2 network knowledges.</p>
-
+                <p>I&rsquo;m on the path of AWS Professinal Certified Architect exam preparation, want to document some key points in the demos for later review to enhance the understanding of knowledge. In this demo, i&rsquo;m going to test the AWS auto scaling and utilize the EC2 network knowledges.</p>
 <h1 id="objective">Objective</h1>
-
 <ol>
-<li>To build a health checking springboot application and package as docker image hosted on AWS ECR.<br /></li>
-<li>Setup basic network infrastructure, VPC, Subnet, Internet Gateway, Route table,Security group, etc.<br /></li>
-<li>Create Auto Scaling Group using prepred Lanuch Template, and expose the access entry through Application Loader Balancer.<br /></li>
-<li>To use Apache HTTP server benchmarking tool(ab) to trigger billions of request to test the instance scale out/in.<br /></li>
+<li>To build a health checking springboot application and package as docker image hosted on AWS ECR.</li>
+<li>Setup basic network infrastructure, VPC, Subnet, Internet Gateway, Route table,Security group, etc.</li>
+<li>Create Auto Scaling Group using prepred Lanuch Template, and expose the access entry through Application Loader Balancer.</li>
+<li>To use Apache HTTP server benchmarking tool(ab) to trigger billions of request to test the instance scale out/in.</li>
 </ol>
-
 <h1 id="architecture-diagram">Architecture diagram</h1>
-
 <p>high level architecture diagram is for easier understanding of this demo. The diagram illustrates an application load balancers to route traffic to EC2 instances hosted in subnet-a(ap-northeast-1c) and subnet-c(ap-northeast-1d), these EC2 instances also are managed by auto scaling group which could automate the capacity management and fault tolerance and ensure the capacity to handle the current traffic demand. Also notification service configured on auto scaling group to timely notify the scaling machanism.
-<img src='/img/2021-08-09-aws-demo-01-autoscale-test/aws-auto-sacle-test-arch.png' style="height: 810px;margin-left: 0px;"/></p>
-
+<!-- raw HTML omitted --></p>
 <h1 id="implementation">Implementation</h1>
-
 <h2 id="prepare-the-docker-image">Prepare the Docker image</h2>
-
 <p>build a simple springboot application and expose a /health interface. let&rsquo;s see the controller.</p>
-
-<pre><code>@GetMapping(&quot;/health&quot;)
+<pre tabindex="0"><code>@GetMapping(&#34;/health&#34;)
 public ResponseEntity hello(HttpServletRequest request) {
     final String sourceIp = Utils.getIpAddr(request);
     final String localIp = Utils.getLocalIpAddress();
     final String hostName = Utils.getHostName();
 
     HashMap&lt;String, Object&gt; map = new HashMap&lt;&gt;();
-    map.put(&quot;sourceIp&quot;, sourceIp);
-    map.put(&quot;targetIp&quot;, localIp);
-    map.put(&quot;hostName&quot;, hostName);
-    map.put(&quot;status&quot;, &quot;UP&quot;);
+    map.put(&#34;sourceIp&#34;, sourceIp);
+    map.put(&#34;targetIp&#34;, localIp);
+    map.put(&#34;hostName&#34;, hostName);
+    map.put(&#34;status&#34;, &#34;UP&#34;);
 
     return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(map);
 }
-</code></pre>
-
-<p>use jib-maven-plugin to build docker image and push the docker image to aws ECR(create a repository first), configure the build plugin as below shown.</p>
-
-<pre><code>&lt;plugin&gt;
+</code></pre><p>use jib-maven-plugin to build docker image and push the docker image to aws ECR(create a repository first), configure the build plugin as below shown.</p>
+<pre tabindex="0"><code>&lt;plugin&gt;
     &lt;groupId&gt;com.google.cloud.tools&lt;/groupId&gt;
     &lt;artifactId&gt;jib-maven-plugin&lt;/artifactId&gt;
     &lt;version&gt;${jib.version}&lt;/version&gt;
@@ -278,136 +267,106 @@ public ResponseEntity hello(HttpServletRequest request) {
         &lt;allowInsecureRegistries&gt;true&lt;/allowInsecureRegistries&gt;
     &lt;/configuration&gt;
 &lt;/plugin&gt;
-</code></pre>
-
-<p>after tested the interface, use <strong>mvn clean compile jib:build</strong> to build the image, once done you could see the image in AWS ECR.
-<img src='/img/2021-08-09-aws-demo-01-autoscale-test/aws-ecr-image-health.png' style="height: 87px;margin-left: 0px;"/></p>
-
+</code></pre><p>after tested the interface, use <strong>mvn clean compile jib:build</strong> to build the image, once done you could see the image in AWS ECR.
+<!-- raw HTML omitted --></p>
 <h2 id="create-infrastructure">Create infrastructure</h2>
-
 <p>To create below resources for this demo:</p>
-
 <table>
 <thead>
 <tr>
-<th align="left">Types</th>
-<th align="left">Resource(ID/Name)</th>
-<th align="left">Region/AZ</th>
-<th align="left">Remark</th>
+<th style="text-align:left">Types</th>
+<th style="text-align:left">Resource(ID/Name)</th>
+<th style="text-align:left">Region/AZ</th>
+<th style="text-align:left">Remark</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td align="left">VPC</td>
-<td align="left">vpc-0e4918ac3af48cba4</td>
-<td align="left">ap-northeast-1(Tokyo)</td>
-<td align="left">CIDR: 172.32.0.0/16, DNS hostnames enabled</td>
+<td style="text-align:left">VPC</td>
+<td style="text-align:left">vpc-0e4918ac3af48cba4</td>
+<td style="text-align:left">ap-northeast-1(Tokyo)</td>
+<td style="text-align:left">CIDR: 172.32.0.0/16, DNS hostnames enabled</td>
 </tr>
-
 <tr>
-<td align="left">Internet Gateway</td>
-<td align="left">igw-018b97e71d32a2ecd</td>
-<td align="left">ap-northeast-1</td>
-<td align="left">attach to VPC and subnet Route Table to enable internet access</td>
+<td style="text-align:left">Internet Gateway</td>
+<td style="text-align:left">igw-018b97e71d32a2ecd</td>
+<td style="text-align:left">ap-northeast-1</td>
+<td style="text-align:left">attach to VPC and subnet Route Table to enable internet access</td>
 </tr>
-
 <tr>
-<td align="left">Subnet</td>
-<td align="left">subnet-a</td>
-<td align="left">ap-northeast-1c</td>
-<td align="left">CIDR: 172.32.0.0/20, public subnet</td>
+<td style="text-align:left">Subnet</td>
+<td style="text-align:left">subnet-a</td>
+<td style="text-align:left">ap-northeast-1c</td>
+<td style="text-align:left">CIDR: 172.32.0.0/20, public subnet</td>
 </tr>
-
 <tr>
-<td align="left">Subnet</td>
-<td align="left">subnet-b</td>
-<td align="left">ap-northeast-1c</td>
-<td align="left">CIDR: 172.32.16.0/20, public subnet</td>
+<td style="text-align:left">Subnet</td>
+<td style="text-align:left">subnet-b</td>
+<td style="text-align:left">ap-northeast-1c</td>
+<td style="text-align:left">CIDR: 172.32.16.0/20, public subnet</td>
 </tr>
-
 <tr>
-<td align="left">Subnet</td>
-<td align="left">subnet-c</td>
-<td align="left">ap-northeast-1d</td>
-<td align="left">CIDR: 172.32.32.0/20, public subnet</td>
+<td style="text-align:left">Subnet</td>
+<td style="text-align:left">subnet-c</td>
+<td style="text-align:left">ap-northeast-1d</td>
+<td style="text-align:left">CIDR: 172.32.32.0/20, public subnet</td>
 </tr>
-
 <tr>
-<td align="left">Security Group</td>
-<td align="left">sg-0e5aae3682dea4349/security-group-external</td>
-<td align="left"></td>
-<td align="left">inboound: all ICMP - ipv4 and http/https</td>
+<td style="text-align:left">Security Group</td>
+<td style="text-align:left">sg-0e5aae3682dea4349/security-group-external</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">inboound: all ICMP - ipv4 and http/https</td>
 </tr>
-
 <tr>
-<td align="left">Security Group</td>
-<td align="left">sg-044e680ce2a997f4a/security-group-external-management</td>
-<td align="left"></td>
-<td align="left">quite open and should add IP range constrains</td>
+<td style="text-align:left">Security Group</td>
+<td style="text-align:left">sg-044e680ce2a997f4a/security-group-external-management</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">quite open and should add IP range constrains</td>
 </tr>
-
 <tr>
-<td align="left">Security Group</td>
-<td align="left">sg-0112367fdf4f05fe5/security-group-internal</td>
-<td align="left"></td>
-<td align="left">inboound: all traffic from sg-044e680ce2a997f4a and http/https from sg-0e5aae3682dea4349</td>
+<td style="text-align:left">Security Group</td>
+<td style="text-align:left">sg-0112367fdf4f05fe5/security-group-internal</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">inboound: all traffic from sg-044e680ce2a997f4a and http/https from sg-0e5aae3682dea4349</td>
 </tr>
 </tbody>
 </table>
-
 <h2 id="create-instance-templete-and-auto-scaling-group">Create instance templete and auto scaling group</h2>
-
 <p>create instance template to use t2.micro instance type and disable public ipv4, the ec2 instance backed by auto scaling group are only accessible from the bastion host secured by security-group-external-management. for the instance count, minumum: 1, desired: 2, maxium: 3</p>
-
 <p>no much details here on this step, the wizard page on aws console is quite clear to guide you create these parts, you can also try Terra form for these resource creation.</p>
-
 <p>notes: the customer AMI may bring additional charges to your account free tier limit, hence i use user data to init the docker run environement instead, the content of user data is listed in below:</p>
-
-<pre><code>#! /bin/sh
+<pre tabindex="0"><code>#! /bin/sh
 sudo yum update -y
 sudo amazon-linux-extras install docker
 sudo service docker start
 sudo usermod -a -G docker ec2-user
 
 docker run -d -p 80:8080 --name health-check public.ecr.aws/a0i4s5a9/utilities-healthcheck:1.0.1
-</code></pre>
-
-<h2 id="test-connectivity">Test connectivity</h2>
-
+</code></pre><h2 id="test-connectivity">Test connectivity</h2>
 <p>when goes to this step, that mean the ELB and auto scaling group as well the target group/health check related configuration have been done, now test the connectivity.
 access the FQDN display on the ELB detail page on browser directly, if get expected response, then great, if not, dont be sad, please check the security group settings and the subnet routes again.</p>
-
 <h1 id="pressure-testing">Pressure testing</h1>
-
 <p>install apacke ab to make request, please see below picture
-<img src='/img/2021-08-09-aws-demo-01-autoscale-test/ab-test.png' style="height: 400px;margin-left: 0px;"/></p>
-
+<!-- raw HTML omitted --></p>
 <p>check the traffic change status on the ELB monitoring dashboard, capture a screenshot for reference:
-<img src='/img/2021-08-09-aws-demo-01-autoscale-test/picture-requests.png' style="height: 400px;margin-left: 0px;"/></p>
-
+<!-- raw HTML omitted --></p>
 <p>CPU utilization on the auto scale group monitoring dashboard:
-<img src='/img/2021-08-09-aws-demo-01-autoscale-test/cpu-utilization.png' style="height: 426px;margin-left: 0px;"/></p>
-
+<!-- raw HTML omitted --></p>
 <p>Instances count during the peak traffic volume:
-<img src='/img/2021-08-09-aws-demo-01-autoscale-test/instance-list.png' style="height: 320px;margin-left: 0px;"/></p>
-
+<!-- raw HTML omitted --></p>
 <p>last but not the least, during the test preparation, some additional changes generated, here paste the bills for reference, hope helps.
-<img src='/img/2021-08-09-aws-demo-01-autoscale-test/bills.png' style="height: 629px;margin-left: 0px;"/></p>
-
+<!-- raw HTML omitted --></p>
 <h1 id="others">Others</h1>
-
 <h2 id="issues-encountered">Issues encountered</h2>
-
-<p>The whole demo process is not smooth as write a blog, actually encountered lots of issues, for example:<br />
-1. Load balancer only could point to instance in public subnet, at the beginning i set the subnet-a and subnet-c as private subnet, and create NAT for out bound access since installation of docker.<br />
-2. Bation host created in the subnet-b cannot ssh to the ec2 instance created by the auto scaling group, lately i found i didn&rsquo;t configure the private key on the bastion host. because all the instance shared the same RAS key pair, so once i stall the private key on the bastion host, i can ssh to any instances created using the key pair by given security access is allowed<br />
-3. NAT is not free of charge, it charges by hour!!<br />
-4. EC2 instance created but cannot access even allow PUBLIC IPV4 or associate elastic IP, because there is no internet routing config in the Route Table for self created subnets.<br />
-5. User data specified on the EC2 instance does not work, check the EC2 logs found it cannot execute the user date correctly, after investigation, the root cause is missing <strong>#! /bin/sh</strong> on the first line of the user data.</p>
-
+<p>The whole demo process is not smooth as write a blog, actually encountered lots of issues, for example:</p>
+<ol>
+<li>Load balancer only could point to instance in public subnet, at the beginning i set the subnet-a and subnet-c as private subnet, and create NAT for out bound access since installation of docker.</li>
+<li>Bation host created in the subnet-b cannot ssh to the ec2 instance created by the auto scaling group, lately i found i didn&rsquo;t configure the private key on the bastion host. because all the instance shared the same RAS key pair, so once i stall the private key on the bastion host, i can ssh to any instances created using the key pair by given security access is allowed</li>
+<li>NAT is not free of charge, it charges by hour!!</li>
+<li>EC2 instance created but cannot access even allow PUBLIC IPV4 or associate elastic IP, because there is no internet routing config in the Route Table for self created subnets.</li>
+<li>User data specified on the EC2 instance does not work, check the EC2 logs found it cannot execute the user date correctly, after investigation, the root cause is missing <strong>#! /bin/sh</strong> on the first line of the user data.</li>
+</ol>
 <p>there are some other security group configure issue, while these are eaiser to fix ^_^.</p>
-
 <p>Thank you for reading.</p>
 
 
@@ -453,6 +412,7 @@ access the FQDN display on the ELB detail page on browser directly, if get expec
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
@@ -469,6 +429,10 @@ access the FQDN display on the ELB detail page on browser directly, if get expec
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -548,6 +512,8 @@ access the FQDN display on the ELB detail page on browser directly, if get expec
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -603,6 +569,8 @@ access the FQDN display on the ELB detail page on browser directly, if get expec
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -707,7 +675,7 @@ access the FQDN display on the ELB detail page on browser directly, if get expec
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -760,9 +728,6 @@ access the FQDN display on the ELB detail page on browser directly, if get expec
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -825,6 +790,7 @@ access the FQDN display on the ELB detail page on browser directly, if get expec
         });
     });
 </script>
+
 
 
 

@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-07.jpg">
+    <meta property="twitter:image" content="/img/background-07.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -218,123 +220,88 @@
                 post-container">
 
                 
-                
-
-<h1 id="背景介绍">背景介绍</h1>
-
+                <h1 id="背景介绍">背景介绍</h1>
 <p>很多时候我们由于great firewall，我们无法访问某些网站，这时候就需要用到网络代理来应对一些比较urgent的case，本文主要会介绍如何使用Shadowsocks 和 Proxychain来 setup linux network proxy，这样在命令行下都可以起到代理和转发的作用，而不仅限于浏览器的代理。</p>
-
-<h1 id="ss-server-ss-local的配置">SS server &amp; SS local的配置</h1>
-
+<h1 id="ss-server--ss-local的配置">SS server &amp; SS local的配置</h1>
 <h2 id="预置条件">预置条件</h2>
-
-<h3 id="installed-python-3-pip">Installed Python 3 + pip</h3>
-
+<h3 id="installed-python-3--pip">Installed Python 3 + pip</h3>
 <p>安装命令如下:</p>
-
-<pre><code>sudo apt-get install python3-pip
-</code></pre>
-
-<p><em>如果得到no packages found - python3-pip的错误，请添加相应的apt sources. 修改/etc/apt/sources.list文件，添加如下4条source信息</em></p>
-
-<pre><code>  deb http://cn.archive.ubuntu.com/ubuntu bionic main multiverse restricted universe
+<pre tabindex="0"><code>sudo apt-get install python3-pip
+</code></pre><p><em>如果得到no packages found - python3-pip的错误，请添加相应的apt sources. 修改/etc/apt/sources.list文件，添加如下4条source信息</em></p>
+<pre tabindex="0"><code>  deb http://cn.archive.ubuntu.com/ubuntu bionic main multiverse restricted universe
   deb http://cn.archive.ubuntu.com/ubuntu bionic-updates main multiverse restricted universe
   deb http://cn.archive.ubuntu.com/ubuntu bionic-security main multiverse restricted universe
   deb http://cn.archive.ubuntu.com/ubuntu bionic-proposed main multiverse restricted universe
-</code></pre>
-
-<h3 id="installed-shadowsocks">Installed Shadowsocks</h3>
-
-<h3 id="一台可以访问-外网-的云主机-azure-aws-alicloud-hk等都可以">一台可以访问<strong>外网</strong>的云主机，Azure/AWS/Alicloud-HK等都可以</h3>
-
-<pre><code>sudo pip install shadowsocks
-</code></pre>
-
-<h2 id="ssserver的配置和启动">SSServer的配置和启动</h2>
-
+</code></pre><h3 id="installed-shadowsocks">Installed Shadowsocks</h3>
+<h3 id="一台可以访问__外网__的云主机azureawsalicloud-hk等都可以">一台可以访问__外网__的云主机，Azure/AWS/Alicloud-HK等都可以</h3>
+<pre tabindex="0"><code>sudo pip install shadowsocks
+</code></pre><h2 id="ssserver的配置和启动">SSServer的配置和启动</h2>
 <p>在云主机上创建sss 配置文件shadowsocks.json(推荐放置在/etc/shadowsocks/ 下面)，其内容如下：</p>
-
-<pre><code>{
-  &quot;server&quot;:&quot;0.0.0.0&quot;,
-  &quot;server_port&quot;:&quot;{port}&quot;,
-  &quot;local_address&quot;:&quot;127.0.0.1&quot;,
-  &quot;local_port&quot;:&quot;1080&quot;,
-  &quot;password&quot;:&quot;{password}&quot;,
-  &quot;timeout&quot;:1000,
-  &quot;method&quot;:&quot;aes-256-cfb&quot;,
-  &quot;fast_open&quot;:false
+<pre tabindex="0"><code>{
+  &#34;server&#34;:&#34;0.0.0.0&#34;,
+  &#34;server_port&#34;:&#34;{port}&#34;,
+  &#34;local_address&#34;:&#34;127.0.0.1&#34;,
+  &#34;local_port&#34;:&#34;1080&#34;,
+  &#34;password&#34;:&#34;{password}&#34;,
+  &#34;timeout&#34;:1000,
+  &#34;method&#34;:&#34;aes-256-cfb&#34;,
+  &#34;fast_open&#34;:false
 }
-</code></pre>
-
-<p>ip,port,password这三个参数是必须参数
+</code></pre><p>ip,port,password这三个参数是必须参数
 配置好这个配置文件后，运行命令然SSS服务运行起来</p>
-
-<pre><code>nohup ssserver -c /etc/shadowsocks/shadowsocks.json start &amp;
-</code></pre>
-
-<h2 id="sslocal的配置和启动">SSLocal的配置和启动</h2>
-
+<pre tabindex="0"><code>nohup ssserver -c /etc/shadowsocks/shadowsocks.json start &amp;
+</code></pre><h2 id="sslocal的配置和启动">SSLocal的配置和启动</h2>
 <p>在配置好了服务端之后，我们就可以开始配置客户端了，客户端也需要一个基本类似的配置文件，当然了你可以在windows或者手机上用shadowsocks的客户端来实现客户端代理，这个不是本文的重点
 在本地的linux机上创建shadowsocks.json，配置内容如下：</p>
-
-<pre><code>{
-  &quot;server&quot;:&quot;xxxx&quot;,
-  &quot;local_address&quot;: &quot;127.0.0.1&quot;,
-  &quot;local_port&quot;:1080,
-  &quot;server_port&quot;:xxxx,
-  &quot;password&quot;:&quot;xxxx&quot;,
-  &quot;timeout&quot;:300,
-  &quot;method&quot;:&quot;aes-256-cfb&quot;
+<pre tabindex="0"><code>{
+  &#34;server&#34;:&#34;xxxx&#34;,
+  &#34;local_address&#34;: &#34;127.0.0.1&#34;,
+  &#34;local_port&#34;:1080,
+  &#34;server_port&#34;:xxxx,
+  &#34;password&#34;:&#34;xxxx&#34;,
+  &#34;timeout&#34;:300,
+  &#34;method&#34;:&#34;aes-256-cfb&#34;
 }
-</code></pre>
-
-<p>完成配置后，命令运行起来</p>
-
-<pre><code>nohup sslocal -c shadowsocks.json &amp;
-</code></pre>
-
-<p>到此，我们可以通过设置linux系统环境变量达到浏览器network代理的目的,这距离我们的最终目标命令行下的网络代理更近一步了
-&gt;export http_proxy=127.0.0.1:1080
+</code></pre><p>完成配置后，命令运行起来</p>
+<pre tabindex="0"><code>nohup sslocal -c shadowsocks.json &amp;
+</code></pre><p>到此，我们可以通过设置linux系统环境变量达到浏览器network代理的目的,这距离我们的最终目标命令行下的网络代理更近一步了</p>
+<blockquote>
+<p>export http_proxy=127.0.0.1:1080
 export https_proxy=127.0.0.1:1080
 export no_proxy=localhost, 127.0.0.1</p>
-
-<p>接下来我们进行proxychain的安装和配置</p>
-
-<h1 id="proxychain的配置">Proxychain的配置</h1>
-
-<h2 id="install-proxychain">Install proxychain</h2>
-
-<blockquote>
-<p>git clone <a href="https://github.com/rofl0r/proxychains-ng">https://github.com/rofl0r/proxychains-ng</a><br />
-cd proxychains-ng<br />
-./configure &ndash;prefix=/usr &ndash;sysconfdir=/etc<br />
-make<br />
-make install<br />
-make install-config</p>
 </blockquote>
-
+<p>接下来我们进行proxychain的安装和配置</p>
+<h1 id="proxychain的配置">Proxychain的配置</h1>
+<h2 id="install-proxychain">Install proxychain</h2>
+<blockquote>
+</blockquote>
+<p>git clone <a href="https://github.com/rofl0r/proxychains-ng">https://github.com/rofl0r/proxychains-ng</a><br>
+cd proxychains-ng<br>
+./configure &ndash;prefix=/usr &ndash;sysconfdir=/etc<br>
+make<br>
+make install<br>
+make install-config</p>
 <p>按步骤执行如上命令完成后，proxychain安装完成，并且默认的配置为：/etc/proxychains.conf</p>
-
 <h2 id="update-proxychain的代理列表">Update proxychain的代理列表</h2>
-
 <blockquote>
 <p>vim /etc/proxychains.conf
 在文件尾部增加一行：socks5    127.0.0.1  1080
-<img src="/img/2019-07-14-linux-network-proxy-setup-desktop-terminal/15532408-1405d25f0bcee21b.png" style="margin-left:25px" /></p>
+<!-- raw HTML omitted --></p>
 </blockquote>
-
-<p>现在你可以测试了，测试命令如下：
-&gt;proxychains4 curl <a href="https://www.google.com">https://www.google.com</a></p>
-
+<p>现在你可以测试了，测试命令如下：</p>
+<blockquote>
+<p>proxychains4 curl <a href="https://www.google.com">https://www.google.com</a></p>
+</blockquote>
 <p>如果你能看到服务器返回了html相关的东西，说明代理是工作的，恭喜你
 截至目前，你可以做到在命令下来代理网络了，可以应对很多的使用场景了，但是依然有场景你无法满足，例如，在某个应用的内需要走代理，前提是你无法添加proxychains4的前缀，如docker daemon里面去下载image，这时候需要一个‘全局’的代理，使到全部的流量都走代理，不管是inbound或者outbound，你会问可以做到吗？
-答案是Yes，很简单，只需要一个命令去打开bash并在这个bash下面所有的流量都走代理
-&gt; proxychains4 -q /bin/bash</p>
-
+答案是Yes，很简单，只需要一个命令去打开bash并在这个bash下面所有的流量都走代理</p>
+<blockquote>
+<p>proxychains4 -q /bin/bash</p>
+</blockquote>
 <p>到此为止，我们基本实现了基于浏览器代理和命令行下的全局代理，自己去试试吧，good luck</p>
-
-<p>最后一点补充，可以把SS做成linux服务，这样随系统启动使用起来会更加的方便，做法如下：
-&gt;sudo vim /etc/systemd/system/shadowsocks.service
+<p>最后一点补充，可以把SS做成linux服务，这样随系统启动使用起来会更加的方便，做法如下：</p>
+<blockquote>
+<p>sudo vim /etc/systemd/system/shadowsocks.service
 内容如下：
 <em>[Unit]
 Description=Shadowsocks Client Service
@@ -345,15 +312,16 @@ User=root
 ExecStart=/usr/local/bin/sslocal -c /xxx/shadowsocks.json
 [Install]
 WantedBy=multi-user.target</em></p>
-
-<p>激活SS服务随系统自动启动
-&gt;systemctl enable /etc/systemd/system/shadowsocks.service</p>
-
+</blockquote>
+<p>激活SS服务随系统自动启动</p>
+<blockquote>
+<p>systemctl enable /etc/systemd/system/shadowsocks.service</p>
+</blockquote>
 <p>然后就可以像其他linux服务那样使用 systemctl来管理了
 如果在上述添加SS服务的过程中遇到这个错误的话
 /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1: undefined symbol: EVP_CIPHER
 请修改/usr/local/lib/python3.6/dist-packages/shadowsocks/crypto/openssl.py，更新第55行和111行
-将libcrypto.EVP_CIPHER_CTX_cleanup(self._ctx) 修改为 <label style="color:blue">libcrypto.EVP_CIPHER_CTX_reset(self._ctx)</label></p>
+将libcrypto.EVP_CIPHER_CTX_cleanup(self._ctx) 修改为 <!-- raw HTML omitted -->libcrypto.EVP_CIPHER_CTX_reset(self._ctx)<!-- raw HTML omitted --></p>
 
 
                 
@@ -398,6 +366,7 @@ WantedBy=multi-user.target</em></p>
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
@@ -414,6 +383,10 @@ WantedBy=multi-user.target</em></p>
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -493,6 +466,8 @@ WantedBy=multi-user.target</em></p>
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -548,6 +523,8 @@ WantedBy=multi-user.target</em></p>
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -652,7 +629,7 @@ WantedBy=multi-user.target</em></p>
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -705,9 +682,6 @@ WantedBy=multi-user.target</em></p>
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -770,6 +744,7 @@ WantedBy=multi-user.target</em></p>
         });
     });
 </script>
+
 
 
 

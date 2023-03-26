@@ -10,14 +10,14 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-05.jpg">
+    <meta property="twitter:image" content="/img/background-05.jpg" />
     
 
     
-    <meta name="title" content="Redis学习笔记" />
-    <meta property="og:title" content="Redis学习笔记" />
-    <meta property="twitter:title" content="Redis学习笔记" />
+    <meta name="title" content="Redis advance II" />
+    <meta property="og:title" content="Redis advance II" />
+    <meta property="twitter:title" content="Redis advance II" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Redis学习笔记 | Jamie&#39;s Blog</title>
+    <title>Redis advance II | Jamie&#39;s Blog</title>
 
     <link rel="canonical" href="/post/2022-06-28-redis-master-slave-replication/">
 
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -187,7 +189,7 @@
                         </a>
                         
                     </div>
-                    <h1>Redis学习笔记</h1>
+                    <h1>Redis advance II</h1>
                     <h2 class="subheading">Redis basic knowledge - Master/slave replication</h2>
                     <span class="meta">
                         
@@ -222,25 +224,20 @@
                 post-container">
 
                 
-                
-
-<h1 id="主从复制">主从复制</h1>
-
+                <h1 id="主从复制">主从复制</h1>
 <h2 id="基本概念">基本概念</h2>
-
-<p>主机数据更新后根据配置和策略，自动同步到备份机的master/slave机制，其中master以写为主，而slave主要以读为主。<br />
-该机制使<br />
-1》读写分离，性能获得提升<br />
+<p>主机数据更新后根据配置和策略，自动同步到备份机的master/slave机制，其中master以写为主，而slave主要以读为主。 <br>
+该机制使<br>
+1》读写分离，性能获得提升<br>
 2》容灾快速恢复</p>
-
 <h2 id="环境搭建">环境搭建</h2>
-
-<p>快速demo搭建一主两从的主从复制集群，准备3份配置文件：<br />
-- redis-6379.conf<br />
-- redis-6380.conf<br />
-- redis-6381.conf</p>
-
-<pre><code># -----------------------------------------------------------------------
+<p>快速demo搭建一主两从的主从复制集群，准备3份配置文件：</p>
+<ul>
+<li>redis-6379.conf</li>
+<li>redis-6380.conf</li>
+<li>redis-6381.conf</li>
+</ul>
+<pre tabindex="0"><code># -----------------------------------------------------------------------
 # redis-6379.conf ==&gt; master node
 # include original redis config - full version
 include /Users/jamie/Documents/work-benches/redis/redis-6.0.6/redis.conf
@@ -302,58 +299,44 @@ daemonize yes
 
 replicaof 127.0.0.1 6379
 # -----------------------------------------------------------------------
-</code></pre>
-
-<p>启动redis实例  &lsquo;nohup redis-server ./config/redis-<port>.conf&rsquo;, 当3个实例启动完成后, 在master 上检查replication的配置,看到如下信息则主从配置成功
-<img src='/img/2022-06-28-redis-master-slave-replication/replica-01.png' style="height: 428px;margin-left: 0px;"/></p>
-
-<p>3中加入到复制集的方式<br />
-- 依赖于config文件中的<strong>replicaof {masterhost} {masterport}</strong>命令把节点加入到集群<br />
-- 通过 redis-server &ndash;slaveof {masterhost} {masterport}进行添加<br />
-- 在slave节点上运行redis 命令 slaveof {masterhost} {masterport}进行添加</p>
-
+</code></pre><p>启动redis实例  &rsquo;nohup redis-server ./config/redis-<!-- raw HTML omitted -->.conf&rsquo;, 当3个实例启动完成后, 在master 上检查replication的配置,看到如下信息则主从配置成功
+<!-- raw HTML omitted --></p>
+<p>3中加入到复制集的方式</p>
+<ul>
+<li>依赖于config文件中的__replicaof {masterhost} {masterport}__命令把节点加入到集群</li>
+<li>通过 redis-server &ndash;slaveof {masterhost} {masterport}进行添加</li>
+<li>在slave节点上运行redis 命令 slaveof {masterhost} {masterport}进行添加</li>
+</ul>
 <h2 id="注意问题或重点">注意问题或重点</h2>
-
 <ol>
-<li>从服务器挂掉之后重新启动，已经不再是从模式(只有在conf中没有replicaof的情况下)，需要重新手动添加到集群，主服务器重新集群模式仍然不变。<br /></li>
+<li>从服务器挂掉之后重新启动，已经不再是从模式(只有在conf中没有replicaof的情况下)，需要重新手动添加到集群，主服务器重新集群模式仍然不变。</li>
 <li>主从复制原理
-
 <ul>
 <li>salve连接上master之后，salve向master请求数据同步sync</li>
 <li>master收到同步数据请求后，进行数据持久化到rdb文件，发送rdb文件给slave</li>
 <li>每次master写操作，主动同步到slave</li>
-</ul></li>
+</ul>
+</li>
 <li>slave 上可以添加slave，形成树形结构</li>
 <li>主从切换，当master挂掉，slave可以升级为master
-
 <ul>
 <li>手动进行切换 &ndash;〉 slaveof no one</li>
-<li>哨兵模式 sentinel
-<br /></li>
-</ul></li>
+<li>哨兵模式 sentinel</li>
+</ul>
+</li>
 </ol>
-
 <h2 id="哨兵模式-sentinel">哨兵模式 sentinel</h2>
-
 <p>哨兵模式是一种特殊的模式，首先Redis提供了哨兵的命令，哨兵是一个独立的进程，作为进程，它会独立运行。其原理是<strong>哨兵通过发送命令，等待Redis服务器响应，从而监控运行的多个Redis实例</strong>.</p>
-
 <h3 id="启动哨兵">启动哨兵</h3>
-
 <p>copy redis安装目录下的sentinel.conf配置修改如下：</p>
-
-<pre><code># protection mode
+<pre tabindex="0"><code># protection mode
 protected-mode no
 # monitor master node
 sentinel monitor mymaster 127.0.0.1 6379 1	
-</code></pre>
-
-<p>启动哨兵 - <strong>redis-sentinel ./config/sentinel.conf</strong>, 如果启动正常可以在日志中看到master和slave节点的信息。
-<img src='/img/2022-06-28-redis-master-slave-replication/sentinel-01.png' style="weight: 1450px;height: 132px;margin-left: 0px;"/></p>
-
+</code></pre><p>启动哨兵 - <strong>redis-sentinel ./config/sentinel.conf</strong>, 如果启动正常可以在日志中看到master和slave节点的信息。
+<!-- raw HTML omitted --></p>
 <h3 id="验证failover">验证failover</h3>
-
 <h4 id="验证前server信息">验证前server信息</h4>
-
 <table>
 <thead>
 <tr>
@@ -362,37 +345,31 @@ sentinel monitor mymaster 127.0.0.1 6379 1
 <th>角色</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>127.0.0.1</td>
 <td>6379</td>
 <td>master</td>
 </tr>
-
 <tr>
 <td>127.0.0.1</td>
 <td>6380</td>
 <td>slave</td>
 </tr>
-
 <tr>
 <td>127.0.0.1</td>
 <td>6381</td>
 <td>slave</td>
 </tr>
-
 <tr>
 <td>127.0.0.1</td>
 <td>26379</td>
-<td><span style='color:red'>sentinel</span></td>
+<td><!-- raw HTML omitted -->sentinel<!-- raw HTML omitted --></td>
 </tr>
 </tbody>
 </table>
-
 <p>输出replication详情如下：</p>
-
-<pre><code>Jamies-MacBook-Pro:workspace-20190620 jamie$ redis-cli -p 6379
+<pre tabindex="0"><code>Jamies-MacBook-Pro:workspace-20190620 jamie$ redis-cli -p 6379
 127.0.0.1:6379&gt; info replication
 # Replication
 role:master
@@ -407,24 +384,17 @@ repl_backlog_active:1
 repl_backlog_size:1048576
 repl_backlog_first_byte_offset:1
 repl_backlog_histlen:43115
-</code></pre>
-
-<h4 id="failover后的server-信息">failover后的server 信息</h4>
-
+</code></pre><h4 id="failover后的server-信息">failover后的server 信息</h4>
 <p>手动shutdown 6379，查看sentinel日志获取新的主节点信息，并输出新主节点上的replication info.
-<img src='/img/2022-06-28-redis-master-slave-replication/sentinel-02.png' style="weight: 1852px;height: 654px;margin-left: 0px;"/>
+<!-- raw HTML omitted -->
 由上图所示，新的master 为6380.</p>
-
-<pre><code>Jamies-MacBook-Pro:workspace-20190620 jamie$ redis-cli -p 6380
+<pre tabindex="0"><code>Jamies-MacBook-Pro:workspace-20190620 jamie$ redis-cli -p 6380
 127.0.0.1:6380&gt; info replication
 # Replication
 role:master
 connected_slaves:1
 slave0:ip=127.0.0.1,port=6381,state=online,offset=90136,lag=1
-</code></pre>
-
-<p>综上所述，新的server info 为</p>
-
+</code></pre><p>综上所述，新的server info 为</p>
 <table>
 <thead>
 <tr>
@@ -433,39 +403,32 @@ slave0:ip=127.0.0.1,port=6381,state=online,offset=90136,lag=1
 <th>角色</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>127.0.0.1</td>
 <td>6379</td>
 <td>slave after restarted</td>
 </tr>
-
 <tr>
 <td>127.0.0.1</td>
 <td>6380</td>
 <td>master</td>
 </tr>
-
 <tr>
 <td>127.0.0.1</td>
 <td>6381</td>
 <td>slave</td>
 </tr>
-
 <tr>
 <td>127.0.0.1</td>
 <td>26379</td>
-<td><span style='color:red'>sentinel</span></td>
+<td><!-- raw HTML omitted -->sentinel<!-- raw HTML omitted --></td>
 </tr>
 </tbody>
 </table>
-
-<h3 id="spring-lettuce-测试failover">Spring + Lettuce 测试failover</h3>
-
+<h3 id="spring--lettuce-测试failover">Spring + Lettuce 测试failover</h3>
 <p>配置如下：</p>
-
-<pre><code># application.yml ==&gt;
+<pre tabindex="0"><code># application.yml ==&gt;
 spring:  
   redis:  
     host: localhost  
@@ -479,11 +442,8 @@ spring:
     sentinel:  
       master: mymaster  
     client-type: lettuce
-</code></pre>
-
-<p>Test case - 每间隔1分钟向redis写一条数据，在过程shutdown 6380，等待sentinel发现并切换主节点然后应用恢复连接并继续写入数据。</p>
-
-<pre><code>@SpringBootTest  
+</code></pre><p>Test case - 每间隔1分钟向redis写一条数据，在过程shutdown 6380，等待sentinel发现并切换主节点然后应用恢复连接并继续写入数据。</p>
+<pre tabindex="0"><code>@SpringBootTest  
 @Slf4j  
 public class RedisWriteOperationWithFailover {  
     @Autowired  
@@ -491,10 +451,10 @@ public class RedisWriteOperationWithFailover {
   
     @Test  
     public void test() {  
-        final String testKeyPrefix = &quot;test:sentinel:sequence:&quot;;  
+        final String testKeyPrefix = &#34;test:sentinel:sequence:&#34;;  
         IntStream.range(0, 20).forEach(i -&gt; {  
             String key = testKeyPrefix + i;  
-            log.info(&quot;write record to redis, key: {}, value:{}&quot;, key, i);  
+            log.info(&#34;write record to redis, key: {}, value:{}&#34;, key, i);  
             redisTemplate.opsForValue().set(key, i, Duration.ofMinutes(1));  
             try {  
                 TimeUnit.MINUTES.sleep(1);  
@@ -504,21 +464,18 @@ public class RedisWriteOperationWithFailover {
         });  
     }  
 }
-</code></pre>
-
-<p>测试结果如图
-<img src='/img/2022-06-28-redis-master-slave-replication/sentinel-03.png' style="height: 727px;margin-left: 0px;"/>
-从上图中得知：<br />
-- 2022-07-07 23:34:58发现master down机，然后尝试重新连接一直fail。<br />
-- sentinel在30秒后进行投票选举新的master 并切换到新master 6379。<br />
-- 应用自动连接到新的master恢复数据写入。</p>
-
+</code></pre><p>测试结果如图
+<!-- raw HTML omitted -->
+从上图中得知：</p>
+<ul>
+<li>2022-07-07 23:34:58发现master down机，然后尝试重新连接一直fail。</li>
+<li>sentinel在30秒后进行投票选举新的master 并切换到新master 6379。</li>
+<li>应用自动连接到新的master恢复数据写入。</li>
+</ul>
 <blockquote>
 <p>sentinel down-after-milliseconds mymaster 30000</p>
 </blockquote>
-
 <h1 id="refference-articles">Refference Articles</h1>
-
 <p><a href="https://www.jianshu.com/p/f2cb77e7a402">https://www.jianshu.com/p/f2cb77e7a402</a></p>
 
 
@@ -564,11 +521,12 @@ public class RedisWriteOperationWithFailover {
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/2022-06-27-redis-basic-2/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">&larr;
+                        <a href="/post/2022-06-27-redis-basic-2/" data-toggle="tooltip" data-placement="top" title="Redis foundation - III">&larr;
                             Previous Post</a>
                     </li>
                     
@@ -580,6 +538,10 @@ public class RedisWriteOperationWithFailover {
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -659,6 +621,8 @@ public class RedisWriteOperationWithFailover {
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -714,6 +678,8 @@ public class RedisWriteOperationWithFailover {
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -818,7 +784,7 @@ public class RedisWriteOperationWithFailover {
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -871,9 +837,6 @@ public class RedisWriteOperationWithFailover {
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -936,6 +899,7 @@ public class RedisWriteOperationWithFailover {
         });
     });
 </script>
+
 
 
 

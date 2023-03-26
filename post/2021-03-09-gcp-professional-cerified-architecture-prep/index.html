@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-06.jpg">
+    <meta property="twitter:image" content="/img/background-06.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -218,48 +220,33 @@
                 post-container">
 
                 
-                
-
-<p>Today i took <a href="https://cloud.google.com/certification/cloud-architect">Google Cloud Certified Professional Cloud Architect</a> exam, the result is pass，through the final result is being reviewed for compliance with exam terms and conditions, i&rsquo;d like to summarize the preparation path i went through for this exam, hope that could help others who want to take the same exam.</p>
-
+                <p>Today i took <a href="https://cloud.google.com/certification/cloud-architect">Google Cloud Certified Professional Cloud Architect</a> exam, the result is pass，through the final result is being reviewed for compliance with exam terms and conditions, i&rsquo;d like to summarize the preparation path i went through for this exam, hope that could help others who want to take the same exam.</p>
 <h1 id="about-the-exam">About the exam</h1>
-
-<p><strong>Professional Cloud Architect</strong> is one of the google cloud professonal cerficates, it requires a thorough understanding of cloud architecture and Google Cloud Platform, and verifies the capability of design, develop, and manage robust, secure, scalable, highly available, and dynamic solutions to drive business objectives. so it assesses the ability of:<br />
- - Design and plan a cloud solution architecture<br />
- - Analyze and optimize technical and business processes<br />
- - Manage and provision the cloud solution infrastructure<br />
- - Manage implementations of cloud architecture<br />
- - Design for security and compliance<br />
- - Ensure solution and operations reliability</p>
-
+<p><strong>Professional Cloud Architect</strong> is one of the google cloud professonal cerficates, it requires a thorough understanding of cloud architecture and Google Cloud Platform, and verifies the capability of design, develop, and manage robust, secure, scalable, highly available, and dynamic solutions to drive business objectives. so it assesses the ability of:</p>
+<ul>
+<li>Design and plan a cloud solution architecture</li>
+<li>Analyze and optimize technical and business processes</li>
+<li>Manage and provision the cloud solution infrastructure</li>
+<li>Manage implementations of cloud architecture</li>
+<li>Design for security and compliance</li>
+<li>Ensure solution and operations reliability</li>
+</ul>
 <p>The exam is 2 hours duration and totally 50 questions, the cost is 200$.  seems google will launch the Professional Cloud Architect <strong>BETA</strong>, which cost lower but with long duration and different sample study cases.</p>
-
 <h1 id="prerequisites-for-this-exam">Prerequisites for this exam</h1>
-
 <p>there is no any prerequisites for this exam. While if you have any other cloud service experience or have been working with GCP service, these would be very helpful for you to pass the exam.</p>
-
 <h1 id="how-i-prepare-it">How I prepare it</h1>
-
 <p>Firstly, i registered Coursera Courses - <a href="https://www.coursera.org/specializations/gcp-architecture">Architecting with Google Compute Engine Specialization</a>, which consists of 5 courses as shown in below.
-<img src='/img/2021-03-09-gcp-professional-cerified-architecture-prep/coursera-course-list.png' style="height: 380px;margin-left: 0px; margin-top: 0px;"/></p>
-
+<!-- raw HTML omitted --></p>
 <p>it covers the basic knowleage you should know and also there are logs of solution design tree and practices, as well as the free labs on qwiklabs. The labs are very useful to understand what&rsquo;s the service and how it works, it&rsquo;s the fast approach to get hands-on experience.</p>
-
 <p>Secondly, register GCP service account, which has free credit, you could try some cases for free.</p>
-
 <p>Thirdly, walk through the official docs - <a href="https://cloud.google.com/products">products</a>, mainly focus on the concepts and best practices. it would take around 2 weeks(1~2 hours per day).  i also would like to recommand to do some practices on the GCP with your free account.</p>
-
-<p>Fourthly, to master the sample study cases which will appear in your later exam.<br />
-<a href="https://jayendrapatil.com/google-cloud-mountkirk-games-case-study/">MountKrik</a><br />
-<a href="https://jayendrapatil.com/google-cloud-dress4win-case-study/">Dress4Win</a><br />
+<p>Fourthly, to master the sample study cases which will appear in your later exam.<br>
+<a href="https://jayendrapatil.com/google-cloud-mountkirk-games-case-study/">MountKrik</a><br>
+<a href="https://jayendrapatil.com/google-cloud-dress4win-case-study/">Dress4Win</a><br>
 <a href="https://jayendrapatil.com/google-cloud-terramearth-case-study/">TerramEarth</a></p>
-
 <p>Fifthly, learned Coursera course - <a href="https://www.coursera.org/learn/preparing-cloud-professional-cloud-architect-exam/home/welcome">https://www.coursera.org/learn/preparing-cloud-professional-cloud-architect-exam/home/welcome</a>, it will give you some design best practice and suggestions.</p>
-
 <p>Last but not the least, take the <a href="https://cloud.google.com/certification/sample-questions/cloud-architect">sample questions test</a> to verify the knowledge matering status, try to get 80+% correctness.</p>
-
-<h1 id="userful-links-blog-videos">Userful links/blog/videos</h1>
-
+<h1 id="userful-linksblogvideos">Userful links/blog/videos</h1>
 <ol>
 <li><a href="https://jayendrapatil.com/google-cloud-professional-cloud-architect-certification-learning-path/">https://jayendrapatil.com/google-cloud-professional-cloud-architect-certification-learning-path/</a></li>
 <li>Youtube videos - <a href="https://www.youtube.com/channel/UCL8vwy2jhEtQrC-Rx6qzCZg">Learn GCP with Mahesh</a>, including demo for the MountKrik/Dress4Win/TerramEarth and userful tips or summaries.</li>
@@ -308,6 +295,7 @@
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
@@ -324,6 +312,10 @@
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -403,6 +395,8 @@
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -458,6 +452,8 @@
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -562,7 +558,7 @@
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -615,9 +611,6 @@
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -680,6 +673,7 @@
         });
     });
 </script>
+
 
 
 

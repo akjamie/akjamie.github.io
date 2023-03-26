@@ -10,14 +10,14 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-05.jpg">
+    <meta property="twitter:image" content="/img/background-05.jpg" />
     
 
     
-    <meta name="title" content="Redis学习笔记" />
-    <meta property="og:title" content="Redis学习笔记" />
-    <meta property="twitter:title" content="Redis学习笔记" />
+    <meta name="title" content="Redis foundation - II" />
+    <meta property="og:title" content="Redis foundation - II" />
+    <meta property="twitter:title" content="Redis foundation - II" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Redis学习笔记 | Jamie&#39;s Blog</title>
+    <title>Redis foundation - II | Jamie&#39;s Blog</title>
 
     <link rel="canonical" href="/post/2022-05-31-redis-basic-1/">
 
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -183,8 +185,8 @@
                         </a>
                         
                     </div>
-                    <h1>Redis学习笔记</h1>
-                    <h2 class="subheading">Redis basic knowledge - 2</h2>
+                    <h1>Redis foundation - II</h1>
+                    <h2 class="subheading">Redis foundation - II</h2>
                     <span class="meta">
                         
                             Posted by 
@@ -218,35 +220,35 @@
                 post-container">
 
                 
-                
-
-<h1 id="redis基础">Redis基础</h1>
-
+                <h1 id="redis基础">Redis基础</h1>
 <h2 id="common知识"> Common知识</h2>
-
 <ul>
-<li>Redis  有16个数据库，一般都使用0号库，使用select dbid 来切换db。</li>
-<li>Redis是单线程 + 多路io服用技术</li>
-
-<li><p>Redis vs memcache</p>
-
+<li>
+<p>Redis  有16个数据库，一般都使用0号库，使用select dbid 来切换db。</p>
+</li>
+<li>
+<p>Redis是单线程 + 多路io服用技术</p>
+</li>
+<li>
+<p>Redis vs memcache</p>
 <ul>
 <li>Redis -&gt;  单线程 + 多路io复用 + 灵活支持多种数据类型</li>
 <li>Memcached -&gt; 多线程+锁 + 单一数据类型</li>
-</ul></li>
-
-<li><p>Key 操作</p>
-
+</ul>
+</li>
+<li>
+<p>Key 操作</p>
 <ul>
 <li>keys * - list keys</li>
 <li>expire key duration - set expire duration for key</li>
 <li>exists key - verify if key exists</li>
 <li>del key - delete key-value pair via key</li>
 <li>unlink key - delete data in non-blocking way</li>
-
-<li><p>ttl key - check remaining expiry duration</p>
-
-<pre><code>127.0.0.1:6379&gt; dbsize
+<li>ttl key - check remaining expiry duration</li>
+</ul>
+</li>
+</ul>
+<pre tabindex="0"><code>127.0.0.1:6379&gt; dbsize
 (integer) 7
 127.0.0.1:6379&gt; type test-set-1
 set
@@ -254,96 +256,84 @@ set
 zset
 127.0.0.1:6379&gt; exists test-set-1
 (integer) 1
-127.0.0.1:6379&gt; set test-string-1 &quot;test&quot; 
+127.0.0.1:6379&gt; set test-string-1 &#34;test&#34; 
 OK
 127.0.0.1:6379&gt; expire test-string-1 100
 (integer) 1
 127.0.0.1:6379&gt; ttl test-string-1
 (integer) 95
-</code></pre></li>
-</ul></li>
-
-<li><p> 重要命令</p>
-
+</code></pre><ul>
+<li> 重要命令
 <ul>
 <li>select - select db</li>
 <li>dbsize - check total key size in current db</li>
 <li>flushdb - cleanup current db</li>
-<li>flushall - cleanup all dbs
-<br /></li>
-</ul></li>
+<li>flushall - cleanup all dbs</li>
 </ul>
-
+</li>
+</ul>
 <h2 id="5大数据结构">5大数据结构</h2>
-
 <ul>
 <li>String 是redis最基本的类型，redis中字符串key和value最大可以存放512m
-
 <ul>
 <li>setex key ttl value</li>
 <li>存储方式为预分配冗余空间来减少内存的频繁分配</li>
-</ul></li>
+</ul>
+</li>
 <li>List - 双向链表，一键多值
-
 <ul>
 <li>quickList, 元素少的时候是连续空间存储 - ziplist，多个ziplist</li>
 <li>ziplist - 内存紧凑，访问效率高，缺点是更新效率低，并且数据量较大时，可能导致大量的内存复制</li>
 <li>linkedlist - 节点修改的效率高，但是需要额外的内存开销，并且节点较多时，会产生大量的内存碎片</li>
 <li>quicklist -  linkedlist 与 ziplist 的结合</li>
-</ul></li>
+</ul>
+</li>
 <li>Set -自动排除数据重复
-
 <ul>
 <li>数据架构师dict，基于hash表实现</li>
 <li>Java 中HashSet的所有key指向同一个value，插入的元素即为key</li>
-</ul></li>
-
-<li><p>Hash</p>
-
+</ul>
+</li>
+<li>Hash
 <ul>
-<li><p>数据结构，ziplist和hashtable，当field-value 长度 &lt;=64,  默认使用ziplist，大于64位则自动使用hashtable</p>
-
-<pre><code>127.0.0.1:6379&gt; object encoding test-hash-1
-&quot;ziplist&quot;
-127.0.0.1:6379&gt; hset test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1 date 2022-05-30 event 'this is a testing event for redis hash testing' publisher 'system'
+<li>数据结构，ziplist和hashtable，当field-value 长度 &lt;=64,  默认使用ziplist，大于64位则自动使用hashtable</li>
+</ul>
+</li>
+</ul>
+<pre tabindex="0"><code>127.0.0.1:6379&gt; object encoding test-hash-1
+&#34;ziplist&#34;
+127.0.0.1:6379&gt; hset test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1 date 2022-05-30 event &#39;this is a testing event for redis hash testing&#39; publisher &#39;system&#39;
 (integer) 3
 127.0.0.1:6379&gt; object encoding test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1
-&quot;ziplist&quot;
-127.0.0.1:6379&gt; hset test-hash-2 test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1 'test data encoding in redis'
+&#34;ziplist&#34;
+127.0.0.1:6379&gt; hset test-hash-2 test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1-test-hash-1 &#39;test data encoding in redis&#39;
 (integer) 1
 127.0.0.1:6379&gt; object encoding test-hash-2
-&quot;hashtable&quot;
-</code></pre></li>
-</ul></li>
-
-<li><p>Zset</p>
-
+&#34;hashtable&#34;
+</code></pre><ul>
+<li>Zset
 <ul>
-<li>底层数据结构，类似于Map<String, Double>/TreeSet内部元素按照score进行排序</li>
+<li>底层数据结构，类似于Map&lt;String, Double&gt;/TreeSet内部元素按照score进行排序</li>
 <li>hash，关联元素value和权重，保证value的唯一性</li>
-<li>skiplist，给value排序，根据score的范围获取元素
-<br /></li>
-</ul></li>
+<li>skiplist，给value排序，根据score的范围获取元素</li>
 </ul>
-
+</li>
+</ul>
 <h2 id="有序链表和跳跃表">有序链表和跳跃表</h2>
-
 <p>简单比较如下图，查找51，跳跃表的查找性能相较于链表效会更好。
-<img src='/img/2022-05-26-redis-basic/linkedlist-vs-skiplist.png' style="height: 379px; margin-left: 0px;" /></p>
-
+<!-- raw HTML omitted --></p>
 <h2 id="新数据类型">新数据类型</h2>
-
 <ul>
-<li><p>Bitmaps - 对位的操作</p>
-
+<li>Bitmaps - 对位的操作
 <ul>
 <li>其本身不是一种数据类型，实际上就是字符串</li>
 <li>可以对字符串的位进行操作</li>
 <li>提供了单独的操作命令集</li>
-
-<li><p>与set相比极大的节省内存空间，但存储内容有限</p>
-
-<pre><code>127.0.0.1:6379&gt; setbit test:bitmaps:2 1 0
+<li>与set相比极大的节省内存空间，但存储内容有限</li>
+</ul>
+</li>
+</ul>
+<pre tabindex="0"><code>127.0.0.1:6379&gt; setbit test:bitmaps:2 1 0
 (integer) 0
 127.0.0.1:6379&gt; setbit test:bitmaps:2 2 0
 (integer) 0
@@ -353,44 +343,40 @@ OK
 (integer) 0
 127.0.0.1:6379&gt; getbit test:bitmaps:1 0
 (integer) 1
-</code></pre></li>
-</ul></li>
-
-<li><p>HyperLogLog - 做基数统计，耗费12kb内存，可以计算近2^64个不同元素的技术</p>
-
+</code></pre><ul>
+<li>HyperLogLog - 做基数统计，耗费12kb内存，可以计算近2^64个不同元素的技术
 <ul>
 <li>相较于distinct，hash，set，bitmaps，更少的空间占用</li>
-
-<li><p>用降低数据精确度来换存储空间</p>
-
-<pre><code>127.0.0.1:6379&gt; pfadd hyperloglog:pageview:001 'jamie' 'james' 'edward'
+<li>用降低数据精确度来换存储空间</li>
+</ul>
+</li>
+</ul>
+<pre tabindex="0"><code>127.0.0.1:6379&gt; pfadd hyperloglog:pageview:001 &#39;jamie&#39; &#39;james&#39; &#39;edward&#39;
 (integer) 1
-127.0.0.1:6379&gt; pfadd hyperloglog:pageview:001 'jamie' 
+127.0.0.1:6379&gt; pfadd hyperloglog:pageview:001 &#39;jamie&#39; 
 (integer) 0
-127.0.0.1:6379&gt; pfadd hyperloglog:pageview:001 'john' 'edward'
+127.0.0.1:6379&gt; pfadd hyperloglog:pageview:001 &#39;john&#39; &#39;edward&#39;
 (integer) 1
 127.0.0.1:6379&gt; pfcount hyperloglog:pageview:001
 (integer) 4
-127.0.0.1:6379&gt; pfadd hyperloglog:pageview:002 'john' 'edward'
+127.0.0.1:6379&gt; pfadd hyperloglog:pageview:002 &#39;john&#39; &#39;edward&#39;
 (integer) 1
 127.0.0.1:6379&gt; pfmerge hyperloglog:pageview:summ hyperloglog:pageview:001 hyperloglog:pageview:002
 OK
 127.0.0.1:6379&gt; pfcount hyperloglog:pageview:summ
 (integer) 4
 127.0.0.1:6379&gt; get hyperloglog:pageview:summ
-&quot;HYLL\x01\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00M\xca\x84^\xa1\x80I\x86\x84E]\x84D\xa9&quot;
-</code></pre></li>
-</ul></li>
-
-<li><p>Geospatial - 地理经纬度</p>
-
+&#34;HYLL\x01\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00M\xca\x84^\xa1\x80I\x86\x84E]\x84D\xa9&#34;
+</code></pre><ul>
+<li>Geospatial - 地理经纬度
 <ul>
 <li>geohash保存地理位置的坐标</li>
 <li>geohash计算的字符串，可以反向解码出原来的经纬度</li>
-
-<li><p>有序集合（zset）保存地理位置数据, member + geohash</p>
-
-<pre><code>127.0.0.1:6379&gt; geoadd china:city:xian 108.84067296981812 34.23806027872841 lvdi
+<li>有序集合（zset）保存地理位置数据, member + geohash</li>
+</ul>
+</li>
+</ul>
+<pre tabindex="0"><code>127.0.0.1:6379&gt; geoadd china:city:xian 108.84067296981812 34.23806027872841 lvdi
 (integer) 1
 127.0.0.1:6379&gt; geoadd china:city:xian 108.88047695159912 34.22972243813365 gaoxinhospital
 (integer) 1
@@ -401,61 +387,50 @@ OK
 127.0.0.1:6379&gt; geoadd china:city:xian 108.8686752319336 34.22915472534989 waishi
 (integer) 1
 127.0.0.1:6379&gt; geopos china:city:xian lvdi
-1) 1) &quot;108.84067565202713013&quot;
-2) &quot;34.23805909783406065&quot;
+1) 1) &#34;108.84067565202713013&#34;
+   2) &#34;34.23805909783406065&#34;
 127.0.0.1:6379&gt; geodist china:city:xian lvdi zhenguanfu km
-&quot;0.3323&quot;
+&#34;0.3323&#34;
 127.0.0.1:6379&gt; geodist china:city:xian lvdi gaoxinhospital km
-&quot;3.7758&quot;
+&#34;3.7758&#34;
 127.0.0.1:6379&gt; georadius china:city:xian 108.84067565202713013 34.23805909783406065 3 km
-1) &quot;zhenguanfu&quot;
-2) &quot;lvdi&quot;
-3) &quot;waishi&quot;
-4) &quot;mincheng&quot;
+1) &#34;zhenguanfu&#34;
+2) &#34;lvdi&#34;
+3) &#34;waishi&#34;
+4) &#34;mincheng&#34;
 127.0.0.1:6379&gt; GEORADIUSBYMEMBER china:city:xian lvdi 3 km
-1) &quot;zhenguanfu&quot;
-2) &quot;lvdi&quot;
-3) &quot;waishi&quot;
-4) &quot;mincheng&quot;
+1) &#34;zhenguanfu&#34;
+2) &#34;lvdi&#34;
+3) &#34;waishi&#34;
+4) &#34;mincheng&#34;
 127.0.0.1:6379&gt; GEOHASH china:city:xian lvdi
-1) &quot;wqj6u8z75s0&quot;
+1) &#34;wqj6u8z75s0&#34;
 127.0.0.1:6379&gt; OBJECT ENCODING china:city:xian
-&quot;ziplist&quot;
-</code></pre></li>
-</ul></li>
-</ul>
-
-<h1 id="redis-重要配置">Redis 重要配置</h1>
-
-<h2 id="redis-conf">redis.conf</h2>
-
+&#34;ziplist&#34;
+</code></pre><h1 id="redis-重要配置">Redis 重要配置</h1>
+<h2 id="redisconf">redis.conf</h2>
 <ul>
 <li>timeout - Close the connection after a client is idle for N seconds</li>
 <li>pidfile - /var/run/redis_6379.pid</li>
 <li>loglevel - debug/verbose/notice/warning</li>
 <li>databases - the number of databases</li>
-
-<li><p>requirepass - setting password for default user</p>
-
-<pre><code>root@d5ff6116c0ab:/# redis-cli
+<li>requirepass - setting password for default user</li>
+</ul>
+<pre tabindex="0"><code>root@d5ff6116c0ab:/# redis-cli
 127.0.0.1:6379&gt; config get requirepass
-1) &quot;requirepass&quot;
-2) &quot;&quot;
-127.0.0.1:6379&gt; config set requirepass '123456'
+1) &#34;requirepass&#34;
+2) &#34;&#34;
+127.0.0.1:6379&gt; config set requirepass &#39;123456&#39;
 OK
 127.0.0.1:6379&gt; config get requirepass
-1) &quot;requirepass&quot;
-2) &quot;123456&quot;
-127.0.0.1:6379&gt; auth '123456'
+1) &#34;requirepass&#34;
+2) &#34;123456&#34;
+127.0.0.1:6379&gt; auth &#39;123456&#39;
 OK
-</code></pre></li>
-
-<li><p>maxclients - the max number of connected clients at the same time</p></li>
-
-<li><p>maxmemory - memory usage limit, 强烈推荐设置，否则可能会内存耗尽而宕机</p></li>
-
-<li><p>maxmemory-policy - how Redis will select what to remove when maxmemory is reached</p>
-
+</code></pre><ul>
+<li>maxclients - the max number of connected clients at the same time</li>
+<li>maxmemory - memory usage limit, 强烈推荐设置，否则可能会内存耗尽而宕机</li>
+<li>maxmemory-policy - how Redis will select what to remove when maxmemory is reached
 <ul>
 <li>volatile-lru - Least Recently Used, 只对设置了ttl的keys</li>
 <li>allkeys-lru - all keys</li>
@@ -465,37 +440,29 @@ OK
 <li>allkeys-random</li>
 <li>volatile-ttl - 只对设置了ttl的keys</li>
 <li>noeviction - 不移除，写入时返回错误</li>
-</ul></li>
-
-<li><p>maxmemory-samples - LRU, LFU and minimal TTL algorithms are not precise algorithms but approximated，by default redis Redis will check five keys and pick the one that was used least recently</p></li>
 </ul>
-
+</li>
+<li>maxmemory-samples - LRU, LFU and minimal TTL algorithms are not precise algorithms but approximated，by default redis Redis will check five keys and pick the one that was used least recently</li>
+</ul>
 <h1 id="发布与订阅">发布与订阅</h1>
-
-<p><img src='/img/2022-05-26-redis-basic/pub-sub-01.jpg' style="height: 294px; margin-left: 0px;" /></p>
-
+<!-- raw HTML omitted -->
 <h1 id="示例场景">示例场景</h1>
-
 <ul>
 <li>短信验证码</li>
 </ul>
-
 <blockquote>
-<p>主要思路：<br />
-1&gt;  随机生成6位数字码<br />
-2&gt; 存储验证码到redis，且设置ttl(如2mins), sample key pattern: <app-name/system-name>:<phone-number>:<verificaiton-code>, e.g. &lsquo;user-service:13992590000:678325&rsquo;<br />
-3&gt; 其他限制，如每天每个手机号可以发送的验证码的次数，设置单独的key来管理发送次数，sample key pattern：<app-name/system-name>:<phone-number>:count， 如果次数超过limit则不生成验证码返回exception<br />
-4&gt; 调用短信服务商接口发送短信<br />
+<p>主要思路：<br>
+1&gt;  随机生成6位数字码<br>
+2&gt; 存储验证码到redis，且设置ttl(如2mins), sample key pattern: &lt;app-name/system-name&gt;:<!-- raw HTML omitted -->:<!-- raw HTML omitted -->, e.g. &lsquo;user-service:13992590000:678325&rsquo;<br>
+3&gt; 其他限制，如每天每个手机号可以发送的验证码的次数，设置单独的key来管理发送次数，sample key pattern：&lt;app-name/system-name&gt;:<!-- raw HTML omitted -->:count， 如果次数超过limit则不生成验证码返回exception<br>
+4&gt; 调用短信服务商接口发送短信<br>
 <a href="https://github.com/cloud-poc/redis-test">redis-test-sample</a></p>
 </blockquote>
-
 <ul>
 <li>静态数据缓存加速前端访问或者缓冲db的i/o压力</li>
 </ul>
-
 <h1 id="referred-articles">Referred Articles</h1>
-
-<p><a href="https://www.cnblogs.com/LBSer/p/3310455.html">https://www.cnblogs.com/LBSer/p/3310455.html</a><br />
+<p><a href="https://www.cnblogs.com/LBSer/p/3310455.html">https://www.cnblogs.com/LBSer/p/3310455.html</a><br>
 <a href="http://redisbook.com/preview/object/sorted_set.html">http://redisbook.com/preview/object/sorted_set.html</a></p>
 
 
@@ -541,6 +508,7 @@ OK
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
@@ -551,12 +519,16 @@ OK
                     
                     
                     <li class="next">
-                        <a href="/post/2022-06-23-redis-advance/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">Next
+                        <a href="/post/2022-06-23-redis-advance/" data-toggle="tooltip" data-placement="top" title="Redis advance I">Next
                             Post &rarr;</a>
                     </li>
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -636,6 +608,8 @@ OK
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -691,6 +665,8 @@ OK
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -795,7 +771,7 @@ OK
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -848,9 +824,6 @@ OK
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -913,6 +886,7 @@ OK
         });
     });
 </script>
+
 
 
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Spring Cloud on Jamie&#39;s Blog</title>
@@ -6,11 +6,7 @@
     <description>Recent content in Spring Cloud on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 29 Nov 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="http://akjamie.github.io/tags/spring-cloud/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 29 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/spring-cloud/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Kubernates - Practice</title>
       <link>http://akjamie.github.io/post/2020-11-29-run-application-on-k8s/</link>
@@ -30,7 +26,7 @@ Before you begin install docker desktop in local and enable local k8s cluster, m
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       
       <guid>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</guid>
-      <description>Demo的介绍 本文主要通过一个小demo，来综合运用spring cloud系列技术，demo中主要包含如下模块/组建： 1. Authorization service, 基于Spring</description>
+      <description>Demo的介绍 本文主要通过一个小demo，来综合运用spring cloud系列技术，demo中主要包含如下模块/组建： Authorization service, 基于Spring Security</description>
     </item>
     
     <item>
@@ -39,7 +35,7 @@ Before you begin install docker desktop in local and enable local k8s cluster, m
       <pubDate>Sun, 14 Jul 2019 12:10:27 +0000</pubDate>
       
       <guid>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</guid>
-      <description>Install vault Prepare docker-compose.yml, content as below (just a sample here, please don&amp;rsquo;t use it for production, there are more aspects should be considered) version: &#39;3&#39; services: consul: container_name: consul.server command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect=1 image: consul:latest restart: always volumes: - ./consul.server/config:/consul/config - ./consul.server/data:/consul/data ports: - &amp;quot;9300:9300&amp;quot; - &amp;quot;9500:9500&amp;quot; - &amp;quot;9600:9600/udp&amp;quot; vault: container_name: vault.server image: vault ports: - &amp;quot;8200:8200&amp;quot; restart: always links: - consul:consul.server volumes: - ./vault.server/config:/mnt/vault/config</description>
+      <description>Install vault Prepare docker-compose.yml, content as below (just a sample here, please don&amp;rsquo;t use it for production, there are more aspects should be considered) version: &amp;#39;3&amp;#39; services: consul: container_name: consul.server command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect=1 image: consul:latest restart: always volumes: - ./consul.server/config:/consul/config - ./consul.server/data:/consul/data ports: - &amp;#34;9300:9300&amp;#34; - &amp;#34;9500:9500&amp;#34; - &amp;#34;9600:9600/udp&amp;#34; vault: container_name: vault.server image: vault ports: - &amp;#34;8200:8200&amp;#34; restart: always links: - consul:consul.server volumes: - ./vault.server/config:/mnt/vault/config</description>
     </item>
     
   </channel>

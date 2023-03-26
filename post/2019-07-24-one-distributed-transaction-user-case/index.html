@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-05.jpg">
+    <meta property="twitter:image" content="/img/background-05.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -222,54 +224,49 @@
                 post-container">
 
                 
-                
+                <h1 id="用户场景">用户场景</h1>
+<p>在某企业app上做Payment业务，在app端准备好request data， 如debit account number, credit account number, amount, notes, 点击submit。<br>
+业务流程如下:</p>
+<ol>
+<li>用户提交payment 请求</li>
+<li>server校验用户所在公司的每日转账限额(account level)</li>
+<li>如果限额可以满足，则发起转账，否则reject请求<br>
 
-<h1 id="用户场景">用户场景</h1>
+  <img src="/img/2019-07-24-one-distributed-transaction-user-case/overall-business-flow.png" alt="">
 
-<p>在某企业app上做Payment业务，在app端准备好request data， 如debit account number, credit account number, amount, notes, 点击submit。<br />
-业务流程如下:<br />
-1) 用户提交payment 请求<br />
-2) server校验用户所在公司的每日转账限额(account level)<br />
-3) 如果限额可以满足，则发起转账，否则reject请求<br />
-<img src="/img/2019-07-24-one-distributed-transaction-user-case/overall-business-flow.png" alt="" /></p>
-
+</li>
+</ol>
 <h1 id="问题和挑战">问题和挑战</h1>
-
 <ol>
 <li>如何规避重复提交</li>
 <li>如何避免分布式事务</li>
 </ol>
-
 <h1 id="解决思路">解决思路</h1>
-
 <ol>
-<li>如何规避重复提交<br />
-采用前端/后端生成UUID(it will be used as payment id), 需要缓存起来便于request进来后的校验， 当然也可以不缓存，只是校验这个ID是否已经存在，如果存在就reject请求。<br /></li>
-
-<li><p>如何避免分布式事务<br />
-本例中，主要的分布式事务check point有3个，<br />
-1)计算limit checking，在此过程中可能有新payment请求过来可能导致limit用尽或超支，这是业务上不能允许的;<br />
-采用乐观锁,把锁控制在payment db里面而不是对entitlement db中的transaction limit进行CRUD，这样会使整个事务处理变得复杂; 且兵并发性能有大幅度提升<br />
-2)payment data 写入transaction history db<br />
-Oracle RAC事务，用spring transaction 注解，@Transactional<br />
-3)update B/E system response - payment status(succ/fail)<br />
-Oracle RAC事务，用spring transaction 注解，@Transactional</p>
-
+<li>如何规避重复提交<br>
+采用前端/后端生成UUID(it will be used as payment id), 需要缓存起来便于request进来后的校验， 当然也可以不缓存，只是校验这个ID是否已经存在，如果存在就reject请求。</li>
+<li>如何避免分布式事务<br>
+本例中，主要的分布式事务check point有3个，<br>
+1)计算limit checking，在此过程中可能有新payment请求过来可能导致limit用尽或超支，这是业务上不能允许的;<br>
+采用乐观锁,把锁控制在payment db里面而不是对entitlement db中的transaction limit进行CRUD，这样会使整个事务处理变得复杂; 且兵并发性能有大幅度提升<br>
+2)payment data 写入transaction history db<br>
+Oracle RAC事务，用spring transaction 注解，@Transactional<br>
+3)update B/E system response - payment status(succ/fail)<br>
+Oracle RAC事务，用spring transaction 注解，@Transactional</li>
+</ol>
 <h1 id="解决方案">解决方案</h1>
+<p>一个方案proposal如下,主要针对limit checking部分加锁， payment data写入和status update 单独分开事务控制(主要由于如果B/E执行成功了，而update status failed导致payment数据回滚会导致数据丢失)<br>
+处理流程diagram如下:<br>
 
-<p>一个方案proposal如下,主要针对limit checking部分加锁， payment data写入和status update 单独分开事务控制(主要由于如果B/E执行成功了，而update status failed导致payment数据回滚会导致数据丢失)<br />
-处理流程diagram如下:<br />
-<img src="/img/2019-07-24-one-distributed-transaction-user-case/solution.jpg" alt="" /></p></li>
-</ol>
+  <img src="/img/2019-07-24-one-distributed-transaction-user-case/solution.jpg" alt="">
 
+</p>
 <h1 id="事后思考">事后思考</h1>
-
 <ol>
-<li>如果使用非oracle 集群，可能需要引入其他中间件来确保事务一致性，该部分思考中<br /></li>
-<li>上例中暂时缺少重试机制，如果payment status update failed， 是否可以再次幂等尝试，因为payment id/uuid是唯一的<br /></li>
+<li>如果使用非oracle 集群，可能需要引入其他中间件来确保事务一致性，该部分思考中</li>
+<li>上例中暂时缺少重试机制，如果payment status update failed， 是否可以再次幂等尝试，因为payment id/uuid是唯一的</li>
 </ol>
-
-<p>参考文章:<br />
+<p>参考文章:<br>
 <a href="https://yq.aliyun.com/articles/284728">https://yq.aliyun.com/articles/284728</a></p>
 
 
@@ -315,22 +312,27 @@ Oracle RAC事务，用spring transaction 注解，@Transactional</p>
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/2019-07-15-spring-cloud-demo-overview/" data-toggle="tooltip" data-placement="top" title="Spring Cloud Series">&larr;
+                        <a href="/post/2019-07-21-spring-batch-single-process-remote-partitioning/" data-toggle="tooltip" data-placement="top" title="Spring batch - single process &amp; remote partitioning(multi instances)">&larr;
                             Previous Post</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/post/2019-08-04-redis-basic/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">Next
+                        <a href="/post/2019-08-04-redis-basic/" data-toggle="tooltip" data-placement="top" title="Redis foundation - I">Next
                             Post &rarr;</a>
                     </li>
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -410,6 +412,8 @@ Oracle RAC事务，用spring transaction 注解，@Transactional</p>
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -465,6 +469,8 @@ Oracle RAC事务，用spring transaction 注解，@Transactional</p>
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -569,7 +575,7 @@ Oracle RAC事务，用spring transaction 注解，@Transactional</p>
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -622,9 +628,6 @@ Oracle RAC事务，用spring transaction 注解，@Transactional</p>
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -687,6 +690,7 @@ Oracle RAC事务，用spring transaction 注解，@Transactional</p>
         });
     });
 </script>
+
 
 
 

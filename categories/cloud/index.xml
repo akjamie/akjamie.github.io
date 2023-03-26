@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Cloud on Jamie&#39;s Blog</title>
@@ -6,10 +6,16 @@
     <description>Recent content in Cloud on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Apr 2022 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="http://akjamie.github.io/categories/cloud/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Sat, 25 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/categories/cloud/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Vault on Kubernetes</title>
+      <link>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</link>
+      <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</guid>
+      <description>What is Vault? Vault introduction HashiCorp Vault is an identity-based secrets and encryption management system. A secret is anything that you want to tightly
+control access to, such as API encryption keys, passwords, and certificates. Vault provides encryption services that are gated by authentication and authorization methods.Using Vault’s UI, CLI, or HTTP API, access to secrets and other sensitive data can be securely stored and managed, tightly controlled (restricted), and auditable.</description>
+    </item>
     
     <item>
       <title>Kubernetes dashboard deployment</title>
@@ -18,8 +24,8 @@
       
       <guid>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</guid>
       <description>Install dashboard To run the following command to deploy dashboard
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml  once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully. ps:
- On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service, the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</description>
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully. ps:
+On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service, the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</description>
     </item>
     
     <item>
@@ -29,8 +35,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/a
       
       <guid>http://akjamie.github.io/post/2021-08-09-aws-demo-01-autoscale-test/</guid>
       <description>I&amp;rsquo;m on the path of AWS Professinal Certified Architect exam preparation, want to document some key points in the demos for later review to enhance the understanding of knowledge. In this demo, i&amp;rsquo;m going to test the AWS auto scaling and utilize the EC2 network knowledges.
-Objective  To build a health checking springboot application and package as docker image hosted on AWS ECR.
- Setup basic network infrastructure, VPC, Subnet, Internet Gateway, Route table,Security group, etc.</description>
+Objective To build a health checking springboot application and package as docker image hosted on AWS ECR. Setup basic network infrastructure, VPC, Subnet, Internet Gateway, Route table,Security group, etc.</description>
     </item>
     
     <item>
@@ -50,7 +55,8 @@ About the exam Professional Cloud Architect is one of the google cloud professon
       
       <guid>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</guid>
       <description>To document the setup process for VPC peering accross different GCP project VPCs for demo purpose only.
-Setup VPC peering accross two GCP projects in this demo, will create two GCP projects, and setup VPC network peering to work as network bridge to make sure the vm in one of GCP project can access the MongoDB installed on VM of another GCP project. preparation Mongo backups 1&amp;gt; backup MongoDB</description>
+Setup VPC peering accross two GCP projects in this demo, will create two GCP projects, and setup VPC network peering to work as network bridge to make sure the vm in one of GCP project can access the MongoDB installed on VM of another GCP project. preparation Mongo backups 1&amp;gt; backup MongoDB
+to use mongo shell command to backup data, samples as below</description>
     </item>
     
     <item>

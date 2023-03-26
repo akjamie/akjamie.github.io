@@ -10,14 +10,14 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-05.jpg">
+    <meta property="twitter:image" content="/img/background-05.jpg" />
     
 
     
-    <meta name="title" content="Redis学习笔记" />
-    <meta property="og:title" content="Redis学习笔记" />
-    <meta property="twitter:title" content="Redis学习笔记" />
+    <meta name="title" content="Redis advance III" />
+    <meta property="og:title" content="Redis advance III" />
+    <meta property="twitter:title" content="Redis advance III" />
     
 
     
@@ -34,7 +34,7 @@
     <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>Redis学习笔记 | Jamie&#39;s Blog</title>
+    <title>Redis advance III | Jamie&#39;s Blog</title>
 
     <link rel="canonical" href="/post/2022-07-09-redis-cluster-01/">
 
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -183,7 +185,7 @@
                         </a>
                         
                     </div>
-                    <h1>Redis学习笔记</h1>
+                    <h1>Redis advance III</h1>
                     <h2 class="subheading">Redis basic knowledge - Redis cluster - Part I</h2>
                     <span class="meta">
                         
@@ -218,25 +220,18 @@
                 post-container">
 
                 
-                
-
-<h1 id="what-s-redis-cluster">What&rsquo;s Redis Cluster</h1>
-
+                <h1 id="whats-redis-cluster">What&rsquo;s Redis Cluster</h1>
 <p>Redis Cluster is a distributed implementation of Redis with the following goals in order of importance in the design:</p>
-
 <ul>
-<li>High performance and linear scalability up to 1000 nodes. There are no proxies, asynchronous replication is used, and no merge operations are performed on values.<br /></li>
-<li>在多达 1000 个节点的时候仍能保持高性能及线性的可扩展性。没有代理，使用异步复制，并且不对值执行合并操作<br /></li>
-<li>Acceptable degree of write safety: the system tries (in a best-effort way) to retain all the writes originating from clients connected with the majority of the master nodes. Usually there are small windows where acknowledged writes can be lost. Windows to lose acknowledged writes are larger when clients are in a minority partition.<br /></li>
-<li>可接受的写入安全：与多数派节点相连的客户端所做的写入操作，系统尝试全部都保存下来（以最大努力的方式）。不过极小概率下容忍小部分写入会丢失<br /></li>
-<li>Availability: Redis Cluster is able to survive partitions where the majority of the master nodes are reachable and there is at least one reachable replica for every master node that is no longer reachable. Moreover using <em>replicas migration</em>, masters no longer replicated by any replica will receive one from a master which is covered by multiple replicas.<br /></li>
-<li>可用性：分区情况下在多数派这边，当绝大多数的主节点是可达的，并且对于每一个不可达的主节点都至少有一个它的从节点可达的情况下，Redis Cluster 仍能提供服务<br /></li>
+<li>High performance and linear scalability up to 1000 nodes. There are no proxies, asynchronous replication is used, and no merge operations are performed on values.</li>
+<li>在多达 1000 个节点的时候仍能保持高性能及线性的可扩展性。没有代理，使用异步复制，并且不对值执行合并操作</li>
+<li>Acceptable degree of write safety: the system tries (in a best-effort way) to retain all the writes originating from clients connected with the majority of the master nodes. Usually there are small windows where acknowledged writes can be lost. Windows to lose acknowledged writes are larger when clients are in a minority partition.</li>
+<li>可接受的写入安全：与多数派节点相连的客户端所做的写入操作，系统尝试全部都保存下来（以最大努力的方式）。不过极小概率下容忍小部分写入会丢失</li>
+<li>Availability: Redis Cluster is able to survive partitions where the majority of the master nodes are reachable and there is at least one reachable replica for every master node that is no longer reachable. Moreover using <em>replicas migration</em>, masters no longer replicated by any replica will receive one from a master which is covered by multiple replicas.</li>
+<li>可用性：分区情况下在多数派这边，当绝大多数的主节点是可达的，并且对于每一个不可达的主节点都至少有一个它的从节点可达的情况下，Redis Cluster 仍能提供服务</li>
 </ul>
-
 <h1 id="local-redis-cluster">Local redis cluster</h1>
-
 <p>Exploration starts from setting up a local redis cluster, the simulated nodes listed as below:</p>
-
 <table>
 <thead>
 <tr>
@@ -246,7 +241,6 @@
 <th>Remark</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>192.168.0.110</td>
@@ -254,35 +248,30 @@
 <td>master</td>
 <td>master node with 1 slave</td>
 </tr>
-
 <tr>
 <td>192.168.0.110</td>
 <td>6380</td>
 <td>master</td>
 <td>master node with 1 slave</td>
 </tr>
-
 <tr>
 <td>192.168.0.110</td>
 <td>6381</td>
 <td>master</td>
 <td>master node with 1 slave</td>
 </tr>
-
 <tr>
 <td>192.168.0.110</td>
 <td>6389</td>
 <td>slave</td>
 <td>slave of 6381</td>
 </tr>
-
 <tr>
 <td>192.168.0.110</td>
 <td>6390</td>
 <td>slave</td>
 <td>slave of 6379</td>
 </tr>
-
 <tr>
 <td>192.168.0.110</td>
 <td>6391</td>
@@ -291,12 +280,9 @@
 </tr>
 </tbody>
 </table>
-
 <h2 id="redis-config">Redis config</h2>
-
 <p>Config file template:</p>
-
-<pre><code># include original redis config - full version
+<pre tabindex="0"><code># include original redis config - full version
 include /Users/jamie/Documents/work-benches/redis/redis-6.0.6/redis.conf
 
 #pidfile path
@@ -326,16 +312,12 @@ cluster-config-file node-{port}.conf
 
 # timeout setting for cluster, if get timeout, then start to switch master/slave
 cluster-node-timeout 15000
-</code></pre>
-
-<h2 id="steps-to-startup">Steps to startup</h2>
-
+</code></pre><h2 id="steps-to-startup">Steps to startup</h2>
 <ol>
 <li>Use <strong>redis-server ./config/redis-{port}.conf</strong> to start each instance/node.</li>
-
-<li><p>Merge the started redis instance/nodes into one cluster.</p>
-
-<pre><code>redis-cli --cluster create --cluster-replicas 1 192.168.0.110:6379 192.168.0.110:6380 192.168.0.110:6381 192.168.0.110:6389 192.168.0.110:6390 192.168.0.110:6391
+<li>Merge the started redis instance/nodes into one cluster.</li>
+</ol>
+<pre tabindex="0"><code>redis-cli --cluster create --cluster-replicas 1 192.168.0.110:6379 192.168.0.110:6380 192.168.0.110:6381 192.168.0.110:6389 192.168.0.110:6390 192.168.0.110:6391
 
 &gt;&gt; 
 &gt;&gt;&gt; Performing hash slots allocation on 6 nodes...
@@ -348,35 +330,38 @@ Adding replica 192.168.0.110:6389 to 192.168.0.110:6381
 &gt;&gt;&gt; Trying to optimize slaves allocation for anti-affinity
 [WARNING] Some slaves are in the same host as their master
 M: 58b3c8fcc4546f122e42f546bd015c729bd4a531 192.168.0.110:6379
-slots:[0-5460] (5461 slots) master
+   slots:[0-5460] (5461 slots) master
 M: 68913fbd6577582d8aba73be69f7c38430c9cb37 192.168.0.110:6380
-slots:[5461-10922] (5462 slots) master
+   slots:[5461-10922] (5462 slots) master
 M: 44312cf65f32aaeae033a01094c41bea947b7946 192.168.0.110:6381
-slots:[10923-16383] (5461 slots) master
+   slots:[10923-16383] (5461 slots) master
 S: 3a506595ed87964b42ef135d8862acef0613626e 192.168.0.110:6389
-replicates 68913fbd6577582d8aba73be69f7c38430c9cb37
+   replicates 68913fbd6577582d8aba73be69f7c38430c9cb37
 S: 4d2ade8214274a1653d2ba68f0ab12f0e61502d5 192.168.0.110:6390
-replicates 44312cf65f32aaeae033a01094c41bea947b7946
+   replicates 44312cf65f32aaeae033a01094c41bea947b7946
 S: c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391
-replicates 58b3c8fcc4546f122e42f546bd015c729bd4a531
-</code></pre></li>
-</ol>
-
-<h2 id="key-points-summary">Key points summary</h2>
-
+   replicates 58b3c8fcc4546f122e42f546bd015c729bd4a531
+</code></pre><h2 id="key-points-summary">Key points summary</h2>
 <blockquote>
 <ol>
-<li><p><span style="color: red; font-weight: bold">cluster-replicas 1 </span> ==&gt;<br />
-specify 1 master 1 slave mode,should guarantee the master and slave node are not on same physical machine.</p></li>
-
-<li><p><span style="color: red; font-weight: bold">Slot</span> ==&gt;<br />
-when insert key-value pair to redis, redis will use algorithm [CRC16(KEY)] to get a slot number, then map to redis master node according to their slot ranges of each master node.</p></li>
-
-<li><p>Cross Slot data insertion will be rejected in cluster mode ==&gt;<br />
-There is also an approach to solve the CrossSlot error at application level, use hashtags ({…}) to force the keys into the same hash slot.</p>
-
-<pre><code>192.168.0.110:6389&gt; mset name Jamie age 18
-(error) CROSSSLOT Keys in request don't hash to the same slot
+<li><!-- raw HTML omitted -->cluster-replicas 1 <!-- raw HTML omitted --> ==&gt;<br>
+specify 1 master 1 slave mode,should guarantee the master and slave node are not on same physical machine.</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li><!-- raw HTML omitted -->Slot<!-- raw HTML omitted --> ==&gt;<br>
+when insert key-value pair to redis, redis will use algorithm [CRC16(KEY)] to get a slot number, then map to redis master node according to their slot ranges of each master node.</li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="3">
+<li>Cross Slot data insertion will be rejected in cluster mode ==&gt;<br>
+There is also an approach to solve the CrossSlot error at application level, use hashtags ({…}) to force the keys into the same hash slot.</li>
+</ol>
+</blockquote>
+<pre tabindex="0"><code>192.168.0.110:6389&gt; mset name Jamie age 18
+(error) CROSSSLOT Keys in request don&#39;t hash to the same slot
 
 192.168.0.110:6389&gt; mset {user-01}name Jamie age{user-01} 18 height:{user-01} 175 {user-01}:weight 70
 -&gt; Redirected to slot [1116] located at 192.168.0.110:6391
@@ -389,12 +374,7 @@ OK
 (integer) 1116
 192.168.0.110:6391&gt; cluster keyslot {user-01}:age
 (integer) 1116
-</code></pre></li>
-</ol>
-</blockquote>
-
-<p>Sample Hash Slot calculation:</p>
-
+</code></pre><p>Sample Hash Slot calculation:</p>
 <table>
 <thead>
 <tr>
@@ -403,50 +383,42 @@ OK
 <th>Hash Slot</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>user-profile:1234</td>
 <td>CRC16(‘user-profile:1234’) mod 16384</td>
 <td>15990</td>
 </tr>
-
 <tr>
 <td>user-session:1234</td>
 <td>CRC16(‘user-session:1234’) mod 16384</td>
 <td>2963</td>
 </tr>
-
 <tr>
 <td>user-profile:5678</td>
 <td>CRC16(‘user-profile:5678’) mod 16384</td>
 <td>9487</td>
 </tr>
-
 <tr>
 <td>user-session:5678</td>
 <td>CRC16(‘user-session:5678’) mod 16384</td>
 <td>4330</td>
 </tr>
-
 <tr>
 <td>user-profile:{1234}</td>
 <td>CRC16(‘1234’) mod 16384</td>
 <td>6025</td>
 </tr>
-
 <tr>
 <td>user-session:{1234}</td>
 <td>CRC16(‘1234’) mod 16384</td>
 <td>6025</td>
 </tr>
-
 <tr>
 <td>user-profile:{5678}</td>
 <td>CRC16(‘5678’) mod 16384</td>
 <td>3312</td>
 </tr>
-
 <tr>
 <td>user-profile:{5678}</td>
 <td>CRC16(‘5678’) mod 16384</td>
@@ -454,31 +426,23 @@ OK
 </tr>
 </tbody>
 </table>
-
 <p>Check assigned hash slot by a given key on cluster:</p>
-
-<pre><code>192.168.0.110:6389&gt; cluster keyslot test
+<pre tabindex="0"><code>192.168.0.110:6389&gt; cluster keyslot test
 
 (integer) 6918
-</code></pre>
-
-<p>Other useful commands<br />
-- cluster countkeysinslot {slot number}<br />
-- cluster getkeysinslot {slot number} {count}</p>
-
+</code></pre><p>Other useful commands</p>
+<ul>
+<li>cluster countkeysinslot {slot number}</li>
+<li>cluster getkeysinslot {slot number} {count}</li>
+</ul>
 <blockquote>
 <p>these two commands can only see the own slots for each master node.</p>
 </blockquote>
-
 <h1 id="auto-failover">Auto Failover</h1>
-
 <p>When a master fails or is found to be unreachable by the majority of the cluster as determined by the nodes communication via the gossip port, the remaining masters hold a vote and elect one of the failing masters’ slaves to take its place.</p>
-
-<p>Do a demo in local based on the cluster already setup in previous steps, will shutdown 6391 and check the cluster status, the expected behavior is <span style='background-color: yellow'>the 6379 will be elected as master node to replace the 6391, and the 6391 will be worked as slave node after restarted.</span></p>
-
-<p>Firstly, capature exist redis node status for later comparison.</p>
-
-<pre><code># run cluster nodes on any cluster nodes
+<p>Do a demo in local based on the cluster already setup in previous steps, will shutdown 6391 and check the cluster status, the expected behavior is <!-- raw HTML omitted -->the 6379 will be elected as master node to replace the 6391, and the 6391 will be worked as slave node after restarted.<!-- raw HTML omitted --></p>
+<p>Firstly, capture exist redis node status for later comparison.</p>
+<pre tabindex="0"><code># run cluster nodes on any cluster nodes
 c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 master - 0 1657641720841 7 connected 0-5460
 
 3a506595ed87964b42ef135d8862acef0613626e 192.168.0.110:6389@16389 master - 0 1657641719834 15 connected 5461-10922
@@ -490,11 +454,8 @@ c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 master - 0 165
 4d2ade8214274a1653d2ba68f0ab12f0e61502d5 192.168.0.110:6390@16390 master - 0 1657641720000 14 connected 10923-16383
 
 44312cf65f32aaeae033a01094c41bea947b7946 192.168.0.110:6381@16381 slave 4d2ade8214274a1653d2ba68f0ab12f0e61502d5 0 1657641717000 14 connected
-</code></pre>
-
-<p>Secondly, shutdown the master node 6391, the 6379(slave of 6391) will be new master.</p>
-
-<pre><code>127.0.0.1:6389&gt; cluster nodes
+</code></pre><p>Secondly, shutdown the master node 6391, the 6379(slave of 6391) will be new master.</p>
+<pre tabindex="0"><code>127.0.0.1:6389&gt; cluster nodes
 
 3a506595ed87964b42ef135d8862acef0613626e 192.168.0.110:6389@16389 myself,master - 0 1657641905000 15 connected 5461-10922
 
@@ -507,11 +468,8 @@ c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 master,fail - 
 68913fbd6577582d8aba73be69f7c38430c9cb37 192.168.0.110:6380@16380 slave 3a506595ed87964b42ef135d8862acef0613626e 0 1657641905851 15 connected
 
 4d2ade8214274a1653d2ba68f0ab12f0e61502d5 192.168.0.110:6390@16390 master - 0 1657641903831 14 connected 10923-16383
-</code></pre>
-
-<p>Thirdly, restart 6391, the 6391 will be slave of 6379.</p>
-
-<pre><code>Jamies-MacBook-Pro:cluster jamie$ redis-server ./config/redis-6391.conf 
+</code></pre><p>Thirdly, restart 6391, the 6391 will be slave of 6379.</p>
+<pre tabindex="0"><code>Jamies-MacBook-Pro:cluster jamie$ redis-server ./config/redis-6391.conf
 
 Jamies-MacBook-Pro:cluster jamie$ redis-cli -p 6389
 
@@ -528,24 +486,23 @@ c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 slave 58b3c8fc
 68913fbd6577582d8aba73be69f7c38430c9cb37 192.168.0.110:6380@16380 slave 3a506595ed87964b42ef135d8862acef0613626e 0 1657642039201 15 connected
 
 4d2ade8214274a1653d2ba68f0ab12f0e61502d5 192.168.0.110:6390@16390 master - 0 1657642036000 14 connected 10923-16383
-</code></pre>
-
-<p>What if both master and it&rsquo;s slaves are down, then depends on the config value of <span style='color:red'> cluster-require-full-coverage </span>, if yes, then whole custer cannot work; if no, then only the hash slots of the unavailable master cannot work.</p>
-
+</code></pre><p>What if both master and it&rsquo;s slaves are down, then depends on the config value of <!-- raw HTML omitted --> cluster-require-full-coverage <!-- raw HTML omitted -->, if cluster-require-full-coverage=yes, then whole custer cannot work; if no, then only the hash slots of the unavailable master cannot work.</p>
 <h1 id="pros-and-cons">Pros and Cons</h1>
-
-<p>pros:<br />
-- High Performance, promises the same level or performance as standalone Redis deployments.<br />
-- High Availability, supports the standard Redis master-replica configuration<br />
-- Horizontal &amp; Vertical Scalability</p>
-
-<p>cons:<br />
-- Requires Client Support<br />
-- limited multi-key related operations are supported as multi-key operations are supported only when all the keys in a single operation belong to the same slot.<br />
-- lua is not supported</p>
-
-<h1 id="refference-articles">Refference articles</h1>
-
+<p>pros:</p>
+<ul>
+<li>High Performance, promises the same level of performance as standalone Redis deployments.</li>
+<li>High Availability, supports the standard Redis master-replica configuration</li>
+<li>Horizontal &amp; Vertical Scalability</li>
+</ul>
+<p>cons:</p>
+<ul>
+<li>Requires Client to dynamically detect the slots mapping, limited redis client can be used.</li>
+<li>Data sync is processed asynchronously, cannot guarantee the data Strong Consistence.</li>
+<li>Slave node only can only work as data backup, cannot balance cluster read/write pressure.</li>
+<li>Limited multi-keys operations(mset, mget, sunion,etc.) are supported as multi-key operations are supported only when all the keys in a single operation belongs to the same slot.</li>
+<li>Lua is not supported</li>
+</ul>
+<h1 id="reference-docs">Reference docs</h1>
 <p><a href="https://redis.io/docs/reference/cluster-spec/">https://redis.io/docs/reference/cluster-spec/</a></p>
 
 
@@ -591,6 +548,7 @@ c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 slave 58b3c8fc
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
@@ -600,8 +558,17 @@ c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 slave 58b3c8fc
                     </li>
                     
                     
+                    <li class="next">
+                        <a href="/post/2023-03-25-vault-on-k8s/" data-toggle="tooltip" data-placement="top" title="Vault on Kubernetes">Next
+                            Post &rarr;</a>
+                    </li>
+                    
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -681,6 +648,8 @@ c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 slave 58b3c8fc
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -736,6 +705,8 @@ c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 slave 58b3c8fc
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -840,7 +811,7 @@ c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 slave 58b3c8fc
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -893,9 +864,6 @@ c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 slave 58b3c8fc
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -958,6 +926,7 @@ c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 slave 58b3c8fc
         });
     });
 </script>
+
 
 
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kubernetes on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/kubernetes/</link>
+    <description>Recent content in Kubernetes on Jamie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 25 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Vault on Kubernetes</title>
+      <link>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</link>
+      <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</guid>
+      <description>What is Vault? Vault introduction HashiCorp Vault is an identity-based secrets and encryption management system. A secret is anything that you want to tightly
+control access to, such as API encryption keys, passwords, and certificates. Vault provides encryption services that are gated by authentication and authorization methods.Using Vault’s UI, CLI, or HTTP API, access to secrets and other sensitive data can be securely stored and managed, tightly controlled (restricted), and auditable.</description>
+    </item>
+    
+  </channel>
+</rss>

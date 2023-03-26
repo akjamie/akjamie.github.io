@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Python on Jamie&#39;s Blog</title>
@@ -6,11 +6,7 @@
     <description>Recent content in Python on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 10 Jun 2019 13:36:10 +0000</lastBuildDate>
-    
-	<atom:link href="http://akjamie.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 10 Jun 2019 13:36:10 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>AWS Serveless Application Model</title>
       <link>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</link>
@@ -22,10 +18,10 @@
     
     <item>
       <title>How to invoke python scripts in UIPath</title>
-      <link>http://akjamie.github.io/2019/01/19/uipath-invoke-python-method/</link>
+      <link>http://akjamie.github.io/2019/01/19/UIPath-invoke-python-method/</link>
       <pubDate>Sat, 19 Jan 2019 12:10:27 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/2019/01/19/uipath-invoke-python-method/</guid>
+      <guid>http://akjamie.github.io/2019/01/19/UIPath-invoke-python-method/</guid>
       <description>UIPath是一个非常不错的RPA(Robotic Process Automation) 工具和平台，并且有开源社区版本可以方便RPA爱好者去尝试，本文是介绍如何在UIPath</description>
     </item>
     

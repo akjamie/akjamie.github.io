@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-01.jpg">
+    <meta property="twitter:image" content="/img/background-01.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -222,13 +224,9 @@
                 post-container">
 
                 
-                
-
-<h1 id="install-vault">Install vault</h1>
-
+                <h1 id="install-vault">Install vault</h1>
 <p>Prepare <em>docker-compose.yml</em>, content as below (just a sample here, please don&rsquo;t use it for production, there are more aspects should be considered)</p>
-
-<pre><code>version: '3'
+<pre tabindex="0"><code>version: &#39;3&#39;
 services:
   consul:
     container_name: consul.server
@@ -239,14 +237,14 @@ services:
       - ./consul.server/config:/consul/config
       - ./consul.server/data:/consul/data
     ports:
-      - &quot;9300:9300&quot;
-      - &quot;9500:9500&quot;
-      - &quot;9600:9600/udp&quot;
+      - &#34;9300:9300&#34;
+      - &#34;9500:9500&#34;
+      - &#34;9600:9600/udp&#34;
   vault:
     container_name: vault.server
     image: vault
     ports:
-    - &quot;8200:8200&quot;
+    - &#34;8200:8200&#34;
     restart: always
     links:
         - consul:consul.server
@@ -259,261 +257,231 @@ services:
     cap_add:
     - IPC_LOCK
     command: server
-</code></pre>
-
-<h2 id="consul-config-config-json">consul config - config.json</h2>
-
-<pre><code>   {
-     &quot;datacenter&quot;: &quot;data-center-1&quot;,
-     &quot;node_name&quot;: &quot;master-node&quot;,
-     &quot;log_level&quot;: &quot;INFO&quot;,
-     &quot;server&quot;: true,
-     &quot;data_dir&quot;: &quot;/consul/data&quot;,
-     &quot;ui&quot; : true,
-     &quot;ports&quot;: {
-       &quot;http&quot;: 8500,
-       &quot;server&quot;: 8300
+</code></pre><h2 id="consul-config---configjson">consul config - config.json</h2>
+<pre tabindex="0"><code>   {
+     &#34;datacenter&#34;: &#34;data-center-1&#34;,
+     &#34;node_name&#34;: &#34;master-node&#34;,
+     &#34;log_level&#34;: &#34;INFO&#34;,
+     &#34;server&#34;: true,
+     &#34;data_dir&#34;: &#34;/consul/data&#34;,
+     &#34;ui&#34; : true,
+     &#34;ports&#34;: {
+       &#34;http&#34;: 8500,
+       &#34;server&#34;: 8300
      }
    } 
-</code></pre>
-
-<h2 id="vault-config-vault-hcl">vault config - vault.hcl</h2>
-
-<pre><code>ui = true
-backend &quot;consul&quot; {
-  address = &quot;consul:8500&quot;
-  advertise_addr = &quot;http://consul:8300&quot;
-  scheme = &quot;http&quot;
+</code></pre><h2 id="vault-config---vaulthcl">vault config - vault.hcl</h2>
+<pre tabindex="0"><code>ui = true
+backend &#34;consul&#34; {
+  address = &#34;consul:8500&#34;
+  advertise_addr = &#34;http://consul:8300&#34;
+  scheme = &#34;http&#34;
 }
-listener &quot;tcp&quot; {
-  address = &quot;0.0.0.0:8200
+listener &#34;tcp&#34; {
+  address = &#34;0.0.0.0:8200
   tls_disable = 1
 }
 disable_mlock = true
-</code></pre>
+</code></pre><h2 id="use-docker-compose-up--d-to-run-these-services-and-check-its-status">Use docker-compose up -d to run these services, and check its status</h2>
+<p>
+  <img src="/img/2019-07-14-harshicorp-vault-setup-config/15532408-351f3fa54f1ebc1a.png" alt="">
 
-<h2 id="use-docker-compose-up-d-to-run-these-services-and-check-its-status">Use docker-compose up -d to run these services, and check its status</h2>
 
-<p><img src="/img/2019-07-14-harshicorp-vault-setup-config/15532408-351f3fa54f1ebc1a.png" alt="" />
-<img src="/img/2019-07-14-harshicorp-vault-setup-config/15532408-698c9ee3afd1d4f9.png" alt="" /></p>
 
+  <img src="/img/2019-07-14-harshicorp-vault-setup-config/15532408-698c9ee3afd1d4f9.png" alt="">
+
+</p>
 <h1 id="configure-the-vault">Configure the vault</h1>
-
 <p>in #1, we created the vault container, but vault is still in uninitialized status (unsealed)</p>
-
 <h2 id="vault-init">Vault init</h2>
-
-<pre><code>curl -X PUT \
+<pre tabindex="0"><code>curl -X PUT \
   https://demo.xxx.com/vault/v1/sys/init \
-  -H 'Cache-Control: no-cache' \
-  -H 'Content-Type: application/json' \
-  -H 'Postman-Token: cb5d640a-152e-844f-cda3-5e8be4e3eec3' \
-  -d '{&quot;secret_shares&quot;:5, &quot;secret_threshold&quot;:2}'
+  -H &#39;Cache-Control: no-cache&#39; \
+  -H &#39;Content-Type: application/json&#39; \
+  -H &#39;Postman-Token: cb5d640a-152e-844f-cda3-5e8be4e3eec3&#39; \
+  -d &#39;{&#34;secret_shares&#34;:5, &#34;secret_threshold&#34;:2}&#39;
   
   {
-    &quot;keys&quot;: [
-        &quot;977595193b3a8cb4ae70338859f0a7264b2757775a51cca461731b1bff4b61798f&quot;,
-        &quot;9f6c61623da515b36671ca2677f5be084f670751e2da6a05d88970ebe832d6430b&quot;,
-        &quot;d1f13304840d0445e23ebe7ea39d23dc6821ddcb9fc97ce5ea2c8a9e82ca132ca0&quot;,
-        &quot;d49bda98c1723e659f5bb87af7774988e709ff9ad4337dc4c4851cf8a89c7dfd7f&quot;,
-        &quot;dfa480970d31b18b7c7943211cdd76636f51b17a55ee2d7a6718052a50d7198847&quot;
+    &#34;keys&#34;: [
+        &#34;977595193b3a8cb4ae70338859f0a7264b2757775a51cca461731b1bff4b61798f&#34;,
+        &#34;9f6c61623da515b36671ca2677f5be084f670751e2da6a05d88970ebe832d6430b&#34;,
+        &#34;d1f13304840d0445e23ebe7ea39d23dc6821ddcb9fc97ce5ea2c8a9e82ca132ca0&#34;,
+        &#34;d49bda98c1723e659f5bb87af7774988e709ff9ad4337dc4c4851cf8a89c7dfd7f&#34;,
+        &#34;dfa480970d31b18b7c7943211cdd76636f51b17a55ee2d7a6718052a50d7198847&#34;
     ],
-    &quot;keys_base64&quot;: [
-        &quot;l3WVGTs6jLSucDOIWfCnJksnV3daUcykYXMbG/9LYXmP&quot;,
-        &quot;n2xhYj2lFbNmccomd/W+CE9nB1Hi2moF2Ilw6+gy1kML&quot;,
-        &quot;0fEzBIQNBEXiPr5+o50j3Ggh3cufyXzl6iyKnoLKEyyg&quot;,
-        &quot;1JvamMFyPmWfW7h693dJiOcJ/5rUM33ExIUc+Kicff1/&quot;,
-        &quot;36SAlw0xsYt8eUMhHN12Y29RsXpV7i16ZxgFKlDXGYhH&quot;
+    &#34;keys_base64&#34;: [
+        &#34;l3WVGTs6jLSucDOIWfCnJksnV3daUcykYXMbG/9LYXmP&#34;,
+        &#34;n2xhYj2lFbNmccomd/W+CE9nB1Hi2moF2Ilw6+gy1kML&#34;,
+        &#34;0fEzBIQNBEXiPr5+o50j3Ggh3cufyXzl6iyKnoLKEyyg&#34;,
+        &#34;1JvamMFyPmWfW7h693dJiOcJ/5rUM33ExIUc+Kicff1/&#34;,
+        &#34;36SAlw0xsYt8eUMhHN12Y29RsXpV7i16ZxgFKlDXGYhH&#34;
     ],
-    &quot;root_token&quot;: &quot;s.nBXC2nmVs7IVLHk6zsU7ZoaT&quot;
+    &#34;root_token&#34;: &#34;s.nBXC2nmVs7IVLHk6zsU7ZoaT&#34;
   }
-</code></pre>
-
-<h2 id="vault-unseal">Vault unseal</h2>
-
-<pre><code>curl -X PUT \
+</code></pre><h2 id="vault-unseal">Vault unseal</h2>
+<pre tabindex="0"><code>curl -X PUT \
   https://demo.xxx.com/vault/v1/sys/unseal \
-  -H 'Cache-Control: no-cache' \
-  -H 'Content-Type: application/json' \
-  -H 'Postman-Token: a43db86c-26d4-de01-9a13-eefc23857eb7' \
-  -d '{&quot;key&quot;: &quot;n2xhYj2lFbNmccomd/W+CE9nB1Hi2moF2Ilw6+gy1kML&quot;}'
+  -H &#39;Cache-Control: no-cache&#39; \
+  -H &#39;Content-Type: application/json&#39; \
+  -H &#39;Postman-Token: a43db86c-26d4-de01-9a13-eefc23857eb7&#39; \
+  -d &#39;{&#34;key&#34;: &#34;n2xhYj2lFbNmccomd/W+CE9nB1Hi2moF2Ilw6+gy1kML&#34;}&#39;
   
   {
-    &quot;type&quot;: &quot;shamir&quot;,
-    &quot;initialized&quot;: true,
-    &quot;sealed&quot;: false,
-    &quot;t&quot;: 2,
-    &quot;n&quot;: 5,
-    &quot;progress&quot;: 0,
-    &quot;nonce&quot;: &quot;&quot;,
-    &quot;version&quot;: &quot;1.1.0&quot;,
-    &quot;migration&quot;: false,
-    &quot;cluster_name&quot;: &quot;vault-cluster-8492c510&quot;,
-    &quot;cluster_id&quot;: &quot;c73cee19-c9ab-81f1-9563-8fd060084370&quot;,
-    &quot;recovery_seal&quot;: false
+    &#34;type&#34;: &#34;shamir&#34;,
+    &#34;initialized&#34;: true,
+    &#34;sealed&#34;: false,
+    &#34;t&#34;: 2,
+    &#34;n&#34;: 5,
+    &#34;progress&#34;: 0,
+    &#34;nonce&#34;: &#34;&#34;,
+    &#34;version&#34;: &#34;1.1.0&#34;,
+    &#34;migration&#34;: false,
+    &#34;cluster_name&#34;: &#34;vault-cluster-8492c510&#34;,
+    &#34;cluster_id&#34;: &#34;c73cee19-c9ab-81f1-9563-8fd060084370&#34;,
+    &#34;recovery_seal&#34;: false
   }
-</code></pre>
-
-<h2 id="create-read-write-token">create read/write token</h2>
-
+</code></pre><h2 id="create-readwrite-token">create read/write token</h2>
 <p>a. create admin policy</p>
-
-<pre><code>curl -X POST \
+<pre tabindex="0"><code>curl -X POST \
   https://demo.xxx.com/vault/v1/sys/policy/admin-policy \
-  -H 'Cache-Control: no-cache' \
-  -H 'Content-Type: application/json' \
-  -H 'Postman-Token: c03aae97-d6c1-fa79-f8d5-f4476fe8347a' \
-  -H 'X-Vault-Token: s.nBXC2nmVs7IVLHk6zsU7ZoaT' \
-  -d '{&quot;policy&quot;:&quot;{\&quot;path\&quot;:{\&quot;secret/*\&quot;:{\&quot;capabilities\&quot;:[\&quot;create\&quot;, \&quot;read\&quot;, \&quot;update\&quot;, \&quot;delete\&quot;, \&quot;list\&quot;]}}}&quot;}'
-</code></pre>
-
-<p>b.create user policy
-similar request as step <label style="color:red">create admin-policy</label>
+  -H &#39;Cache-Control: no-cache&#39; \
+  -H &#39;Content-Type: application/json&#39; \
+  -H &#39;Postman-Token: c03aae97-d6c1-fa79-f8d5-f4476fe8347a&#39; \
+  -H &#39;X-Vault-Token: s.nBXC2nmVs7IVLHk6zsU7ZoaT&#39; \
+  -d &#39;{&#34;policy&#34;:&#34;{\&#34;path\&#34;:{\&#34;secret/*\&#34;:{\&#34;capabilities\&#34;:[\&#34;create\&#34;, \&#34;read\&#34;, \&#34;update\&#34;, \&#34;delete\&#34;, \&#34;list\&#34;]}}}&#34;}&#39;
+</code></pre><p>b.create user policy
+similar request as step <!-- raw HTML omitted -->create admin-policy<!-- raw HTML omitted -->
 c.check the policy we created</p>
-
-<pre><code>curl -X GET \
+<pre tabindex="0"><code>curl -X GET \
   https://demo.xxx.com/vault/v1/sys/policy/admin-policy \
-  -H 'Accept: application/json' \
-  -H 'Cache-Control: no-cache' \
-  -H 'Postman-Token: 6874a6ca-070c-8d20-f4bb-183e1ff663d1' \
-  -H 'X-Vault-Token: s.nBXC2nmVs7IVLHk6zsU7ZoaT'
+  -H &#39;Accept: application/json&#39; \
+  -H &#39;Cache-Control: no-cache&#39; \
+  -H &#39;Postman-Token: 6874a6ca-070c-8d20-f4bb-183e1ff663d1&#39; \
+  -H &#39;X-Vault-Token: s.nBXC2nmVs7IVLHk6zsU7ZoaT&#39;
   
 {
-  &quot;name&quot;: &quot;admin-policy&quot;,
-  &quot;rules&quot;: &quot;{\&quot;path\&quot;:{\&quot;secrets/*\&quot;:{\&quot;capabilities\&quot;:[\&quot;create\&quot;, \&quot;read\&quot;, \&quot;update\&quot;, \&quot;delete\&quot;, \&quot;list\&quot;]}}}&quot;,
-  &quot;request_id&quot;: &quot;51ba3350-f14d-0e3f-27b4-610b6442d296&quot;,
-  &quot;lease_id&quot;: &quot;&quot;,
-  &quot;renewable&quot;: false,
-  &quot;lease_duration&quot;: 0,
-  &quot;data&quot;: {
-      &quot;name&quot;: &quot;admin-policy&quot;,
-      &quot;rules&quot;: &quot;{\&quot;path\&quot;:{\&quot;secret/*\&quot;:{\&quot;capabilities\&quot;:[\&quot;create\&quot;, \&quot;read\&quot;, \&quot;update\&quot;, \&quot;delete\&quot;, \&quot;list\&quot;]}}}&quot;
+  &#34;name&#34;: &#34;admin-policy&#34;,
+  &#34;rules&#34;: &#34;{\&#34;path\&#34;:{\&#34;secrets/*\&#34;:{\&#34;capabilities\&#34;:[\&#34;create\&#34;, \&#34;read\&#34;, \&#34;update\&#34;, \&#34;delete\&#34;, \&#34;list\&#34;]}}}&#34;,
+  &#34;request_id&#34;: &#34;51ba3350-f14d-0e3f-27b4-610b6442d296&#34;,
+  &#34;lease_id&#34;: &#34;&#34;,
+  &#34;renewable&#34;: false,
+  &#34;lease_duration&#34;: 0,
+  &#34;data&#34;: {
+      &#34;name&#34;: &#34;admin-policy&#34;,
+      &#34;rules&#34;: &#34;{\&#34;path\&#34;:{\&#34;secret/*\&#34;:{\&#34;capabilities\&#34;:[\&#34;create\&#34;, \&#34;read\&#34;, \&#34;update\&#34;, \&#34;delete\&#34;, \&#34;list\&#34;]}}}&#34;
   },
-  &quot;wrap_info&quot;: null,
-  &quot;warnings&quot;: null,
-  &quot;auth&quot;: null
+  &#34;wrap_info&#34;: null,
+  &#34;warnings&#34;: null,
+  &#34;auth&#34;: null
 }  
-</code></pre>
-
-<h2 id="generate-token-against-policies">Generate Token against policies</h2>
-
-<pre><code>curl -X POST \
+</code></pre><h2 id="generate-token-against-policies">Generate Token against policies</h2>
+<pre tabindex="0"><code>curl -X POST \
   https://demo.xxx.com/vault/v1/auth/token/create \
-  -H 'Cache-Control: no-cache' \
-  -H 'Content-Type: application/json' \
-  -H 'Postman-Token: 21ef1963-b06d-b4ea-547c-03539a681ca5' \
-  -H 'X-Vault-Token: s.nBXC2nmVs7IVLHk6zsU7ZoaT' \
-  -d '{&quot;policies&quot;: [&quot;admin-policy&quot;]}'
+  -H &#39;Cache-Control: no-cache&#39; \
+  -H &#39;Content-Type: application/json&#39; \
+  -H &#39;Postman-Token: 21ef1963-b06d-b4ea-547c-03539a681ca5&#39; \
+  -H &#39;X-Vault-Token: s.nBXC2nmVs7IVLHk6zsU7ZoaT&#39; \
+  -d &#39;{&#34;policies&#34;: [&#34;admin-policy&#34;]}&#39;
 
 {
-    &quot;request_id&quot;: &quot;a5251b70-e14c-5c56-a81e-6ad59445a44f&quot;,
-    &quot;lease_id&quot;: &quot;&quot;,
-    &quot;renewable&quot;: false,
-    &quot;lease_duration&quot;: 0,
-    &quot;data&quot;: null,
-    &quot;wrap_info&quot;: null,
-    &quot;warnings&quot;: null,
-    &quot;auth&quot;: {
-        &quot;client_token&quot;: &quot;s.AXTHvuudLS6C4PYjSvLLabr9&quot;,
-        &quot;accessor&quot;: &quot;wVg70OelyhDMwa4MojtCKeZ1&quot;,
-        &quot;policies&quot;: [
-            &quot;admin-policy&quot;,
-            &quot;default&quot;
+    &#34;request_id&#34;: &#34;a5251b70-e14c-5c56-a81e-6ad59445a44f&#34;,
+    &#34;lease_id&#34;: &#34;&#34;,
+    &#34;renewable&#34;: false,
+    &#34;lease_duration&#34;: 0,
+    &#34;data&#34;: null,
+    &#34;wrap_info&#34;: null,
+    &#34;warnings&#34;: null,
+    &#34;auth&#34;: {
+        &#34;client_token&#34;: &#34;s.AXTHvuudLS6C4PYjSvLLabr9&#34;,
+        &#34;accessor&#34;: &#34;wVg70OelyhDMwa4MojtCKeZ1&#34;,
+        &#34;policies&#34;: [
+            &#34;admin-policy&#34;,
+            &#34;default&#34;
         ],
-        &quot;token_policies&quot;: [
-            &quot;admin-policy&quot;,
-            &quot;default&quot;
+        &#34;token_policies&#34;: [
+            &#34;admin-policy&#34;,
+            &#34;default&#34;
         ],
-        &quot;metadata&quot;: null,
-        &quot;lease_duration&quot;: 2764800,
-        &quot;renewable&quot;: true,
-        &quot;entity_id&quot;: &quot;&quot;,
-        &quot;token_type&quot;: &quot;service&quot;,
-        &quot;orphan&quot;: false
+        &#34;metadata&#34;: null,
+        &#34;lease_duration&#34;: 2764800,
+        &#34;renewable&#34;: true,
+        &#34;entity_id&#34;: &#34;&#34;,
+        &#34;token_type&#34;: &#34;service&#34;,
+        &#34;orphan&#34;: false
     }
 }
 
 {
-    &quot;request_id&quot;: &quot;35212529-0b4c-3c50-0489-94df50a5f781&quot;,
-    &quot;lease_id&quot;: &quot;&quot;,
-    &quot;renewable&quot;: false,
-    &quot;lease_duration&quot;: 0,
-    &quot;data&quot;: null,
-    &quot;wrap_info&quot;: null,
-    &quot;warnings&quot;: null,
-    &quot;auth&quot;: {
-        &quot;client_token&quot;: &quot;s.7A1UuLB7aJdiGhn5Qaj2FlxN&quot;,
-        &quot;accessor&quot;: &quot;8H2pMpG4SnKHMgH8nr56FsUJ&quot;,
-        &quot;policies&quot;: [
-            &quot;default&quot;,
-            &quot;user-policy&quot;
+    &#34;request_id&#34;: &#34;35212529-0b4c-3c50-0489-94df50a5f781&#34;,
+    &#34;lease_id&#34;: &#34;&#34;,
+    &#34;renewable&#34;: false,
+    &#34;lease_duration&#34;: 0,
+    &#34;data&#34;: null,
+    &#34;wrap_info&#34;: null,
+    &#34;warnings&#34;: null,
+    &#34;auth&#34;: {
+        &#34;client_token&#34;: &#34;s.7A1UuLB7aJdiGhn5Qaj2FlxN&#34;,
+        &#34;accessor&#34;: &#34;8H2pMpG4SnKHMgH8nr56FsUJ&#34;,
+        &#34;policies&#34;: [
+            &#34;default&#34;,
+            &#34;user-policy&#34;
         ],
-        &quot;token_policies&quot;: [
-            &quot;default&quot;,
-            &quot;user-policy&quot;
+        &#34;token_policies&#34;: [
+            &#34;default&#34;,
+            &#34;user-policy&#34;
         ],
-        &quot;metadata&quot;: null,
-        &quot;lease_duration&quot;: 2764800,
-        &quot;renewable&quot;: true,
-        &quot;entity_id&quot;: &quot;&quot;,
-        &quot;token_type&quot;: &quot;service&quot;,
-        &quot;orphan&quot;: false
+        &#34;metadata&#34;: null,
+        &#34;lease_duration&#34;: 2764800,
+        &#34;renewable&#34;: true,
+        &#34;entity_id&#34;: &#34;&#34;,
+        &#34;token_type&#34;: &#34;service&#34;,
+        &#34;orphan&#34;: false
     }
 }
-</code></pre>
-
-<h2 id="use-token-to-read-write-data">Use token to read/write data</h2>
-
-<p>$\color{red}{Admin-token}$ to put key/value, otherwise got <label style="color:red">error occurred:permission denied</label></p>
-
-<pre><code>curl -X POST \
+</code></pre><h2 id="use-token-to-readwrite-data">Use token to read/write data</h2>
+<p>$\color{red}{Admin-token}$ to put key/value, otherwise got <!-- raw HTML omitted -->error occurred:permission denied<!-- raw HTML omitted --></p>
+<pre tabindex="0"><code>curl -X POST \
   https://demo.xxx.com/vault/v1/secret/test \
-  -H 'Cache-Control: no-cache' \
-  -H 'Content-Type: application/json' \
-  -H 'Postman-Token: 0b3cd187-14fd-c94f-9198-794e71b906af' \
-  -H 'X-Vault-Token: s.AXTHvuudLS6C4PYjSvLLabr9' \ 
+  -H &#39;Cache-Control: no-cache&#39; \
+  -H &#39;Content-Type: application/json&#39; \
+  -H &#39;Postman-Token: 0b3cd187-14fd-c94f-9198-794e71b906af&#39; \
+  -H &#39;X-Vault-Token: s.AXTHvuudLS6C4PYjSvLLabr9&#39; \ 
  
-  -d '{
-	&quot;token&quot;:&quot;test-token&quot;
-}'
-&lt;label style=&quot;color:red&quot;&gt;user-token&lt;/label&gt; to get key/value
+  -d &#39;{
+	&#34;token&#34;:&#34;test-token&#34;
+}&#39;
+&lt;label style=&#34;color:red&#34;&gt;user-token&lt;/label&gt; to get key/value
 
 curl -X GET \
   https://demo.xxx.com/vault/v1/secret/test \
-  -H 'Cache-Control: no-cache' \
-  -H 'Content-Type: application/json' \
-  -H 'Postman-Token: 2f1e1e02-db11-5fdc-426e-ad0adc735b47' \
-  -H 'X-Vault-Token: s.7A1UuLB7aJdiGhn5Qaj2FlxN' 
+  -H &#39;Cache-Control: no-cache&#39; \
+  -H &#39;Content-Type: application/json&#39; \
+  -H &#39;Postman-Token: 2f1e1e02-db11-5fdc-426e-ad0adc735b47&#39; \
+  -H &#39;X-Vault-Token: s.7A1UuLB7aJdiGhn5Qaj2FlxN&#39; 
 
 {
-    &quot;request_id&quot;: &quot;8a1dfacd-7514-ae7d-8133-d3295fafb394&quot;,
-    &quot;lease_id&quot;: &quot;&quot;,
-    &quot;renewable&quot;: false,
-    &quot;lease_duration&quot;: 2764800,
-    &quot;data&quot;: {
-        &quot;token&quot;: &quot;test-token&quot;
+    &#34;request_id&#34;: &#34;8a1dfacd-7514-ae7d-8133-d3295fafb394&#34;,
+    &#34;lease_id&#34;: &#34;&#34;,
+    &#34;renewable&#34;: false,
+    &#34;lease_duration&#34;: 2764800,
+    &#34;data&#34;: {
+        &#34;token&#34;: &#34;test-token&#34;
     },
-    &quot;wrap_info&quot;: null,
-    &quot;warnings&quot;: null,
-    &quot;auth&quot;: null
+    &#34;wrap_info&#34;: null,
+    &#34;warnings&#34;: null,
+    &#34;auth&#34;: null
 }
-</code></pre>
-
-<h2 id="error-no-handler-for-route-secret-test">Error: no handler for route &lsquo;secret/test&rsquo;</h2>
-
+</code></pre><h2 id="error-no-handler-for-route-secrettest">Error: no handler for route &lsquo;secret/test&rsquo;</h2>
 <p>check secrets engine if corresponding is enabled or not, commands:
-a. docker exec -it <container-name> /bin/sh
-b.set VAULT_ADDR=<a href="http://127.0.0.1:8200">http://127.0.0.1:8200</a>, and VAULT_TOKEN={root token}
+a. docker exec -it <!-- raw HTML omitted --> /bin/sh
+b.set VAULT_ADDR=http://127.0.0.1:8200, and VAULT_TOKEN={root token}
 c. vault secrets list, to list out all secrets, by default,  kv secrets engine at: secret/ should be enabled, if not found, please move forward to #d
 d. vault secrets enable -path=secret kv
 e. test the secrets engine, vault kv put secret/hello foo=world excited=yes
 f. vault kv get secret/hello, to check the data u&rsquo;ve just pushed</p>
-
 <h1 id="springboot-application-intergrates-with-vault">Springboot application intergrates with Vault</h1>
-
 <h2 id="create-project-and-import-related-maven-dependencies">Create project and import related maven dependencies</h2>
-
-<pre><code>&lt;properties&gt;
+<pre tabindex="0"><code>&lt;properties&gt;
     &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
     &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
     &lt;spring.cloud.version&gt;Greenwich.RELEASE&lt;/spring.cloud.version&gt;
@@ -594,25 +562,19 @@ f. vault kv get secret/hello, to check the data u&rsquo;ve just pushed</p>
     &lt;/dependency&gt;
 
 &lt;/dependencies&gt;
-</code></pre>
-
-<h2 id="prepare-test-data">Prepare test data</h2>
-
-<pre><code>curl -X POST \
+</code></pre><h2 id="prepare-test-data">Prepare test data</h2>
+<pre tabindex="0"><code>curl -X POST \
   https://demo.xxx.com/v1/secret/vault-test \
-  -H 'Cache-Control: no-cache' \
-  -H 'Content-Type: application/json' \
-  -H 'Postman-Token: 6cad13c9-14d3-8260-dd74-6cef2b2ee822' \
-  -H 'X-Vault-Token: s.AXTHvuudLS6C4PYjSvLLabr9' \
-  -d '{
-	&quot;username&quot;:&quot;Jamie&quot;,
-	&quot;password&quot;:&quot;Hlhjjj&amp;jkjlkjklhHHJKKYUJKjTFttrdfhHg#h$$HHHH&quot;
-}'
-</code></pre>
-
-<h2 id="bootstrap-yml">bootstrap.yml</h2>
-
-<pre><code>server:
+  -H &#39;Cache-Control: no-cache&#39; \
+  -H &#39;Content-Type: application/json&#39; \
+  -H &#39;Postman-Token: 6cad13c9-14d3-8260-dd74-6cef2b2ee822&#39; \
+  -H &#39;X-Vault-Token: s.AXTHvuudLS6C4PYjSvLLabr9&#39; \
+  -d &#39;{
+	&#34;username&#34;:&#34;Jamie&#34;,
+	&#34;password&#34;:&#34;Hlhjjj&amp;jkjlkjklhHHJKKYUJKjTFttrdfhHg#h$$HHHH&#34;
+}&#39;
+</code></pre><h2 id="bootstrapyml">bootstrap.yml</h2>
+<pre tabindex="0"><code>server:
   port: 8084
 
 logging.level.org.springframework.vault: DEBUG
@@ -635,50 +597,40 @@ spring.cloud:
         enabled: true
         profile-separator: /
       token: s.7A1UuLB7aJdiGhn5Qaj2FlxN  
-</code></pre>
-
-<h2 id="implement-a-controller-to-inject-the-data-loaded-from-vault">Implement a controller to inject the data loaded from vault</h2>
-
-<pre><code>@RestController
+</code></pre><h2 id="implement-a-controller-to-inject-the-data-loaded-from-vault">Implement a controller to inject the data loaded from vault</h2>
+<pre tabindex="0"><code>@RestController
 public class TestController {
 
-	@Value(&quot;${username:test}&quot;)
+	@Value(&#34;${username:test}&#34;)
 	private String userName;
 
-	@Value(&quot;${password:test}&quot;)
+	@Value(&#34;${password:test}&#34;)
 	private String password;
 
-	@GetMapping(&quot;/&quot;)
+	@GetMapping(&#34;/&#34;)
 	@ResponseBody
 	public Map&lt;String, String&gt; test() {
 		Map&lt;String, String&gt; rsp = new HashMap&lt;String, String&gt;();
-		rsp.put(&quot;userName&quot;, userName);
-		rsp.put(&quot;password&quot;, password);    
+		rsp.put(&#34;userName&#34;, userName);
+		rsp.put(&#34;password&#34;, password);    
 		return rsp;
 	}    
 }
-</code></pre>
-
-<blockquote>
+</code></pre><blockquote>
+</blockquote>
 <p>Findings found during testing:
 <em>if change the spring.cloud.vault.config.order to a lower value, for example -100, the configs loaded from vault can take effects on spring auto-configured beans, like HikaiCP datasource, can put credentials onto vault in k/v format rather than keep these sensitive data in explicit config file, spring.datasource.username=xxx,spring.datasource.password=xxx</em></p>
-</blockquote>
-
 <h2 id="test-it-through-postman">Test it through postman</h2>
-
-<pre><code>curl -X GET \
+<pre tabindex="0"><code>curl -X GET \
   http://localhost:8084/ \
-  -H 'Cache-Control: no-cache' \
-  -H 'Postman-Token: 9466ffbc-e8d5-355f-cb2c-c29907a5af9d'
+  -H &#39;Cache-Control: no-cache&#39; \
+  -H &#39;Postman-Token: 9466ffbc-e8d5-355f-cb2c-c29907a5af9d&#39;
 
 {
-    &quot;password&quot;: &quot;Hlhjjj&amp;jkjlkjklhHHJKKYUJKjTFttrdfhHg#h$$HHHH&quot;,
-    &quot;userName&quot;: &quot;Jamie&quot;
+    &#34;password&#34;: &#34;Hlhjjj&amp;jkjlkjklhHHJKKYUJKjTFttrdfhHg#h$$HHHH&#34;,
+    &#34;userName&#34;: &#34;Jamie&#34;
 }
-</code></pre>
-
-<p>you can find sources code on <a href="https://github.com/cloud-poc/springboot-vault-test">github</a></p>
-
+</code></pre><p>you can find sources code on <a href="https://github.com/cloud-poc/springboot-vault-test">github</a></p>
 <p>参考文章:
 <a href="https://www.vaultproject.io/docs/concepts/policies.html">https://www.vaultproject.io/docs/concepts/policies.html</a>
 <a href="https://www.hashicorp.com/resources/getting-vault-enterprise-installed-running">https://www.hashicorp.com/resources/getting-vault-enterprise-installed-running</a>
@@ -729,6 +681,7 @@ public class TestController {
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
@@ -745,6 +698,10 @@ public class TestController {
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -824,6 +781,8 @@ public class TestController {
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -879,6 +838,8 @@ public class TestController {
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -983,7 +944,7 @@ public class TestController {
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -1036,9 +997,6 @@ public class TestController {
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -1101,6 +1059,7 @@ public class TestController {
         });
     });
 </script>
+
 
 
 

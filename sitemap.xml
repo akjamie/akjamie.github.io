@@ -1,388 +1,216 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
     <loc>http://akjamie.github.io/categories/</loc>
-    <lastmod>2022-07-09T23:03:30+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+    <lastmod>2023-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/categories/cloud/</loc>
+    <lastmod>2023-03-25T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://akjamie.github.io/</loc>
-    <lastmod>2022-07-09T23:03:30+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://akjamie.github.io/categories/nosql/</loc>
-    <lastmod>2022-07-09T23:03:30+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+    <lastmod>2023-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/kubernetes/</loc>
+    <lastmod>2023-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/</loc>
+    <lastmod>2023-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/</loc>
+    <lastmod>2023-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/vault/</loc>
+    <lastmod>2023-03-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</loc>
+    <lastmod>2023-03-25T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://akjamie.github.io/tags/nosql/</loc>
     <lastmod>2022-07-09T23:03:30+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://akjamie.github.io/post/</loc>
+  </url><url>
+    <loc>http://akjamie.github.io/categories/nosql/</loc>
     <lastmod>2022-07-09T23:03:30+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/redis/</loc>
     <lastmod>2022-07-09T23:03:30+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</loc>
     <lastmod>2022-07-09T23:03:30+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://akjamie.github.io/tags/</loc>
-    <lastmod>2022-07-09T23:03:30+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/k8s/</loc>
     <lastmod>2022-07-04T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/categories/microservice/</loc>
     <lastmod>2022-07-04T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/spring-stomp/</loc>
     <lastmod>2022-07-04T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/websocket/</loc>
     <lastmod>2022-07-04T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2022-07-04-spring-websocket-stomp/</loc>
     <lastmod>2022-07-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2022-06-28-redis-master-slave-replication/</loc>
     <lastmod>2022-06-28T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2022-06-27-redis-basic-2/</loc>
     <lastmod>2022-06-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2022-06-23-redis-advance/</loc>
     <lastmod>2022-06-23T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2022-05-31-redis-basic-1/</loc>
     <lastmod>2022-05-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://akjamie.github.io/categories/cloud/</loc>
-    <lastmod>2022-04-12T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/devops/</loc>
     <lastmod>2022-04-12T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</loc>
     <lastmod>2022-04-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/aws/</loc>
     <lastmod>2021-08-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/cloud/</loc>
     <lastmod>2021-08-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2021-08-09-aws-demo-01-autoscale-test/</loc>
     <lastmod>2021-08-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/batch/</loc>
     <lastmod>2021-05-08T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/microservice/</loc>
     <lastmod>2021-05-08T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2021-05-08-microservice-data-sync/</loc>
     <lastmod>2021-05-08T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/certificate/</loc>
     <lastmod>2021-03-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/gcp/</loc>
     <lastmod>2021-03-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2021-03-09-gcp-professional-cerified-architecture-prep/</loc>
     <lastmod>2021-03-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2020-11-29-run-application-on-k8s/</loc>
     <lastmod>2020-11-29T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/spring-cloud/</loc>
     <lastmod>2020-11-29T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</loc>
     <lastmod>2020-09-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/mongo/</loc>
     <lastmod>2020-09-07T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/vpc/</loc>
     <lastmod>2020-09-07T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2020-09-05-mongo-basics/</loc>
     <lastmod>2020-09-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/spring/</loc>
     <lastmod>2019-08-31T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2019-08-31-spring-global-transaction/</loc>
     <lastmod>2019-08-31T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/transaction-management/</loc>
     <lastmod>2019-08-31T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2019-08-30-spring-local-transaction/</loc>
     <lastmod>2019-08-30T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2019-08-04-redis-basic/</loc>
     <lastmod>2019-08-04T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/design/</loc>
     <lastmod>2019-07-23T19:40:10+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/distributed-transaction/</loc>
     <lastmod>2019-07-23T19:40:10+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2019-07-24-one-distributed-transaction-user-case/</loc>
     <lastmod>2019-07-23T19:40:10+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/docker/</loc>
     <lastmod>2019-07-23T13:36:10+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/spring-batch/</loc>
     <lastmod>2019-07-23T13:36:10+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://akjamie.github.io/tags/spring-boot/</loc>
-    <lastmod>2019-07-23T13:36:10+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</loc>
-    <lastmod>2019-07-23T13:36:10+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</loc>
     <lastmod>2019-07-23T13:36:10+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/spring-boot/</loc>
+    <lastmod>2019-07-23T13:36:10+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</loc>
+    <lastmod>2019-07-23T13:36:10+00:00</lastmod>
+  </url><url>
     <loc>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</loc>
     <lastmod>2019-07-14T18:30:05+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/lets-encrypt/</loc>
     <lastmod>2019-07-14T18:30:05+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/nginx/</loc>
     <lastmod>2019-07-14T18:30:05+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/categories/others/</loc>
     <lastmod>2019-07-14T18:30:05+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/</loc>
     <lastmod>2019-07-14T14:50:52+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/proxychain/</loc>
     <lastmod>2019-07-14T14:50:52+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/shadowsocks/</loc>
     <lastmod>2019-07-14T14:50:52+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/harshicorp-vault/</loc>
     <lastmod>2019-07-14T12:10:27+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</loc>
     <lastmod>2019-07-14T12:10:27+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/top/about/</loc>
     <lastmod>2019-07-14T09:54:06+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/top/</loc>
     <lastmod>2019-07-14T09:54:06+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</loc>
     <lastmod>2019-06-10T13:36:10+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/python/</loc>
     <lastmod>2019-06-10T13:36:10+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/serveless/</loc>
     <lastmod>2019-06-10T13:36:10+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>http://akjamie.github.io/2019/01/19/uipath-invoke-python-method/</loc>
+  </url><url>
+    <loc>http://akjamie.github.io/2019/01/19/UIPath-invoke-python-method/</loc>
     <lastmod>2019-01-19T12:10:27+00:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/uipath/</loc>
     <lastmod>2019-01-19T12:10:27+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/search/placeholder/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/jpa/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/search/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/tags/spring-data/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>http://akjamie.github.io/post/2022-07-08-spring-data-series-01/</loc>
   </url>
-  
 </urlset>

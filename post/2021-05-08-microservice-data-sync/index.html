@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-05.jpg">
+    <meta property="twitter:image" content="/img/background-05.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -218,76 +220,56 @@
                 post-container">
 
                 
-                
-
-<h1 id="summary">Summary</h1>
-
-<p>To mark down a batch data sync accross system solution, tested daily sync data volume is around 10w.<br />
-In this solution, adopted the message driven batch processing rather than traditional fixed time schedule batch.<br />
+                <h1 id="summary">Summary</h1>
+<p>To mark down a batch data sync accross system solution, tested daily sync data volume is around 10w.<br>
+In this solution, adopted the message driven batch processing rather than traditional fixed time schedule batch.<br>
 Also applied the microservice design to eliminate the system dependency and well protect the data/system boundry,which is also aligned with the DEVOPS,,both team could focus on their own domain/services&rsquo; development and maintenance.</p>
-
 <h1 id="techniques-used">Techniques used</h1>
-
 <ul>
 <li>Springboot + Spring cloud config, constrained by infra, services are running on in hourse VM instances.</li>
 <li>Quartz, based on java, easy to custom against requirements, also support clustering.</li>
 <li>Oracle database</li>
-<li>JWT is adopted for system to system authentication and authorization.
-<br /></li>
+<li>JWT is adopted for system to system authentication and authorization.</li>
 </ul>
-
 <h1 id="key-components">Key Components</h1>
-
 <h2 id="scheduling-platform">Scheduling Platform</h2>
-
 <p>The platform is implemented using Springboot + Quartz + JDBC, store the all the Quartz related configs in database, it support clustering and easy to build support portal to server better user experience on operation angle.</p>
-
 <h2 id="data-provider">Data Provider</h2>
-
 <p>To provide restful API to expose the data rather than database directly, well protected data security and integrity, especially for golden source data.</p>
-
 <h2 id="data-consumer">Data Consumer</h2>
-
 <p>Springboot appliation, mainly to load data for data calculation and aggregation, output data per requirement.</p>
-
 <h1 id="solution">Solution</h1>
-
 <p>There are two solutions i proposed, day 1 solution is the one using on production, day 2 solution is what i laterly think about after leave the project.</p>
-
 <h2 id="day-1-solution">Day 1 solution</h2>
-
 <h3 id="process-flow">Process Flow</h3>
-
 <ol>
-<li>One schedule task for data sync configured in Scheduling Platform, triggers by upstream system message.<br /></li>
-<li>Once triggered, a work task will be added into working queue and keep scheduled at preconfigured interval untill it&rsquo;s in completed status.<br /></li>
-<li>In each round scheduling, it calls downstream rest API to start the data sync process, Downstream api must support idompotent feature and calling Scheduling Platform callback api to report process status.<br /></li>
-<li>In downstream internal processing, main thread distributes the workload to sub thread for the each file to be synced, and aggregate the finaly process status, report the reconcilation result back to Scheduling Platform.<br /></li>
-<li>Alert mechanism is leveraged in Scheduling Platform to report the exceptional cases like overdue, failure according the collected task process status.<br />
+<li>One schedule task for data sync configured in Scheduling Platform, triggers by upstream system message.</li>
+<li>Once triggered, a work task will be added into working queue and keep scheduled at preconfigured interval untill it&rsquo;s in completed status.</li>
+<li>In each round scheduling, it calls downstream rest API to start the data sync process, Downstream api must support idompotent feature and calling Scheduling Platform callback api to report process status.</li>
+<li>In downstream internal processing, main thread distributes the workload to sub thread for the each file to be synced, and aggregate the finaly process status, report the reconcilation result back to Scheduling Platform.</li>
+<li>Alert mechanism is leveraged in Scheduling Platform to report the exceptional cases like overdue, failure according the collected task process status.<br>
 More details please refer to below diagram.
-<img src='/img/2021-05-08-microservice-data-sync/micro-service-data-sync-s1.jpg' style="height: 831px; margin-left: 0px;"/></li>
+<!-- raw HTML omitted --></li>
 </ol>
-
 <h3 id="advantages-and-drawbacks">Advantages and drawbacks</h3>
-
-<p>1.<strong>Advantages</strong><br />
-- Centralized task scheduling, and task scheduling implementation in Scheduling Platform is not complex.<br />
-- Task sync status is managed in downstream, it&rsquo;s stateless for Scheduling Platform, it&rsquo;s good to decouple the downstream and Scheduling Platform.<br />
-2.<strong>Drawbacks</strong><br />
-- Resource utilization rate is quite slow, only one instance is handling the whole data process at a time.<br />
-- It&rsquo;s hard to do extension to support more data sync source, like to sync a new file from another data provider(in rest services), especially on the system to system trust mechanism design.</p>
-
-<h2 id="day-2-solution-not-verified">Day 2 solution(not verified)</h2>
-
-<p>based on the solution one, day2 solution aims to resolve the drawbacks to better optimize the existing data sync and scheduling flow.<br />
-Improvements are:<br />
-1. Bring in task group concept(or actions under task), to enrich the scheduling platform to support both single task and task group, and add SYNC/ASYNC flag in the config, if all the tasks under group are in ASYNC way, then scheduling platform could handle the tasks in async way, so that the traffic could be route the multiple downstream instances to get better resource untilization.<br />
-2. Decoupled the file sync processes, each file has it&rsquo;s own task schedule and status, it&rsquo;s independent with each other, no matter the data source from same system or different system.
-3. Each file sync api could have it&rsquo;s separate authentication setting.
-<img src='/img/2021-05-08-microservice-data-sync/micro-service-data-sync-s2.jpg' style="height: 688px; margin-left: 0px;"/></p>
-
+<p>1.<strong>Advantages</strong></p>
+<ul>
+<li>Centralized task scheduling, and task scheduling implementation in Scheduling Platform is not complex.</li>
+<li>Task sync status is managed in downstream, it&rsquo;s stateless for Scheduling Platform, it&rsquo;s good to decouple the downstream and Scheduling Platform.<br>
+2.<strong>Drawbacks</strong></li>
+<li>Resource utilization rate is quite slow, only one instance is handling the whole data process at a time.</li>
+<li>It&rsquo;s hard to do extension to support more data sync source, like to sync a new file from another data provider(in rest services), especially on the system to system trust mechanism design.</li>
+</ul>
+<h2 id="day-2-solutionnot-verified">Day 2 solution(not verified)</h2>
+<p>based on the solution one, day2 solution aims to resolve the drawbacks to better optimize the existing data sync and scheduling flow.<br>
+Improvements are:</p>
+<ol>
+<li>Bring in task group concept(or actions under task), to enrich the scheduling platform to support both single task and task group, and add SYNC/ASYNC flag in the config, if all the tasks under group are in ASYNC way, then scheduling platform could handle the tasks in async way, so that the traffic could be route the multiple downstream instances to get better resource untilization.</li>
+<li>Decoupled the file sync processes, each file has it&rsquo;s own task schedule and status, it&rsquo;s independent with each other, no matter the data source from same system or different system.</li>
+<li>Each file sync api could have it&rsquo;s separate authentication setting.
+<!-- raw HTML omitted --></li>
+</ol>
 <h1 id="the-end">The end</h1>
-
 <p>No matter what techniques are used in the behind, the solution could support business requirement is good solution, at the beginning, not every architect could put all the scenarios identified and unidentified into consideration to good support user&rsquo;s needs. Hence continue to fine tune it is required</p>
 
 
@@ -333,6 +315,7 @@ Improvements are:<br />
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
@@ -349,6 +332,10 @@ Improvements are:<br />
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -428,6 +415,8 @@ Improvements are:<br />
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -483,6 +472,8 @@ Improvements are:<br />
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -587,7 +578,7 @@ Improvements are:<br />
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -640,9 +631,6 @@ Improvements are:<br />
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -705,6 +693,7 @@ Improvements are:<br />
         });
     });
 </script>
+
 
 
 

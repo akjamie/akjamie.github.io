@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-03.jpg">
+    <meta property="twitter:image" content="/img/background-03.jpg" />
     
 
     
@@ -36,7 +36,7 @@
 
     <title>How to invoke python scripts in UIPath | Jamie&#39;s Blog</title>
 
-    <link rel="canonical" href="/2019/01/19/uipath-invoke-python-method/">
+    <link rel="canonical" href="/2019/01/19/UIPath-invoke-python-method/">
 
     
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -218,81 +220,85 @@
                 post-container">
 
                 
-                
-
-<p>UIPath是一个非常不错的RPA(Robotic Process Automation) 工具和平台，并且有开源社区版本可以方便RPA爱好者去尝试，本文是介绍如何在UIPath下调用python的脚本中的方法并提取返回值</p>
-
+                <p>UIPath是一个非常不错的RPA(Robotic Process Automation) 工具和平台，并且有开源社区版本可以方便RPA爱好者去尝试，本文是介绍如何在UIPath下调用python的脚本中的方法并提取返回值</p>
 <h1 id="模拟问题场景">模拟问题场景</h1>
-
 <p>uipath加载python脚本，并根据传入的配置文件，返回配置文件中的符合条件的配置信息</p>
-
 <h1 id="解决步骤">解决步骤</h1>
-
 <h2 id="预置条件">预置条件：</h2>
-
 <p>a. python脚本pmt_detection.py， 内容如下：</p>
-
-<pre><code>from configparser import ConfigParser
+<pre tabindex="0"><code>from configparser import ConfigParser
 def getPmtReqsStatToBeSync(configFilePath):
-	&quot;&quot;&quot;
+	&#34;&#34;&#34;
 	read config item in rpa-config.ini
 	:param: configFilePath - config file
 	:return: PMT.sync_scan_on_status
-	&quot;&quot;&quot;
+	&#34;&#34;&#34;
 	cfg = ConfigParser()
 	cfg.read(configFilePath)
 
-	return cfg.get(&quot;PMT&quot;, &quot;sync_scan_on_status&quot;).split(',')
-</code></pre>
-
-<p>b. 配置文件rpa-config.ini,内容如下：</p>
-
-<pre><code>[PMT]
+	return cfg.get(&#34;PMT&#34;, &#34;sync_scan_on_status&#34;).split(&#39;,&#39;)
+</code></pre><p>b. 配置文件rpa-config.ini,内容如下：</p>
+<pre tabindex="0"><code>[PMT]
 sync_scan_on_status=SUBMITTED,INPROGRESS
 rm_scan_on_status=CANCELLED,COMPLETED
 
 [XXX]
 doc_type_list=ID,PASSPORT
-</code></pre>
-
-<p>我们本次的目标是，用getPmtReqsStatToBeSync去拿到配置文件中的key sync_scan_on_status对应的value，即SUBMITTED,INPROGRESS<br />
+</code></pre><p>我们本次的目标是，用getPmtReqsStatToBeSync去拿到配置文件中的key sync_scan_on_status对应的value，即SUBMITTED,INPROGRESS<br>
 c.uipath项目已创建且python activities已安装</p>
-
-<h2 id="设置python-home并用变量保存">设置PYTHON_HOME并用变量保存</h2>
-
-<p>避免每次调用python脚本的时候都要hardcode python env home 地址，及python.exe所在的目录<br />
+<h2 id="设置python_home并用变量保存">设置PYTHON_HOME并用变量保存</h2>
+<p>避免每次调用python脚本的时候都要hardcode python env home 地址，及python.exe所在的目录<br>
 a. 我们现在系统环境变量中设置PYTHON_HOME,如下图
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-48a93520172f1317.png" alt="" />
+
+  <img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-48a93520172f1317.png" alt="">
+
+
 b. 在UIpath activities中找到&rsquo;Get Environment Variable&rsquo;并拖入使用，配置如下图，用变量保存下python home的地址
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-b9231e50939f7b28.png" alt="" /></p>
 
+  <img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-b9231e50939f7b28.png" alt="">
+
+</p>
 <h2 id="使用python-activities下面的组件来调用python脚本">使用Python activities下面的组件来调用python脚本</h2>
-
 <p>a. 添加python scope及配置
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-b3d0136be36e7810.png" alt="" />
-截了其它例子中的图(请姑且认为py_home跟python_home是同一个变量)
-需要补充说明的是,除了Path需要配置之外，Target和Version也请选择正确否则会得到无法加载script的错误且没有具体的错误日志<br />
-b. 在python scope的Do区域添加Load Python Script并设置脚本路径和result - 变量保存python object
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-91e3fecb9fd03402.png" alt="" /><br />
-c. 在添加invoke python method组件，配置如下
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-aa7b7078eba0b3e7.png" alt="" />
-Instance即 在上一步加载进来的脚本对象，Name即方法名，本例中方法名为：getPmtReqsStatToBeSync，输出同样是pythonObject
-&gt; 在我们的需求场景中，需要传递一个配置文件地址，即使它与脚本放在同一个目录下(e.g 项目的根目录，与Main.xaml)，uipath-python也无法加载到（os.path.dirname(os.path.abspath(<strong>file</strong>)) or os.getcwd(), both failed）
-所以我们假设rpa-config.ini 和pmt_detection.py放在项目的根目录下，首先需要获取项目的当前path，所以最后Input parameters的配置为：{Environment.CurrentDirectory + “/rpa-config.ini”}
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-8f34731c7c4b4884.png" alt="" /></p>
 
+  <img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-b3d0136be36e7810.png" alt="">
+
+
+截了其它例子中的图(请姑且认为py_home跟python_home是同一个变量)
+需要补充说明的是,除了Path需要配置之外，Target和Version也请选择正确否则会得到无法加载script的错误且没有具体的错误日志<br>
+b. 在python scope的Do区域添加Load Python Script并设置脚本路径和result - 变量保存python object
+
+  <img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-91e3fecb9fd03402.png" alt="">
+
+<br>
+c. 在添加invoke python method组件，配置如下
+
+  <img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-aa7b7078eba0b3e7.png" alt="">
+
+
+Instance即 在上一步加载进来的脚本对象，Name即方法名，本例中方法名为：getPmtReqsStatToBeSync，输出同样是pythonObject</p>
+<blockquote>
+<p>在我们的需求场景中，需要传递一个配置文件地址，即使它与脚本放在同一个目录下(e.g 项目的根目录，与Main.xaml)，uipath-python也无法加载到（os.path.dirname(os.path.abspath(<strong>file</strong>)) or os.getcwd(), both failed）
+所以我们假设rpa-config.ini 和pmt_detection.py放在项目的根目录下，首先需要获取项目的当前path，所以最后Input parameters的配置为：{Environment.CurrentDirectory + “/rpa-config.ini”}
+
+  <img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-8f34731c7c4b4884.png" alt="">
+
+</p>
+</blockquote>
 <p>d. 拿到了方法的执行之后的返回对象之后，我们还需要添加get python object来获取到返回值，我们的例子中返回值是个tuple即数组或者ArrayList。
-<img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-f29b169d4d7b725d.png" alt="" />
+
+  <img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-f29b169d4d7b725d.png" alt="">
+
+
 Input 为‘invoke python method’的返回对象，TypeArgument是要转化的对象类型，本例为：System.String[],输出到变量中。
 至此，调用python 方法完成，返回结果变量可以在后面的flow正常使用了</p>
-
 <p>打印日志可以查看输出结果：</p>
-
 <pre><code>&quot;[&quot; +correlationid +&quot;] Payment sync config loaded, payment sync status are: &quot; +&quot;&quot;.Join(&quot;,&quot;,pmt_sync_status) 
 </code></pre>
+<p>
+  <img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-d07d7cb65ed442b0.png" alt="">
 
-<p><img src="/img/2019-01-19-UIPath-invoke-python-method/15532408-d07d7cb65ed442b0.png" alt="" /></p>
-
+</p>
 <p><em>备注</em>
 欢迎多多指正</p>
 
@@ -339,6 +345,7 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
@@ -355,6 +362,10 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -434,6 +445,8 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -489,6 +502,8 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -593,7 +608,7 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -646,9 +661,6 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -711,6 +723,7 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
         });
     });
 </script>
+
 
 
 

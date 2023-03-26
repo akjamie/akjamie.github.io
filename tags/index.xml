@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Jamie&#39;s Blog</title>
@@ -6,10 +6,24 @@
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 09 Jul 2022 23:03:30 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 25 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Kubernetes</title>
+      <link>http://akjamie.github.io/tags/kubernetes/</link>
+      <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/kubernetes/</guid>
+      <description></description>
+    </item>
     
-	<atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
-    
+    <item>
+      <title>Vault</title>
+      <link>http://akjamie.github.io/tags/vault/</link>
+      <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/tags/vault/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>NoSQL</title>

@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-05.jpg">
+    <meta property="twitter:image" content="/img/background-05.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -222,17 +224,12 @@
                 post-container">
 
                 
-                
-
-<h1 id="background">Background</h1>
-
+                <h1 id="background">Background</h1>
 <p>最近在做一个类似于快速竞价的功能的技术设计，即在很短的时间内通过一个集中的平台拿到各家的报价，类似于支付宝上的那个车险报价，发送完汽车信息，得到各家保险公司的报价回复，然后可以选择某家性价比高的价格购买汽车保险。在设计的过程很快就想到了用websocket+stomp这种长链接和event-streaming 推送的方式，做了一些技术研究和验证，因此便记录这些零碎的知识便于以后查阅。</p>
-
 <h1 id="reffering-articles">Reffering articles</h1>
-
-<p>1.偶然找到了下面这篇文章，写的挺详细的便引用过来，弥补了spring官方文档不够详细的不足。<br />
-<a href="https://medium.com/swlh/websockets-with-spring-part-1-http-and-websocket-36c69df1c2ee">https://medium.com/swlh/websockets-with-spring-part-1-http-and-websocket-36c69df1c2ee</a><br />
-<a href="https://medium.com/swlh/websockets-with-spring-part-2-websocket-with-sockjs-fallback-1903cf8fe480">https://medium.com/swlh/websockets-with-spring-part-2-websocket-with-sockjs-fallback-1903cf8fe480</a><br />
+<p>1.偶然找到了下面这篇文章，写的挺详细的便引用过来，弥补了spring官方文档不够详细的不足。<br>
+<a href="https://medium.com/swlh/websockets-with-spring-part-1-http-and-websocket-36c69df1c2ee">https://medium.com/swlh/websockets-with-spring-part-1-http-and-websocket-36c69df1c2ee</a><br>
+<a href="https://medium.com/swlh/websockets-with-spring-part-2-websocket-with-sockjs-fallback-1903cf8fe480">https://medium.com/swlh/websockets-with-spring-part-2-websocket-with-sockjs-fallback-1903cf8fe480</a><br>
 <a href="https://medium.com/swlh/websockets-with-spring-part-3-stomp-over-websocket-3dab4a21f397">https://medium.com/swlh/websockets-with-spring-part-3-stomp-over-websocket-3dab4a21f397</a></p>
 
 
@@ -278,22 +275,27 @@
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/2022-06-28-redis-master-slave-replication/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">&larr;
+                        <a href="/post/2022-06-28-redis-master-slave-replication/" data-toggle="tooltip" data-placement="top" title="Redis advance II">&larr;
                             Previous Post</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/post/2022-07-09-redis-cluster-01/" data-toggle="tooltip" data-placement="top" title="Redis学习笔记">Next
+                        <a href="/post/2022-07-09-redis-cluster-01/" data-toggle="tooltip" data-placement="top" title="Redis advance III">Next
                             Post &rarr;</a>
                     </li>
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -373,6 +375,8 @@
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -428,6 +432,8 @@
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -532,7 +538,7 @@
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -585,9 +591,6 @@
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -650,6 +653,7 @@
         });
     });
 </script>
+
 
 
 

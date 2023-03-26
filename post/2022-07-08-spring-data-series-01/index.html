@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-01.jpg">
+    <meta property="twitter:image" content="/img/background-01.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -218,52 +220,36 @@
                 post-container">
 
                 
-                
-
-<h1 id="what-is-jpa">What is JPA?</h1>
-
-<p>&ldquo;The Java Persistence API is the Java API for the management of persistence and object/relational mapping in Java EE and Java SE environments. It provides an object/relational mapping facility for the Java application developer using a Java domain model to manage a relational database.&rdquo;<br />
+                <h1 id="what-is-jpa">What is JPA?</h1>
+<p>&ldquo;The Java Persistence API is the Java API for the management of persistence and object/relational mapping in Java EE and Java SE environments. It provides an object/relational mapping facility for the Java application developer using a Java domain model to manage a relational database.&rdquo;<br>
 It&rsquo;s quoted from JSR(Java Specification Request) managed by Java Community Process.</p>
-
 <p>This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persist data before adopting JPA.</p>
-
 <ul>
-<li><p>Loading jdbc driver</p>
-
-<pre><code>Class.forName(&quot;com.mysql.jdbc.driver&quot;)
-</code></pre></li>
-
-<li><p>Get Connection</p>
-
-<pre><code>Connection conn = DriverManager.getConnection(url,username, password)
-</code></pre></li>
-
-<li><p>Create Statement or PreparedStatement</p>
-
-<pre><code>PreparedStatement stmt = conn.prepareStatement(sql);
+<li>Loading jdbc driver</li>
+</ul>
+<pre tabindex="0"><code>Class.forName(&#34;com.mysql.jdbc.driver&#34;)
+</code></pre><ul>
+<li>Get Connection</li>
+</ul>
+<pre tabindex="0"><code>Connection conn = DriverManager.getConnection(url,username, password)
+</code></pre><ul>
+<li>Create Statement or PreparedStatement</li>
+</ul>
+<pre tabindex="0"><code>PreparedStatement stmt = conn.prepareStatement(sql);
 # Set args
 stmt.setXx
-</code></pre></li>
-
-<li><p>Execute Query or Update</p>
-
-<pre><code>ResultSet rs = stmt.executeQuery()
+</code></pre><ul>
+<li>Execute Query or Update</li>
+</ul>
+<pre tabindex="0"><code>ResultSet rs = stmt.executeQuery()
 # Iterator the rs to manual map to Java Domain object
 
 stmt.executeUpdate() # for insert, delete or update
-</code></pre></li>
-</ul>
-
-<p>Seen from above steps, the difficulty parts are the mapping between Java Domain Object and args for Statement for update operation, and the mapping between ResultSet and Java Domain Object, that&rsquo;s what JPA can help, the so called ORM layer.</p>
-
+</code></pre><p>Seen from above steps, the difficulty parts are the mapping between Java Domain Object and args for Statement for update operation, and the mapping between ResultSet and Java Domain Object, that&rsquo;s what JPA can help, the so called ORM layer.</p>
 <p>In Java, ORM layer is responsible for managing the conversion of Java objects/classes to interact with tables and columns in a relational database, so that the Java objects/classes can be stored and managed in a relational database.</p>
-
 <h1 id="jpa-and-hibernate">JPA and Hibernate</h1>
-
 <p>JPA&rsquo;s object-relational mapping was originally based on Hibernate, While JPA is not a tool or framework, it defines a set of concepts that guide implementers. And JPA has spawned many compatile tools and frameworks, Hibernate is just one of many JPA tools.</p>
-
 <h1 id="db-manipulation-tool">DB manipulation tool</h1>
-
 <table>
 <thead>
 <tr>
@@ -272,20 +258,17 @@ stmt.executeUpdate() # for insert, delete or update
 <th>Object Factory/Manager</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>Hibernate</td>
 <td>Session</td>
 <td>SessionFactory</td>
 </tr>
-
 <tr>
 <td>Spring-data-JPA</td>
 <td>EntityManager</td>
 <td>EntityManagerFactory(LocalContainerEntityManagerFactoryBean)</td>
 </tr>
-
 <tr>
 <td>Mybatis</td>
 <td>SqlSession(DefaultSqlSession)</td>
@@ -337,17 +320,22 @@ stmt.executeUpdate() # for insert, delete or update
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
                     
                     <li class="next">
-                        <a href="/2019/01/19/uipath-invoke-python-method/" data-toggle="tooltip" data-placement="top" title="How to invoke python scripts in UIPath">Next
+                        <a href="/2019/01/19/UIPath-invoke-python-method/" data-toggle="tooltip" data-placement="top" title="How to invoke python scripts in UIPath">Next
                             Post &rarr;</a>
                     </li>
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -427,6 +415,8 @@ stmt.executeUpdate() # for insert, delete or update
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -482,6 +472,8 @@ stmt.executeUpdate() # for insert, delete or update
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -586,7 +578,7 @@ stmt.executeUpdate() # for insert, delete or update
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -639,9 +631,6 @@ stmt.executeUpdate() # for insert, delete or update
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -704,6 +693,7 @@ stmt.executeUpdate() # for insert, delete or update
         });
     });
 </script>
+
 
 
 

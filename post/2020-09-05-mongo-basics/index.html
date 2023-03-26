@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="img/background-08.jpg">
+    <meta property="twitter:image" content="img/background-08.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -218,342 +220,221 @@
                 post-container">
 
                 
-                
-
-<h1 id="mongo-installation-for-test">Mongo installation(for test)</h1>
-
+                <h1 id="mongo-installationfor-test">Mongo installation(for test)</h1>
 <h2 id="docker-command-for-local-mongo-installation">docker command for local mongo installation</h2>
-
-<pre><code>docker run -p 27017:27017 -v /Users/jamie/Documents/work-benches/mongo/test:/data/db --name mongo -d mongo:latest
-</code></pre>
-
-<h2 id="check-mongo-running-status">check mongo running status</h2>
-
+<pre tabindex="0"><code>docker run -p 27017:27017 -v /Users/jamie/Documents/work-benches/mongo/test:/data/db --name mongo -d mongo:latest
+</code></pre><h2 id="check-mongo-running-status">check mongo running status</h2>
 <blockquote>
-<p>docker ps | grep mongo<br />
-9161bd4811a8        mongo:latest        &ldquo;docker-entrypoint.s…&rdquo;   6 days ago          Up 6 days           0.0.0.0:27017-&gt;27017/tcp   mongo</p>
 </blockquote>
-
+<p>docker ps | grep mongo<br>
+9161bd4811a8        mongo:latest        &ldquo;docker-entrypoint.s…&rdquo;   6 days ago          Up 6 days           0.0.0.0:27017-&gt;27017/tcp   mongo</p>
 <h2 id="mongo-shell-installation">mongo Shell installation</h2>
-
 <p>please refer to <a href="https://docs.mongodb.com/manual/tutorial/configure-mongo-shell/">https://docs.mongodb.com/manual/tutorial/configure-mongo-shell/</a></p>
-
 <h1 id="crud-operations">CRUD operations</h1>
-
 <h2 id="insertone-vs-insertmany">insertOne vs insertMany</h2>
-
-<p>insertOne - since version 3.2<br />
+<p>insertOne - since version 3.2<br>
 insertMany - since version 3.2</p>
-
 <p>MongoShell command format:
-<img src='/img/2020-09-05-mongo-basics/mongo-shell-command-format.png' style="height: 77px;margin-left: 15px;"/></p>
-
+<!-- raw HTML omitted --></p>
 <h3 id="samples">samples</h3>
-
 <p>to provide some samples and corresponded shell command for better understand &amp; master each params &amp; grammer</p>
-
 <p>1&gt; insert one document to inventory</p>
-
-<pre><code>db.inventory.insertOne({&quot;item&quot;: &quot;canvas&quot;,
-           &quot;qty&quot;: 100,
-           &quot;tags&quot;: [&quot;cotton&quot;],
-           size: {&quot;h&quot;:28,&quot;w&quot;:100,&quot;uom&quot;: &quot;mm&quot;}
+<pre tabindex="0"><code>db.inventory.insertOne({&#34;item&#34;: &#34;canvas&#34;,
+           &#34;qty&#34;: 100,
+           &#34;tags&#34;: [&#34;cotton&#34;],
+           size: {&#34;h&#34;:28,&#34;w&#34;:100,&#34;uom&#34;: &#34;mm&#34;}
            })
-</code></pre>
-
-<p><img src='/img/2020-09-05-mongo-basics/insert-one-1.png' style="height: 90px;margin-left: 15px;"/></p>
-
+</code></pre><!-- raw HTML omitted -->
 <p>2&gt; insert many records in same command</p>
-
-<pre><code>db.inventory.insertMany([{&quot;item&quot;: &quot;canvas-new&quot;,
-       &quot;qty&quot;: 100,
-       &quot;tags&quot;: [&quot;cotton&quot;],
-       size: {&quot;h&quot;:28,&quot;w&quot;:100,&quot;uom&quot;: &quot;mm&quot;}
-     },{&quot;item&quot;: &quot;ipad2021&quot;,
-       &quot;qty&quot;:20,
-       &quot;tags&quot;:[&quot;ios&quot;,&quot;HIFI&quot;],
-       size:{&quot;h&quot;:20,&quot;w&quot;:30,&quot;uom&quot;: &quot;cm&quot;}
+<pre tabindex="0"><code>db.inventory.insertMany([{&#34;item&#34;: &#34;canvas-new&#34;,
+       &#34;qty&#34;: 100,
+       &#34;tags&#34;: [&#34;cotton&#34;],
+       size: {&#34;h&#34;:28,&#34;w&#34;:100,&#34;uom&#34;: &#34;mm&#34;}
+     },{&#34;item&#34;: &#34;ipad2021&#34;,
+       &#34;qty&#34;:20,
+       &#34;tags&#34;:[&#34;ios&#34;,&#34;HIFI&#34;],
+       size:{&#34;h&#34;:20,&#34;w&#34;:30,&#34;uom&#34;: &#34;cm&#34;}
      }])
-</code></pre>
-
-<p><img src='/img/2020-09-05-mongo-basics/insert-many-1.png' style="height: 160px;margin-left: 15px;"/></p>
-
+</code></pre><!-- raw HTML omitted -->
 <blockquote>
-<p>Insert Behavior:<br />
-. Collection Creation, if the collection does not exist, the insert operation will create the collection.<br />
-. _id Field - it acts as the primary key, if an inserted document omits _id, MongoDB driver automatically generates and ObjectId for the _id fields.<br />
+<p>Insert Behavior:<br>
+. Collection Creation, if the collection does not exist, the insert operation will create the collection.<br>
+. _id Field - it acts as the primary key, if an inserted document omits _id, MongoDB driver automatically generates and ObjectId for the _id fields.<br>
 . Atomicity - all wirte operation in MongoDB are automic on the level of a single document.</p>
 </blockquote>
-
 <h2 id="find">Find</h2>
-
 <p>it&rsquo;s equative to SELECT in SQL, and return data in cursor.</p>
-
 <h3 id="basic-grammer-you-should-know">basic grammer you should know</h3>
-
-<p><img src='/img/2020-09-05-mongo-basics/find-grammer-01.png' style="height: 180px;margin-left: 15px;"/></p>
-
+<!-- raw HTML omitted -->
 <table>
 <thead>
 <tr>
-<th align="left">SQL</th>
-<th align="left">MQL</th>
+<th style="text-align:left">SQL</th>
+<th style="text-align:left">MQL</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td align="left">a = 1</td>
-<td align="left">{a: 1}</td>
+<td style="text-align:left">a = 1</td>
+<td style="text-align:left">{a: 1}</td>
 </tr>
-
 <tr>
-<td align="left">a &lt;&gt; 1</td>
-<td align="left">{a: {$ne: 1}}</td>
+<td style="text-align:left">a &lt;&gt; 1</td>
+<td style="text-align:left">{a: {$ne: 1}}</td>
 </tr>
-
 <tr>
-<td align="left">a &gt; 1</td>
-<td align="left">{a: {$gt: 1}}</td>
+<td style="text-align:left">a &gt; 1</td>
+<td style="text-align:left">{a: {$gt: 1}}</td>
 </tr>
-
 <tr>
-<td align="left">a &gt;= 1</td>
-<td align="left">{a: {$gte: 1}}</td>
+<td style="text-align:left">a &gt;= 1</td>
+<td style="text-align:left">{a: {$gte: 1}}</td>
 </tr>
-
 <tr>
-<td align="left">a &lt; 1</td>
-<td align="left">{a: {$1t: 1}}</td>
+<td style="text-align:left">a &lt; 1</td>
+<td style="text-align:left">{a: {$1t: 1}}</td>
 </tr>
-
 <tr>
-<td align="left">a &lt;= 1</td>
-<td align="left">{a: {$lte: 1}}</td>
+<td style="text-align:left">a &lt;= 1</td>
+<td style="text-align:left">{a: {$lte: 1}}</td>
 </tr>
-
 <tr>
-<td align="left">a = 1 and b = 1</td>
-<td align="left">{a: 1, b: 1} or {$and: [{a: 1}, {b: 1}]}</td>
+<td style="text-align:left">a = 1 and b = 1</td>
+<td style="text-align:left">{a: 1, b: 1} or {$and: [{a: 1}, {b: 1}]}</td>
 </tr>
-
 <tr>
-<td align="left">a = 1 or b = 1</td>
-<td align="left">{$or: [{a: 1}, {b: 1}]}</td>
+<td style="text-align:left">a = 1 or b = 1</td>
+<td style="text-align:left">{$or: [{a: 1}, {b: 1}]}</td>
 </tr>
-
 <tr>
-<td align="left">a IS NULL</td>
-<td align="left">{a: {$exists: false}}</td>
+<td style="text-align:left">a IS NULL</td>
+<td style="text-align:left">{a: {$exists: false}}</td>
 </tr>
-
 <tr>
-<td align="left">a IN (1,2,3)</td>
-<td align="left">{a: {$in: [1,2,3]}}</td>
+<td style="text-align:left">a IN (1,2,3)</td>
+<td style="text-align:left">{a: {$in: [1,2,3]}}</td>
 </tr>
 </tbody>
 </table>
-
 <h3 id="samples-1">samples</h3>
-
 <p>1&gt; find users who&rsquo;s userName starts with &lsquo;jamie&rsquo;</p>
-
-<pre><code>b.users.find({&quot;userName&quot;: /^jamie/}).pretty()
-</code></pre>
-
-<p><img src='/img/2020-09-05-mongo-basics/find-mql-01.png' style="height: 250px;margin-left: 15px;"/>
-2&gt; find users which userName starts with &lsquo;Test&rsquo; and &lsquo;authType&rsquo; is &lsquo;PASSWORD&rsquo;</p>
-
-<pre><code>db.users.find({&quot;userName&quot;: /^Test/, &quot;authType&quot;: &quot;PASSWORD&quot;}).pretty()
-</code></pre>
-
-<p><img src='/img/2020-09-05-mongo-basics/find-mql-02.png' style="height: 300px;margin-left: 15px;"/>
-<img src='/img/2020-09-05-mongo-basics/find-mql-03.png' style="height: 80px;margin-left: 15px;"/></p>
-
+<pre tabindex="0"><code>b.users.find({&#34;userName&#34;: /^jamie/}).pretty()
+</code></pre><!-- raw HTML omitted -->
 <p>3&gt; find users who&rsquo;s userName starts with &lsquo;Test&rsquo; and &lsquo;authType&rsquo; is &lsquo;PASSWORD&rsquo; and his/her age between 18 and 45.</p>
-
-<pre><code>db.users.find({&quot;userName&quot;: /^Test/, &quot;authType&quot;: &quot;PASSWORD&quot;,&quot;userInfo.age&quot;: {$gt: 18, $lte: 45}}).count()
-</code></pre>
-
-<p><img src='/img/2020-09-05-mongo-basics/find-mql-04.png' style="height: 55px;margin-left: 15px;"/></p>
-
-<p>4&gt; find users which userName start with &lsquo;Test&rsquo; and &lsquo;authType&rsquo; is &lsquo;PASSWORD&rsquo; and meet either of below two conditions:<br />
-&ndash; &lsquo;userInfo.gender&rsquo; = &lsquo;FEMALE&rsquo; and age &gt;=3  and age &lt; 10<br />
+<pre tabindex="0"><code>db.users.find({&#34;userName&#34;: /^Test/, &#34;authType&#34;: &#34;PASSWORD&#34;,&#34;userInfo.age&#34;: {$gt: 18, $lte: 45}}).count()
+</code></pre><!-- raw HTML omitted -->
+<p>4&gt; find users which userName start with &lsquo;Test&rsquo; and &lsquo;authType&rsquo; is &lsquo;PASSWORD&rsquo; and meet either of below two conditions:<br>
+&ndash; &lsquo;userInfo.gender&rsquo; = &lsquo;FEMALE&rsquo; and age &gt;=3  and age &lt; 10<br>
 &ndash; &lsquo;userInfo.gender&rsquo; = &lsquo;MALE&rsquo; and age &gt;= 18 and age &lt; 45</p>
-
-<pre><code>db.getCollection(&quot;users&quot;).find({&quot;authType&quot;:&quot;PASSWORD&quot;, $or: [{
-       &quot;userInfo.gender&quot;: &quot;MALE&quot;, &quot;userInfo.age&quot;: {$gte: 18, $lt: 45}},{
-        &quot;userInfo.gender&quot;: &quot;FEMAIL&quot;, &quot;userInfo.age&quot;: {$gte: 3, $lt: 10}
+<pre tabindex="0"><code>db.getCollection(&#34;users&#34;).find({&#34;authType&#34;:&#34;PASSWORD&#34;, $or: [{
+       &#34;userInfo.gender&#34;: &#34;MALE&#34;, &#34;userInfo.age&#34;: {$gte: 18, $lt: 45}},{
+        &#34;userInfo.gender&#34;: &#34;FEMAIL&#34;, &#34;userInfo.age&#34;: {$gte: 3, $lt: 10}
 }]}).count()
-</code></pre>
-
-<p>5&gt; distinct, to find the possible values for &lsquo;authType&rsquo;</p>
-
-<pre><code>db.users.distinct('authType', {&quot;userName&quot;: /^Test/})
-</code></pre>
-
-<p><img src='/img/2020-09-05-mongo-basics/find-mql-05.png' style="height: 40px;margin-left: 0px;"/>
-6&gt; find users whose authType is OTP or WECHAT</p>
-
-<pre><code>db.getCollection(&quot;users&quot;).find({&quot;authType&quot;: {$in : ['OTP','WECHAT']}}).limit(2).pretty()
-</code></pre>
-
+</code></pre><p>5&gt; distinct, to find the possible values for &lsquo;authType&rsquo;</p>
+<pre tabindex="0"><code>db.users.distinct(&#39;authType&#39;, {&#34;userName&#34;: /^Test/})
+</code></pre><!-- raw HTML omitted -->
 <p>7&gt; find users which gender is null</p>
-
-<pre><code>db.getCollection(&quot;users&quot;).find({&quot;userInfo.gender&quot;: {$exists : false}}).limit(2).pretty()
-</code></pre>
-
-<p><img src='/img/2020-09-05-mongo-basics/find-mql-06.png' style="height: 120px;margin-left: 0px;"/></p>
-
+<pre tabindex="0"><code>db.getCollection(&#34;users&#34;).find({&#34;userInfo.gender&#34;: {$exists : false}}).limit(2).pretty()
+</code></pre><!-- raw HTML omitted -->
 <p>8&gt; projection, specify the fields we need</p>
-
-<pre><code>db.getCollection(&quot;users&quot;).find({&quot;userInfo.gender&quot;: &quot;MALE&quot;, 
-    &quot;userInfo.age&quot;: {$gte: 18, $lt: 30}
-   },{&quot;_id&quot;: 0, 
-    &quot;userName&quot;: 1,
-    &quot;authType&quot;: 1, 
-    &quot;schemaVersion&quot;: 1, 
-    &quot;userInfo.firstName&quot;: 1, 
-    &quot;userInfo.phone&quot;: 1
+<pre tabindex="0"><code>db.getCollection(&#34;users&#34;).find({&#34;userInfo.gender&#34;: &#34;MALE&#34;, 
+    &#34;userInfo.age&#34;: {$gte: 18, $lt: 30}
+   },{&#34;_id&#34;: 0, 
+    &#34;userName&#34;: 1,
+    &#34;authType&#34;: 1, 
+    &#34;schemaVersion&#34;: 1, 
+    &#34;userInfo.firstName&#34;: 1, 
+    &#34;userInfo.phone&#34;: 1
     }).limit(2).pretty()
-</code></pre>
-
-<p><img src='/img/2020-09-05-mongo-basics/find-mql-07.png' style="height: 200px;margin-left: 0px;"/></p>
-
+</code></pre><!-- raw HTML omitted -->
 <h2 id="remove">Remove</h2>
-
-<p><img src='/img/2020-09-05-mongo-basics/remove-grammer-01.png' style="height: 150px;margin-left: 0px;"/></p>
-
+<!-- raw HTML omitted -->
 <h2 id="update">Update</h2>
-
 <h3 id="basic-grammers">basic grammers</h3>
-
-<p><img src='/img/2020-09-05-mongo-basics/update-grammer-01.png' style="height: 30px;margin-left: 0px;"/></p>
-
-<p><img src='/img/2020-09-05-mongo-basics/update-grammer-02.png' style="height: 160px;margin-left: 0px;"/></p>
-
-<p><img src='/img/2020-09-05-mongo-basics/update-grammer-03.png' style="height: 240px;margin-left: 0px;"/></p>
-
-<p><img src='/img/2020-09-05-mongo-basics/update-grammer-04.png' style="height: 250px;margin-left: 0px;"/></p>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <h3 id="samples-2">samples</h3>
-
 <p>1&gt; update the authType from &lsquo;string&rsquo; to &lsquo;ALIPAY&rsquo;</p>
-
-<pre><code>db.users.updateOne({&quot;authType&quot;: &quot;string&quot;}, {$set: {&quot;authType&quot;: &quot;ALIPAY&quot;}})
-</code></pre>
-
-<p><img src='/img/2020-09-05-mongo-basics/update-mql-01.png' style="height: 65px;margin-left: 0px;"/></p>
-
+<pre tabindex="0"><code>db.users.updateOne({&#34;authType&#34;: &#34;string&#34;}, {$set: {&#34;authType&#34;: &#34;ALIPAY&#34;}})
+</code></pre><!-- raw HTML omitted -->
 <p>2&gt; update all the documents -  the &lsquo;schemaVersion&rsquo; to &lsquo;0.1&rsquo; if does not exist in document</p>
-
-<pre><code>db.users.updateMany({&quot;schemaVersion&quot;: {$exists: false}}, {$set: {&quot;schemaVersion&quot;: &quot;0.1&quot;}})
-</code></pre>
-
-<p>4&gt;.add one item to an array in document</p>
-
-<pre><code>db.users.update({&quot;userName&quot;: 'Annie-01'}, {$push: {&quot;userInfo.tags&quot;: 'Springboot'}})
-</code></pre>
-
-<p><img src='/img/2020-09-05-mongo-basics/update-mql-02.png' style="height: 220px;margin-left: 0px;"/></p>
-
+<pre tabindex="0"><code>db.users.updateMany({&#34;schemaVersion&#34;: {$exists: false}}, {$set: {&#34;schemaVersion&#34;: &#34;0.1&#34;}})
+</code></pre><p>4&gt;.add one item to an array in document</p>
+<pre tabindex="0"><code>db.users.update({&#34;userName&#34;: &#39;Annie-01&#39;}, {$push: {&#34;userInfo.tags&#34;: &#39;Springboot&#39;}})
+</code></pre><!-- raw HTML omitted -->
 <p>5&gt;Add more than one items(does not exists) to an array in one go</p>
-
-<pre><code>var newTags = ['Mongodb','Angular','BlockChain']
-db.users.update({&quot;userName&quot;: 'Annie-01', 'userInfo.tags': {$ne: {$each: newTags}}}, {$addToSet: {&quot;userInfo.tags&quot;:{$each: newTags} }})
-</code></pre>
-
-<p><img src='/img/2020-09-05-mongo-basics/update-mql-03.png' style="height: 260px;margin-left: 0px;"/>
-<strong>notes:</strong> <em>this approach can also prevent duplicated data added into array</em></p>
-
+<pre tabindex="0"><code>var newTags = [&#39;Mongodb&#39;,&#39;Angular&#39;,&#39;BlockChain&#39;]
+db.users.update({&#34;userName&#34;: &#39;Annie-01&#39;, &#39;userInfo.tags&#39;: {$ne: {$each: newTags}}}, {$addToSet: {&#34;userInfo.tags&#34;:{$each: newTags} }})
+</code></pre><!-- raw HTML omitted -->
 <p>6&gt; update the indexed data in an array</p>
-
-<pre><code>db.users.update({&quot;userName&quot;: 'Annie-01'}, {$set: {'userInfo.tags.3': 'Mysql'}})
-</code></pre>
-
-<p><img src='/img/2020-09-05-mongo-basics/update-mql-04.png' style="height: 260px;margin-left: 0px;"/></p>
-
+<pre tabindex="0"><code>db.users.update({&#34;userName&#34;: &#39;Annie-01&#39;}, {$set: {&#39;userInfo.tags.3&#39;: &#39;Mysql&#39;}})
+</code></pre><!-- raw HTML omitted -->
 <h2 id="drop-collection">Drop Collection</h2>
-
-<p>db.<collection>.drop()<br />
+<p>db.<!-- raw HTML omitted -->.drop()<br>
 all the documents in the collection, including the indexes, will be deleted.</p>
-
 <h2 id="drop-database">Drop database</h2>
-
 <p>db.dropDatabase()</p>
-
 <h1 id="java-api-to-do-crud">JAVA api to do CRUD</h1>
-
 <h2 id="use-document-object-to-do-crud">use Document object to do CRUD</h2>
-
 <p>MongoDB driver</p>
-
-<pre><code>&lt;dependency&gt;
+<pre tabindex="0"><code>&lt;dependency&gt;
     &lt;groupId&gt;org.mongodb&lt;/groupId&gt;
     &lt;artifactId&gt;mongo-java-driver&lt;/artifactId&gt;
     &lt;version&gt;${mongo.driver.version}&lt;/version&gt;
 &lt;/dependency&gt;
-</code></pre>
-
-<p>insert document</p>
-
-<pre><code>@Test
+</code></pre><p>insert document</p>
+<pre tabindex="0"><code>@Test
 public void testInsert() {
     String id = UUID.randomUUID().toString();
-    Document userInfo = new Document().append(&quot;tags&quot;, Arrays.asList(&quot;Springboot&quot;, &quot;Mongo&quot;));
-    Document document = new Document().append(&quot;_id&quot;, id)
-            .append(&quot;userName&quot;, &quot;Test-&quot; + id.replace(&quot;-&quot;, &quot;&quot;).substring(0, 8))
-            .append(&quot;authType&quot;, &quot;WECHAT&quot;).append(&quot;createDate&quot;, new Date()).append(&quot;schemaVersion&quot;, &quot;1.0.0&quot;).append(&quot;userInfo&quot;, userInfo);
+    Document userInfo = new Document().append(&#34;tags&#34;, Arrays.asList(&#34;Springboot&#34;, &#34;Mongo&#34;));
+    Document document = new Document().append(&#34;_id&#34;, id)
+            .append(&#34;userName&#34;, &#34;Test-&#34; + id.replace(&#34;-&#34;, &#34;&#34;).substring(0, 8))
+            .append(&#34;authType&#34;, &#34;WECHAT&#34;).append(&#34;createDate&#34;, new Date()).append(&#34;schemaVersion&#34;, &#34;1.0.0&#34;).append(&#34;userInfo&#34;, userInfo);
 
     collection.insertOne(document);
 
 
     //verify the insertion
-    FindIterable iterable = collection.find(new BasicDBObject().append(&quot;_id&quot;, id));
+    FindIterable iterable = collection.find(new BasicDBObject().append(&#34;_id&#34;, id));
     Document first = (Document) iterable.first();
 
     assertNotNull(first);
-    assertEquals(id, first.getString(&quot;_id&quot;));
+    assertEquals(id, first.getString(&#34;_id&#34;));
 }
-</code></pre>
-
-<p>update document</p>
-
-<pre><code>@Test
+</code></pre><p>update document</p>
+<pre tabindex="0"><code>@Test
 public void testUpdate() {
     // insert one document
     String id = UUID.randomUUID().toString();
-    Document userInfo = new Document().append(&quot;tags&quot;, Arrays.asList(&quot;Springboot&quot;, &quot;Mongo&quot;));
-    Document document = new Document().append(&quot;_id&quot;, id)
-            .append(&quot;userName&quot;, &quot;Test-&quot; + id.replace(&quot;-&quot;, &quot;&quot;).substring(0, 8))
-            .append(&quot;authType&quot;, &quot;WECHAT&quot;).append(&quot;createDate&quot;, new Date()).append(&quot;schemaVersion&quot;, &quot;1.0.0&quot;).append(&quot;userInfo&quot;, userInfo);
+    Document userInfo = new Document().append(&#34;tags&#34;, Arrays.asList(&#34;Springboot&#34;, &#34;Mongo&#34;));
+    Document document = new Document().append(&#34;_id&#34;, id)
+            .append(&#34;userName&#34;, &#34;Test-&#34; + id.replace(&#34;-&#34;, &#34;&#34;).substring(0, 8))
+            .append(&#34;authType&#34;, &#34;WECHAT&#34;).append(&#34;createDate&#34;, new Date()).append(&#34;schemaVersion&#34;, &#34;1.0.0&#34;).append(&#34;userInfo&#34;, userInfo);
     collection.insertOne(document);
 
 
     // try to update it
-    //Document update = new Document().append(&quot;tags&quot;, Arrays.asList(&quot;Mysql&quot;,&quot;Scala&quot;));
-    collection.updateOne(document, new Document(&quot;$addToSet&quot;, new Document(&quot;userInfo.tags&quot;, new Document(&quot;$each&quot;, Arrays.asList(&quot;Mysql&quot;, &quot;Scala&quot;)))));
+    //Document update = new Document().append(&#34;tags&#34;, Arrays.asList(&#34;Mysql&#34;,&#34;Scala&#34;));
+    collection.updateOne(document, new Document(&#34;$addToSet&#34;, new Document(&#34;userInfo.tags&#34;, new Document(&#34;$each&#34;, Arrays.asList(&#34;Mysql&#34;, &#34;Scala&#34;)))));
 
     // find the document and check the update
-    FindIterable iterable = collection.find(new BasicDBObject().append(&quot;_id&quot;, id));
+    FindIterable iterable = collection.find(new BasicDBObject().append(&#34;_id&#34;, id));
     Document first = (Document) iterable.first();
 
     assertNotNull(first);
-    assertEquals(4, ((List&lt;String&gt;) (((Document) first.get(&quot;userInfo&quot;)).get(&quot;tags&quot;))).size());
+    assertEquals(4, ((List&lt;String&gt;) (((Document) first.get(&#34;userInfo&#34;)).get(&#34;tags&#34;))).size());
 }
-</code></pre>
-
-<h2 id="use-gson-pojo-to-do-crud">use gson + POJO to do CRUD</h2>
-
+</code></pre><h2 id="use-gson--pojo-to-do-crud">use gson + POJO to do CRUD</h2>
 <p>1&gt; define customize codec if need to do the date type that does not support by MongoDB by default</p>
-
-<pre><code>public class DateCodec implements Codec&lt;Date&gt; {
+<pre tabindex="0"><code>public class DateCodec implements Codec&lt;Date&gt; {
     @Override
     public Date decode(BsonReader reader, DecoderContext decoderContext) {
         Date date = null;
         try {
             reader.readStartDocument();
-            date = new SimpleDateFormat(&quot;yyyy-mm-dd hh:MM:ss&quot;).parse(reader.readString(&quot;dateTime&quot;));
+            date = new SimpleDateFormat(&#34;yyyy-mm-dd hh:MM:ss&#34;).parse(reader.readString(&#34;dateTime&#34;));
             reader.readEndDocument();
         } catch (ParseException e) {
             e.printStackTrace();
@@ -565,7 +446,7 @@ public void testUpdate() {
     @Override
     public void encode(BsonWriter writer, Date value, EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writer.writeString(&quot;dateTime&quot;, new SimpleDateFormat(&quot;yyyy-mm-dd hh:MM:ss&quot;).format(value));
+        writer.writeString(&#34;dateTime&#34;, new SimpleDateFormat(&#34;yyyy-mm-dd hh:MM:ss&#34;).format(value));
         writer.writeEndDocument();
     }
 
@@ -574,14 +455,11 @@ public void testUpdate() {
         return Date.class;
     }
 }
-</code></pre>
-
-<p>2&gt; POJO</p>
-
-<pre><code>@Data
+</code></pre><p>2&gt; POJO</p>
+<pre tabindex="0"><code>@Data
 public class User implements Serializable {
     @BsonId
-    @BsonProperty(&quot;_id&quot;)
+    @BsonProperty(&#34;_id&#34;)
     private String id;
 
     private UserInfo userInfo;
@@ -592,7 +470,7 @@ public class User implements Serializable {
 
     private String password;
 
-    @BsonProperty(&quot;createDate&quot;)
+    @BsonProperty(&#34;createDate&#34;)
     private Date createDate;
 
     private Date lastUpdateDate;
@@ -619,16 +497,12 @@ public class UserInfo implements Serializable {
 public enum GenderEnum {
     MALE,FEMALE,OTHER;
 }
-
-</code></pre>
-
-<p>3&gt; test cases</p>
-
-<pre><code>public class MongoClientTest {
+</code></pre><p>3&gt; test cases</p>
+<pre tabindex="0"><code>public class MongoClientTest {
     private MongoClient client;
-    private static final String url = &quot;mongodb://localhost:27017&quot;;
-    private static final String DATABASE = &quot;test&quot;;
-    private static final String COLLECTION = &quot;users&quot;;
+    private static final String url = &#34;mongodb://localhost:27017&#34;;
+    private static final String DATABASE = &#34;test&#34;;
+    private static final String COLLECTION = &#34;users&#34;;
     private MongoCollection collection;
 
     @BeforeEach
@@ -637,7 +511,7 @@ public enum GenderEnum {
         client = new MongoClient(clientURI);
 
         PojoCodecProvider pojoCodecProvider =
-                PojoCodecProvider.builder().register(&quot;org.akj.mongo.bean&quot;).conventions(Arrays.asList(Conventions.ANNOTATION_CONVENTION, Conventions.OBJECT_ID_GENERATORS, Conventions.CLASS_AND_PROPERTY_CONVENTION)).build();
+                PojoCodecProvider.builder().register(&#34;org.akj.mongo.bean&#34;).conventions(Arrays.asList(Conventions.ANNOTATION_CONVENTION, Conventions.OBJECT_ID_GENERATORS, Conventions.CLASS_AND_PROPERTY_CONVENTION)).build();
         CodecRegistry pojoCodecRegistry = fromRegistries(MongoClient.getDefaultCodecRegistry(),
                 fromProviders(pojoCodecProvider));
 
@@ -646,14 +520,14 @@ public enum GenderEnum {
         boolean collectionExists = client.getDatabase(DATABASE).listCollectionNames()
                 .into(new ArrayList&lt;String&gt;()).contains(COLLECTION);
         if (!collectionExists) {
-            database.createCollection(&quot;users&quot;);
+            database.createCollection(&#34;users&#34;);
             collection =
-                    database.getCollection(&quot;users&quot;, User.class).withCodecRegistry(pojoCodecRegistry);
+                    database.getCollection(&#34;users&#34;, User.class).withCodecRegistry(pojoCodecRegistry);
             IndexOptions indexOptions = new IndexOptions();
             indexOptions.unique(true);
-            indexOptions.name(&quot;users_uni_username&quot;);
+            indexOptions.name(&#34;users_uni_username&#34;);
 
-            collection.createIndex(new Document(&quot;userName&quot;, 1), indexOptions);
+            collection.createIndex(new Document(&#34;userName&#34;, 1), indexOptions);
         }
 
         collection =
@@ -663,28 +537,28 @@ public enum GenderEnum {
 
     @Test
     public void testConnection() {
-        Assertions.assertNotNull(client, &quot;mongo db connection issue&quot;);
+        Assertions.assertNotNull(client, &#34;mongo db connection issue&#34;);
         MongoIterable&lt;String&gt; actual = client.listDatabaseNames();
         Assertions.assertNotNull(actual);
 
-        log.info(&quot;{}&quot;, actual);
+        log.info(&#34;{}&#34;, actual);
         actual.forEach((Consumer&lt;? super String&gt;) s -&gt; log.info(s));
     }
 
     @Test
     public void testInsert() {
         UserInfo userInfo = new UserInfo();
-        userInfo.setFirstName(&quot;Jamie&quot;);
-        userInfo.setLastName(&quot;Zhang&quot;);
+        userInfo.setFirstName(&#34;Jamie&#34;);
+        userInfo.setLastName(&#34;Zhang&#34;);
         userInfo.setAge(31);
         userInfo.setGender(GenderEnum.MALE);
-        userInfo.setPhone(&quot;13991999999&quot;);
+        userInfo.setPhone(&#34;13991999999&#34;);
 
         User u = new User();
         u.setUserInfo(userInfo);
-        u.setAuthType(&quot;PASSWORD&quot;);
-        u.setUserName(&quot;jamie-002&quot;);
-        u.setPassword(&quot;123456&quot;);
+        u.setAuthType(&#34;PASSWORD&#34;);
+        u.setUserName(&#34;jamie-002&#34;);
+        u.setPassword(&#34;123456&#34;);
         Date date = new Date();
         u.setCreateDate(date);
         u.setLastUpdateDate(date);
@@ -713,7 +587,7 @@ public enum GenderEnum {
             Document doc = (Document) obj;
             String json = doc.toJson(JsonWriterSettings.builder().build());
             User u = gson.fromJson(json, User.class);
-            log.debug(&quot;{}&quot;, u);
+            log.debug(&#34;{}&#34;, u);
         }
     }
 
@@ -727,7 +601,6 @@ public enum GenderEnum {
     }
 }
 </code></pre>
-
 
                 
                 
@@ -771,6 +644,7 @@ public enum GenderEnum {
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
@@ -787,6 +661,10 @@ public enum GenderEnum {
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -866,6 +744,8 @@ public enum GenderEnum {
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -921,6 +801,8 @@ public enum GenderEnum {
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -1025,7 +907,7 @@ public enum GenderEnum {
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -1078,9 +960,6 @@ public enum GenderEnum {
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -1143,6 +1022,7 @@ public enum GenderEnum {
         });
     });
 </script>
+
 
 
 

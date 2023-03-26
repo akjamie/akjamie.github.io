@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Jamie&#39;s Blog</title>
@@ -6,13 +6,19 @@
     <description>Recent content on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 09 Jul 2022 23:03:30 +0000</lastBuildDate>
-    
-	<atom:link href="http://akjamie.github.io/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Sat, 25 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Vault on Kubernetes</title>
+      <link>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</link>
+      <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</guid>
+      <description>What is Vault? Vault introduction HashiCorp Vault is an identity-based secrets and encryption management system. A secret is anything that you want to tightly
+control access to, such as API encryption keys, passwords, and certificates. Vault provides encryption services that are gated by authentication and authorization methods.Using Vault’s UI, CLI, or HTTP API, access to secrets and other sensitive data can be securely stored and managed, tightly controlled (restricted), and auditable.</description>
+    </item>
     
     <item>
-      <title>Redis学习笔记</title>
+      <title>Redis advance III</title>
       <link>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</link>
       <pubDate>Sat, 09 Jul 2022 23:03:30 +0000</pubDate>
       
@@ -30,7 +36,7 @@
     </item>
     
     <item>
-      <title>Redis学习笔记</title>
+      <title>Redis advance II</title>
       <link>http://akjamie.github.io/post/2022-06-28-redis-master-slave-replication/</link>
       <pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate>
       
@@ -39,7 +45,7 @@
     </item>
     
     <item>
-      <title>Redis学习笔记</title>
+      <title>Redis foundation - III</title>
       <link>http://akjamie.github.io/post/2022-06-27-redis-basic-2/</link>
       <pubDate>Mon, 27 Jun 2022 00:00:00 +0000</pubDate>
       
@@ -48,7 +54,7 @@
     </item>
     
     <item>
-      <title>Redis学习笔记</title>
+      <title>Redis advance I</title>
       <link>http://akjamie.github.io/post/2022-06-23-redis-advance/</link>
       <pubDate>Thu, 23 Jun 2022 00:00:00 +0000</pubDate>
       
@@ -57,7 +63,7 @@
     </item>
     
     <item>
-      <title>Redis学习笔记</title>
+      <title>Redis foundation - II</title>
       <link>http://akjamie.github.io/post/2022-05-31-redis-basic-1/</link>
       <pubDate>Mon, 30 May 2022 00:00:00 +0000</pubDate>
       
@@ -72,8 +78,8 @@
       
       <guid>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</guid>
       <description>Install dashboard To run the following command to deploy dashboard
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml  once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully. ps:
- On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service, the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</description>
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully. ps:
+On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service, the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</description>
     </item>
     
     <item>
@@ -83,8 +89,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/a
       
       <guid>http://akjamie.github.io/post/2021-08-09-aws-demo-01-autoscale-test/</guid>
       <description>I&amp;rsquo;m on the path of AWS Professinal Certified Architect exam preparation, want to document some key points in the demos for later review to enhance the understanding of knowledge. In this demo, i&amp;rsquo;m going to test the AWS auto scaling and utilize the EC2 network knowledges.
-Objective  To build a health checking springboot application and package as docker image hosted on AWS ECR.
- Setup basic network infrastructure, VPC, Subnet, Internet Gateway, Route table,Security group, etc.</description>
+Objective To build a health checking springboot application and package as docker image hosted on AWS ECR. Setup basic network infrastructure, VPC, Subnet, Internet Gateway, Route table,Security group, etc.</description>
     </item>
     
     <item>
@@ -96,7 +101,7 @@ Objective  To build a health checking springboot application and package as dock
       <description>Summary To mark down a batch data sync accross system solution, tested daily sync data volume is around 10w.
 In this solution, adopted the message driven batch processing rather than traditional fixed time schedule batch.
 Also applied the microservice design to eliminate the system dependency and well protect the data/system boundry,which is also aligned with the DEVOPS,,both team could focus on their own domain/services&amp;rsquo; development and maintenance.
-Techniques used  Springboot + Spring cloud config, constrained by infra, services are running on in hourse VM instances.</description>
+Techniques used Springboot + Spring cloud config, constrained by infra, services are running on in hourse VM instances.</description>
     </item>
     
     <item>
@@ -129,7 +134,8 @@ Before you begin install docker desktop in local and enable local k8s cluster, m
       
       <guid>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</guid>
       <description>To document the setup process for VPC peering accross different GCP project VPCs for demo purpose only.
-Setup VPC peering accross two GCP projects in this demo, will create two GCP projects, and setup VPC network peering to work as network bridge to make sure the vm in one of GCP project can access the MongoDB installed on VM of another GCP project. preparation Mongo backups 1&amp;gt; backup MongoDB</description>
+Setup VPC peering accross two GCP projects in this demo, will create two GCP projects, and setup VPC network peering to work as network bridge to make sure the vm in one of GCP project can access the MongoDB installed on VM of another GCP project. preparation Mongo backups 1&amp;gt; backup MongoDB
+to use mongo shell command to backup data, samples as below</description>
     </item>
     
     <item>
@@ -160,7 +166,7 @@ Setup VPC peering accross two GCP projects in this demo, will create two GCP pro
     </item>
     
     <item>
-      <title>Redis学习笔记</title>
+      <title>Redis foundation - I</title>
       <link>http://akjamie.github.io/post/2019-08-04-redis-basic/</link>
       <pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate>
       
@@ -178,21 +184,21 @@ Setup VPC peering accross two GCP projects in this demo, will create two GCP pro
     </item>
     
     <item>
-      <title>Spring Cloud Series</title>
-      <link>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</link>
-      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
-      
-      <guid>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</guid>
-      <description>Demo的介绍 本文主要通过一个小demo，来综合运用spring cloud系列技术，demo中主要包含如下模块/组建： 1. Authorization service, 基于Spring</description>
-    </item>
-    
-    <item>
       <title>Spring batch - single process &amp; remote partitioning(multi instances)</title>
       <link>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</link>
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       
       <guid>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</guid>
       <description>Spring batch是轻量级，全面的批处理框架，旨在开发对企业系统日常运营至关重要的强大批处理应用程序。 Spring Batch负责大量记录，包括日志记录/跟踪</description>
+    </item>
+    
+    <item>
+      <title>Spring Cloud Series</title>
+      <link>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</link>
+      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</guid>
+      <description>Demo的介绍 本文主要通过一个小demo，来综合运用spring cloud系列技术，demo中主要包含如下模块/组建： Authorization service, 基于Spring Security</description>
     </item>
     
     <item>
@@ -219,7 +225,7 @@ Setup VPC peering accross two GCP projects in this demo, will create two GCP pro
       <pubDate>Sun, 14 Jul 2019 12:10:27 +0000</pubDate>
       
       <guid>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</guid>
-      <description>Install vault Prepare docker-compose.yml, content as below (just a sample here, please don&amp;rsquo;t use it for production, there are more aspects should be considered) version: &#39;3&#39; services: consul: container_name: consul.server command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect=1 image: consul:latest restart: always volumes: - ./consul.server/config:/consul/config - ./consul.server/data:/consul/data ports: - &amp;quot;9300:9300&amp;quot; - &amp;quot;9500:9500&amp;quot; - &amp;quot;9600:9600/udp&amp;quot; vault: container_name: vault.server image: vault ports: - &amp;quot;8200:8200&amp;quot; restart: always links: - consul:consul.server volumes: - ./vault.server/config:/mnt/vault/config</description>
+      <description>Install vault Prepare docker-compose.yml, content as below (just a sample here, please don&amp;rsquo;t use it for production, there are more aspects should be considered) version: &amp;#39;3&amp;#39; services: consul: container_name: consul.server command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect=1 image: consul:latest restart: always volumes: - ./consul.server/config:/consul/config - ./consul.server/data:/consul/data ports: - &amp;#34;9300:9300&amp;#34; - &amp;#34;9500:9500&amp;#34; - &amp;#34;9600:9600/udp&amp;#34; vault: container_name: vault.server image: vault ports: - &amp;#34;8200:8200&amp;#34; restart: always links: - consul:consul.server volumes: - ./vault.server/config:/mnt/vault/config</description>
     </item>
     
     <item>
@@ -245,10 +251,10 @@ He is happy with his current job, but also willing to take new challenges if the
     
     <item>
       <title>How to invoke python scripts in UIPath</title>
-      <link>http://akjamie.github.io/2019/01/19/uipath-invoke-python-method/</link>
+      <link>http://akjamie.github.io/2019/01/19/UIPath-invoke-python-method/</link>
       <pubDate>Sat, 19 Jan 2019 12:10:27 +0000</pubDate>
       
-      <guid>http://akjamie.github.io/2019/01/19/uipath-invoke-python-method/</guid>
+      <guid>http://akjamie.github.io/2019/01/19/UIPath-invoke-python-method/</guid>
       <description>UIPath是一个非常不错的RPA(Robotic Process Automation) 工具和平台，并且有开源社区版本可以方便RPA爱好者去尝试，本文是介绍如何在UIPath</description>
     </item>
     

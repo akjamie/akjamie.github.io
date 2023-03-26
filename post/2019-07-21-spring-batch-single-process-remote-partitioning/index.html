@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-03.jpg">
+    <meta property="twitter:image" content="/img/background-03.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -214,28 +216,25 @@
                 post-container">
 
                 
-                
-
-<p>Spring batch是轻量级，全面的批处理框架，旨在开发对企业系统日常运营至关重要的强大批处理应用程序。</p>
-
+                <p>Spring batch是轻量级，全面的批处理框架，旨在开发对企业系统日常运营至关重要的强大批处理应用程序。</p>
 <p>Spring Batch负责大量记录，包括日志记录/跟踪，事务管理，作业处理统计，作业重启，跳过和资源管理。 它还提供更高级的技术服务和功能，通过优化和分区技术实现极高容量和高性能的批处理作业。 简单和复杂的大批量批处理作业可以高度可扩展的方式利用框架来处理大量信息。</p>
-
 <p>关于spring batch的细节介绍，请参加<a href="https://spring.io/projects/spring-batch">Spring batch</a>官网，本文主要是记录一个poc的过程，主要包含单个实例应用和远程分析多实例处理的cases。</p>
+<p>模拟demo的用户场景：<br>
+定时处理多个系统输出的csv文件，然后跑批处理到数据到DB，简要架构图如下:<br>
 
-<p>模拟demo的用户场景：<br />
-定时处理多个系统输出的csv文件，然后跑批处理到数据到DB，简要架构图如下:<br />
-<img src="/img/2019-07-21-spring-batch-single-process-remote-partitioning/20190721193530.png" alt="" /></p>
+  <img src="/img/2019-07-21-spring-batch-single-process-remote-partitioning/20190721193530.png" alt="">
 
-<h1 id="单个实例处理-且单个文件">单个实例处理(且单个文件)</h1>
-
+</p>
+<h1 id="单个实例处理且单个文件">单个实例处理(且单个文件)</h1>
 <p>通过cron job定时调度batch job，整个job由两个step组成的一个flow，step1 - 清理目标数据库表(模拟场景，可能是数据备份，建立新的day表等); step2 - 加载文件，解析数据内容并转化为java对象,经processor处理，后倒入db存储.
-sequence diagram:<br />
-<img src="/img/2019-07-21-spring-batch-single-process-remote-partitioning/single-process-sequence.png" alt="" />
+sequence diagram:<br>
+
+  <img src="/img/2019-07-21-spring-batch-single-process-remote-partitioning/single-process-sequence.png" alt="">
+
+
 主要配置文件</p>
-
 <h2 id="singleprocessconfiguration">SingleProcessConfiguration</h2>
-
-<pre><code>package org.akj.batch.configuration;
+<pre tabindex="0"><code>package org.akj.batch.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.akj.batch.constant.Constant;
@@ -292,13 +291,13 @@ public class SingleSourceConfiguration {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Value(&quot;${batch.job.name}&quot;)
+    @Value(&#34;${batch.job.name}&#34;)
     private String jobName;
 
-    @Value(&quot;${batch.job.chunk.size}&quot;)
+    @Value(&#34;${batch.job.chunk.size}&#34;)
     private int chunkSize;
 
-    @Value(&quot;${batch.job.input.path}&quot;)
+    @Value(&#34;${batch.job.input.path}&#34;)
     private String inputFolder;
 
     @Bean
@@ -307,13 +306,13 @@ public class SingleSourceConfiguration {
         beanMapper.setTargetType(Person.class);
 
         Map&lt;String, PropertyEditor&gt; customEditors = new HashMap&lt;String, PropertyEditor&gt;();
-        DateFormat dateFormatter = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);
-        customEditors.put(&quot;java.util.Date&quot;, new CustomDateEditor(dateFormatter, false));
+        DateFormat dateFormatter = new SimpleDateFormat(&#34;yyyy-MM-dd&#34;);
+        customEditors.put(&#34;java.util.Date&#34;, new CustomDateEditor(dateFormatter, false));
         beanMapper.setCustomEditors(customEditors);
-        return new FlatFileItemReaderBuilder&lt;Person&gt;().name(&quot;personItemReader&quot;)
+        return new FlatFileItemReaderBuilder&lt;Person&gt;().name(&#34;personItemReader&#34;)
                 .resource(new FileSystemResource(inputFolder + File.separatorChar + Constant.FILE_SOURCE)).delimited()
-                .names(new String[]{&quot;pid&quot;, &quot;firstName&quot;, &quot;lastName&quot;, &quot;age&quot;, &quot;gender&quot;, &quot;dateOfBirth&quot;, &quot;height&quot;,
-                        &quot;weight&quot;})
+                .names(new String[]{&#34;pid&#34;, &#34;firstName&#34;, &#34;lastName&#34;, &#34;age&#34;, &#34;gender&#34;, &#34;dateOfBirth&#34;, &#34;height&#34;,
+                        &#34;weight&#34;})
                 .fieldSetMapper(beanMapper).build();
     }
 
@@ -324,7 +323,7 @@ public class SingleSourceConfiguration {
 
     @Bean
     public RepositoryItemWriter&lt;Person&gt; writer() {
-        return new RepositoryItemWriterBuilder&lt;Person&gt;().repository(repository).methodName(&quot;save&quot;).build();
+        return new RepositoryItemWriterBuilder&lt;Person&gt;().repository(repository).methodName(&#34;save&#34;).build();
     }
 
     @Bean
@@ -335,17 +334,17 @@ public class SingleSourceConfiguration {
 
     @Bean
     public Job importUserJobflow(CustomJobExcecutionListener listener, Step step1) {
-        return jobBuilderFactory.get(jobName).listener(listener).start(step1()).on(&quot;COMPLETED&quot;).to(step2(writer()))
+        return jobBuilderFactory.get(jobName).listener(listener).start(step1()).on(&#34;COMPLETED&#34;).to(step2(writer()))
                 .end().build();
     }
 
     @Bean
     public Step step1() {
-        return stepBuilderFactory.get(&quot;step1&quot;).tasklet(new Tasklet() {
+        return stepBuilderFactory.get(&#34;step1&#34;).tasklet(new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
                 jdbcTemplate.execute(Constant.TRANCATE_TABLE_SQL);
-                log.debug(&quot;successfully execute sql: &quot; + Constant.TRANCATE_TABLE_SQL);
+                log.debug(&#34;successfully execute sql: &#34; + Constant.TRANCATE_TABLE_SQL);
                 return RepeatStatus.FINISHED;
             }
         }).build();
@@ -354,20 +353,17 @@ public class SingleSourceConfiguration {
 
     @Bean
     public Step step2(RepositoryItemWriter&lt;Person&gt; writer) {
-        return stepBuilderFactory.get(&quot;step2&quot;).&lt;Person, Person&gt;chunk(chunkSize).reader(reader()).processor(processor())
+        return stepBuilderFactory.get(&#34;step2&#34;).&lt;Person, Person&gt;chunk(chunkSize).reader(reader()).processor(processor())
                 .writer(writer).taskExecutor(taskExecutor()).build();
     }
 
     @Bean
     public TaskExecutor taskExecutor() {
-        return new SimpleAsyncTaskExecutor(&quot;spring batch&quot;);
+        return new SimpleAsyncTaskExecutor(&#34;spring batch&#34;);
     }
 }
-</code></pre>
-
-<h2 id="scheduledjoblancherconfiguration">ScheduledJobLancherConfiguration</h2>
-
-<pre><code>package org.akj.batch.configuration;
+</code></pre><h2 id="scheduledjoblancherconfiguration">ScheduledJobLancherConfiguration</h2>
+<pre tabindex="0"><code>package org.akj.batch.configuration;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -390,26 +386,26 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 @EnableScheduling
 @Configuration
-@ConditionalOnProperty(&quot;batch.scheduling.enabled&quot;)
-@Profile({&quot;master&quot;})
+@ConditionalOnProperty(&#34;batch.scheduling.enabled&#34;)
+@Profile({&#34;master&#34;})
 public class ScheduledJobLancherConfiguration {
     @Autowired
     Job job;
 
-    @Value(&quot;${batch.job.name}&quot;)
+    @Value(&#34;${batch.job.name}&#34;)
     private String jobName;
 
     @Autowired
     private JobRepository repository;
 
-    @Bean(&quot;scheduledJobLauncher&quot;)
+    @Bean(&#34;scheduledJobLauncher&#34;)
     public JobLauncher jobLauncher(JobRepository jobRepo) {
         SimpleJobLauncher simpleJobLauncher = new SimpleJobLauncher();
         simpleJobLauncher.setJobRepository(jobRepo);
         return simpleJobLauncher;
     }
 
-    @Scheduled(cron = &quot;${batch.job.scheduler.cron}&quot;)
+    @Scheduled(cron = &#34;${batch.job.scheduler.cron}&#34;)
     public void perform() throws JobExecutionAlreadyRunningException, JobRestartException,
             JobInstanceAlreadyCompleteException, JobParametersInvalidException {
         JobParameters params = new JobParametersBuilder().addString(jobName, String.valueOf(System.currentTimeMillis()))
@@ -417,11 +413,8 @@ public class ScheduledJobLancherConfiguration {
         jobLauncher(repository).run(job, params);
     }
 }
-</code></pre>
-
-<p>配置文件 in application.yml</p>
-
-<pre><code>batch:
+</code></pre><p>配置文件 in application.yml</p>
+<pre tabindex="0"><code>batch:
   scheduling:
     enabled: true
   partitioner:
@@ -431,48 +424,44 @@ public class ScheduledJobLancherConfiguration {
     chunk.size: 20
     input:
       path: c:/temp/source
-      filter: '.csv'
+      filter: &#39;.csv&#39;
     ouput:
       path: c:/temp/target
     failure:
       path: c:/temp/failure
     scheduler:
       cron: 0 */1 * * * ? #[s] [m] [h] [d] [m] [w] [y]
-</code></pre>
-
-<p>single process可以对应大部分场景了，并且可以通过设置taskExecutor来支持多线程处理</p>
-
-<pre><code>@Bean
+</code></pre><p>single process可以对应大部分场景了，并且可以通过设置taskExecutor来支持多线程处理</p>
+<pre tabindex="0"><code>@Bean
 public TaskExecutor taskExecutor(){
-    return new SimpleAsyncTaskExecutor(&quot;spring_batch&quot;);
+    return new SimpleAsyncTaskExecutor(&#34;spring_batch&#34;);
 }
 
 @Bean
 public Step sampleStep(TaskExecutor taskExecutor) {
-        return this.stepBuilderFactory.get(&quot;sampleStep&quot;)
+        return this.stepBuilderFactory.get(&#34;sampleStep&#34;)
                                 .&lt;String, String&gt;chunk(10)
                                 .reader(itemReader())
                                 .writer(itemWriter())
                                 .taskExecutor(taskExecutor)
                                 .build();
-</code></pre>
-
-<p>当数据量或者处理步骤更加复杂的场景时，JVM多线程都难以应对时，spring batch也提供了远程分块和远程分区支持，把task调度到远程instance上进行然后聚合，下面演示一个主从架构的多实例remote partition处理架构</p>
-
+</code></pre><p>当数据量或者处理步骤更加复杂的场景时，JVM多线程都难以应对时，spring batch也提供了远程分块和远程分区支持，把task调度到远程instance上进行然后聚合，下面演示一个主从架构的多实例remote partition处理架构</p>
 <h1 id="remote-partition主从架构">Remote partition主从架构</h1>
-
-<p>在single process的基础进行修改，保留处理流程step，并将其修改为master/slave step结构，主要流程为:<br />
-1. cron task trigger jobLauncher 运行job任务
-2. 运行master step任务分区并存储在DB，public Map<String, ExecutionContext> partition(int gridSize)
-3. 通过AMQP协议，将partitioned task(StepExecution)分派到message queue
-4. Slave node通过监听message queue，接受partioned task，运行slave step并更新运行结果
-5. 所有step运行完成后，job complete.
+<p>在single process的基础进行修改，保留处理流程step，并将其修改为master/slave step结构，主要流程为:</p>
+<ol>
+<li>cron task trigger jobLauncher 运行job任务</li>
+<li>运行master step任务分区并存储在DB，public Map&lt;String, ExecutionContext&gt; partition(int gridSize)</li>
+<li>通过AMQP协议，将partitioned task(StepExecution)分派到message queue</li>
+<li>Slave node通过监听message queue，接受partioned task，运行slave step并更新运行结果</li>
+<li>所有step运行完成后，job complete.
 架构如下:
-<img src="/img/2019-07-21-spring-batch-single-process-remote-partitioning/remote-partition-diagram.png" alt="" /></p>
 
+  <img src="/img/2019-07-21-spring-batch-single-process-remote-partitioning/remote-partition-diagram.png" alt="">
+
+</li>
+</ol>
 <h2 id="partitioner-分区器">Partitioner 分区器</h2>
-
-<pre><code>package org.akj.batch.configuration.partitioner;
+<pre tabindex="0"><code>package org.akj.batch.configuration.partitioner;
 
 import lombok.extern.slf4j.Slf4j;
 import org.akj.batch.util.PathMatchingResourcePatternResolver;
@@ -492,13 +481,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class CustomMultiResourcePartitioner implements Partitioner {
 
-	@Value(&quot;${batch.job.input.path}&quot;)
+	@Value(&#34;${batch.job.input.path}&#34;)
 	private String inputFolder;
 
-	@Value(&quot;${batch.job.input.filter}&quot;)
+	@Value(&#34;${batch.job.input.filter}&#34;)
 	private String fileFilter;
 
-	@Value(&quot;${batch.partitioner.partition}&quot;)
+	@Value(&#34;${batch.partitioner.partition}&#34;)
 	private int partition;
 
 	@Override
@@ -508,25 +497,21 @@ public class CustomMultiResourcePartitioner implements Partitioner {
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		try {
 			String[] resources = resolver.getResources(inputFolder, fileFilter);
-			log.info(&quot;started partitioning, &quot; + resources.length + &quot; resources been found as input&quot;);
+			log.info(&#34;started partitioning, &#34; + resources.length + &#34; resources been found as input&#34;);
 			Arrays.stream(resources).forEach(filePath -&gt; {
 					ExecutionContext context = new ExecutionContext();
-					context.putString(&quot;fileName&quot;, filePath);
-					map.put(&quot;partition&quot; + partitionNumber.getAndIncrement(), context);
+					context.putString(&#34;fileName&#34;, filePath);
+					map.put(&#34;partition&#34; + partitionNumber.getAndIncrement(), context);
 			});
 		} catch (IOException e) {
-			log.error(&quot;system error, invalid input resource: &quot; + inputFolder + File.separatorChar + fileFilter);
+			log.error(&#34;system error, invalid input resource: &#34; + inputFolder + File.separatorChar + fileFilter);
 		}
 
 		return map;
 	}
 }
-
-</code></pre>
-
-<h2 id="amqp配置">AMQP配置</h2>
-
-<pre><code>package org.akj.batch.configuration.partitioner;
+</code></pre><h2 id="amqp配置">AMQP配置</h2>
+<pre tabindex="0"><code>package org.akj.batch.configuration.partitioner;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
@@ -552,14 +537,14 @@ import org.springframework.messaging.PollableChannel;
 public class RemotePartitioningAMQPConfiguration {
 
 	@Bean
-	@ServiceActivator(inputChannel = &quot;outboundRequests&quot;)
+	@ServiceActivator(inputChannel = &#34;outboundRequests&#34;)
 	public AsyncAmqpOutboundGateway amqpOutboundEndpoint(AsyncRabbitTemplate asyncTemplate) {
 		AsyncAmqpOutboundGateway gateway = new AsyncAmqpOutboundGateway(asyncTemplate);
-		gateway.setExchangeName(&quot;user-service.batch&quot;);
-		gateway.setRoutingKey(&quot;partition.requests&quot;);
+		gateway.setExchangeName(&#34;user-service.batch&#34;);
+		gateway.setRoutingKey(&#34;partition.requests&#34;);
 		gateway.setRequiresReply(false);
 
-		log.info(&quot;Created AMQP Outbound gateway---&gt; &quot; + gateway.toString());
+		log.info(&#34;Created AMQP Outbound gateway---&gt; &#34; + gateway.toString());
 		return gateway;
 	}
 
@@ -585,17 +570,17 @@ public class RemotePartitioningAMQPConfiguration {
 
 	@Bean
 	public Queue requestQueue() {
-		return new Queue(&quot;partition.requests&quot;, true);
+		return new Queue(&#34;partition.requests&#34;, true);
 	}
 
 	@Bean
 	Binding binding(Queue queue, TopicExchange exchange) {
-		return BindingBuilder.bind(queue).to(exchange).with(&quot;partition.requests&quot;);
+		return BindingBuilder.bind(queue).to(exchange).with(&#34;partition.requests&#34;);
 	}
 
 	@Bean
 	public TopicExchange batch() {
-		return new TopicExchange(&quot;user-service.batch&quot;, true, false);
+		return new TopicExchange(&#34;user-service.batch&#34;, true, false);
 	}
 
 	@Bean
@@ -606,8 +591,8 @@ public class RemotePartitioningAMQPConfiguration {
 	}
 	
 	 @Bean
-    @Profile({&quot;slave&quot;})
-    @ServiceActivator(inputChannel = &quot;inboundRequests&quot;, outputChannel = &quot;outboundStaging&quot;, async = &quot;true&quot;, poller = {@Poller(fixedRate = &quot;1000&quot;)})
+    @Profile({&#34;slave&#34;})
+    @ServiceActivator(inputChannel = &#34;inboundRequests&#34;, outputChannel = &#34;outboundStaging&#34;, async = &#34;true&#34;, poller = {@Poller(fixedRate = &#34;1000&#34;)})
     public StepExecutionRequestHandler stepExecutionRequestHandler() {
         StepExecutionRequestHandler stepExecutionRequestHandler = new StepExecutionRequestHandler();
         BeanFactoryStepLocator stepLocator = new BeanFactoryStepLocator();
@@ -619,7 +604,7 @@ public class RemotePartitioningAMQPConfiguration {
     }
 
     @Bean
-    @Profile({&quot;slave&quot;})
+    @Profile({&#34;slave&#34;})
     public AmqpInboundChannelAdapter inbound(SimpleMessageListenerContainer listenerContainer) {
         AmqpInboundChannelAdapter adapter = new AmqpInboundChannelAdapter(listenerContainer);
         adapter.setOutputChannel(inboundRequests);
@@ -631,29 +616,26 @@ public class RemotePartitioningAMQPConfiguration {
     @Bean
     public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
-        container.setQueueNames(&quot;partition.requests&quot;);
-        // container.setConcurrency(&quot;10&quot;);
+        container.setQueueNames(&#34;partition.requests&#34;);
+        // container.setConcurrency(&#34;10&#34;);
         // container.setConcurrentConsumers(1);
         container.setErrorHandler(t -&gt; {
-            log.error(&quot;message listener error,&quot; + t.getMessage());
+            log.error(&#34;message listener error,&#34; + t.getMessage());
         });
         container.setAutoStartup(false);
 
         return container;
     }
 }
-</code></pre>
-
-<p>demo中用profile进行了区分，可以主从方式，一主多从，暂时不支持mixed模式，主节点无法兼做从节点，理论上可以做到。<br />
-spring.profiles.active=master 主节点，可以进行batch任务调度和任务分区和job状态监控<br />
-spring.profiles.active-slace 从节点，从message queue中拉去任务并执行，更新任务完成情况到db<br />
+</code></pre><p>demo中用profile进行了区分，可以主从方式，一主多从，暂时不支持mixed模式，主节点无法兼做从节点，理论上可以做到。<br>
+spring.profiles.active=master 主节点，可以进行batch任务调度和任务分区和job状态监控<br>
+spring.profiles.active-slace 从节点，从message queue中拉去任务并执行，更新任务完成情况到db<br>
 源码 - <a href="https://github.com/cloud-poc/springbatch-userservice">https://github.com/cloud-poc/springbatch-userservice</a></p>
-
-<p>参考资料:<br />
-<a href="https://blog.51cto.com/13501268/2177746">https://blog.51cto.com/13501268/2177746</a><br />
-<a href="https://cloud.tencent.com/developer/article/1096337">https://cloud.tencent.com/developer/article/1096337</a><br />
-<a href="https://asardana.com/2018/01/01/scaling-spring-batch-on-aws-with-remote-partitioning/">https://asardana.com/2018/01/01/scaling-spring-batch-on-aws-with-remote-partitioning/</a><br />
-<a href="https://docs.spring.io/spring-integration/docs/5.1.6.RELEASE/reference/html/#amqp">https://docs.spring.io/spring-integration/docs/5.1.6.RELEASE/reference/html/#amqp</a><br />
+<p>参考资料:<br>
+<a href="https://blog.51cto.com/13501268/2177746">https://blog.51cto.com/13501268/2177746</a><br>
+<a href="https://cloud.tencent.com/developer/article/1096337">https://cloud.tencent.com/developer/article/1096337</a><br>
+<a href="https://asardana.com/2018/01/01/scaling-spring-batch-on-aws-with-remote-partitioning/">https://asardana.com/2018/01/01/scaling-spring-batch-on-aws-with-remote-partitioning/</a><br>
+<a href="https://docs.spring.io/spring-integration/docs/5.1.6.RELEASE/reference/html/#amqp">https://docs.spring.io/spring-integration/docs/5.1.6.RELEASE/reference/html/#amqp</a><br>
 <a href="https://www.docs4dev.com/docs/zh/spring-batch/4.1.x/reference/spring-batch-integration.html">https://www.docs4dev.com/docs/zh/spring-batch/4.1.x/reference/spring-batch-integration.html</a></p>
 
 
@@ -699,22 +681,27 @@ spring.profiles.active-slace 从节点，从message queue中拉去任务并执�
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2019/07/14/free-https-certs-docker-nginx/" data-toggle="tooltip" data-placement="top" title="Free CA Certs setup using Certbot &#43; Docker &#43; Nginx">&larr;
+                        <a href="/post/2019-07-15-spring-cloud-demo-overview/" data-toggle="tooltip" data-placement="top" title="Spring Cloud Series">&larr;
                             Previous Post</a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/post/2019-07-15-spring-cloud-demo-overview/" data-toggle="tooltip" data-placement="top" title="Spring Cloud Series">Next
+                        <a href="/post/2019-07-24-one-distributed-transaction-user-case/" data-toggle="tooltip" data-placement="top" title="微服务中的分布式事务">Next
                             Post &rarr;</a>
                     </li>
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -794,6 +781,8 @@ spring.profiles.active-slace 从节点，从message queue中拉去任务并执�
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -849,6 +838,8 @@ spring.profiles.active-slace 从节点，从message queue中拉去任务并执�
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -953,7 +944,7 @@ spring.profiles.active-slace 从节点，从message queue中拉去任务并执�
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -1006,9 +997,6 @@ spring.profiles.active-slace 从节点，从message queue中拉去任务并执�
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -1071,6 +1059,7 @@ spring.profiles.active-slace 从节点，从message queue中拉去任务并执�
         });
     });
 </script>
+
 
 
 

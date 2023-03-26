@@ -15,9 +15,9 @@
     
 
     
-    <meta name="title" content="" />
-    <meta property="og:title" content="" />
-    <meta property="twitter:title" content="" />
+    <meta name="title" content="Microservice" />
+    <meta property="og:title" content="Microservice" />
+    <meta property="twitter:title" content="Microservice" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -176,7 +178,7 @@
 
 
   
-<div class="container">
+<div data-pagefind-ignore="all" class="container">
     <div class="row">
         
         
@@ -188,6 +190,7 @@
             post-container
         ">
             
+<div data-pagefind-ignore="all">
 
 <div class="post-preview">
     <a href="http://akjamie.github.io/post/2019-07-24-one-distributed-transaction-user-case/">
@@ -217,18 +220,14 @@
 <hr>
 
 <div class="post-preview">
-    <a href="http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/">
+    <a href="http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/">
         <h2 class="post-title">
-            Spring Cloud Series
+            Spring batch - single process &amp; remote partitioning(multi instances)
         </h2>
-	
-        <h3 class="post-subtitle">
-            (1st) Demo Overview
-        </h3>
 	
         <div class="post-content-preview">
 	
-            通过一个demo，来综合运用spring cloud系列技术
+            spring batch 批处理poc
         
         </div>
     </a>
@@ -244,14 +243,18 @@
 <hr>
 
 <div class="post-preview">
-    <a href="http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/">
+    <a href="http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/">
         <h2 class="post-title">
-            Spring batch - single process &amp; remote partitioning(multi instances)
+            Spring Cloud Series
         </h2>
+	
+        <h3 class="post-subtitle">
+            (1st) Demo Overview
+        </h3>
 	
         <div class="post-content-preview">
 	
-            spring batch 批处理poc
+            通过一个demo，来综合运用spring cloud系列技术
         
         </div>
     </a>
@@ -295,11 +298,12 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
 </div>
 <hr>
 
+</div>
 
             
 
 
-<ul class="pager">
+<ul class="pager" data-pagefind-ignore="all">
     
     <li class="previous">
         <a href="/categories/microservice/">&larr; Newer Posts</a>
@@ -325,12 +329,12 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
 	
         <div class="short-about">
             
-            <a href="/top/about">
+            <a href="/about">
                <img src="/img/20190713213835-3.jpg" alt="avatar" style="cursor: pointer" />
             </a>
             
             
-                <p>Senior Software Engineer, Open source enthusiasts, PMP,Scrum master</p>
+                <p>10&#43; years working experience,Senior Software Engineer, Open source enthusiasts, PMP,Scrum master</p>
             
            
            <ul class="list-inline">
@@ -447,6 +451,8 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
                
             
                
+            
+               
                     <a href="/tags/mongo" title="mongo">
                         mongo
                     </a>
@@ -502,6 +508,8 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
                     <a href="/tags/transaction-management" title="transaction-management">
                         transaction-management
                     </a>
+               
+            
                
             
                
@@ -608,7 +616,7 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -661,9 +669,6 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -726,6 +731,7 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
         });
     });
 </script>
+
 
 
 

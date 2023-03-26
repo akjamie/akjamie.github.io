@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="img/background-10.jpg">
+    <meta property="twitter:image" content="img/background-10.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -222,148 +224,106 @@
                 post-container">
 
                 
-                
-
-<p>To document the setup process for VPC peering accross different GCP project VPCs for demo purpose only.</p>
-
+                <p>To document the setup process for VPC peering accross different GCP project VPCs for demo purpose only.</p>
 <h1 id="setup-vpc-peering-accross-two-gcp-projects">Setup VPC peering accross two GCP projects</h1>
-
 <p>in this demo, will create two GCP projects, and setup VPC network peering to work as network bridge to make sure the vm in one of GCP project can access the MongoDB installed on VM of another GCP project.
-<img src='/img/2020-09-07-gcp-network-connection/vpc-peering-network.png' style="height: 380px;margin-left: 0px;"/></p>
-
+<!-- raw HTML omitted --></p>
 <h2 id="preparation">preparation</h2>
-
 <h3 id="mongo-backups">Mongo backups</h3>
-
-<p>1&gt; backup MongoDB<br />
+<p>1&gt; backup MongoDB<br>
 to use mongo shell command to backup data, samples as below</p>
-
-<pre><code>mongodump --host 127.0.0.1 --port 27017 --out /Users/jamie/Documents/work-benches/mongo/dump/20200907 --gzip --collection users --db test
-</code></pre>
-
-<p>2&gt; install Google Cloud SDK in local<br />
+<pre tabindex="0"><code>mongodump --host 127.0.0.1 --port 27017 --out /Users/jamie/Documents/work-benches/mongo/dump/20200907 --gzip --collection users --db test
+</code></pre><p>2&gt; install Google Cloud SDK in local<br>
 please refer to <a href="https://cloud.google.com/storage/docs/gsutil_install">https://cloud.google.com/storage/docs/gsutil_install</a></p>
-
 <blockquote>
-<p><strong>output</strong>:<br />
-2020-09-07T11:20:57.540+0800    writing test.users to<br />
+<p><strong>output</strong>:<br>
+2020-09-07T11:20:57.540+0800    writing test.users to<br>
 2020-09-07T11:20:57.792+0800    done dumping test.users (10004 documents)</p>
 </blockquote>
-
 <p>3&gt; upload the backup file to Cloud Storage</p>
-
-<pre><code>gsutil cp -r ../20200907 gs://mongo-backup-repo
-</code></pre>
-
-<h3 id="gcp-resource-creation">GCP resource creation</h3>
-
+<pre tabindex="0"><code>gsutil cp -r ../20200907 gs://mongo-backup-repo
+</code></pre><h3 id="gcp-resource-creation">GCP resource creation</h3>
 <table>
 <thead>
 <tr>
-<th align="left">Resource</th>
-<th align="left">GCP project</th>
-<th align="center">GCP network</th>
-<th align="center">GCP Subnet</th>
-<th align="left">Remark</th>
+<th style="text-align:left">Resource</th>
+<th style="text-align:left">GCP project</th>
+<th style="text-align:center">GCP network</th>
+<th style="text-align:center">GCP Subnet</th>
+<th style="text-align:left">Remark</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td align="left">test-vm-01</td>
-<td align="left">test-project-01</td>
-<td align="center">test-vpc-01</td>
-<td align="center">asia-east1</td>
-<td align="left">with Mongo server installed and init data use the backups <br/> from Cloud Storage</td>
+<td style="text-align:left">test-vm-01</td>
+<td style="text-align:left">test-project-01</td>
+<td style="text-align:center">test-vpc-01</td>
+<td style="text-align:center">asia-east1</td>
+<td style="text-align:left">with Mongo server installed and init data use the backups <!-- raw HTML omitted --> from Cloud Storage</td>
 </tr>
-
 <tr>
-<td align="left">test-vm-02</td>
-<td align="left">test-project-02</td>
-<td align="center">test-vpc-02</td>
-<td align="center">asia-east1</td>
-<td align="left">with MongoShell installed</td>
+<td style="text-align:left">test-vm-02</td>
+<td style="text-align:left">test-project-02</td>
+<td style="text-align:center">test-vpc-02</td>
+<td style="text-align:center">asia-east1</td>
+<td style="text-align:left">with MongoShell installed</td>
 </tr>
 </tbody>
 </table>
-
-<p>Notes:<br />
-1.VPC network &amp; subnet &amp; firewall<br />
+<p>Notes:<br>
+1.VPC network &amp; subnet &amp; firewall<br>
 create a custom mode VPC with one subnet</p>
-
 <blockquote>
-<p>VPC<br />
-name: test-vpc-01<br />
-subnet mode: Custom subnets<br />
+<p>VPC<br>
+name: test-vpc-01<br>
+subnet mode: Custom subnets<br>
 routing mode: Regional</p>
-
-<p>Subnet<br />
-name: asia-east1<br />
-region: asia-east1<br />
-ip ranges: 10.140.0.0/20<br />
+<p>Subnet<br>
+name: asia-east1<br>
+region: asia-east1 <br>
+ip ranges: 10.140.0.0/20<br>
 private google access: on</p>
-
-<hr />
-
-<p>name: test-vpc-02<br />
-subnet mode: Custom subnets<br />
+<hr>
+<p>name: test-vpc-02<br>
+subnet mode: Custom subnets<br>
 routing mode: Regional</p>
-
-<p>Subnet<br />
-name: asia-east1<br />
-region: asia-east2<br />
-ip ranges: 10.150.0.0/20<br />
+<p>Subnet<br>
+name: asia-east1<br>
+region: asia-east2 <br>
+ip ranges: 10.150.0.0/20<br>
 private google access: on</p>
 </blockquote>
-
 <p>for custom mode VPC, no any default firewall rules would be created, you must create it by yourself.
-<img src='/img/2020-09-07-gcp-network-connection/test1-firewall-01.png' style="height: 250px;margin-left: 0px;"/>
-<img src='/img/2020-09-07-gcp-network-connection/test1-firewall-02.png' style="height: 320px;margin-left: 0px;"/></p>
-
-<p>2.Create VM instance on Google Compute Engine &amp; restore the MongoDB data<br />
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<p>2.Create VM instance on Google Compute Engine &amp; restore the MongoDB data<br>
 please refer to <a href="https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/">https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/</a> to install mongo on VM</p>
-
-<pre><code>gsutil cp -r gs://mongo-backup-repo/20200907 ./backup/
+<pre tabindex="0"><code>gsutil cp -r gs://mongo-backup-repo/20200907 ./backup/
 
 mongorestore --gzip --archive= ./backup/20200907/test/users.bson.gz --db test
-</code></pre>
-
-<h2 id="configure-vpc-peering">Configure VPC Peering</h2>
-
+</code></pre><h2 id="configure-vpc-peering">Configure VPC Peering</h2>
 <h3 id="create-vpc-network-peering">Create VPC network peering</h3>
-
 <ol>
-<li>vpc peering from test-vpc-01 to test-vpc-02<br />
-<img src='/img/2020-09-07-gcp-network-connection/vpc-peering-01-02.png' style="height: 420px;margin-left: 0px;"/></li>
+<li>vpc peering from test-vpc-01 to test-vpc-02<br>
+<!-- raw HTML omitted --></li>
 </ol>
-
 <p>2.vpc peering from test-vpc-02 to test-vpc-01
-<img src='/img/2020-09-07-gcp-network-connection/vpc-peering-02-01.png' style="height: 420px;margin-left: 0px;"/></p>
-
+<!-- raw HTML omitted --></p>
 <h3 id="test-connectivity">Test connectivity</h3>
-
 <p>1&gt; ping from both side, should be successfully from both side.</p>
-
-<p>2&gt; install MongoDB shell on test-vm-02 to verify the mongo connection works as expected.<br />
+<p>2&gt; install MongoDB shell on test-vm-02 to verify the mongo connection works as expected.<br>
 refer to <a href="https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/">https://docs.mongodb.com/manual/tutorial/install-mongodb-on-debian/</a>, only install the the mongo shell.</p>
-
-<pre><code>sudo apt-get install -y mongodb-org-shell=4.4.0 
-</code></pre>
-
-<p><img src='/img/2020-09-07-gcp-network-connection/vpc-peering-result-01.png' style="height: 350px;margin-left: 0px;"/></p>
-
+<pre tabindex="0"><code>sudo apt-get install -y mongodb-org-shell=4.4.0 
+</code></pre><!-- raw HTML omitted -->
 <p>notes: <em>regarding how to secure the MongoDB access, please find the reference on the bottom of this page.</em></p>
-
 <h2 id="resrictions-for-vpc-peering">Resrictions for VPC peering</h2>
-
-<p><strong>No subnet IP range overlap across peered VPC networks</strong><br />
-No subnet IP range can overlap with another subnet IP range in a peered VPC network.<br />
-Checks performed at VPC Network Peering setup<br />
-Checks performed at subnet creation in VPC Network Peering scenarios<br />
+<p><strong>No subnet IP range overlap across peered VPC networks</strong><br>
+No subnet IP range can overlap with another subnet IP range in a peered VPC network.<br>
+Checks performed at VPC Network Peering setup <br>
+Checks performed at subnet creation in VPC Network Peering scenarios<br>
 <strong>Tags and service accounts are not usable across peered networks</strong></p>
-
-<p>Userful References:<br />
-<a href="https://cloud.google.com/vpc/docs/using-vpc-peering">https://cloud.google.com/vpc/docs/using-vpc-peering</a><br />
+<p>Userful References:<br>
+<a href="https://cloud.google.com/vpc/docs/using-vpc-peering">https://cloud.google.com/vpc/docs/using-vpc-peering</a><br>
 <a href="https://ciphertrick.com/setup-mongodb-authentication-connect-using-mongoose/">https://ciphertrick.com/setup-mongodb-authentication-connect-using-mongoose/</a></p>
 
 
@@ -409,6 +369,7 @@ Checks performed at subnet creation in VPC Network Peering scenarios<br />
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
@@ -425,6 +386,10 @@ Checks performed at subnet creation in VPC Network Peering scenarios<br />
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -504,6 +469,8 @@ Checks performed at subnet creation in VPC Network Peering scenarios<br />
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -559,6 +526,8 @@ Checks performed at subnet creation in VPC Network Peering scenarios<br />
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -663,7 +632,7 @@ Checks performed at subnet creation in VPC Network Peering scenarios<br />
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -716,9 +685,6 @@ Checks performed at subnet creation in VPC Network Peering scenarios<br />
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -781,6 +747,7 @@ Checks performed at subnet creation in VPC Network Peering scenarios<br />
         });
     });
 </script>
+
 
 
 

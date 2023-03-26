@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-03.jpg">
+    <meta property="twitter:image" content="/img/background-03.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -218,101 +220,87 @@
                 post-container">
 
                 
-                
+                <p>先回顾上一篇sprint local transaction的内容，本地事务是用于指定资源，即单一数据源，其主要结构如下：
 
-<p>先回顾上一篇sprint local transaction的内容，本地事务是用于指定资源，即单一数据源，其主要结构如下：
- <img src="/img/2019-08-31-spring-global-transaction/spring-txn-local.png" alt="" />
- 那么我们来看看spring的global transaction管理，其主要用于多数据源的业务场景中，如mysql + mysql, oracle + mysql + rabbitmq等，但是说到全局事务，我们需要先来谈谈xa。</p>
+  <img src="/img/2019-08-31-spring-global-transaction/spring-txn-local.png" alt="">
 
+
+那么我们来看看spring的global transaction管理，其主要用于多数据源的业务场景中，如mysql + mysql, oracle + mysql + rabbitmq等，但是说到全局事务，我们需要先来谈谈xa。</p>
 <h1 id="xa-与-jta">XA 与 JTA</h1>
-
 <h2 id="什么是xa">什么是XA</h2>
-
-<pre><code>XA 是指由 X/Open 组织提出的分布式事务处理的规范. XA 规范主要定义了事务管理器(Transaction Manager)和局部资源管理器(Local Resource Manager)之间的接口.
+<pre tabindex="0"><code>XA 是指由 X/Open 组织提出的分布式事务处理的规范. XA 规范主要定义了事务管理器(Transaction Manager)和局部资源管理器(Local Resource Manager)之间的接口.
 目前，Oracle、Informix、DB2和Sybase等各大数据库厂家都提供对XA的支持。XA协议采用两阶段提交方式来管理分布式事务。
-</code></pre>
-
-<p>由如上的信息中我们能看到，在xa的规范中定义了如下3个方面：<br />
-1. Transaction manager, 统筹管理多个resource manager<br />
-2. Resource manager, 管理具体的XA resource<br />
-3. Two-phase commit, 两阶段提交的方式<br />
-<em>4. Xid, 事务ID 用于区分事务</em></p>
-
+</code></pre><p>由如上的信息中我们能看到，在xa的规范中定义了如下3个方面：</p>
+<ol>
+<li>Transaction manager, 统筹管理多个resource manager</li>
+<li>Resource manager, 管理具体的XA resource</li>
+<li>Two-phase commit, 两阶段提交的方式<br>
+<em>4. Xid, 事务ID 用于区分事务</em></li>
+</ol>
 <h2 id="xa与jta的联系">XA与JTA的联系</h2>
-
 <p>jta是xa规范在java中的实现
-<img src='/img/2019-08-31-spring-global-transaction/xa-jta.png' style="height: 317px;margin-left: 15px;"/></p>
-
-<h1 id="全局-jta事务">全局/JTA事务</h1>
-
+<!-- raw HTML omitted --></p>
+<h1 id="全局jta事务">全局/JTA事务</h1>
 <h2 id="jta事务的两种支持方式">JTA事务的两种支持方式</h2>
-
 <ol>
 <li>基于j2ee 应用服务器的jta，事务管理器和xa资源管理器均由应用服务器来管理，如jboss, ibm web sphere</li>
+<li>采用非应用服务器的方式，如采用atomikos,Bitronix等
 
-<li><p>采用非应用服务器的方式，如采用atomikos,Bitronix等
-<img src="/img/2019-08-31-spring-global-transaction/spring-txn-global.png" alt="" /></p>
+  <img src="/img/2019-08-31-spring-global-transaction/spring-txn-global.png" alt="">
 
-<h2 id="atomikos-配置多数据源支持jta事务">Atomikos 配置多数据源支持jta事务</h2>
-
-<p>环境准备：<br />
-. 两台mysql数据库
-主要配置：<br />
-. datasource 配置文件</p>
-
-<pre><code>spring:
-datasource:
-user:
-  driver-class-name: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://localhost:3306/xa?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;charset=utf8
-  username: xxx
-  password: xxx
-audit:
-  driver-class-name: com.mysql.cj.jdbc.Driver
-  url: jdbc:mysql://xxx.rds.amazonaws.com:3306/xa?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;charset=utf8
-  username: xxx
-  password: xxx
-</code></pre>
-
-<p>. 核心配置bean - transaction interface</p>
-
-<pre><code>@Bean(name = &quot;userTransaction&quot;)
-public UserTransaction userTransaction() throws Throwable {
-UserTransactionImp userTransactionImp = new UserTransactionImp();
-userTransactionImp.setTransactionTimeout(10000);
-return userTransactionImp;
-}
-
-@Bean(name = &quot;atomikosTransactionManager&quot;)
-public TransactionManager atomikosTransactionManager() throws Throwable {
-UserTransactionManager userTransactionManager = new UserTransactionManager();
-userTransactionManager.setForceShutdown(false);
-AtomikosJtaPlatform.transactionManager = userTransactionManager;
-return userTransactionManager;
-}
-
-@Bean(name = &quot;transactionManager&quot;)
-@DependsOn({&quot;userTransaction&quot;, &quot;atomikosTransactionManager&quot;})
-public PlatformTransactionManager transactionManager() throws Throwable {
-UserTransaction userTransaction = userTransaction();
-AtomikosJtaPlatform.transaction = userTransaction;
-TransactionManager atomikosTransactionManager = atomikosTransactionManager();
-
-return new JtaTransactionManager(userTransaction, atomikosTransactionManager);
-}
-</code></pre></li>
+</li>
 </ol>
+<h2 id="atomikos-配置多数据源支持jta事务">Atomikos 配置多数据源支持jta事务</h2>
+<p>环境准备：<br>
+. 两台mysql数据库
+主要配置：<br>
+. datasource 配置文件</p>
+<pre tabindex="0"><code>spring:
+  datasource:
+    user:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/xa?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;charset=utf8
+      username: xxx
+      password: xxx
+    audit:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://xxx.rds.amazonaws.com:3306/xa?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;charset=utf8
+      username: xxx
+      password: xxx
+</code></pre><p>. 核心配置bean - transaction interface</p>
+<pre tabindex="0"><code>@Bean(name = &#34;userTransaction&#34;)
+public UserTransaction userTransaction() throws Throwable {
+    UserTransactionImp userTransactionImp = new UserTransactionImp();
+    userTransactionImp.setTransactionTimeout(10000);
+    return userTransactionImp;
+}
 
-<p>. 核心配置bean datasource - user,需要指定一组为@primary，高优先级装配的的datasource，否则spring在初始化transaction manager的时候会报错。</p>
+@Bean(name = &#34;atomikosTransactionManager&#34;)
+public TransactionManager atomikosTransactionManager() throws Throwable {
+    UserTransactionManager userTransactionManager = new UserTransactionManager();
+    userTransactionManager.setForceShutdown(false);
+    AtomikosJtaPlatform.transactionManager = userTransactionManager;
+    return userTransactionManager;
+}
 
-<pre><code>@Bean
+@Bean(name = &#34;transactionManager&#34;)
+@DependsOn({&#34;userTransaction&#34;, &#34;atomikosTransactionManager&#34;})
+public PlatformTransactionManager transactionManager() throws Throwable {
+    UserTransaction userTransaction = userTransaction();
+    AtomikosJtaPlatform.transaction = userTransaction;
+    TransactionManager atomikosTransactionManager = atomikosTransactionManager();
+
+    return new JtaTransactionManager(userTransaction, atomikosTransactionManager);
+}
+</code></pre><p>. 核心配置bean datasource - user,需要指定一组为@primary，高优先级装配的的datasource，否则spring在初始化transaction manager的时候会报错。</p>
+<pre tabindex="0"><code>@Bean
 @Primary
-@ConfigurationProperties(prefix = &quot;spring.datasource.user&quot;)
+@ConfigurationProperties(prefix = &#34;spring.datasource.user&#34;)
 public org.springframework.boot.autoconfigure.jdbc.DataSourceProperties customerDataSourceProperties() {
     return new org.springframework.boot.autoconfigure.jdbc.DataSourceProperties();
 }
 
-@Bean(name = &quot;customerDataSource&quot;)
+@Bean(name = &#34;customerDataSource&#34;)
 @Primary
 public DataSource customerDataSource() throws SQLException {
     MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
@@ -323,49 +311,46 @@ public DataSource customerDataSource() throws SQLException {
 
     AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
     xaDataSource.setXaDataSource(mysqlXaDataSource);
-    xaDataSource.setUniqueResourceName(&quot;customerDataSource&quot;);
+    xaDataSource.setUniqueResourceName(&#34;customerDataSource&#34;);
     xaDataSource.setMaxPoolSize(100);
     xaDataSource.setMinPoolSize(20);
     return xaDataSource;
 }
 
-@Bean(name = &quot;customerEntityManager&quot;)
-@DependsOn(&quot;transactionManager&quot;)
+@Bean(name = &#34;customerEntityManager&#34;)
+@DependsOn(&#34;transactionManager&#34;)
 @Primary
 public LocalContainerEntityManagerFactoryBean customerEntityManager() throws Throwable {
     HashMap&lt;String, Object&gt; properties = new HashMap&lt;String, Object&gt;();
-    properties.put(&quot;hibernate.transaction.jta.platform&quot;, AtomikosJtaPlatform.class.getName());
-    properties.put(&quot;javax.persistence.transactionType&quot;, &quot;JTA&quot;);
+    properties.put(&#34;hibernate.transaction.jta.platform&#34;, AtomikosJtaPlatform.class.getName());
+    properties.put(&#34;javax.persistence.transactionType&#34;, &#34;JTA&#34;);
 
     LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
     entityManager.setJtaDataSource(customerDataSource());
     entityManager.setJpaVendorAdapter(jpaVendorAdapter);
-    entityManager.setPackagesToScan(&quot;org.akj.springboot.tx.entity.customer&quot;);
-    entityManager.setPersistenceUnitName(&quot;customerPersistenceUnit&quot;);
+    entityManager.setPackagesToScan(&#34;org.akj.springboot.tx.entity.customer&#34;);
+    entityManager.setPersistenceUnitName(&#34;customerPersistenceUnit&#34;);
     entityManager.setJpaPropertyMap(properties);
 
     return entityManager;
 }
-</code></pre>
-
-<p>. 核心配置bean datasource - audit</p>
-
-<pre><code>@Configuration
-@EnableJpaRepositories(basePackages = &quot;org.akj.springboot.tx.entity.audit&quot;, entityManagerFactoryRef =
-        &quot;auditEntityManager&quot;, transactionManagerRef = &quot;transactionManager&quot;)
-@DependsOn(&quot;transactionManager&quot;)
+</code></pre><p>. 核心配置bean datasource - audit</p>
+<pre tabindex="0"><code>@Configuration
+@EnableJpaRepositories(basePackages = &#34;org.akj.springboot.tx.entity.audit&#34;, entityManagerFactoryRef =
+        &#34;auditEntityManager&#34;, transactionManagerRef = &#34;transactionManager&#34;)
+@DependsOn(&#34;transactionManager&#34;)
 public class AuditDataSourceConfiguration {
 
     @Autowired
     private JpaVendorAdapter jpaVendorAdapter;
 
     @Bean
-    @ConfigurationProperties(prefix = &quot;spring.datasource.audit&quot;)
+    @ConfigurationProperties(prefix = &#34;spring.datasource.audit&#34;)
     public org.springframework.boot.autoconfigure.jdbc.DataSourceProperties auditDataSourceProperties() {
         return new org.springframework.boot.autoconfigure.jdbc.DataSourceProperties();
     }
 
-    @Bean(name = &quot;auditDataSource&quot;)
+    @Bean(name = &#34;auditDataSource&#34;)
     public DataSource auditDataSource() throws SQLException {
         MysqlXADataSource mysqlXaDataSource = new MysqlXADataSource();
         mysqlXaDataSource.setURL(auditDataSourceProperties().getUrl());
@@ -375,47 +360,48 @@ public class AuditDataSourceConfiguration {
 
         AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
         xaDataSource.setXaDataSource(mysqlXaDataSource);
-        xaDataSource.setUniqueResourceName(&quot;auditDataSource&quot;);
+        xaDataSource.setUniqueResourceName(&#34;auditDataSource&#34;);
         xaDataSource.setMaxPoolSize(100);
         xaDataSource.setMinPoolSize(20);
         return xaDataSource;
     }
 
-    @Bean(name = &quot;auditEntityManager&quot;)
-    @DependsOn(&quot;transactionManager&quot;)
+    @Bean(name = &#34;auditEntityManager&#34;)
+    @DependsOn(&#34;transactionManager&#34;)
     public LocalContainerEntityManagerFactoryBean auditEntityManager() throws Throwable {
         HashMap&lt;String, Object&gt; properties = new HashMap&lt;String, Object&gt;();
-        properties.put(&quot;hibernate.transaction.jta.platform&quot;, AtomikosJtaPlatform.class.getName());
-        properties.put(&quot;javax.persistence.transactionType&quot;, &quot;JTA&quot;);
+        properties.put(&#34;hibernate.transaction.jta.platform&#34;, AtomikosJtaPlatform.class.getName());
+        properties.put(&#34;javax.persistence.transactionType&#34;, &#34;JTA&#34;);
 
         LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
         entityManager.setJtaDataSource(auditDataSource());
         entityManager.setJpaVendorAdapter(jpaVendorAdapter);
-        entityManager.setPackagesToScan(&quot;org.akj.springboot.tx.entity.audit&quot;);
-        entityManager.setPersistenceUnitName(&quot;auditPersistenceUnit&quot;);
+        entityManager.setPackagesToScan(&#34;org.akj.springboot.tx.entity.audit&#34;);
+        entityManager.setPersistenceUnitName(&#34;auditPersistenceUnit&#34;);
         entityManager.setJpaPropertyMap(properties);
 
         return entityManager;
     }
 }
-</code></pre>
-
-<p><em>@EnableJpaRepositories, 仓储bean的扫描和注册，并且使用了这个之后，两个db都能支持auto ddl</em></p>
-
+</code></pre><p><em>@EnableJpaRepositories, 仓储bean的扫描和注册，并且使用了这个之后，两个db都能支持auto ddl</em></p>
 <h2 id="track-atomikos的工作流程">Track atomikos的工作流程</h2>
-
-<p>JTA的事务加载和切面拦截流程跟local transaction是一样的，本次过重分析一下atomikos的两阶段提交的工作流程和重点代码分析：<br />
-1. 搞清楚UserTransaction, TransactionManager 和 Transaction<br />
- - TransactionManager, 将应用对分布式事务的使用映射到实际的事务资源并在事务资源间进行协调与控制<br />
- - Transaction, 代表了一个物理意义上的事务，在开发人员调用 UserTransaction.begin() 方法时 TransactionManager 会创建一个 Transaction 事务对象（标志着事务的开始）并把此对象通过 ThreadLocale 关联到当前线程。<strong>UserTransaction 接口中的 commit()、rollback()，getStatus() 等方法都将最终委托给 Transaction 类的对应方法执行</strong><br />
- - UserTransaction, 面向开发人员的接口, 直接使用该接口实现JTA事务管理<br />
-2. 查看启动日志，观察atomikos下的相关事务配置<br />
-o.s.t.jta.JtaTransactionManager          : Using JTA UserTransaction: <strong>com.atomikos.icatch.jta.UserTransactionImp@5ba90d8a</strong><br />
-2019-09-07 18:02:39.918 DEBUG 24695 &mdash; [           main] o.s.t.jta.JtaTransactionManager          : Using JTA TransactionManager: <strong>com.atomikos.icatch.jta.UserTransactionManager@4d93f75b</strong><br />
-接着会打印AtomikosDataSoureBean的配置，即初始化我们在上面的datasource配置bean<br />
-3. 部分源码分析</p>
-
-<pre><code>org.springframework.transaction.interceptor.TransactionAspectSupport#createTransactionIfNecessary
+<p>JTA的事务加载和切面拦截流程跟local transaction是一样的，本次过重分析一下atomikos的两阶段提交的工作流程和重点代码分析：</p>
+<ol>
+<li>搞清楚UserTransaction, TransactionManager 和 Transaction</li>
+</ol>
+<ul>
+<li>TransactionManager, 将应用对分布式事务的使用映射到实际的事务资源并在事务资源间进行协调与控制</li>
+<li>Transaction, 代表了一个物理意义上的事务，在开发人员调用 UserTransaction.begin() 方法时 TransactionManager 会创建一个 Transaction 事务对象（标志着事务的开始）并把此对象通过 ThreadLocale 关联到当前线程。<strong>UserTransaction 接口中的 commit()、rollback()，getStatus() 等方法都将最终委托给 Transaction 类的对应方法执行</strong></li>
+<li>UserTransaction, 面向开发人员的接口, 直接使用该接口实现JTA事务管理</li>
+</ul>
+<ol start="2">
+<li>查看启动日志，观察atomikos下的相关事务配置<br>
+o.s.t.jta.JtaTransactionManager          : Using JTA UserTransaction: <strong>com.atomikos.icatch.jta.UserTransactionImp@5ba90d8a</strong><br>
+2019-09-07 18:02:39.918 DEBUG 24695 &mdash; [           main] o.s.t.jta.JtaTransactionManager          : Using JTA TransactionManager: <strong>com.atomikos.icatch.jta.UserTransactionManager@4d93f75b</strong><br>
+接着会打印AtomikosDataSoureBean的配置，即初始化我们在上面的datasource配置bean</li>
+<li>部分源码分析</li>
+</ol>
+<pre tabindex="0"><code>org.springframework.transaction.interceptor.TransactionAspectSupport#createTransactionIfNecessary
     // 获取trsanction
     org.springframework.transaction.support.AbstractPlatformTransactionManager#getTransaction
         // 获取&lt;JtaTransactionObject&gt;transaction
@@ -456,27 +442,7 @@ o.s.t.jta.JtaTransactionManager          : Using JTA UserTransaction: <strong>co
                                     }
                             // 创建 TransactionImp，保存tid和transactionImpl的关系
                             com.atomikos.icatch.jta.TransactionManagerImp#recreateCompositeTransactionAsJtaTransaction
-</code></pre>
-
-<p><p>
-4. 过程日志分析<br />
- - Create transaction<br />
- - Participant in existing transaction for &lsquo;customer&rsquo; datasource<br />
- - XAResource.start for &lsquo;customer&rsquo;<br />
- - XAResource.end for &lsquo;customer&rsquo;<br />
- - Participant in existing transaction for &lsquo;audit&rsquo; datasource<br />
- - XAResource.start for &lsquo;audit&rsquo;<br />
- - XAResource.end for &lsquo;audit&rsquo;<br />
- - Initiating transaction commit<br />
- - XAResource.prepare for &lsquo;customer&rsquo;<br />
- - XAResource.prepare for &lsquo;audit&rsquo;<br />
- - XAResource.commit for &lsquo;customer&rsquo;<br />
- - XAResource.commit for &lsquo;audit&rsquo;<br />
-<img src="/img/2019-08-31-spring-global-transaction/txn-01.png" style="margin-left: 15px"/>
-<img src="/img/2019-08-31-spring-global-transaction/txn-02.png" style="margin-left: 15px"/>
-</p>
- 参考文章:<br />
- <a href="https://www.ibm.com/developerworks/cn/java/j-lo-jta/index.html">https://www.ibm.com/developerworks/cn/java/j-lo-jta/index.html</a></p>
+</code></pre><!-- raw HTML omitted -->
 
 
                 
@@ -521,6 +487,7 @@ o.s.t.jta.JtaTransactionManager          : Using JTA UserTransaction: <strong>co
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
@@ -537,6 +504,10 @@ o.s.t.jta.JtaTransactionManager          : Using JTA UserTransaction: <strong>co
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -616,6 +587,8 @@ o.s.t.jta.JtaTransactionManager          : Using JTA UserTransaction: <strong>co
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -671,6 +644,8 @@ o.s.t.jta.JtaTransactionManager          : Using JTA UserTransaction: <strong>co
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -775,7 +750,7 @@ o.s.t.jta.JtaTransactionManager          : Using JTA UserTransaction: <strong>co
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -828,9 +803,6 @@ o.s.t.jta.JtaTransactionManager          : Using JTA UserTransaction: <strong>co
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -893,6 +865,7 @@ o.s.t.jta.JtaTransactionManager          : Using JTA UserTransaction: <strong>co
         });
     });
 </script>
+
 
 
 

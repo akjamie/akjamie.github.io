@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-03.jpg">
+    <meta property="twitter:image" content="/img/background-03.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -218,142 +220,111 @@
                 post-container">
 
                 
-                
-
-<p>this page shows how to run a spring boot application on local K8S environment.</p>
-
+                <p>this page shows how to run a spring boot application on local K8S environment.</p>
 <h1 id="objectives">Objectives</h1>
-
-<p>1.create spring boot application and build a docker image<br />
-2.create local persistent volume to share the files from host<br />
+<p>1.create spring boot application and build a docker image<br>
+2.create local persistent volume to share the files from host<br>
 3.create deployment and service to run this application and expose for external access.</p>
-
 <h1 id="before-you-begin">Before you begin</h1>
-
 <p>install docker desktop in local and enable local k8s cluster, more details please refer to docker official guide or k8s local
 cluster setup <a href="https://kubernetes.io/docs/tasks/tools/">guide</a>.</p>
-
 <h1 id="create-spring-boot-application-and-build-docker-image">Create spring boot application and build docker image</h1>
-
 <p>in this demo, created a simple config service using spring boot cloud config, source code on <a href="https://github.com/cloud-poc/config-service/tree/dev-k8s">git</a></p>
-
-<h2 id="spring-boot-application-config-service">Spring boot application - config-service</h2>
-
-<p>1.use Spring Cloud Config to quickly implement a config service, please refer to spring cloud documents.<br />
+<h2 id="spring-boot-application---config-service">Spring boot application - config-service</h2>
+<p>1.use Spring Cloud Config to quickly implement a config service, please refer to spring cloud documents.<br>
 2.create a service config repos on git, in this demo, we will use the native config rather than points to git directly as
 network delay caused by GFW.</p>
-
 <ul>
-<li><p>service configs - spring:</p>
-
-<pre><code>server:
-port: 8888
+<li>service configs - spring:</li>
+</ul>
+<pre tabindex="0"><code>server:
+  port: 8888
 
 spring:
-application:
-name: config-service
-profiles:
-active: native
-cloud:
-config:
-  server:
-    native:
-      search-locations: ${CONFIG_ROOT_PATH:${config.root-path}}/config/{application}
-    bootstrap: true
+  application:
+    name: config-service
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: ${CONFIG_ROOT_PATH:${config.root-path}}/config/{application}
+        bootstrap: true
 #        git:
 #          uri: ${CONFIG_REPOSITORY_URL:https://github.com/cloud-poc/service-config.git}
 #          clone-on-start: true
-#          #cannot work when use place-holder(not just '{application}')
-#          search-paths: 'config/{application}'
+#          #cannot work when use place-holder(not just &#39;{application}&#39;)
+#          search-paths: &#39;config/{application}&#39;
 
 config.root-path: /Users/jamie/Documents/work-benches/workspace-20190524/service-config
-</code></pre></li>
-
-<li><p>config repo:
-<img src='/img/2020-11-29-run-application-on-k8s/config-repo-01.png' style="height: 150px;margin-left: 0px;"/></p></li>
+</code></pre><ul>
+<li>config repo:
+<!-- raw HTML omitted --></li>
 </ul>
-
-<p>3.test if works<br />
-to test if you can get the configs configured in above steps.<br />
-<img src='/img/2020-11-29-run-application-on-k8s/config-test-01.png' style="height: 600px;margin-left: 0px;"/>
+<p>3.test if works<br>
+to test if you can get the configs configured in above steps.<br>
+<!-- raw HTML omitted -->
 from above screenshot, the configs correctly responded from config server, then let&rsquo;s move to docker image build.</p>
-
-<h2 id="docker-image-build-push">Docker image build &amp; push</h2>
-
+<h2 id="docker-image-build--push">Docker image build &amp; push</h2>
 <p>There are several most widely used Maven plugins for Docker in the open source community, for example, fabric8’s docker-maven-plugin,
 Spotify’s docker-maven-plugin, Spotify’s dockerfile-maven, and Google’s jib-maven-plugin,etc. We&rsquo;ll use the jib-maven-plugin
 for our application, let&rsquo;s start with its configuration.</p>
-
 <ul>
-<li><p>jib-maven-plugin in pom.xml</p>
-
-<pre><code>&lt;plugin&gt;
-&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-&lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+<li>jib-maven-plugin in pom.xml</li>
+</ul>
+<pre tabindex="0"><code>&lt;plugin&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
 &lt;/plugin&gt;
 &lt;plugin&gt;
-&lt;groupId&gt;com.google.cloud.tools&lt;/groupId&gt;
-&lt;artifactId&gt;jib-maven-plugin&lt;/artifactId&gt;
-&lt;version&gt;${jib.version}&lt;/version&gt;
-&lt;configuration&gt;
-    &lt;from&gt;
-        &lt;image&gt;openjdk:alpine&lt;/image&gt;
-    &lt;/from&gt;
-    &lt;to&gt;
-        &lt;image&gt;docker.io/akjamie/${artifactId}:${project.version}&lt;/image&gt;
-        &lt;!-- &lt;credHelper&gt;wincred&lt;/credHelper&gt; --&gt;
-        &lt;credHelper&gt;desktop&lt;/credHelper&gt;
-    &lt;/to&gt;
-    &lt;container&gt;
-        &lt;creationTime&gt;USE_CURRENT_TIMESTAMP&lt;/creationTime&gt;
-    &lt;/container&gt;
-    &lt;allowInsecureRegistries&gt;true&lt;/allowInsecureRegistries&gt;
-&lt;/configuration&gt;
+    &lt;groupId&gt;com.google.cloud.tools&lt;/groupId&gt;
+    &lt;artifactId&gt;jib-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;${jib.version}&lt;/version&gt;
+    &lt;configuration&gt;
+        &lt;from&gt;
+            &lt;image&gt;openjdk:alpine&lt;/image&gt;
+        &lt;/from&gt;
+        &lt;to&gt;
+            &lt;image&gt;docker.io/akjamie/${artifactId}:${project.version}&lt;/image&gt;
+            &lt;!-- &lt;credHelper&gt;wincred&lt;/credHelper&gt; --&gt;
+            &lt;credHelper&gt;desktop&lt;/credHelper&gt;
+        &lt;/to&gt;
+        &lt;container&gt;
+            &lt;creationTime&gt;USE_CURRENT_TIMESTAMP&lt;/creationTime&gt;
+        &lt;/container&gt;
+        &lt;allowInsecureRegistries&gt;true&lt;/allowInsecureRegistries&gt;
+    &lt;/configuration&gt;
 &lt;/plugin&gt;
-</code></pre></li>
-
-<li><p>command run to build image and push</p>
-
-<pre><code>mvn clean compile jib:build
-</code></pre>
-
-<p>after finishes, check the result in local and docker hub:
-<img src='/img/2020-11-29-run-application-on-k8s/docker-image-01.png' style="height: 45px;margin-left: 0px;"/>
-<img src='/img/2020-11-29-run-application-on-k8s/docker-image-02.png' style="height: 330px;margin-left: 0px;"/></p></li>
+</code></pre><ul>
+<li>command run to build image and push</li>
 </ul>
-
+<pre tabindex="0"><code>mvn clean compile jib:build
+</code></pre><p>after finishes, check the result in local and docker hub:
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
 <h1 id="use-local-persistent-volume-to-share-the-service-configs">Use Local Persistent Volume to share the service configs</h1>
-
 <p>In our application, we&rsquo;re using the native mode for config server to load the application configs, hence we need to share
-the files to the pod or container in Kubernates cluster. to achive this goal, what we need to do as following:<br />
-1. create storage class - sc<br />
-2. create persistent volume - pv<br />
-3. create persistent volume claim - pvc</p>
-
+the files to the pod or container in Kubernates cluster. to achive this goal, what we need to do as following:</p>
+<ol>
+<li>create storage class - sc</li>
+<li>create persistent volume - pv</li>
+<li>create persistent volume claim - pvc</li>
+</ol>
 <h2 id="create-storage-class">Create storage class</h2>
-
 <p>config file - k8s-localpv-storage-class.yml</p>
-
-<pre><code>kind: StorageClass
+<pre tabindex="0"><code>kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
   name: local-storage
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
-</code></pre>
-
-<p>detailed configs please refer to <a href="https://kubernetes.io/docs/concepts/storage/storage-classes/">https://kubernetes.io/docs/concepts/storage/storage-classes/</a></p>
-
+</code></pre><p>detailed configs please refer to <a href="https://kubernetes.io/docs/concepts/storage/storage-classes/">https://kubernetes.io/docs/concepts/storage/storage-classes/</a></p>
 <p>use command to create storage class</p>
-
-<pre><code>kubectl apply -f k8s-localpv-storage-class.yml
-</code></pre>
-
-<h2 id="create-persistent-volume">Create persistent volume</h2>
-
+<pre tabindex="0"><code>kubectl apply -f k8s-localpv-storage-class.yml
+</code></pre><h2 id="create-persistent-volume">Create persistent volume</h2>
 <p>config file - k8s-localpv-persistent-volume.yml</p>
-
-<pre><code>apiVersion: v1
+<pre tabindex="0"><code>apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: local-pv-service-config
@@ -374,26 +345,17 @@ spec:
               operator: In
               values:
                 - docker-desktop
-</code></pre>
-
-<blockquote>
-<p>1.spec.local.path, specify the path in host you want to share with k8s cluster<br />
+</code></pre><blockquote>
+<p>1.spec.local.path, specify the path in host you want to share with k8s cluster<br>
 2.spec.accessModes, here we want to share the service configs for centralized configuration management, only allow
 pod/container to consume it rather than modify.</p>
 </blockquote>
-
 <p>similar command should use here to create PV.</p>
-
-<pre><code>kubectl apply -f k8s-localpv-persistent-volume.yml
-</code></pre>
-
-<p><a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">https://kubernetes.io/docs/concepts/storage/persistent-volumes/</a></p>
-
+<pre tabindex="0"><code>kubectl apply -f k8s-localpv-persistent-volume.yml
+</code></pre><p><a href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">https://kubernetes.io/docs/concepts/storage/persistent-volumes/</a></p>
 <h2 id="create-pvc">Create PVC</h2>
-
 <p>config file - k8s-localpv-pv-claim.yml</p>
-
-<pre><code>kind: PersistentVolumeClaim
+<pre tabindex="0"><code>kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: pvc-config-service
@@ -404,13 +366,9 @@ spec:
   resources:
     requests:
       storage: 100Mi
-</code></pre>
-
-<h2 id="verify-the-resource-created">Verify the resource created</h2>
-
+</code></pre><h2 id="verify-the-resource-created">Verify the resource created</h2>
 <p>use kubectl command to check the resource we created in above 3 steps.</p>
-
-<pre><code>Jamies-MacBook-Pro:scripts jamie$ kubectl get sc
+<pre tabindex="0"><code>Jamies-MacBook-Pro:scripts jamie$ kubectl get sc
 NAME                 PROVISIONER                    AGE
 hostpath (default)   docker.io/hostpath             174d
 local-storage        kubernetes.io/no-provisioner   21h
@@ -425,7 +383,7 @@ pvc-config-service    Bound    local-pv-service-config                    100Mi 
 Jamies-MacBook-Pro:scripts jamie$ kubectl describe sc/local-storage
 Name:            local-storage
 IsDefaultClass:  No
-Annotations:     kubectl.kubernetes.io/last-applied-configuration={&quot;apiVersion&quot;:&quot;storage.k8s.io/v1&quot;,&quot;kind&quot;:&quot;StorageClass&quot;,&quot;metadata&quot;:{&quot;annotations&quot;:{},&quot;name&quot;:&quot;local-storage&quot;},&quot;provisioner&quot;:&quot;kubernetes.io/no-provisioner&quot;,&quot;volumeBindingMode&quot;:&quot;WaitForFirstConsumer&quot;}
+Annotations:     kubectl.kubernetes.io/last-applied-configuration={&#34;apiVersion&#34;:&#34;storage.k8s.io/v1&#34;,&#34;kind&#34;:&#34;StorageClass&#34;,&#34;metadata&#34;:{&#34;annotations&#34;:{},&#34;name&#34;:&#34;local-storage&#34;},&#34;provisioner&#34;:&#34;kubernetes.io/no-provisioner&#34;,&#34;volumeBindingMode&#34;:&#34;WaitForFirstConsumer&#34;}
 
 Provisioner:           kubernetes.io/no-provisioner
 Parameters:            &lt;none&gt;
@@ -434,15 +392,10 @@ MountOptions:          &lt;none&gt;
 ReclaimPolicy:         Delete
 VolumeBindingMode:     WaitForFirstConsumer
 Events:                &lt;none&gt;
-</code></pre>
-
-<h1 id="deploy-application-and-share-the-access-entry">Deploy application and share the access entry</h1>
-
+</code></pre><h1 id="deploy-application-and-share-the-access-entry">Deploy application and share the access entry</h1>
 <h2 id="application-deployment">Application deployment</h2>
-
 <p>config for deployment in K8S</p>
-
-<pre><code>apiVersion: apps/v1
+<pre tabindex="0"><code>apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: config-service-deployment
@@ -463,45 +416,35 @@ spec:
           image: docker.io/akjamie/config-service:2.0.0
           env:
             - name: CONFIG_ROOT_PATH
-              value: &quot;/app/data/service-configs&quot;
+              value: &#34;/app/data/service-configs&#34;
           ports:
             - containerPort: 8888
           volumeMounts:
-            - mountPath: &quot;/app/data&quot;
+            - mountPath: &#34;/app/data&#34;
               name: storage
       volumes:
         - name: storage
           persistentVolumeClaim:
             claimName: pvc-config-service
-</code></pre>
-
-<blockquote>
+</code></pre><blockquote>
 <p>1.spec.replicas, as name depicts, how many replicas of the application you want to run
 2.spec.containers.volumeMounts.mountPath, we mount the service configs path defined in local persistent volume to
 &lsquo;/app/data/service-configs&rsquo;, so that use it to set the env variable CONFIG_ROOT_PATH, CONFIG_ROOT_PATH will override the <em>&lsquo;search-locations&rsquo;</em> defined in
 bootstrap.yml</p>
 </blockquote>
-
 <p>run command to create deployment to create pods.</p>
-
-<pre><code>Jamies-MacBook-Pro:scripts jamie$ kubectl get pods
+<pre tabindex="0"><code>Jamies-MacBook-Pro:scripts jamie$ kubectl get pods
 NAME                                         READY   STATUS    RESTARTS   AGE
 config-service-deployment-84c8fc544b-g8clz   1/1     Running   1          10h
 config-service-deployment-84c8fc544b-rbjww   1/1     Running   1          10h
-</code></pre>
-
-<p>use &lsquo;kubectl logs -f pod config-service-deployment-84c8fc544b-g8clz&rsquo; to check the application startup logs if you want.
+</code></pre><p>use &lsquo;kubectl logs -f pod config-service-deployment-84c8fc544b-g8clz&rsquo; to check the application startup logs if you want.
 now, two replicas are running for config-services on port 8888, it can be accessible to other applications within K8s
 cluster but cannot access from outside either local host, then let&rsquo;s move to the last steps.</p>
-
 <h1 id="create-service-to-expose-service-access">Create service to expose service access</h1>
-
 <p>there are few ways to route external traffic into k8s cluster to reach pod at where the request really be handled. please
 refer to <a href="https://kubernetes.io/docs/concepts/services-networking/service/">https://kubernetes.io/docs/concepts/services-networking/service/</a>. We choose NodePort here for demonstration purpose.</p>
-
 <p>config:</p>
-
-<pre><code>apiVersion: v1
+<pre tabindex="0"><code>apiVersion: v1
 kind: Service
 metadata:
   name: config-service-service
@@ -515,24 +458,18 @@ spec:
       protocol: TCP
   selector:
     app: config-service
-</code></pre>
-
-<p>nodePort: external access port, like <a href="http://localhost:30001">http://localhost:30001</a><br />
-targetPort: port on container<br />
+</code></pre><p>nodePort: external access port, like http://localhost:30001<br>
+targetPort: port on container<br>
 port: service port, it can be used to access config-service within cluster.</p>
-
 <p>create and verify the result:</p>
-
-<pre><code>Jamies-MacBook-Pro:scripts jamie$ kubectl get services
+<pre tabindex="0"><code>Jamies-MacBook-Pro:scripts jamie$ kubectl get services
 NAME                     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 config-service-service   NodePort    10.108.51.175   &lt;none&gt;        8888:30001/TCP   10h
 kubernetes               ClusterIP   10.96.0.1       &lt;none&gt;        443/TCP          174d
 Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/dev/
-{&quot;name&quot;:&quot;catalog-service&quot;,&quot;profiles&quot;:[&quot;dev&quot;],&quot;label&quot;:null,&quot;version&quot;:null,&quot;state&quot;:null,
-</code></pre>
-
-<p>Referred article/blogs:
-<a href="https://www.jianshu.com/p/8275f2031c83">https://www.jianshu.com/p/8275f2031c83</a><br />
+{&#34;name&#34;:&#34;catalog-service&#34;,&#34;profiles&#34;:[&#34;dev&#34;],&#34;label&#34;:null,&#34;version&#34;:null,&#34;state&#34;:null,
+</code></pre><p>Referred article/blogs:
+<a href="https://www.jianshu.com/p/8275f2031c83">https://www.jianshu.com/p/8275f2031c83</a><br>
 <a href="https://blog.csdn.net/kenkao/article/details/86764788">https://blog.csdn.net/kenkao/article/details/86764788</a></p>
 
 
@@ -578,6 +515,7 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
@@ -594,6 +532,10 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -673,6 +615,8 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -728,6 +672,8 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -832,7 +778,7 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -885,9 +831,6 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -950,6 +893,7 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
         });
     });
 </script>
+
 
 
 

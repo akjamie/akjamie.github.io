@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io/img/background-09.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io/img/background-09.jpg" />
+    <meta property="og:image" content="/img/background-02.jpg">
+    <meta property="twitter:image" content="/img/background-02.jpg" />
     
 
     
@@ -65,9 +65,14 @@
     <script src="/js/hux-blog.min.js"></script>
 
     
+    <script src="/js/lazysizes.min.js"></script>
+
+    
     
 
 </head>
+
+
 
 
 
@@ -97,30 +102,27 @@
                     
                         
                         <li>
-                            <a href="/categories/cloud">cloud</a>
+                            <a href="/categories/cloud/">cloud</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/microservice">microservice</a>
+                            <a href="/categories/microservice/">microservice</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/nosql">nosql</a>
+                            <a href="/categories/nosql/">nosql</a>
                         </li>
                         
                         <li>
-                            <a href="/categories/others">others</a>
+                            <a href="/categories/others/">others</a>
                         </li>
                         
                     
                     
 		    
-
-                    
-		    <li>
+		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
-		    </li>
-                    
+		           </li>
                 </ul>
             </div>
         </div>
@@ -222,43 +224,29 @@
                 post-container">
 
                 
-                
-
-<h1 id="background">Background</h1>
-
+                <h1 id="background">Background</h1>
 <p><strong>Let&rsquo;s Encrypt</strong> is a <a href="https://en.wikipedia.org/wiki/Certificate_authority" title="Certificate authority">certificate authority</a> that provides <a href="https://en.wikipedia.org/wiki/X.509" title="X.509">X.509</a> <a href="https://en.wikipedia.org/wiki/Public_key_certificate" title="Public key certificate">certificates</a> for <a href="https://en.wikipedia.org/wiki/Transport_Layer_Security" title="Transport Layer Security">Transport Layer Security</a> (TLS) encryption at no charge,The certificate is valid for 90 days, during which renewal can take place at anytime.
 这样我们就可以用上免费的CA cert来安全expose我们自己的网站或者服务</p>
-
-<p><strong>基本的http和https</strong>知识请阅读<a href="https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/的‘背景知识’部分，作者讲述的非常很不错。">https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/的‘背景知识’部分，作者讲述的非常很不错。</a></p>
-
+<p><strong>基本的http和https</strong>知识请阅读https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/的‘背景知识’部分，作者讲述的非常很不错。</p>
 <h1 id="objectives">Objectives</h1>
-
 <p>通过例子来demo如何生成和使用Internet Security Research Group推出的Let’s Encrypt 免费证书
-主要涉及如下:<br />
-1.  Docker, docker-compose用来部署nginx<br />
-2.  Certbot，用来为域名生成CA证书</p>
-
+主要涉及如下:</p>
+<ol>
+<li>Docker, docker-compose用来部署nginx</li>
+<li>Certbot，用来为域名生成CA证书</li>
+</ol>
 <h1 id="not-in-scope">Not In Scope</h1>
-
 <p>Docker和docker compose的相关概念和安装，请参考<a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">docker官方文档</a></p>
-
 <h1 id="steps-to-configure-certs">Steps to configure certs</h1>
-
 <h2 id="generate-ca-cert">Generate CA cert</h2>
-
 <h3 id="安装certbot-客户端">安装Certbot 客户端</h3>
-
-<pre><code>wget https://dl.eff.org/certbot-auto
+<pre tabindex="0"><code>wget https://dl.eff.org/certbot-auto
 chmod a+x ./certbot-auto
 ./certbot-auto --help
-</code></pre>
-
-<h3 id="验证域名所有权">验证域名所有权</h3>
-
-<p>该步骤需要启动nginx:<br />
+</code></pre><h3 id="验证域名所有权">验证域名所有权</h3>
+<p>该步骤需要启动nginx:<br>
 a. 准备docker-compose file</p>
-
-<pre><code>version: '3.0'
+<pre tabindex="0"><code>version: &#39;3.0&#39;
 services:
   nginx:
     restart: always
@@ -271,68 +259,52 @@ services:
      - ./log:/var/log/nginx
      - ./wwwroot:/var/www
      - /etc/letsencrypt:/etc/letsencrypt
-</code></pre>
-
-<blockquote>
+</code></pre><blockquote>
 <p><strong>Docker volume的映射关系</strong>
 ./conf.d nginx的配置所在
 ./log 日志文件位置
 ./wwwroot 项目路径
 /etc/letsencrypt CA cert的父目录</p>
 </blockquote>
-
 <p>b. 修改nginx 配置文件 .conf.d/app.conf</p>
-
-<pre><code>server {
+<pre tabindex="0"><code>server {
     listen   80;
     server_name   domain.com;
     location ^~ /.well-known/acme-challenge/ {
-       default_type &quot;text/plain&quot;;
+       default_type &#34;text/plain&#34;;
        root     /var/www;
     }
     location = /.well-known/acme-challenge/ {
        return 404;
     }
 }
-</code></pre>
-
-<blockquote>
+</code></pre><blockquote>
 <p>PS:
 如上两个location配置是为了通过 Let’s Encrypt 的验证，验证域名归属</p>
 </blockquote>
-
 <p>c. 启动nginx</p>
-
-<pre><code>root@aws-techpoc-c02:~/web# ls conf.d/app.conf
+<pre tabindex="0"><code>root@aws-techpoc-c02:~/web# ls conf.d/app.conf
 root@aws-techpoc-c02:~/web# ls wwwroot/
 index.html
 root@aws-techpoc-c02:~/web# docker-compose up -d
-Creating network &quot;web_default&quot; with the default driver
+Creating network &#34;web_default&#34; with the default driver
 Creating web_nginx_1 ...
 Creating web_nginx_1 ... done
-</code></pre>
-
-<p>d. 生成Cert</p>
-
-<pre><code>./certbot-auto certonly -d domain1.com domain2.com
-</code></pre>
-
-<p><em>该步骤过程中会自动运行和安装很多linux的以来包，不用干预，其中有两布需要注意：
+</code></pre><p>d. 生成Cert</p>
+<pre tabindex="0"><code>./certbot-auto certonly -d domain1.com domain2.com
+</code></pre><p><em>该步骤过程中会自动运行和安装很多linux的以来包，不用干预，其中有两布需要注意：
 i.选择用standalone的方式运行还是webroot，一般80端口已经备用了，无法使用standalone，所以选择webroot方式，然后输入webroot的地址，及上面指定的主机项目目录，如本例，/root/web/wwwroot
 2.有一步要求输入邮箱地址的提示，照着输入自己的邮箱即可，顺利完成的话，屏幕上会有提示信息。
-最后，证书成功成功后，会有如下信息:</em><br />
+最后，证书成功成功后，会有如下信息:</em><br>
 IMPORTANT NOTES:
- Congratulations! Your certificate and chain have been saved at
-   /etc/letsencrypt/live/<strong><domain.com></strong>/fullchain.pem. Your cert
-   will expire on xxxx-xx-xxxx. To obtain a new version of the
-   certificate in the future, simply run Let&rsquo;s Encrypt again.
+Congratulations! Your certificate and chain have been saved at
+/etc/letsencrypt/live/<strong>&lt;domain.com&gt;</strong>/fullchain.pem. Your cert
+will expire on xxxx-xx-xxxx. To obtain a new version of the
+certificate in the future, simply run Let&rsquo;s Encrypt again.
 至此，证书就生成好了，接下来就可以去配置nginx ssl监听了</p>
-
 <h2 id="配置ssl监听-for-nginx">配置SSL监听 for Nginx</h2>
-
 <p>a. 修改nginx配置文件</p>
-
-<pre><code>server {
+<pre tabindex="0"><code>server {
     listen   443 ssl;
     server_name  domain.com;
     ssl_certificate        /etc/letsencrypt/live/domain.com/fullchain.pem;
@@ -365,15 +337,11 @@ server {
     server_name   domain.com www.domain.com;
     return 301 https://$server_name$request_uri;            
 }
-</code></pre>
-
-<blockquote>
+</code></pre><blockquote>
 <p>proxy_pass 指定代理地址，注意代理地址后面有没有’/‘,区别很大</p>
 </blockquote>
-
 <p>b. [optional]准备一个测试的html，用来检测nginx配置是否正常，./wwwroot/index.html</p>
-
-<pre><code>&lt;!DOCTYPE html&gt;
+<pre tabindex="0"><code>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
    &lt;head&gt;
      &lt;title&gt;TEST WebSite&lt;/title&gt;
@@ -382,48 +350,30 @@ server {
        &lt;div&gt;Hello, this is a test web site&lt;/div&gt;
     &lt;body&gt;
 &lt;/html&gt;
-</code></pre>
-
-<p>c. Reload nginx config</p>
-
-<pre><code>docker container exec &lt;container&gt; nginx -s reload
-</code></pre>
-
-<p>然后就可以去测试了，https://<domain.com>,如果成功可以显示那个test html page，如果有问题，请使用docker logs -f <container>,或者查看日志目录先access.log 和 error.log</p>
-
+</code></pre><p>c. Reload nginx config</p>
+<pre tabindex="0"><code>docker container exec &lt;container&gt; nginx -s reload
+</code></pre><p>然后就可以去测试了，https://&lt;domain.com&gt;,如果成功可以显示那个test html page，如果有问题，请使用docker logs -f <!-- raw HTML omitted -->,或者查看日志目录先access.log 和 error.log</p>
 <h1 id="cert-renew">Cert Renew</h1>
-
 <p>Let’s Encrypt 签发的证书有效期只有 90 天，所以需要每隔三个月就要更新一次安全证书,为了能让你的网站能被安全的保护起来，所以是非常有必要去更新cert的。certbot-auto 支持手动和自动更新两种cert更新模式，我们来测试一下这两种模式
 首先运行测试一下能否更新,调试模式，不是真的更新</p>
-
-<pre><code>./certbot-auto renew --dry-run
-</code></pre>
-
-<p>获得的结果截图如下
-<img src="/img/2019-07-14-free-https-certs-docker-nginx/20190714194434.png" style="margin-left:20px" /></p>
-
+<pre tabindex="0"><code>./certbot-auto renew --dry-run
+</code></pre><p>获得的结果截图如下
+<!-- raw HTML omitted --></p>
 <p>手动更新模式：</p>
-
-<pre><code>./certbot-auto renew -v
-</code></pre>
-
-<p>自动更新模式：</p>
-
-<pre><code>./certbot-auto renew --quiet --no-self-upgrade
-</code></pre>
-
-<blockquote>
-<p>PS:该部分一般有运维人员集中进行处理，CA证书自动生成后还需要被加载一下去刷新，在本例中，需要运行docker container exec <container> nginx -s reload 去刷新</p>
+<pre tabindex="0"><code>./certbot-auto renew -v
+</code></pre><p>自动更新模式：</p>
+<pre tabindex="0"><code>./certbot-auto renew --quiet --no-self-upgrade
+</code></pre><blockquote>
+<p>PS:该部分一般有运维人员集中进行处理，CA证书自动生成后还需要被加载一下去刷新，在本例中，需要运行docker container exec <!-- raw HTML omitted --> nginx -s reload 去刷新</p>
 </blockquote>
-
 <p>更新后的结果展示
-<img src="/img/2019-07-14-free-https-certs-docker-nginx/20190714195417.png" style="margin-left:20px" /></p>
-
-<p>Q&amp;A:
-1. policy-forbids-issuing-for-name-on-amazon-ec2-domain
-<a href="https://community.letsencrypt.org/t/policy-forbids-issuing-for-name-on-amazon-ec2-domain/12692/3">issue related post</a><br />
-amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk domain names，及无法使用free cert for aws，可以考虑使用route53</p>
-
+<!-- raw HTML omitted --></p>
+<p>Q&amp;A:</p>
+<ol>
+<li>policy-forbids-issuing-for-name-on-amazon-ec2-domain
+<a href="https://community.letsencrypt.org/t/policy-forbids-issuing-for-name-on-amazon-ec2-domain/12692/3">issue related post</a><br>
+amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk domain names，及无法使用free cert for aws，可以考虑使用route53</li>
+</ol>
 <p>Related posts:
 <a href="https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/">https://linuxstory.org/deploy-lets-encrypt-ssl-certificate-with-certbot/</a>
 <a href="https://www.jianshu.com/p/c136c7ec2572">https://www.jianshu.com/p/c136c7ec2572</a></p>
@@ -471,6 +421,7 @@ amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk 
 
                 
 
+                
                 <hr>
                 <ul class="pager">
                     
@@ -481,12 +432,16 @@ amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk 
                     
                     
                     <li class="next">
-                        <a href="/post/2019-07-21-spring-batch-single-process-remote-partitioning/" data-toggle="tooltip" data-placement="top" title="Spring batch - single process &amp; remote partitioning(multi instances)">Next
+                        <a href="/post/2019-07-15-spring-cloud-demo-overview/" data-toggle="tooltip" data-placement="top" title="Spring Cloud Series">Next
                             Post &rarr;</a>
                     </li>
                     
                 </ul>
                 
+
+                
+
+
 
             </div>
 
@@ -566,6 +521,8 @@ amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk 
                         
                         
                         
+                        
+                        
                         <a href="/tags/mongo" title="mongo">
                             mongo
                         </a>
@@ -621,6 +578,8 @@ amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk 
                         <a href="/tags/transaction-management" title="transaction-management">
                             transaction-management
                         </a>
+                        
+                        
                         
                         
                         
@@ -725,7 +684,7 @@ amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk 
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2022
+                    Copyright &copy; Jamie&#39;s Blog 2023
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
                     <iframe
@@ -778,9 +737,6 @@ amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk 
         if($nav) FastClick.attach($nav);
     })
 </script>
-
-
-
 
 
 
@@ -843,6 +799,7 @@ amazonaws.com happens to be on the blacklist Let’s Encrypt uses for high-risk 
         });
     });
 </script>
+
 
 
 
