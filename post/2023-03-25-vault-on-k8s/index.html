@@ -467,7 +467,7 @@ IP.2 = 192.168.179.128 &ndash;&gt; It&rsquo;s optional, just for connectivity te
 number of key shares required to unseal Vault -key-threshold=2.</li>
 <li>For production HA, better to set the key-shares &amp; key-threshold bit larger than 1 to fit for your security needs.
 I will set the key-shares as 5 and key-threshold=2 for later demo.
-<img src='/img/2023-03-25-vault-on-k8s/vault-init-01' style="height: 931px;margin-left: 0px;"/></li>
+<img src='/img/2023-03-25-vault-on-k8s/vault-init-01.jpg' style="height: 420px;margin-left: 0px;"/></li>
 </ol>
 </blockquote>
 <ol start="5">
@@ -613,12 +613,12 @@ Here i got 1 free cert pair for my domain <strong>vault.it-meta.space</strong></
 </span></span><span style="display:flex;"><span><span style="color:#ae81ff">k apply -f ${WORKDIR}/vault-ingress.yaml</span>
 </span></span></code></pre></div><ol start="4">
 <li>Verify the ingress.
-<img src='/img/2023-03-25-vault-on-k8s/vault-ui-01' style="height: 1124px;margin-left: 0px;"/></li>
+<img src='/img/2023-03-25-vault-on-k8s/vault-ui-01.jpg' style="height: 300px;margin-left: 0px;"/></li>
 </ol>
 <p>Use root token to login
-<img src='/img/2023-03-25-vault-on-k8s/vault-ui-02' style="height: 1124px;margin-left: 0px;"/></p>
-<h1 id="next">Next</h1>
-<p>Ends here, will continue the kubernetes engine enablement and vault inject agent in next blog.s</p>
+<img src='/img/2023-03-25-vault-on-k8s/vault-ui-02.jpg' style="height: 240px;margin-left: 0px;"/></p>
+<h1 id="continue">Continue</h1>
+<p>Ends here, will continue the kubernetes engine enablement and vault inject agent in next blog.</p>
 <p>Reference docs:<br>
 <a href="https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-minikube-tls">https://developer.hashicorp.com/vault/tutorials/kubernetes/kubernetes-minikube-tls</a></p>
 
