@@ -352,22 +352,22 @@ server {
 &lt;/html&gt;
 </code></pre><p>c. Reload nginx config</p>
 <pre tabindex="0"><code>docker container exec &lt;container&gt; nginx -s reload
-</code></pre><p>然后就可以去测试了，https://&lt;domain.com&gt;,如果成功可以显示那个test html page，如果有问题，请使用docker logs -f <!-- raw HTML omitted -->,或者查看日志目录先access.log 和 error.log</p>
+</code></pre><p>然后就可以去测试了，https://&lt;domain.com&gt;,如果成功可以显示那个test html page，如果有问题，请使用docker logs -f <container>,或者查看日志目录先access.log 和 error.log</p>
 <h1 id="cert-renew">Cert Renew</h1>
 <p>Let’s Encrypt 签发的证书有效期只有 90 天，所以需要每隔三个月就要更新一次安全证书,为了能让你的网站能被安全的保护起来，所以是非常有必要去更新cert的。certbot-auto 支持手动和自动更新两种cert更新模式，我们来测试一下这两种模式
 首先运行测试一下能否更新,调试模式，不是真的更新</p>
 <pre tabindex="0"><code>./certbot-auto renew --dry-run
 </code></pre><p>获得的结果截图如下
-<!-- raw HTML omitted --></p>
+<img src="/img/2019-07-14-free-https-certs-docker-nginx/20190714194434.png" style="margin-left:20px" /></p>
 <p>手动更新模式：</p>
 <pre tabindex="0"><code>./certbot-auto renew -v
 </code></pre><p>自动更新模式：</p>
 <pre tabindex="0"><code>./certbot-auto renew --quiet --no-self-upgrade
 </code></pre><blockquote>
-<p>PS:该部分一般有运维人员集中进行处理，CA证书自动生成后还需要被加载一下去刷新，在本例中，需要运行docker container exec <!-- raw HTML omitted --> nginx -s reload 去刷新</p>
+<p>PS:该部分一般有运维人员集中进行处理，CA证书自动生成后还需要被加载一下去刷新，在本例中，需要运行docker container exec <container> nginx -s reload 去刷新</p>
 </blockquote>
 <p>更新后的结果展示
-<!-- raw HTML omitted --></p>
+<img src="/img/2019-07-14-free-https-certs-docker-nginx/20190714195417.png" style="margin-left:20px" /></p>
 <p>Q&amp;A:</p>
 <ol>
 <li>policy-forbids-issuing-for-name-on-amazon-ec2-domain

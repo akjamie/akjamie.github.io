@@ -321,7 +321,7 @@ OK
 </ul>
 <h2 id="有序链表和跳跃表">有序链表和跳跃表</h2>
 <p>简单比较如下图，查找51，跳跃表的查找性能相较于链表效会更好。
-<!-- raw HTML omitted --></p>
+<img src='/img/2022-05-26-redis-basic/linkedlist-vs-skiplist.png' style="height: 379px; margin-left: 0px;" /></p>
 <h2 id="新数据类型">新数据类型</h2>
 <ul>
 <li>Bitmaps - 对位的操作
@@ -445,7 +445,7 @@ OK
 <li>maxmemory-samples - LRU, LFU and minimal TTL algorithms are not precise algorithms but approximated，by default redis Redis will check five keys and pick the one that was used least recently</li>
 </ul>
 <h1 id="发布与订阅">发布与订阅</h1>
-<!-- raw HTML omitted -->
+<img src='/img/2022-05-26-redis-basic/pub-sub-01.jpg' style="height: 294px; margin-left: 0px;" />
 <h1 id="示例场景">示例场景</h1>
 <ul>
 <li>短信验证码</li>
@@ -453,8 +453,8 @@ OK
 <blockquote>
 <p>主要思路：<br>
 1&gt;  随机生成6位数字码<br>
-2&gt; 存储验证码到redis，且设置ttl(如2mins), sample key pattern: &lt;app-name/system-name&gt;:<!-- raw HTML omitted -->:<!-- raw HTML omitted -->, e.g. &lsquo;user-service:13992590000:678325&rsquo;<br>
-3&gt; 其他限制，如每天每个手机号可以发送的验证码的次数，设置单独的key来管理发送次数，sample key pattern：&lt;app-name/system-name&gt;:<!-- raw HTML omitted -->:count， 如果次数超过limit则不生成验证码返回exception<br>
+2&gt; 存储验证码到redis，且设置ttl(如2mins), sample key pattern: &lt;app-name/system-name&gt;:<phone-number>:<verificaiton-code>, e.g. &lsquo;user-service:13992590000:678325&rsquo;<br>
+3&gt; 其他限制，如每天每个手机号可以发送的验证码的次数，设置单独的key来管理发送次数，sample key pattern：&lt;app-name/system-name&gt;:<phone-number>:count， 如果次数超过limit则不生成验证码返回exception<br>
 4&gt; 调用短信服务商接口发送短信<br>
 <a href="https://github.com/cloud-poc/redis-test">redis-test-sample</a></p>
 </blockquote>

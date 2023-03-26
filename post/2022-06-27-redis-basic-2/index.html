@@ -363,7 +363,7 @@ save 300 10 - 300秒内有10个key变化就吃法持久化</p>
 <p>应对AOF文件越来越大，当大小超过阈值(文件大小和增加比例)，redis启动AOF内容压缩，保留恢复数据的最小指令集，可以强制压缩bgrewriteaof。</p>
 <p>重写的流程：</p>
 <ul>
-<li>fork出进程将文件重写(先写临时文件，然后在merge)，<!-- raw HTML omitted --><strong>redis 4.0</strong>版本以后，是指把rdb的快照以二进制的形式附在新aof头部，作为已有的历史数据，替换掉原来的operation log<!-- raw HTML omitted --></li>
+<li>fork出进程将文件重写(先写临时文件，然后在merge)，<span style="color:red"><strong>redis 4.0</strong>版本以后，是指把rdb的快照以二进制的形式附在新aof头部，作为已有的历史数据，替换掉原来的operation log</span></li>
 </ul>
 <p>优点：</p>
 <ul>

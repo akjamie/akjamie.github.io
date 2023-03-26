@@ -372,7 +372,7 @@ hash-max-zipmap-value 64 #配置value最大为64字节
 ○ Redis会将一个事务中的命令序列化，然后按照顺序执行<br>
 ○ 执行过程中不会被其他命令插入，不允许出现加塞行为<br>
 批量操作在发送exec命令前被放入队列缓存， 收到exec命令后进入事务执行，事务中的任何命令执行失败，其余命令继续执行
-<!-- raw HTML omitted --></p>
+<img style="margin-left:20px" src="/img/2019-08-04-redis-primary-knowledge/txn.png" /></p>
 <h2 id="常用命令-5">常用命令</h2>
 <pre><code>○ Multi 标记事务开始
 ○ Exec 执行所有事务块中的命令
@@ -380,7 +380,50 @@ hash-max-zipmap-value 64 #配置value最大为64字节
 ○ Watch key1 [key2], 监视一个或者多个key，如果在事务执行之前这些key被其他命令修改，则事务被取消
 ○ Unwatch 取消watch命令监视的所有key，如果执行了watch 命令之后，exec或者discard命令被执行，那么就不需要执行unwatch了
 </code></pre>
-<!-- raw HTML omitted -->
+<img style="margin-left:20px" src="/img/2019-08-04-redis-primary-knowledge/txn-sample.png" />
+## 错误处理
+    ○ 如果执行的某个命令报出了错误，只有报错的命令不会被执行，其他命令正常执行
+    ○ 如果某条命令出现了报告错误(语法错误)，执行的整个队列会被取消
+# 数据备份 - RDB
+redis默认的持久化机制，RDB相当于内存快照，保存的是一种状态,将内存的数据以快照的方式写入到二进制文件中(一种压缩的二进制文件)，默认的文件名为dump.rdb  
+    • save命令  
+    save命令会阻塞redis服务器的进程，直到RDB文件创建完，在该期间，redis不能处理任何的命令请求，这就是save命令最大的缺陷。  
+    • bgsave命令  
+    与save命令不同的是，bgsave在生成RDB文件时，会派生出一个子进程，子进程负责创建RDB文件，在此期间，主进程和子进程是同时存在的，因此不会阻塞redis服务器进程  
+## RDB的配置
+```
+save 900 1
+save 300 10
+save 60 10000
+dbfilename dump.rdb
+dir ./      #配置 RDB 文件存放的路径
+stop-writes-on-bgsave-error yes    #当生成 RDB 文件出错时是否继续处理 Redis 写命令，默认为不处理
+rdbcompression yes  #是否对 RDB 文件进行压缩
+rdbchecksum yes  #是否对 RDB 文件进行校验和校验
+```
+**Pros**:  
+    1）通过合理的配置，可以让Redis每隔一段时间就保存一次数据库副本，也可以很方便地将数据还原到特定的时间点。  
+    2）RDB文件相比AOF占用的空间更小，恢复数据的速度也更快。  
+    3）如果创建RDB文件时出现了错误，Redis不会将它用于替换原来的文件，所以出错时不会影响到之前保存的版本。  
+**Cons**:  
+    1）如果硬件、系统、Redis三者其中之一出现问题而崩溃，Redis会丢失全部数据，保留下来的数据只有上一个时间点创建的快照。如果数据对于应用程序来说非常重要，那么出现错误时的损失会非常大。  
+    2）fork子进程占用的内存随着数据库中数据的增加而增加，耗费的时间也会越来越多  
+# 数据备份 - AOF(append only file)  
+  快照方式是一定的间隔时间做一次，所以redis意外down就会丢失最后一次快照的所有修改，比如900s,AOF是redis对将所有的写命令保存到一个aof文件中，根据这些写命令，实现数据的持久化和数据恢复。
+## AOF配置
+```
+appendonly yes
+appendfilename "appendonly.aof"
+appendfsync everysec 
+#同步频率  
+  - always：redis执行每个写命令时，都同步写入硬盘，这样会严重降低redis性能  
+  - everysec：每秒执行一次，显示的在这一秒内执行的写命令同步到硬盘；  
+  - no: 不同步到硬盘（让操作系统来决定何时进行同步）  
+```
+## AOF文件生成机制
+  生成过程包括三个步骤：命令追加、文件写入、文件同步。  
+  redis打开AOF持久化功能之后，redis在执行完一个写命令后，把执行的命令首先追加到redis内部的aof_buf缓冲区末尾，此时缓冲区的记录还没有写到appendonly.aof文件中。
+  然后，缓冲区的写命令会被写入到 AOF 文件，这一过程是文件写入过程。对于操作系统来说，调用write函数并不会立刻将数据写入到硬盘，为了将数据真正写入硬盘，还需要调用fsync函数， 调用fsync函数即是文件同步的过程，只有经过了文件的同步过程，写命令才真正的被保存到了AOF文件中。appendfsync 就是配置同步的频率的选项.
 <p><strong>Pros</strong>:<br>
 1）.提供了多种同步命令的方式，默认1秒同步一次写命令，做多会丢失1秒内的数据；<br>
 2）.如果AOF文件有错误，比如在写AOF文件时redis崩溃了，redis提供了多种恢复AOF文件的方式，例如使用redis-check-aof工具修正AOF文件（一般都是最后一条写命令有问题，可以手动取出最后一条写命令）；<br>

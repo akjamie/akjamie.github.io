@@ -224,7 +224,7 @@
 <p>To run the following command to deploy dashboard</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
 </span></span></code></pre></div><p>once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully.
-<!-- raw HTML omitted -->
+<img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-01.png' style="height: 484px;margin-left: 0px;"/>
 ps:</p>
 <ol>
 <li>On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service,  the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</li>
@@ -237,11 +237,11 @@ Here i will use Alicould for instance, my Domain name is it-meta.space.</p>
 <p>the menu naviagation is in below:
 Aliyun Console &raquo; Certificate Management Service &raquo; SSL Certificates &raquo; Manage Free Certificates</p>
 <p>on the Free cert management page, you can create 20 free certs, after raising request, the cert will be ready within minutes.
-<!-- raw HTML omitted --></p>
+<img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-02.png' style="height: 311px;margin-left: 0px;"/></p>
 <h2 id="download-the-cert">Download the cert</h2>
 <p>On the right hand side of the cert generated, you can trigger the cert download after click the &lsquo;Download&rsquo; or 3 dot mean.
 in the package downloaded, there are two files, 1 key file and 1 cert.
-<!-- raw HTML omitted --></p>
+<img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-02.png' style="width: 1310px;margin-left: 0px;"/></p>
 <h1 id="replace-tsl-cert">Replace TSL cert</h1>
 <p>Run following command to relace the TSL certs with newly downloaded in above steps.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># check existing secert</span>
@@ -259,7 +259,7 @@ in the package downloaded, there are two files, 1 key file and 1 cert.
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl create secret tls k8s-dashboard --key 7588655_dashboard.it-meta.space.key --cert 7588655_dashboard.it-meta.space.pem -n kubernetes-dashboard
 </span></span><span style="display:flex;"><span>kubectl get secret -n kubernetes-dashboard
 </span></span></code></pre></div><p>Captured screenshot for reference.
-<!-- raw HTML omitted --></p>
+<img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-04.png' style="height: 634px;margin-left: 0px;"/></p>
 <h2 id="create-ingress-for-dashboard">Create Ingress for dashboard</h2>
 <p>here is the sample of yaml file - k8s-dashboard-ingress.yaml</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apiVersion: networking.k8s.io/v1
@@ -326,10 +326,10 @@ in the package downloaded, there are two files, 1 key file and 1 cert.
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>192.168.58.155 dashboard.it-meta.space
 </span></span></code></pre></div><h2 id="access-the-dashboard-1">Access the dashboard</h2>
 <p>Until now, the setup is almost done, let&rsquo;s try the dashboard.
-<!-- raw HTML omitted --></p>
+<img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-05.png' style="height: 620px;margin-left: 0px;"/></p>
 <p>It looks good, now trying to get token and login it.<br>
 Using below command to get login token and use it to login the dashboard console.<br>
-<!-- raw HTML omitted -->kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep kubernetes-dashboard | awk &lsquo;{print $1}&rsquo;)<!-- raw HTML omitted --></p>
+<span style="color:green;font-weight:bold">kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep kubernetes-dashboard | awk &lsquo;{print $1}&rsquo;)</span></p>
 <h2 id="optional----create-a-new-user-with-cluster-admin-role">Optional -  create a new user with cluster-admin role</h2>
 <p>Becuase the existing user kubernetes-dashboard has very limited access right to cluster resources, hence suggest to create a new service account.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apiVersion: v1
@@ -352,11 +352,11 @@ Using below command to get login token and use it to login the dashboard console
 </span></span><span style="display:flex;"><span>  namespace: kubernetes-dashboard
 </span></span></code></pre></div><p>once done, can use this new user to get token to login dashboard.
 v1.23 and older  version<br>
-<!-- raw HTML omitted -->kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep dashboard-admin | awk &lsquo;{print $1}&rsquo;) <!-- raw HTML omitted --></p>
+<span style="color:green;font-weight:bold">kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep dashboard-admin | awk &lsquo;{print $1}&rsquo;) </span></p>
 <p>v1.24 and later version<br>
-<!-- raw HTML omitted -->kubectl -n kubernetes-dashboard create token dashboard-admin <!-- raw HTML omitted --></p>
+<span style="color:green;font-weight:bold">kubectl -n kubernetes-dashboard create token dashboard-admin </span></p>
 <p>after login, you can see the resources running on the clusers and do the operation work through this dashboard.
-<!-- raw HTML omitted --></p>
+<img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-06.png' style="height: 587px;margin-left: 0px;"/></p>
 
 
                 

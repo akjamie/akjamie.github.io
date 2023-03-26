@@ -286,7 +286,7 @@ make install-config</p>
 <blockquote>
 <p>vim /etc/proxychains.conf
 在文件尾部增加一行：socks5    127.0.0.1  1080
-<!-- raw HTML omitted --></p>
+<img src="/img/2019-07-14-linux-network-proxy-setup-desktop-terminal/15532408-1405d25f0bcee21b.png" style="margin-left:25px" /></p>
 </blockquote>
 <p>现在你可以测试了，测试命令如下：</p>
 <blockquote>
@@ -321,7 +321,7 @@ WantedBy=multi-user.target</em></p>
 如果在上述添加SS服务的过程中遇到这个错误的话
 /usr/lib/x86_64-linux-gnu/libcrypto.so.1.1: undefined symbol: EVP_CIPHER
 请修改/usr/local/lib/python3.6/dist-packages/shadowsocks/crypto/openssl.py，更新第55行和111行
-将libcrypto.EVP_CIPHER_CTX_cleanup(self._ctx) 修改为 <!-- raw HTML omitted -->libcrypto.EVP_CIPHER_CTX_reset(self._ctx)<!-- raw HTML omitted --></p>
+将libcrypto.EVP_CIPHER_CTX_cleanup(self._ctx) 修改为 <label style="color:blue">libcrypto.EVP_CIPHER_CTX_reset(self._ctx)</label></p>
 
 
                 

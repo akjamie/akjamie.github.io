@@ -260,11 +260,11 @@ spring:
 config.root-path: /Users/jamie/Documents/work-benches/workspace-20190524/service-config
 </code></pre><ul>
 <li>config repo:
-<!-- raw HTML omitted --></li>
+<img src='/img/2020-11-29-run-application-on-k8s/config-repo-01.png' style="height: 150px;margin-left: 0px;"/></li>
 </ul>
 <p>3.test if works<br>
 to test if you can get the configs configured in above steps.<br>
-<!-- raw HTML omitted -->
+<img src='/img/2020-11-29-run-application-on-k8s/config-test-01.png' style="height: 600px;margin-left: 0px;"/>
 from above screenshot, the configs correctly responded from config server, then let&rsquo;s move to docker image build.</p>
 <h2 id="docker-image-build--push">Docker image build &amp; push</h2>
 <p>There are several most widely used Maven plugins for Docker in the open source community, for example, fabric8’s docker-maven-plugin,
@@ -301,8 +301,8 @@ for our application, let&rsquo;s start with its configuration.</p>
 </ul>
 <pre tabindex="0"><code>mvn clean compile jib:build
 </code></pre><p>after finishes, check the result in local and docker hub:
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted --></p>
+<img src='/img/2020-11-29-run-application-on-k8s/docker-image-01.png' style="height: 45px;margin-left: 0px;"/>
+<img src='/img/2020-11-29-run-application-on-k8s/docker-image-02.png' style="height: 330px;margin-left: 0px;"/></p>
 <h1 id="use-local-persistent-volume-to-share-the-service-configs">Use Local Persistent Volume to share the service configs</h1>
 <p>In our application, we&rsquo;re using the native mode for config server to load the application configs, hence we need to share
 the files to the pod or container in Kubernates cluster. to achive this goal, what we need to do as following:</p>

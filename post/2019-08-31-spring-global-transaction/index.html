@@ -239,7 +239,7 @@
 </ol>
 <h2 id="xa与jta的联系">XA与JTA的联系</h2>
 <p>jta是xa规范在java中的实现
-<!-- raw HTML omitted --></p>
+<img src='/img/2019-08-31-spring-global-transaction/xa-jta.png' style="height: 317px;margin-left: 15px;"/></p>
 <h1 id="全局jta事务">全局/JTA事务</h1>
 <h2 id="jta事务的两种支持方式">JTA事务的两种支持方式</h2>
 <ol>
@@ -442,7 +442,25 @@ o.s.t.jta.JtaTransactionManager          : Using JTA UserTransaction: <strong>co
                                     }
                             // 创建 TransactionImp，保存tid和transactionImpl的关系
                             com.atomikos.icatch.jta.TransactionManagerImp#recreateCompositeTransactionAsJtaTransaction
-</code></pre><!-- raw HTML omitted -->
+</code></pre><p>
+4. 过程日志分析  
+ - Create transaction  
+ - Participant in existing transaction for 'customer' datasource  
+ - XAResource.start for 'customer'  
+ - XAResource.end for 'customer'  
+ - Participant in existing transaction for 'audit' datasource  
+ - XAResource.start for 'audit'  
+ - XAResource.end for 'audit'  
+ - Initiating transaction commit  
+ - XAResource.prepare for 'customer'  
+ - XAResource.prepare for 'audit'  
+ - XAResource.commit for 'customer'  
+ - XAResource.commit for 'audit'  
+<img src="/img/2019-08-31-spring-global-transaction/txn-01.png" style="margin-left: 15px"/>
+<img src="/img/2019-08-31-spring-global-transaction/txn-02.png" style="margin-left: 15px"/>
+</p>
+ 参考文章:  
+ https://www.ibm.com/developerworks/cn/java/j-lo-jta/index.html  
 
 
                 

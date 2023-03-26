@@ -344,13 +344,13 @@ S: c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391
 </code></pre><h2 id="key-points-summary">Key points summary</h2>
 <blockquote>
 <ol>
-<li><!-- raw HTML omitted -->cluster-replicas 1 <!-- raw HTML omitted --> ==&gt;<br>
+<li><span style="color: red; font-weight: bold">cluster-replicas 1 </span> ==&gt;<br>
 specify 1 master 1 slave mode,should guarantee the master and slave node are not on same physical machine.</li>
 </ol>
 </blockquote>
 <blockquote>
 <ol start="2">
-<li><!-- raw HTML omitted -->Slot<!-- raw HTML omitted --> ==&gt;<br>
+<li><span style="color: red; font-weight: bold">Slot</span> ==&gt;<br>
 when insert key-value pair to redis, redis will use algorithm [CRC16(KEY)] to get a slot number, then map to redis master node according to their slot ranges of each master node.</li>
 </ol>
 </blockquote>
@@ -440,7 +440,7 @@ OK
 </blockquote>
 <h1 id="auto-failover">Auto Failover</h1>
 <p>When a master fails or is found to be unreachable by the majority of the cluster as determined by the nodes communication via the gossip port, the remaining masters hold a vote and elect one of the failing masters’ slaves to take its place.</p>
-<p>Do a demo in local based on the cluster already setup in previous steps, will shutdown 6391 and check the cluster status, the expected behavior is <!-- raw HTML omitted -->the 6379 will be elected as master node to replace the 6391, and the 6391 will be worked as slave node after restarted.<!-- raw HTML omitted --></p>
+<p>Do a demo in local based on the cluster already setup in previous steps, will shutdown 6391 and check the cluster status, the expected behavior is <span style='background-color: yellow'>the 6379 will be elected as master node to replace the 6391, and the 6391 will be worked as slave node after restarted.</span></p>
 <p>Firstly, capture exist redis node status for later comparison.</p>
 <pre tabindex="0"><code># run cluster nodes on any cluster nodes
 c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 master - 0 1657641720841 7 connected 0-5460
@@ -486,7 +486,7 @@ c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 slave 58b3c8fc
 68913fbd6577582d8aba73be69f7c38430c9cb37 192.168.0.110:6380@16380 slave 3a506595ed87964b42ef135d8862acef0613626e 0 1657642039201 15 connected
 
 4d2ade8214274a1653d2ba68f0ab12f0e61502d5 192.168.0.110:6390@16390 master - 0 1657642036000 14 connected 10923-16383
-</code></pre><p>What if both master and it&rsquo;s slaves are down, then depends on the config value of <!-- raw HTML omitted --> cluster-require-full-coverage <!-- raw HTML omitted -->, if cluster-require-full-coverage=yes, then whole custer cannot work; if no, then only the hash slots of the unavailable master cannot work.</p>
+</code></pre><p>What if both master and it&rsquo;s slaves are down, then depends on the config value of <span style='color:red'> cluster-require-full-coverage </span>, if cluster-require-full-coverage=yes, then whole custer cannot work; if no, then only the hash slots of the unavailable master cannot work.</p>
 <h1 id="pros-and-cons">Pros and Cons</h1>
 <p>pros:</p>
 <ul>

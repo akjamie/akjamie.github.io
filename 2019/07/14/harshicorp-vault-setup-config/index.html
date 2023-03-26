@@ -350,7 +350,7 @@ disable_mlock = true
   -H &#39;X-Vault-Token: s.nBXC2nmVs7IVLHk6zsU7ZoaT&#39; \
   -d &#39;{&#34;policy&#34;:&#34;{\&#34;path\&#34;:{\&#34;secret/*\&#34;:{\&#34;capabilities\&#34;:[\&#34;create\&#34;, \&#34;read\&#34;, \&#34;update\&#34;, \&#34;delete\&#34;, \&#34;list\&#34;]}}}&#34;}&#39;
 </code></pre><p>b.create user policy
-similar request as step <!-- raw HTML omitted -->create admin-policy<!-- raw HTML omitted -->
+similar request as step <label style="color:red">create admin-policy</label>
 c.check the policy we created</p>
 <pre tabindex="0"><code>curl -X GET \
   https://demo.xxx.com/vault/v1/sys/policy/admin-policy \
@@ -439,7 +439,7 @@ c.check the policy we created</p>
     }
 }
 </code></pre><h2 id="use-token-to-readwrite-data">Use token to read/write data</h2>
-<p>$\color{red}{Admin-token}$ to put key/value, otherwise got <!-- raw HTML omitted -->error occurred:permission denied<!-- raw HTML omitted --></p>
+<p>$\color{red}{Admin-token}$ to put key/value, otherwise got <label style="color:red">error occurred:permission denied</label></p>
 <pre tabindex="0"><code>curl -X POST \
   https://demo.xxx.com/vault/v1/secret/test \
   -H &#39;Cache-Control: no-cache&#39; \
@@ -473,7 +473,7 @@ curl -X GET \
 }
 </code></pre><h2 id="error-no-handler-for-route-secrettest">Error: no handler for route &lsquo;secret/test&rsquo;</h2>
 <p>check secrets engine if corresponding is enabled or not, commands:
-a. docker exec -it <!-- raw HTML omitted --> /bin/sh
+a. docker exec -it <container-name> /bin/sh
 b.set VAULT_ADDR=http://127.0.0.1:8200, and VAULT_TOKEN={root token}
 c. vault secrets list, to list out all secrets, by default,  kv secrets engine at: secret/ should be enabled, if not found, please move forward to #d
 d. vault secrets enable -path=secret kv

@@ -230,7 +230,7 @@
 </ol>
 <h1 id="architecture-diagram">Architecture diagram</h1>
 <p>high level architecture diagram is for easier understanding of this demo. The diagram illustrates an application load balancers to route traffic to EC2 instances hosted in subnet-a(ap-northeast-1c) and subnet-c(ap-northeast-1d), these EC2 instances also are managed by auto scaling group which could automate the capacity management and fault tolerance and ensure the capacity to handle the current traffic demand. Also notification service configured on auto scaling group to timely notify the scaling machanism.
-<!-- raw HTML omitted --></p>
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/aws-auto-sacle-test-arch.png' style="height: 810px;margin-left: 0px;"/></p>
 <h1 id="implementation">Implementation</h1>
 <h2 id="prepare-the-docker-image">Prepare the Docker image</h2>
 <p>build a simple springboot application and expose a /health interface. let&rsquo;s see the controller.</p>
@@ -268,7 +268,7 @@ public ResponseEntity hello(HttpServletRequest request) {
     &lt;/configuration&gt;
 &lt;/plugin&gt;
 </code></pre><p>after tested the interface, use <strong>mvn clean compile jib:build</strong> to build the image, once done you could see the image in AWS ECR.
-<!-- raw HTML omitted --></p>
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/aws-ecr-image-health.png' style="height: 87px;margin-left: 0px;"/></p>
 <h2 id="create-infrastructure">Create infrastructure</h2>
 <p>To create below resources for this demo:</p>
 <table>
@@ -347,15 +347,15 @@ docker run -d -p 80:8080 --name health-check public.ecr.aws/a0i4s5a9/utilities-h
 access the FQDN display on the ELB detail page on browser directly, if get expected response, then great, if not, dont be sad, please check the security group settings and the subnet routes again.</p>
 <h1 id="pressure-testing">Pressure testing</h1>
 <p>install apacke ab to make request, please see below picture
-<!-- raw HTML omitted --></p>
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/ab-test.png' style="height: 400px;margin-left: 0px;"/></p>
 <p>check the traffic change status on the ELB monitoring dashboard, capture a screenshot for reference:
-<!-- raw HTML omitted --></p>
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/picture-requests.png' style="height: 400px;margin-left: 0px;"/></p>
 <p>CPU utilization on the auto scale group monitoring dashboard:
-<!-- raw HTML omitted --></p>
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/cpu-utilization.png' style="height: 426px;margin-left: 0px;"/></p>
 <p>Instances count during the peak traffic volume:
-<!-- raw HTML omitted --></p>
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/instance-list.png' style="height: 320px;margin-left: 0px;"/></p>
 <p>last but not the least, during the test preparation, some additional changes generated, here paste the bills for reference, hope helps.
-<!-- raw HTML omitted --></p>
+<img src='/img/2021-08-09-aws-demo-01-autoscale-test/bills.png' style="height: 629px;margin-left: 0px;"/></p>
 <h1 id="others">Others</h1>
 <h2 id="issues-encountered">Issues encountered</h2>
 <p>The whole demo process is not smooth as write a blog, actually encountered lots of issues, for example:</p>

@@ -249,7 +249,7 @@ Also applied the microservice design to eliminate the system dependency and well
 <li>In downstream internal processing, main thread distributes the workload to sub thread for the each file to be synced, and aggregate the finaly process status, report the reconcilation result back to Scheduling Platform.</li>
 <li>Alert mechanism is leveraged in Scheduling Platform to report the exceptional cases like overdue, failure according the collected task process status.<br>
 More details please refer to below diagram.
-<!-- raw HTML omitted --></li>
+<img src='/img/2021-05-08-microservice-data-sync/micro-service-data-sync-s1.jpg' style="height: 831px; margin-left: 0px;"/></li>
 </ol>
 <h3 id="advantages-and-drawbacks">Advantages and drawbacks</h3>
 <p>1.<strong>Advantages</strong></p>
@@ -267,7 +267,7 @@ Improvements are:</p>
 <li>Bring in task group concept(or actions under task), to enrich the scheduling platform to support both single task and task group, and add SYNC/ASYNC flag in the config, if all the tasks under group are in ASYNC way, then scheduling platform could handle the tasks in async way, so that the traffic could be route the multiple downstream instances to get better resource untilization.</li>
 <li>Decoupled the file sync processes, each file has it&rsquo;s own task schedule and status, it&rsquo;s independent with each other, no matter the data source from same system or different system.</li>
 <li>Each file sync api could have it&rsquo;s separate authentication setting.
-<!-- raw HTML omitted --></li>
+<img src='/img/2021-05-08-microservice-data-sync/micro-service-data-sync-s2.jpg' style="height: 688px; margin-left: 0px;"/></li>
 </ol>
 <h1 id="the-end">The end</h1>
 <p>No matter what techniques are used in the behind, the solution could support business requirement is good solution, at the beginning, not every architect could put all the scenarios identified and unidentified into consideration to good support user&rsquo;s needs. Hence continue to fine tune it is required</p>

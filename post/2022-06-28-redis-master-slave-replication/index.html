@@ -299,8 +299,8 @@ daemonize yes
 
 replicaof 127.0.0.1 6379
 # -----------------------------------------------------------------------
-</code></pre><p>启动redis实例  &rsquo;nohup redis-server ./config/redis-<!-- raw HTML omitted -->.conf&rsquo;, 当3个实例启动完成后, 在master 上检查replication的配置,看到如下信息则主从配置成功
-<!-- raw HTML omitted --></p>
+</code></pre><p>启动redis实例  &rsquo;nohup redis-server ./config/redis-<port>.conf&rsquo;, 当3个实例启动完成后, 在master 上检查replication的配置,看到如下信息则主从配置成功
+<img src='/img/2022-06-28-redis-master-slave-replication/replica-01.png' style="height: 428px;margin-left: 0px;"/></p>
 <p>3中加入到复制集的方式</p>
 <ul>
 <li>依赖于config文件中的__replicaof {masterhost} {masterport}__命令把节点加入到集群</li>
@@ -334,7 +334,7 @@ protected-mode no
 # monitor master node
 sentinel monitor mymaster 127.0.0.1 6379 1	
 </code></pre><p>启动哨兵 - <strong>redis-sentinel ./config/sentinel.conf</strong>, 如果启动正常可以在日志中看到master和slave节点的信息。
-<!-- raw HTML omitted --></p>
+<img src='/img/2022-06-28-redis-master-slave-replication/sentinel-01.png' style="weight: 1450px;height: 132px;margin-left: 0px;"/></p>
 <h3 id="验证failover">验证failover</h3>
 <h4 id="验证前server信息">验证前server信息</h4>
 <table>
@@ -364,7 +364,7 @@ sentinel monitor mymaster 127.0.0.1 6379 1
 <tr>
 <td>127.0.0.1</td>
 <td>26379</td>
-<td><!-- raw HTML omitted -->sentinel<!-- raw HTML omitted --></td>
+<td><span style='color:red'>sentinel</span></td>
 </tr>
 </tbody>
 </table>
@@ -386,7 +386,7 @@ repl_backlog_first_byte_offset:1
 repl_backlog_histlen:43115
 </code></pre><h4 id="failover后的server-信息">failover后的server 信息</h4>
 <p>手动shutdown 6379，查看sentinel日志获取新的主节点信息，并输出新主节点上的replication info.
-<!-- raw HTML omitted -->
+<img src='/img/2022-06-28-redis-master-slave-replication/sentinel-02.png' style="weight: 1852px;height: 654px;margin-left: 0px;"/>
 由上图所示，新的master 为6380.</p>
 <pre tabindex="0"><code>Jamies-MacBook-Pro:workspace-20190620 jamie$ redis-cli -p 6380
 127.0.0.1:6380&gt; info replication
@@ -422,7 +422,7 @@ slave0:ip=127.0.0.1,port=6381,state=online,offset=90136,lag=1
 <tr>
 <td>127.0.0.1</td>
 <td>26379</td>
-<td><!-- raw HTML omitted -->sentinel<!-- raw HTML omitted --></td>
+<td><span style='color:red'>sentinel</span></td>
 </tr>
 </tbody>
 </table>
@@ -465,7 +465,7 @@ public class RedisWriteOperationWithFailover {
     }  
 }
 </code></pre><p>测试结果如图
-<!-- raw HTML omitted -->
+<img src='/img/2022-06-28-redis-master-slave-replication/sentinel-03.png' style="height: 727px;margin-left: 0px;"/>
 从上图中得知：</p>
 <ul>
 <li>2022-07-07 23:34:58发现master down机，然后尝试重新连接一直fail。</li>

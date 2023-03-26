@@ -235,7 +235,7 @@
 <p>insertOne - since version 3.2<br>
 insertMany - since version 3.2</p>
 <p>MongoShell command format:
-<!-- raw HTML omitted --></p>
+<img src='/img/2020-09-05-mongo-basics/mongo-shell-command-format.png' style="height: 77px;margin-left: 15px;"/></p>
 <h3 id="samples">samples</h3>
 <p>to provide some samples and corresponded shell command for better understand &amp; master each params &amp; grammer</p>
 <p>1&gt; insert one document to inventory</p>
@@ -244,7 +244,7 @@ insertMany - since version 3.2</p>
            &#34;tags&#34;: [&#34;cotton&#34;],
            size: {&#34;h&#34;:28,&#34;w&#34;:100,&#34;uom&#34;: &#34;mm&#34;}
            })
-</code></pre><!-- raw HTML omitted -->
+</code></pre><img src='/img/2020-09-05-mongo-basics/insert-one-1.png' style="height: 90px;margin-left: 15px;"/>
 <p>2&gt; insert many records in same command</p>
 <pre tabindex="0"><code>db.inventory.insertMany([{&#34;item&#34;: &#34;canvas-new&#34;,
        &#34;qty&#34;: 100,
@@ -255,7 +255,7 @@ insertMany - since version 3.2</p>
        &#34;tags&#34;:[&#34;ios&#34;,&#34;HIFI&#34;],
        size:{&#34;h&#34;:20,&#34;w&#34;:30,&#34;uom&#34;: &#34;cm&#34;}
      }])
-</code></pre><!-- raw HTML omitted -->
+</code></pre><img src='/img/2020-09-05-mongo-basics/insert-many-1.png' style="height: 160px;margin-left: 15px;"/>
 <blockquote>
 <p>Insert Behavior:<br>
 . Collection Creation, if the collection does not exist, the insert operation will create the collection.<br>
@@ -265,7 +265,7 @@ insertMany - since version 3.2</p>
 <h2 id="find">Find</h2>
 <p>it&rsquo;s equative to SELECT in SQL, and return data in cursor.</p>
 <h3 id="basic-grammer-you-should-know">basic grammer you should know</h3>
-<!-- raw HTML omitted -->
+<img src='/img/2020-09-05-mongo-basics/find-grammer-01.png' style="height: 180px;margin-left: 15px;"/>
 <table>
 <thead>
 <tr>
@@ -319,10 +319,16 @@ insertMany - since version 3.2</p>
 <h3 id="samples-1">samples</h3>
 <p>1&gt; find users who&rsquo;s userName starts with &lsquo;jamie&rsquo;</p>
 <pre tabindex="0"><code>b.users.find({&#34;userName&#34;: /^jamie/}).pretty()
-</code></pre><!-- raw HTML omitted -->
+</code></pre><img src='/img/2020-09-05-mongo-basics/find-mql-01.png' style="height: 250px;margin-left: 15px;"/>
+2> find users which userName starts with 'Test' and 'authType' is 'PASSWORD'
+```
+db.users.find({"userName": /^Test/, "authType": "PASSWORD"}).pretty()
+```
+<img src='/img/2020-09-05-mongo-basics/find-mql-02.png' style="height: 300px;margin-left: 15px;"/>
+<img src='/img/2020-09-05-mongo-basics/find-mql-03.png' style="height: 80px;margin-left: 15px;"/>
 <p>3&gt; find users who&rsquo;s userName starts with &lsquo;Test&rsquo; and &lsquo;authType&rsquo; is &lsquo;PASSWORD&rsquo; and his/her age between 18 and 45.</p>
 <pre tabindex="0"><code>db.users.find({&#34;userName&#34;: /^Test/, &#34;authType&#34;: &#34;PASSWORD&#34;,&#34;userInfo.age&#34;: {$gt: 18, $lte: 45}}).count()
-</code></pre><!-- raw HTML omitted -->
+</code></pre><img src='/img/2020-09-05-mongo-basics/find-mql-04.png' style="height: 55px;margin-left: 15px;"/>
 <p>4&gt; find users which userName start with &lsquo;Test&rsquo; and &lsquo;authType&rsquo; is &lsquo;PASSWORD&rsquo; and meet either of below two conditions:<br>
 &ndash; &lsquo;userInfo.gender&rsquo; = &lsquo;FEMALE&rsquo; and age &gt;=3  and age &lt; 10<br>
 &ndash; &lsquo;userInfo.gender&rsquo; = &lsquo;MALE&rsquo; and age &gt;= 18 and age &lt; 45</p>
@@ -332,10 +338,14 @@ insertMany - since version 3.2</p>
 }]}).count()
 </code></pre><p>5&gt; distinct, to find the possible values for &lsquo;authType&rsquo;</p>
 <pre tabindex="0"><code>db.users.distinct(&#39;authType&#39;, {&#34;userName&#34;: /^Test/})
-</code></pre><!-- raw HTML omitted -->
+</code></pre><img src='/img/2020-09-05-mongo-basics/find-mql-05.png' style="height: 40px;margin-left: 0px;"/>
+6> find users whose authType is OTP or WECHAT
+```
+db.getCollection("users").find({"authType": {$in : ['OTP','WECHAT']}}).limit(2).pretty()
+```
 <p>7&gt; find users which gender is null</p>
 <pre tabindex="0"><code>db.getCollection(&#34;users&#34;).find({&#34;userInfo.gender&#34;: {$exists : false}}).limit(2).pretty()
-</code></pre><!-- raw HTML omitted -->
+</code></pre><img src='/img/2020-09-05-mongo-basics/find-mql-06.png' style="height: 120px;margin-left: 0px;"/>
 <p>8&gt; projection, specify the fields we need</p>
 <pre tabindex="0"><code>db.getCollection(&#34;users&#34;).find({&#34;userInfo.gender&#34;: &#34;MALE&#34;, 
     &#34;userInfo.age&#34;: {$gte: 18, $lt: 30}
@@ -346,33 +356,34 @@ insertMany - since version 3.2</p>
     &#34;userInfo.firstName&#34;: 1, 
     &#34;userInfo.phone&#34;: 1
     }).limit(2).pretty()
-</code></pre><!-- raw HTML omitted -->
+</code></pre><img src='/img/2020-09-05-mongo-basics/find-mql-07.png' style="height: 200px;margin-left: 0px;"/>
 <h2 id="remove">Remove</h2>
-<!-- raw HTML omitted -->
+<img src='/img/2020-09-05-mongo-basics/remove-grammer-01.png' style="height: 150px;margin-left: 0px;"/>
 <h2 id="update">Update</h2>
 <h3 id="basic-grammers">basic grammers</h3>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<img src='/img/2020-09-05-mongo-basics/update-grammer-01.png' style="height: 30px;margin-left: 0px;"/>
+<img src='/img/2020-09-05-mongo-basics/update-grammer-02.png' style="height: 160px;margin-left: 0px;"/>
+<img src='/img/2020-09-05-mongo-basics/update-grammer-03.png' style="height: 240px;margin-left: 0px;"/>
+<img src='/img/2020-09-05-mongo-basics/update-grammer-04.png' style="height: 250px;margin-left: 0px;"/>
 <h3 id="samples-2">samples</h3>
 <p>1&gt; update the authType from &lsquo;string&rsquo; to &lsquo;ALIPAY&rsquo;</p>
 <pre tabindex="0"><code>db.users.updateOne({&#34;authType&#34;: &#34;string&#34;}, {$set: {&#34;authType&#34;: &#34;ALIPAY&#34;}})
-</code></pre><!-- raw HTML omitted -->
+</code></pre><img src='/img/2020-09-05-mongo-basics/update-mql-01.png' style="height: 65px;margin-left: 0px;"/>
 <p>2&gt; update all the documents -  the &lsquo;schemaVersion&rsquo; to &lsquo;0.1&rsquo; if does not exist in document</p>
 <pre tabindex="0"><code>db.users.updateMany({&#34;schemaVersion&#34;: {$exists: false}}, {$set: {&#34;schemaVersion&#34;: &#34;0.1&#34;}})
 </code></pre><p>4&gt;.add one item to an array in document</p>
 <pre tabindex="0"><code>db.users.update({&#34;userName&#34;: &#39;Annie-01&#39;}, {$push: {&#34;userInfo.tags&#34;: &#39;Springboot&#39;}})
-</code></pre><!-- raw HTML omitted -->
+</code></pre><img src='/img/2020-09-05-mongo-basics/update-mql-02.png' style="height: 220px;margin-left: 0px;"/>
 <p>5&gt;Add more than one items(does not exists) to an array in one go</p>
 <pre tabindex="0"><code>var newTags = [&#39;Mongodb&#39;,&#39;Angular&#39;,&#39;BlockChain&#39;]
 db.users.update({&#34;userName&#34;: &#39;Annie-01&#39;, &#39;userInfo.tags&#39;: {$ne: {$each: newTags}}}, {$addToSet: {&#34;userInfo.tags&#34;:{$each: newTags} }})
-</code></pre><!-- raw HTML omitted -->
+</code></pre><img src='/img/2020-09-05-mongo-basics/update-mql-03.png' style="height: 260px;margin-left: 0px;"/>
+__notes:__ _this approach can also prevent duplicated data added into array_
 <p>6&gt; update the indexed data in an array</p>
 <pre tabindex="0"><code>db.users.update({&#34;userName&#34;: &#39;Annie-01&#39;}, {$set: {&#39;userInfo.tags.3&#39;: &#39;Mysql&#39;}})
-</code></pre><!-- raw HTML omitted -->
+</code></pre><img src='/img/2020-09-05-mongo-basics/update-mql-04.png' style="height: 260px;margin-left: 0px;"/>
 <h2 id="drop-collection">Drop Collection</h2>
-<p>db.<!-- raw HTML omitted -->.drop()<br>
+<p>db.<collection>.drop()<br>
 all the documents in the collection, including the indexes, will be deleted.</p>
 <h2 id="drop-database">Drop database</h2>
 <p>db.dropDatabase()</p>
