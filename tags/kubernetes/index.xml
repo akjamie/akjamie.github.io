@@ -6,7 +6,17 @@
     <description>Recent content in Kubernetes on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 25 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 26 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Vault Agent with Kubernetes</title>
+      <link>http://akjamie.github.io/post/2023-03-26-vault-agent-with-k8s/</link>
+      <pubDate>Sun, 26 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2023-03-26-vault-agent-with-k8s/</guid>
+      <description>Challenge Nearly all requests to Vault must be accompanied by an authentication token. This includes all API requests, as well as via the Vault CLI and other libraries. If you can securely get the first secret from an originator to a consumer, all subsequent secrets transmitted between this originator and consumer can be authenticated with the trust established by the successful distribution and user of that first secret.
+The applications running in a Kubernetes environment is no exception.</description>
+    </item>
+    
     <item>
       <title>Vault on Kubernetes</title>
       <link>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</link>
@@ -15,6 +25,17 @@
       <guid>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</guid>
       <description>What is Vault? Vault introduction HashiCorp Vault is an identity-based secrets and encryption management system. A secret is anything that you want to tightly
 control access to, such as API encryption keys, passwords, and certificates. Vault provides encryption services that are gated by authentication and authorization methods.Using Vault’s UI, CLI, or HTTP API, access to secrets and other sensitive data can be securely stored and managed, tightly controlled (restricted), and auditable.</description>
+    </item>
+    
+    <item>
+      <title>Kubernetes dashboard deployment</title>
+      <link>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</link>
+      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</guid>
+      <description>Install dashboard To run the following command to deploy dashboard
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully. ps:
+On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service, the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</description>
     </item>
     
   </channel>
