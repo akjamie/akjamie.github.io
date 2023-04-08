@@ -6,7 +6,16 @@
     <description>Recent content in Kubernetes on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 26 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 08 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Explore Kubernetes Local PV &amp; PVC access mode</title>
+      <link>http://akjamie.github.io/post/2023-04-08-k8s-pv-pvc-access-mode/</link>
+      <pubDate>Sat, 08 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2023-04-08-k8s-pv-pvc-access-mode/</guid>
+      <description>A local volume represents a mounted local storage device such as a disk, partition or directory. Local volumes can only be used as a statically created PersistentVolume. Dynamic provisioning is not supported. Compared to hostPath volumes, local volumes are used in a durable and portable manner without manually scheduling pods to nodes. The system is aware of the volume&amp;rsquo;s node constraints by looking at the node affinity on the PersistentVolume.</description>
+    </item>
+    
     <item>
       <title>Vault Agent with Kubernetes</title>
       <link>http://akjamie.github.io/post/2023-03-26-vault-agent-with-k8s/</link>
