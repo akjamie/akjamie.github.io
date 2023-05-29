@@ -6,7 +6,18 @@
     <description>Recent content in Kubernetes on Jamie&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 08 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 29 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CKA &amp; important operation commands</title>
+      <link>http://akjamie.github.io/post/2023-05-29-k8s-cka/</link>
+      <pubDate>Mon, 29 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://akjamie.github.io/post/2023-05-29-k8s-cka/</guid>
+      <description>Complains about the CKA exam:
+The CKA exam environment was changed from Terminal to Remote Desktop(VNC) from Last Jun, this is an absolutely shit
+decision. The huge lagging causes that large amount of candidate&amp;rsquo;s time-wasting on always-waiting, and also Mouse is nearly useless - very difficult to locate what you want on Firefox browser, and eventually it highlights the good user experience on the k8s built-in documentation - Kubectl explain, how ridiculous it is !</description>
+    </item>
+    
     <item>
       <title>Explore Kubernetes Local PV &amp; PVC access mode</title>
       <link>http://akjamie.github.io/post/2023-04-08-k8s-pv-pvc-access-mode/</link>
