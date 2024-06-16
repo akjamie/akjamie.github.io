@@ -31,7 +31,7 @@
     
     
 
-    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <meta name="keyword"  content="&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <title>Vault on Kubernetes | Jamie&#39;s Blog</title>
@@ -100,6 +100,10 @@
                         <a href="/">All Posts</a>
                     </li>
                     
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
                         
                         <li>
                             <a href="/categories/cloud/">cloud</a>
@@ -252,11 +256,11 @@ as possible. And on bear metal machines, to deploy Vault On Kubernetes is a good
 <ol>
 <li>Export working directory and naming variables.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>export VAULT_K8S_NAMESPACE<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;vault&#34;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>export VAULT_HELM_RELEASE_NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;vault&#34;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>export VAULT_SERVICE_NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;vault-internal&#34;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>export K8S_CLUSTER_NAME<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cluster.local&#34;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>export WORKDIR<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>pwd<span style="color:#66d9ef">)</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">VAULT_K8S_NAMESPACE</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;vault&#34;</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">VAULT_HELM_RELEASE_NAME</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;vault&#34;</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">VAULT_SERVICE_NAME</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;vault-internal&#34;</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">K8S_CLUSTER_NAME</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;cluster.local&#34;</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span><span style="color:#8be9fd;font-style:italic">pwd</span><span style="color:#ff79c6">)</span>
 </span></span></code></pre></div><blockquote>
 <p>root@master:/opt/k8s/config-repo/vault/pki# echo $WORKDIR<br>
 /opt/k8s/config-repo/vault/pki</p>
@@ -264,39 +268,39 @@ as possible. And on bear metal machines, to deploy Vault On Kubernetes is a good
 <ol start="2">
 <li>Generate the private key</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>openssl genrsa -out <span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/vault.key <span style="color:#ae81ff">2048</span>
-</span></span><span style="display:flex;"><span>Generating RSA private key, <span style="color:#ae81ff">2048</span> bit long modulus
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>openssl genrsa -out <span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/vault.key <span style="color:#bd93f9">2048</span>
+</span></span><span style="display:flex;"><span>Generating RSA private key, <span style="color:#bd93f9">2048</span> bit long modulus
 </span></span><span style="display:flex;"><span>....................+++
 </span></span><span style="display:flex;"><span>....+++
 </span></span></code></pre></div><h3 id="create-the-certificate-signing-request-csr">Create the Certificate Signing Request (CSR).</h3>
 <ol>
 <li>Create the CSR configuration file</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ae81ff">cat &gt; ${WORKDIR}/vault-csr.conf &lt;&lt;EOF</span>
-</span></span><span style="display:flex;"><span>[<span style="color:#ae81ff">req]</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">default_bits = 2048</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">prompt = no</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">encrypt_key = yes</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">default_md = sha256</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">distinguished_name = kubelet_serving</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">req_extensions = v3_req</span>
-</span></span><span style="display:flex;"><span>[ <span style="color:#ae81ff">kubelet_serving ]</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">O = system:nodes</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">CN = system:node:*.${VAULT_K8S_NAMESPACE}.svc.${K8S_CLUSTER_NAME}</span>
-</span></span><span style="display:flex;"><span>[ <span style="color:#ae81ff">v3_req ]</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">basicConstraints = CA:FALSE</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">keyUsage = nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">extendedKeyUsage = serverAuth, clientAuth</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">subjectAltName = @alt_names</span>
-</span></span><span style="display:flex;"><span>[<span style="color:#ae81ff">alt_names]</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">DNS.1 = *.${VAULT_SERVICE_NAME}</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">DNS.2 = *.${VAULT_SERVICE_NAME}.${VAULT_K8S_NAMESPACE}.svc.${K8S_CLUSTER_NAME}</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">DNS.3 = *.${VAULT_K8S_NAMESPACE}</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">DNS.4 = *.it-meta.space</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">DNS.5 = *.vault.svc</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">IP.1 = 127.0.0.1</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">IP.2 = 192.168.179.128</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">EOF</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>cat &gt; ${WORKDIR}/vault-csr.conf &lt;&lt;EOF
+</span></span><span style="display:flex;"><span>[req]
+</span></span><span style="display:flex;"><span>default_bits = 2048
+</span></span><span style="display:flex;"><span>prompt = no
+</span></span><span style="display:flex;"><span>encrypt_key = yes
+</span></span><span style="display:flex;"><span>default_md = sha256
+</span></span><span style="display:flex;"><span>distinguished_name = kubelet_serving
+</span></span><span style="display:flex;"><span>req_extensions = v3_req
+</span></span><span style="display:flex;"><span>[ kubelet_serving ]
+</span></span><span style="display:flex;"><span>O = system:nodes
+</span></span><span style="display:flex;"><span>CN = system:node:*.${VAULT_K8S_NAMESPACE}.svc.${K8S_CLUSTER_NAME}
+</span></span><span style="display:flex;"><span>[ v3_req ]
+</span></span><span style="display:flex;"><span>basicConstraints = CA:FALSE
+</span></span><span style="display:flex;"><span>keyUsage = nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment
+</span></span><span style="display:flex;"><span>extendedKeyUsage = serverAuth, clientAuth
+</span></span><span style="display:flex;"><span>subjectAltName = @alt_names
+</span></span><span style="display:flex;"><span>[alt_names]
+</span></span><span style="display:flex;"><span>DNS.1 = *.${VAULT_SERVICE_NAME}
+</span></span><span style="display:flex;"><span>DNS.2 = *.${VAULT_SERVICE_NAME}.${VAULT_K8S_NAMESPACE}.svc.${K8S_CLUSTER_NAME}
+</span></span><span style="display:flex;"><span>DNS.3 = *.${VAULT_K8S_NAMESPACE}
+</span></span><span style="display:flex;"><span>DNS.4 = *.it-meta.space
+</span></span><span style="display:flex;"><span>DNS.5 = *.vault.svc
+</span></span><span style="display:flex;"><span>IP.1 = 127.0.0.1
+</span></span><span style="display:flex;"><span>IP.2 = 192.168.179.128
+</span></span><span style="display:flex;"><span>EOF
 </span></span></code></pre></div><blockquote>
 <p>ps:<br>
 DNS.4 = *.it-meta.space &ndash;&gt; This is for ingress tls proxy.<br>
@@ -312,154 +316,154 @@ IP.2 = 192.168.179.128 &ndash;&gt; It&rsquo;s optional, just for connectivity te
 <ol>
 <li>Create the csr yaml file to send it to Kubernetes.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ae81ff">cat &gt; ${WORKDIR}/csr.yaml &lt;&lt;EOF</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">certificates.k8s.io/v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">CertificateSigningRequest</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>   <span style="color:#f92672">name</span>: <span style="color:#ae81ff">vault.svc</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>   <span style="color:#f92672">signerName</span>: <span style="color:#ae81ff">kubernetes.io/kubelet-serving</span>
-</span></span><span style="display:flex;"><span>   <span style="color:#75715e">#expirationSeconds: 8640000</span>
-</span></span><span style="display:flex;"><span>   <span style="color:#f92672">expirationSeconds</span>: <span style="color:#ae81ff">31536000</span>
-</span></span><span style="display:flex;"><span>   <span style="color:#f92672">request</span>: <span style="color:#ae81ff">$(cat ${WORKDIR}/vault.csr|base64|tr -d &#39;\n&#39;)</span>
-</span></span><span style="display:flex;"><span>   <span style="color:#f92672">usages</span>:
-</span></span><span style="display:flex;"><span>   - <span style="color:#ae81ff">digital signature</span>
-</span></span><span style="display:flex;"><span>   - <span style="color:#ae81ff">key encipherment</span>
-</span></span><span style="display:flex;"><span>   - <span style="color:#ae81ff">server auth</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">EOF</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>cat &gt; ${WORKDIR}/csr.yaml &lt;&lt;EOF
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: certificates.k8s.io/v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: CertificateSigningRequest
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>   <span style="color:#ff79c6">name</span>: vault.svc
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>   <span style="color:#ff79c6">signerName</span>: kubernetes.io/kubelet-serving
+</span></span><span style="display:flex;"><span>   <span style="color:#6272a4">#expirationSeconds: 8640000</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ff79c6">expirationSeconds</span>: <span style="color:#bd93f9">31536000</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#ff79c6">request</span>: $(cat ${WORKDIR}/vault.csr|base64|tr -d &#39;\n&#39;)
+</span></span><span style="display:flex;"><span>   <span style="color:#ff79c6">usages</span>:
+</span></span><span style="display:flex;"><span>   - digital signature
+</span></span><span style="display:flex;"><span>   - key encipherment
+</span></span><span style="display:flex;"><span>   - server auth
+</span></span><span style="display:flex;"><span>EOF
 </span></span></code></pre></div><ol start="2">
 <li>Send the CSR to Kubernetes.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl create -f <span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/csr.yaml
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl create -f <span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/csr.yaml
 </span></span></code></pre></div><ol start="3">
 <li>Approve the CSR in Kubernetes.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl certificate approve vault.svc
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl certificate approve vault.svc
 </span></span></code></pre></div><ol start="4">
 <li>Confirm the certificate was issued.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ kubectl get csr vault.svc
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ kubectl get csr vault.svc
 </span></span><span style="display:flex;"><span>NAME        AGE   SIGNERNAME                      REQUESTOR          REQUESTEDDURATION   CONDITION
 </span></span><span style="display:flex;"><span>vault.svc   75s   kubernetes.io/kubelet-serving   kubernetes-admin   365d                Approved,Issued
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">```</span>shell
-</span></span><span style="display:flex;"><span><span style="color:#75715e">### Store the certificates and Key in the Kubernetes secrets store</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">```</span>shell
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">### Store the certificates and Key in the Kubernetes secrets store</span>
 </span></span><span style="display:flex;"><span>1. Retrieve the certificate.
-</span></span><span style="display:flex;"><span><span style="color:#e6db74">```</span>shell
-</span></span><span style="display:flex;"><span>kubectl get csr vault.svc -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{.status.certificate}&#39;</span> | openssl base64 -d -A -out <span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/vault.crt
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">```</span>shell
+</span></span><span style="display:flex;"><span>kubectl get csr vault.svc -o <span style="color:#8be9fd;font-style:italic">jsonpath</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;{.status.certificate}&#39;</span> | openssl base64 -d -A -out <span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/vault.crt
 </span></span></code></pre></div><ol start="2">
 <li>Retrieve Kubernetes CA certificate.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ae81ff">kubectl config view \</span>
-</span></span><span style="display:flex;"><span>--<span style="color:#ae81ff">raw \</span>
-</span></span><span style="display:flex;"><span>--<span style="color:#ae81ff">minify \</span>
-</span></span><span style="display:flex;"><span>--<span style="color:#ae81ff">flatten \</span>
-</span></span><span style="display:flex;"><span>-<span style="color:#ae81ff">o jsonpath=&#39;{.clusters[].cluster.certificate-authority-data}&#39; \</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">| base64 -d &gt; ${WORKDIR}/vault.ca</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>kubectl config view \
+</span></span><span style="display:flex;"><span>--raw \
+</span></span><span style="display:flex;"><span>--minify \
+</span></span><span style="display:flex;"><span>--flatten \
+</span></span><span style="display:flex;"><span>-o jsonpath=&#39;{.clusters[].cluster.certificate-authority-data}&#39; \
+</span></span><span style="display:flex;"><span>| base64 -d &gt; ${WORKDIR}/vault.ca
 </span></span></code></pre></div><ol start="3">
 <li>Create the Kubernetes namespace.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl create namespace $VAULT_K8S_NAMESPACE
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl create namespace <span style="color:#8be9fd;font-style:italic">$VAULT_K8S_NAMESPACE</span>
 </span></span></code></pre></div><ol start="4">
 <li>Create the TLS secret.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl create secret generic vault-ha-tls <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>   -n $VAULT_K8S_NAMESPACE <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>   --from-file<span style="color:#f92672">=</span>vault.key<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/vault.key <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>   --from-file<span style="color:#f92672">=</span>vault.crt<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/vault.crt <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>   --from-file<span style="color:#f92672">=</span>vault.ca<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/vault.ca
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl create secret generic vault-ha-tls <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>   -n <span style="color:#8be9fd;font-style:italic">$VAULT_K8S_NAMESPACE</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>   --from-file<span style="color:#ff79c6">=</span>vault.key<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/vault.key <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>   --from-file<span style="color:#ff79c6">=</span>vault.crt<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/vault.crt <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>   --from-file<span style="color:#ff79c6">=</span>vault.ca<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/vault.ca
 </span></span></code></pre></div><h2 id="deploy-the-vault-cluster-via-helm-with-overrides">Deploy the vault cluster via helm with overrides</h2>
 <h3 id="prerequisites">Prerequisites</h3>
 <p>Please ensure the Vault CLI, Helm CLI are installed before proceed consequent steps.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault/pki# helm version
-</span></span><span style="display:flex;"><span>version.BuildInfo<span style="color:#f92672">{</span>Version:<span style="color:#e6db74">&#34;v3.10.2&#34;</span>, GitCommit:<span style="color:#e6db74">&#34;50f003e5ee8704ec937a756c646870227d7c8b58&#34;</span>, GitTreeState:<span style="color:#e6db74">&#34;clean&#34;</span>, GoVersion:<span style="color:#e6db74">&#34;go1.18.8&#34;</span><span style="color:#f92672">}</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault/pki# helm version
+</span></span><span style="display:flex;"><span>version.BuildInfo<span style="color:#ff79c6">{</span>Version:<span style="color:#f1fa8c">&#34;v3.10.2&#34;</span>, GitCommit:<span style="color:#f1fa8c">&#34;50f003e5ee8704ec937a756c646870227d7c8b58&#34;</span>, GitTreeState:<span style="color:#f1fa8c">&#34;clean&#34;</span>, GoVersion:<span style="color:#f1fa8c">&#34;go1.18.8&#34;</span><span style="color:#ff79c6">}</span>
 </span></span><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault/pki# vault -v
-</span></span><span style="display:flex;"><span>Vault v1.13.0 <span style="color:#f92672">(</span>a4cf0dc4437de35fce4860857b64569d092a9b5a<span style="color:#f92672">)</span>, built 2023-03-01T14:58:13Z
+</span></span><span style="display:flex;"><span>Vault v1.13.0 <span style="color:#ff79c6">(</span>a4cf0dc4437de35fce4860857b64569d092a9b5a<span style="color:#ff79c6">)</span>, built 2023-03-01T14:58:13Z
 </span></span></code></pre></div><h3 id="deploy-ha-cluster-via-helm">Deploy HA cluster via Helm</h3>
 <ol>
 <li>create the overrides.yaml file.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ae81ff">cat &gt; ${WORKDIR}/overrides.yaml &lt;&lt;EOF</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">global</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">enabled</span>: <span style="color:#66d9ef">true</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">tlsDisable</span>: <span style="color:#66d9ef">false</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">injector</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">enabled</span>: <span style="color:#66d9ef">true</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">resources</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">requests</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">256Mi</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">cpu</span>: <span style="color:#ae81ff">250m</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">limits</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">256Mi</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">cpu</span>: <span style="color:#ae81ff">250m</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">server</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">resources</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">requests</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">256Mi</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">cpu</span>: <span style="color:#ae81ff">200m</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">limits</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">memory</span>: <span style="color:#ae81ff">384Mi</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">cpu</span>: <span style="color:#ae81ff">200m</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">extraEnvironmentVars</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">VAULT_CACERT</span>: <span style="color:#ae81ff">/vault/userconfig/vault-ha-tls/vault.ca</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">VAULT_TLSCERT</span>: <span style="color:#ae81ff">/vault/userconfig/vault-ha-tls/vault.crt</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">VAULT_TLSKEY</span>: <span style="color:#ae81ff">/vault/userconfig/vault-ha-tls/vault.key</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">volumes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">userconfig-vault-ha-tls</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">secret</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">defaultMode</span>: <span style="color:#ae81ff">420</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">secretName</span>: <span style="color:#ae81ff">vault-ha-tls</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">volumeMounts</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">mountPath</span>: <span style="color:#ae81ff">/vault/userconfig/vault-ha-tls</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">name</span>: <span style="color:#ae81ff">userconfig-vault-ha-tls</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">readOnly</span>: <span style="color:#66d9ef">true</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">auditStorage</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">enabled</span>: <span style="color:#66d9ef">true</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">standalone</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">enabled</span>: <span style="color:#66d9ef">false</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">standalone</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">enabled</span>: <span style="color:#66d9ef">false</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">affinity</span>: <span style="color:#e6db74">&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ha</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">enabled</span>: <span style="color:#66d9ef">true</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">replicas</span>: <span style="color:#ae81ff">2</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">raft</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">enabled</span>: <span style="color:#66d9ef">true</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">setNodeId</span>: <span style="color:#66d9ef">true</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">config</span>: |<span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        ui = true
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        listener &#34;tcp&#34; {
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">           tls_disable = 0
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">           address = &#34;[::]:8200&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">           cluster_address = &#34;[::]:8201&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">           tls_cert_file = &#34;/vault/userconfig/vault-ha-tls/vault.crt&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">           tls_key_file  = &#34;/vault/userconfig/vault-ha-tls/vault.key&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">           tls_client_ca_file = &#34;/vault/userconfig/vault-ha-tls/vault.ca&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        }
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        storage &#34;raft&#34; {
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">           path = &#34;/vault/data&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        }
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        disable_mlock = true
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        service_registration &#34;kubernetes&#34; {}</span>        
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">EOF</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>cat &gt; ${WORKDIR}/overrides.yaml &lt;&lt;EOF
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">global</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">enabled</span>: <span style="color:#ff79c6">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">tlsDisable</span>: <span style="color:#ff79c6">false</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">injector</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">enabled</span>: <span style="color:#ff79c6">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">resources</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">requests</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">memory</span>: 256Mi
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">cpu</span>: 250m
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">limits</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">memory</span>: 256Mi
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">cpu</span>: 250m
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">server</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">resources</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">requests</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">memory</span>: 256Mi
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">cpu</span>: 200m
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">limits</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">memory</span>: 384Mi
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">cpu</span>: 200m
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">extraEnvironmentVars</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">VAULT_CACERT</span>: /vault/userconfig/vault-ha-tls/vault.ca
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">VAULT_TLSCERT</span>: /vault/userconfig/vault-ha-tls/vault.crt
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">VAULT_TLSKEY</span>: /vault/userconfig/vault-ha-tls/vault.key
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">volumes</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: userconfig-vault-ha-tls
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">secret</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">defaultMode</span>: <span style="color:#bd93f9">420</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">secretName</span>: vault-ha-tls
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">volumeMounts</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">mountPath</span>: /vault/userconfig/vault-ha-tls
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">name</span>: userconfig-vault-ha-tls
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">readOnly</span>: <span style="color:#ff79c6">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">auditStorage</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">enabled</span>: <span style="color:#ff79c6">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">standalone</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">enabled</span>: <span style="color:#ff79c6">false</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">standalone</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">enabled</span>: <span style="color:#ff79c6">false</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">affinity</span>: <span style="color:#f1fa8c">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">ha</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">enabled</span>: <span style="color:#ff79c6">true</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">replicas</span>: <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">raft</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">enabled</span>: <span style="color:#ff79c6">true</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">setNodeId</span>: <span style="color:#ff79c6">true</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">config</span>: |<span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        ui = true
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        listener &#34;tcp&#34; {
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">           tls_disable = 0
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">           address = &#34;[::]:8200&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">           cluster_address = &#34;[::]:8201&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">           tls_cert_file = &#34;/vault/userconfig/vault-ha-tls/vault.crt&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">           tls_key_file  = &#34;/vault/userconfig/vault-ha-tls/vault.key&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">           tls_client_ca_file = &#34;/vault/userconfig/vault-ha-tls/vault.ca&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        }
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        storage &#34;raft&#34; {
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">           path = &#34;/vault/data&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        }
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        disable_mlock = true
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        service_registration &#34;kubernetes&#34; {}</span>        
+</span></span><span style="display:flex;"><span>EOF
 </span></span></code></pre></div><ol start="2">
 <li>Deploy the Vault HA Cluster</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>helm install -n $VAULT_K8S_NAMESPACE $VAULT_HELM_RELEASE_NAME hashicorp/vault -f <span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/overrides.yaml
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>helm install -n <span style="color:#8be9fd;font-style:italic">$VAULT_K8S_NAMESPACE</span> <span style="color:#8be9fd;font-style:italic">$VAULT_HELM_RELEASE_NAME</span> hashicorp/vault -f <span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/overrides.yaml
 </span></span></code></pre></div><ol start="3">
 <li>Display the pods in the namespace that you created for vault.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault# kubectl -n $VAULT_K8S_NAMESPACE get pods
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault# kubectl -n <span style="color:#8be9fd;font-style:italic">$VAULT_K8S_NAMESPACE</span> get pods
 </span></span><span style="display:flex;"><span>NAME                                    READY   STATUS    RESTARTS   AGE
-</span></span><span style="display:flex;"><span>vault-0                                 0/1     Running   <span style="color:#ae81ff">0</span>          28s
-</span></span><span style="display:flex;"><span>vault-1                                 0/1     Running   <span style="color:#ae81ff">0</span>          27s
-</span></span><span style="display:flex;"><span>vault-agent-injector-57bfcf947c-2p6ws   1/1     Running   <span style="color:#ae81ff">0</span>          38s
+</span></span><span style="display:flex;"><span>vault-0                                 0/1     Running   <span style="color:#bd93f9">0</span>          28s
+</span></span><span style="display:flex;"><span>vault-1                                 0/1     Running   <span style="color:#bd93f9">0</span>          27s
+</span></span><span style="display:flex;"><span>vault-agent-injector-57bfcf947c-2p6ws   1/1     Running   <span style="color:#bd93f9">0</span>          38s
 </span></span></code></pre></div><ol start="4">
 <li>Initialize vault-0 with one key share and one key threshold.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl exec -n $VAULT_K8S_NAMESPACE vault-0 -- vault operator init <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -key-shares<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -key-threshold<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -format<span style="color:#f92672">=</span>json &gt; <span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/cluster-keys.json
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl <span style="color:#8be9fd;font-style:italic">exec</span> -n <span style="color:#8be9fd;font-style:italic">$VAULT_K8S_NAMESPACE</span> vault-0 -- vault operator init <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>    -key-shares<span style="color:#ff79c6">=</span><span style="color:#bd93f9">5</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>    -key-threshold<span style="color:#ff79c6">=</span><span style="color:#bd93f9">2</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>    -format<span style="color:#ff79c6">=</span>json &gt; <span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/cluster-keys.json
 </span></span></code></pre></div><blockquote>
 <p>PS:</p>
 <ol>
@@ -474,54 +478,54 @@ I will set the key-shares as 5 and key-threshold=2 for later demo.
 <li>Create a variable named VAULT_UNSEAL_KEY to capture the Vault unseal key<br>
 randomly pick up two from these 5 shares.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>export VAULT_UNSEAL_KEY_1<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;+BLXCXRatpd5uiamYAly5vfea1eRBOOP8jrRpTxEOzTT&#34;</span>
-</span></span><span style="display:flex;"><span>export VAULT_UNSEAL_KEY_2<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;K8lYi9kLRA9nQ2KrV0qWvKMjvIREDroJOP7q2OWscljL&#34;</span> 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">VAULT_UNSEAL_KEY_1</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;+BLXCXRatpd5uiamYAly5vfea1eRBOOP8jrRpTxEOzTT&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">VAULT_UNSEAL_KEY_2</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;K8lYi9kLRA9nQ2KrV0qWvKMjvIREDroJOP7q2OWscljL&#34;</span> 
 </span></span></code></pre></div><ol start="6">
 <li>Unseal Vault running on the vault-0 pod.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl exec -n $VAULT_K8S_NAMESPACE vault-0 -- vault operator unseal $VAULT_UNSEAL_KEY_1
-</span></span><span style="display:flex;"><span>kubectl exec -n $VAULT_K8S_NAMESPACE vault-0 -- vault operator unseal $VAULT_UNSEAL_KEY_2
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl <span style="color:#8be9fd;font-style:italic">exec</span> -n <span style="color:#8be9fd;font-style:italic">$VAULT_K8S_NAMESPACE</span> vault-0 -- vault operator unseal <span style="color:#8be9fd;font-style:italic">$VAULT_UNSEAL_KEY_1</span>
+</span></span><span style="display:flex;"><span>kubectl <span style="color:#8be9fd;font-style:italic">exec</span> -n <span style="color:#8be9fd;font-style:italic">$VAULT_K8S_NAMESPACE</span> vault-0 -- vault operator unseal <span style="color:#8be9fd;font-style:italic">$VAULT_UNSEAL_KEY_2</span>
 </span></span></code></pre></div><h3 id="join-vault-1-pod-to-the-raft-cluster">Join vault-1 pod to the Raft cluster</h3>
 <ol>
 <li>Start an interactive shell session on the vault-1 pod.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl exec -n $VAULT_K8S_NAMESPACE -it vault-1 -- /bin/sh
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl <span style="color:#8be9fd;font-style:italic">exec</span> -n <span style="color:#8be9fd;font-style:italic">$VAULT_K8S_NAMESPACE</span> -it vault-1 -- /bin/sh
 </span></span></code></pre></div><ol start="2">
 <li>Join the vault-1 pod to the Raft cluster.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>vault operator raft join -address<span style="color:#f92672">=</span>https://vault-1.vault-internal:8200 -leader-ca-cert<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>cat /vault/userconfig/vault-ha-tls/vault.ca<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span> -leader-client-cert<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>cat /vault/userconfig/vault-ha-tls/vault.crt<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span> -leader-client-key<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>cat /vault/userconfig/vault-ha-tls/vault.key<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span> https://vault-0.vault-internal:8200
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>vault operator raft join -address<span style="color:#ff79c6">=</span>https://vault-1.vault-internal:8200 -leader-ca-cert<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">$(</span>cat /vault/userconfig/vault-ha-tls/vault.ca<span style="color:#ff79c6">)</span><span style="color:#f1fa8c">&#34;</span> -leader-client-cert<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">$(</span>cat /vault/userconfig/vault-ha-tls/vault.crt<span style="color:#ff79c6">)</span><span style="color:#f1fa8c">&#34;</span> -leader-client-key<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">$(</span>cat /vault/userconfig/vault-ha-tls/vault.key<span style="color:#ff79c6">)</span><span style="color:#f1fa8c">&#34;</span> https://vault-0.vault-internal:8200
 </span></span></code></pre></div><p>Example output:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Key       Value
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Key       Value
 </span></span><span style="display:flex;"><span>---       -----
-</span></span><span style="display:flex;"><span>Joined    true
+</span></span><span style="display:flex;"><span>Joined    <span style="color:#8be9fd;font-style:italic">true</span>
 </span></span></code></pre></div><p>Once success, then exit the vault-1 pod.
 3. Unseal vault-1.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl exec -n $VAULT_K8S_NAMESPACE -ti vault-1 -- vault operator unseal $VAULT_UNSEAL_KEY_1
-</span></span><span style="display:flex;"><span>kubectl exec -n $VAULT_K8S_NAMESPACE -ti vault-1 -- vault operator unseal $VAULT_UNSEAL_KEY_2
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl <span style="color:#8be9fd;font-style:italic">exec</span> -n <span style="color:#8be9fd;font-style:italic">$VAULT_K8S_NAMESPACE</span> -ti vault-1 -- vault operator unseal <span style="color:#8be9fd;font-style:italic">$VAULT_UNSEAL_KEY_1</span>
+</span></span><span style="display:flex;"><span>kubectl <span style="color:#8be9fd;font-style:italic">exec</span> -n <span style="color:#8be9fd;font-style:italic">$VAULT_K8S_NAMESPACE</span> -ti vault-1 -- vault operator unseal <span style="color:#8be9fd;font-style:italic">$VAULT_UNSEAL_KEY_2</span>
 </span></span></code></pre></div><p>Example output:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Key                Value
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Key                Value
 </span></span><span style="display:flex;"><span>---                -----
 </span></span><span style="display:flex;"><span>Seal Type          shamir
-</span></span><span style="display:flex;"><span>Initialized        true
-</span></span><span style="display:flex;"><span>Sealed             true
-</span></span><span style="display:flex;"><span>Total Shares       <span style="color:#ae81ff">5</span>
-</span></span><span style="display:flex;"><span>Threshold          <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>Initialized        <span style="color:#8be9fd;font-style:italic">true</span>
+</span></span><span style="display:flex;"><span>Sealed             <span style="color:#8be9fd;font-style:italic">true</span>
+</span></span><span style="display:flex;"><span>Total Shares       <span style="color:#bd93f9">5</span>
+</span></span><span style="display:flex;"><span>Threshold          <span style="color:#bd93f9">2</span>
 </span></span><span style="display:flex;"><span>Unseal Progress    0/2
 </span></span><span style="display:flex;"><span>Unseal Nonce       n/a
 </span></span><span style="display:flex;"><span>Version            1.12.1
 </span></span><span style="display:flex;"><span>Build Date         2022-10-27T12:32:05Z
 </span></span><span style="display:flex;"><span>Storage Type       raft
-</span></span><span style="display:flex;"><span>HA Enabled         true
+</span></span><span style="display:flex;"><span>HA Enabled         <span style="color:#8be9fd;font-style:italic">true</span>
 </span></span></code></pre></div><ol start="4">
 <li>Export the cluster root token.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>export CLUSTER_ROOT_TOKEN<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>cat <span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/cluster-keys.json | jq -r <span style="color:#e6db74">&#34;.root_token&#34;</span><span style="color:#66d9ef">)</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">CLUSTER_ROOT_TOKEN</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span>cat <span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/cluster-keys.json | jq -r <span style="color:#f1fa8c">&#34;.root_token&#34;</span><span style="color:#ff79c6">)</span>
 </span></span></code></pre></div><ol start="5">
 <li>Login to vault-0 with the root token.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault/pki# kubectl exec -n $VAULT_K8S_NAMESPACE vault-0 -- vault login $CLUSTER_ROOT_TOKEN
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault/pki# kubectl <span style="color:#8be9fd;font-style:italic">exec</span> -n <span style="color:#8be9fd;font-style:italic">$VAULT_K8S_NAMESPACE</span> vault-0 -- vault login <span style="color:#8be9fd;font-style:italic">$CLUSTER_ROOT_TOKEN</span>
 </span></span><span style="display:flex;"><span>Success! You are now authenticated. The token information displayed below
-</span></span><span style="display:flex;"><span>is already stored in the token helper. You <span style="color:#66d9ef">do</span> NOT need to run <span style="color:#e6db74">&#34;vault login&#34;</span>
+</span></span><span style="display:flex;"><span>is already stored in the token helper. You <span style="color:#ff79c6">do</span> NOT need to run <span style="color:#f1fa8c">&#34;vault login&#34;</span>
 </span></span><span style="display:flex;"><span>again. Future Vault requests will automatically use this token.
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>Key                  Value
@@ -529,40 +533,40 @@ randomly pick up two from these 5 shares.</li>
 </span></span><span style="display:flex;"><span>token                hvs.oemGqKix23q5FMi6qkXiLsqN
 </span></span><span style="display:flex;"><span>token_accessor       BVDmPTEBLgdxLEvQs4p5bXaD
 </span></span><span style="display:flex;"><span>token_duration       ∞
-</span></span><span style="display:flex;"><span>token_renewable      false
-</span></span><span style="display:flex;"><span>token_policies       <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;root&#34;</span><span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>identity_policies    <span style="color:#f92672">[]</span>
-</span></span><span style="display:flex;"><span>policies             <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;root&#34;</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>token_renewable      <span style="color:#8be9fd;font-style:italic">false</span>
+</span></span><span style="display:flex;"><span>token_policies       <span style="color:#ff79c6">[</span><span style="color:#f1fa8c">&#34;root&#34;</span><span style="color:#ff79c6">]</span>
+</span></span><span style="display:flex;"><span>identity_policies    <span style="color:#ff79c6">[]</span>
+</span></span><span style="display:flex;"><span>policies             <span style="color:#ff79c6">[</span><span style="color:#f1fa8c">&#34;root&#34;</span><span style="color:#ff79c6">]</span>
 </span></span></code></pre></div><ol start="6">
 <li>List the raft peers.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault/pki# kubectl exec -n $VAULT_K8S_NAMESPACE vault-0 -- vault operator raft list-peers
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault/pki# kubectl <span style="color:#8be9fd;font-style:italic">exec</span> -n <span style="color:#8be9fd;font-style:italic">$VAULT_K8S_NAMESPACE</span> vault-0 -- vault operator raft list-peers
 </span></span><span style="display:flex;"><span>Node       Address                        State       Voter
 </span></span><span style="display:flex;"><span>----       -------                        -----       -----
-</span></span><span style="display:flex;"><span>vault-0    vault-0.vault-internal:8201    leader      true
-</span></span><span style="display:flex;"><span>vault-1    vault-1.vault-internal:8201    follower    true
+</span></span><span style="display:flex;"><span>vault-0    vault-0.vault-internal:8201    leader      <span style="color:#8be9fd;font-style:italic">true</span>
+</span></span><span style="display:flex;"><span>vault-1    vault-1.vault-internal:8201    follower    <span style="color:#8be9fd;font-style:italic">true</span>
 </span></span></code></pre></div><ol start="7">
 <li>Print the HA status</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault/pki# kubectl exec -n $VAULT_K8S_NAMESPACE vault-0 -- vault status
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault/pki# kubectl <span style="color:#8be9fd;font-style:italic">exec</span> -n <span style="color:#8be9fd;font-style:italic">$VAULT_K8S_NAMESPACE</span> vault-0 -- vault status
 </span></span><span style="display:flex;"><span>Key                     Value
 </span></span><span style="display:flex;"><span>---                     -----
 </span></span><span style="display:flex;"><span>Seal Type               shamir
-</span></span><span style="display:flex;"><span>Initialized             true
-</span></span><span style="display:flex;"><span>Sealed                  false
-</span></span><span style="display:flex;"><span>Total Shares            <span style="color:#ae81ff">5</span>
-</span></span><span style="display:flex;"><span>Threshold               <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>Initialized             <span style="color:#8be9fd;font-style:italic">true</span>
+</span></span><span style="display:flex;"><span>Sealed                  <span style="color:#8be9fd;font-style:italic">false</span>
+</span></span><span style="display:flex;"><span>Total Shares            <span style="color:#bd93f9">5</span>
+</span></span><span style="display:flex;"><span>Threshold               <span style="color:#bd93f9">2</span>
 </span></span><span style="display:flex;"><span>Version                 1.12.1
 </span></span><span style="display:flex;"><span>Build Date              2022-10-27T12:32:05Z
 </span></span><span style="display:flex;"><span>Storage Type            raft
 </span></span><span style="display:flex;"><span>Cluster Name            vault-cluster-1ff6c3b7
 </span></span><span style="display:flex;"><span>Cluster ID              989f282b-a491-6acb-7ad2-24401d96ff0c
-</span></span><span style="display:flex;"><span>HA Enabled              true
+</span></span><span style="display:flex;"><span>HA Enabled              <span style="color:#8be9fd;font-style:italic">true</span>
 </span></span><span style="display:flex;"><span>HA Cluster              https://vault-0.vault-internal:8201
 </span></span><span style="display:flex;"><span>HA Mode                 active
 </span></span><span style="display:flex;"><span>Active Since            2023-03-26T05:15:13.133233643Z
-</span></span><span style="display:flex;"><span>Raft Committed Index    <span style="color:#ae81ff">40</span>
-</span></span><span style="display:flex;"><span>Raft Applied Index      <span style="color:#ae81ff">40</span>
+</span></span><span style="display:flex;"><span>Raft Committed Index    <span style="color:#bd93f9">40</span>
+</span></span><span style="display:flex;"><span>Raft Applied Index      <span style="color:#bd93f9">40</span>
 </span></span></code></pre></div><p>We now have a working 2 node cluster with TLS enabled at the pod level. Next we will create a secret and retrieve it via
 and API call to confirm TLS is working as expected.</p>
 <h3 id="create-ingress-to-expose-the-vault-uinot-recommend-on-production">Create ingress to expose the Vault UI(not recommend on Production)</h3>
@@ -570,47 +574,47 @@ and API call to confirm TLS is working as expected.</p>
 <li>Prepare TLS - request free cert on AliCloud.
 Here i got 1 free cert pair for my domain <strong>vault.it-meta.space</strong></li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault# ls -al | grep it-meta.space
-</span></span><span style="display:flex;"><span>-rwxrwxrwx <span style="color:#ae81ff">1</span> jamie jamie <span style="color:#ae81ff">1679</span> Mar <span style="color:#ae81ff">14</span> 14:54 9482518_vault.it-meta.space.key
-</span></span><span style="display:flex;"><span>-rwxrwxrwx <span style="color:#ae81ff">1</span> jamie jamie <span style="color:#ae81ff">3813</span> Mar <span style="color:#ae81ff">14</span> 14:54 9482518_vault.it-meta.space.pem
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault# ls -al | grep it-meta.space
+</span></span><span style="display:flex;"><span>-rwxrwxrwx <span style="color:#bd93f9">1</span> jamie jamie <span style="color:#bd93f9">1679</span> Mar <span style="color:#bd93f9">14</span> 14:54 9482518_vault.it-meta.space.key
+</span></span><span style="display:flex;"><span>-rwxrwxrwx <span style="color:#bd93f9">1</span> jamie jamie <span style="color:#bd93f9">3813</span> Mar <span style="color:#bd93f9">14</span> 14:54 9482518_vault.it-meta.space.pem
 </span></span></code></pre></div><ol start="2">
 <li>Create Secret tls from these two cert files</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>k create secret tls vault-ext-tls --cert<span style="color:#f92672">=</span>./9482518_vault.it-meta.space.pem --key<span style="color:#f92672">=</span>./9482518_vault.it-meta.space.key -n vault
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>k create secret tls vault-ext-tls --cert<span style="color:#ff79c6">=</span>./9482518_vault.it-meta.space.pem --key<span style="color:#ff79c6">=</span>./9482518_vault.it-meta.space.key -n vault
 </span></span></code></pre></div><ol start="3">
 <li>Create ingress for vault UI</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ae81ff">cat &gt; ${WORKDIR}/vault-ingress.yaml &lt;&lt;EOF</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Ingress</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">vault-ingress</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">vault</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">annotations</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">nginx.ingress.kubernetes.io/use-regex</span>: <span style="color:#e6db74">&#34;true&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">nginx.ingress.kubernetes.io/rewrite-target</span>: <span style="color:#ae81ff">/$1</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">nginx.ingress.kubernetes.io/ssl-redirect</span>: <span style="color:#e6db74">&#34;true&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">nginx.ingress.kubernetes.io/backend-protocol</span>: <span style="color:#e6db74">&#34;HTTPS&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ingressClassName</span>: <span style="color:#ae81ff">nginx</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">rules</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">host</span>: <span style="color:#ae81ff">vault.it-meta.space</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">http</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">paths</span>:
-</span></span><span style="display:flex;"><span>          - <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/(.*)</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">pathType</span>: <span style="color:#ae81ff">Prefix</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">backend</span>:
-</span></span><span style="display:flex;"><span>              <span style="color:#f92672">service</span>:
-</span></span><span style="display:flex;"><span>                <span style="color:#f92672">name</span>: <span style="color:#ae81ff">vault</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#f92672">port</span>:
-</span></span><span style="display:flex;"><span>                  <span style="color:#f92672">number</span>: <span style="color:#ae81ff">8200</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">tls</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">secretName</span>: <span style="color:#ae81ff">vault-ext-tls</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">hosts</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#ae81ff">vault.it-meta.space</span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">EOF</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>cat &gt; ${WORKDIR}/vault-ingress.yaml &lt;&lt;EOF
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: networking.k8s.io/v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: Ingress
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: vault-ingress
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: vault
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">annotations</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">nginx.ingress.kubernetes.io/use-regex</span>: <span style="color:#f1fa8c">&#34;true&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">nginx.ingress.kubernetes.io/rewrite-target</span>: /$1
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">nginx.ingress.kubernetes.io/ssl-redirect</span>: <span style="color:#f1fa8c">&#34;true&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">nginx.ingress.kubernetes.io/backend-protocol</span>: <span style="color:#f1fa8c">&#34;HTTPS&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">ingressClassName</span>: nginx
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">rules</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">host</span>: vault.it-meta.space
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">http</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">paths</span>:
+</span></span><span style="display:flex;"><span>          - <span style="color:#ff79c6">path</span>: /(.*)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">pathType</span>: Prefix
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">backend</span>:
+</span></span><span style="display:flex;"><span>              <span style="color:#ff79c6">service</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">name</span>: vault
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">port</span>:
+</span></span><span style="display:flex;"><span>                  <span style="color:#ff79c6">number</span>: <span style="color:#bd93f9">8200</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">tls</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">secretName</span>: vault-ext-tls
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">hosts</span>:
+</span></span><span style="display:flex;"><span>        - vault.it-meta.space
+</span></span><span style="display:flex;"><span>EOF
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">k apply -f ${WORKDIR}/vault-ingress.yaml</span>
+</span></span><span style="display:flex;"><span>k apply -f ${WORKDIR}/vault-ingress.yaml
 </span></span></code></pre></div><ol start="4">
 <li>Verify the ingress.
 <img src='/img/2023-03-25-vault-on-k8s/vault-ui-01.jpg' style="height: 300px;margin-left: 0px;"/></li>
@@ -635,7 +639,7 @@ Here i got 1 free cert pair for my domain <strong>vault.it-meta.space</strong></
 <div class="zs-modal-box">
 	<div class="zs-modal-head">
 		<button type="button" class="close">×</button>
-		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
         
 	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
 		
@@ -684,7 +688,6 @@ Here i got 1 free cert pair for my domain <strong>vault.it-meta.space</strong></
                 
 
                 
-
 
 
             </div>
@@ -755,6 +758,8 @@ Here i got 1 free cert pair for my domain <strong>vault.it-meta.space</strong></
                         
                         
                         
+                        
+                        
                         <a href="/tags/k8s" title="k8s">
                             k8s
                         </a>
@@ -764,6 +769,8 @@ Here i got 1 free cert pair for my domain <strong>vault.it-meta.space</strong></
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -813,8 +820,8 @@ Here i got 1 free cert pair for my domain <strong>vault.it-meta.space</strong></
                         
                         
                         
-                        <a href="/tags/spring-cloud" title="spring-cloud">
-                            spring-cloud
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
                         </a>
                         
                         
@@ -823,8 +830,8 @@ Here i got 1 free cert pair for my domain <strong>vault.it-meta.space</strong></
                         
                         
                         
-                        <a href="/tags/transaction-management" title="transaction-management">
-                            transaction-management
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
                         </a>
                         
                         
@@ -936,14 +943,8 @@ Here i got 1 free cert pair for my domain <strong>vault.it-meta.space</strong></
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2023
-                    <br>
-                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
-                    <iframe
-                        style="margin-left: 2px; margin-bottom:-5px;"
-                        frameborder="0" scrolling="0" width="100px" height="20px"
-                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
-                    </iframe>
+                    Copyright &copy; Jamie&#39;s Blog 2024
+                    
                 </p>
             </div>
         </div>

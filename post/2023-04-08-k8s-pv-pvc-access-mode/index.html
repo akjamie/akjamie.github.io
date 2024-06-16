@@ -31,7 +31,7 @@
     
     
 
-    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <meta name="keyword"  content="&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <title>Explore Kubernetes Local PV &amp; PVC access mode | Jamie&#39;s Blog</title>
@@ -100,6 +100,10 @@
                         <a href="/">All Posts</a>
                     </li>
                     
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
                         
                         <li>
                             <a href="/categories/cloud/">cloud</a>
@@ -316,12 +320,12 @@ A volume will be in one of the following phases:</li>
 <ol start="4">
 <li>Create local storage class</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">storage.k8s.io/v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">StorageClass</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-storage</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">provisioner</span>: <span style="color:#ae81ff">kubernetes.io/no-provisioner</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">volumeBindingMode</span>: <span style="color:#ae81ff">WaitForFirstConsumer</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: storage.k8s.io/v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: StorageClass
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: local-storage
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">provisioner</span>: kubernetes.io/no-provisioner
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">volumeBindingMode</span>: WaitForFirstConsumer
 </span></span></code></pre></div><blockquote>
 <p>Delaying volume binding allows the scheduler to consider all of a Pod&rsquo;s scheduling constraints when choosing an
 appropriate PersistentVolume for a PersistentVolumeClaim.</p>
@@ -370,112 +374,112 @@ appropriate PersistentVolume for a PersistentVolumeClaim.</p>
 </tbody>
 </table>
 <h3 id="local-pv-rwo">Local PV RWO</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PersistentVolume</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pv</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">capacity</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">1Gi</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">accessModes</span>:
-</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">ReadWriteOnce</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">persistentVolumeReclaimPolicy</span>: <span style="color:#ae81ff">Retain</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storageClassName</span>: <span style="color:#ae81ff">local-storage</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">local</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/data/local/</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">nodeAffinity</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">required</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">nodeSelectorTerms</span>:
-</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">matchExpressions</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">key</span>: <span style="color:#ae81ff">kubernetes.io/hostname</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">operator</span>: <span style="color:#ae81ff">In</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">values</span>:
-</span></span><span style="display:flex;"><span>          - <span style="color:#ae81ff">worker1.it-meta.space</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: PersistentVolume
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: local-pv
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">capacity</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">storage</span>: 1Gi
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">accessModes</span>:
+</span></span><span style="display:flex;"><span>  - ReadWriteOnce
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">persistentVolumeReclaimPolicy</span>: Retain
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">storageClassName</span>: local-storage
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">local</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">path</span>: /data/local/
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">nodeAffinity</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">required</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">nodeSelectorTerms</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ff79c6">matchExpressions</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">key</span>: kubernetes.io/hostname
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">operator</span>: In
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">values</span>:
+</span></span><span style="display:flex;"><span>          - worker1.it-meta.space
 </span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PersistentVolumeClaim</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test-local-pvc</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">accessModes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">ReadWriteOnce</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">resources</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">requests</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">1Gi</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storageClassName</span>: <span style="color:#ae81ff">local-storage</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: PersistentVolumeClaim
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: test-local-pvc
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">accessModes</span>:
+</span></span><span style="display:flex;"><span>    - ReadWriteOnce
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">resources</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">requests</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">storage</span>: 1Gi
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">storageClassName</span>: local-storage
 </span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-1</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">containers</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-1</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">image</span>: <span style="color:#ae81ff">nginx</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">IfNotPresent</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">volumeMounts</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">mountPath</span>: <span style="color:#e6db74">&#34;/usr/share/nginx/html&#34;</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">volumes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">persistentVolumeClaim</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">claimName</span>: <span style="color:#ae81ff">test-local-pvc</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: Pod
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-1
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">containers</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-1
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">image</span>: nginx
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">imagePullPolicy</span>: IfNotPresent
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">volumeMounts</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">mountPath</span>: <span style="color:#f1fa8c">&#34;/usr/share/nginx/html&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">volumes</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">persistentVolumeClaim</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">claimName</span>: test-local-pvc
 </span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-2</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">containers</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-2</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">image</span>: <span style="color:#ae81ff">nginx</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">IfNotPresent</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">volumeMounts</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">mountPath</span>: <span style="color:#e6db74">&#34;/usr/share/nginx/html&#34;</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">volumes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">persistentVolumeClaim</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">claimName</span>: <span style="color:#ae81ff">test-local-pvc</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: Pod
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-2
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">containers</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-2
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">image</span>: nginx
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">imagePullPolicy</span>: IfNotPresent
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">volumeMounts</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">mountPath</span>: <span style="color:#f1fa8c">&#34;/usr/share/nginx/html&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">volumes</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">persistentVolumeClaim</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">claimName</span>: test-local-pvc
 </span></span></code></pre></div><p>Example output:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/workload-test/local-pv# k get pod -n test -o wide
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/workload-test/local-pv# k get pod -n <span style="color:#8be9fd;font-style:italic">test</span> -o wide
 </span></span><span style="display:flex;"><span>NAME                     READY   STATUS    RESTARTS   AGE     IP             NODE                    NOMINATED NODE   READINESS GATES
-</span></span><span style="display:flex;"><span>nginx-test-local-pvc-1   1/1     Running   <span style="color:#ae81ff">0</span>          3m48s   10.244.46.33   worker1.it-meta.space   &lt;none&gt;           &lt;none&gt;
-</span></span><span style="display:flex;"><span>nginx-test-local-pvc-2   1/1     Running   <span style="color:#ae81ff">0</span>          3m48s   10.244.46.35   worker1.it-meta.space   &lt;none&gt;           &lt;none&gt;
+</span></span><span style="display:flex;"><span>nginx-test-local-pvc-1   1/1     Running   <span style="color:#bd93f9">0</span>          3m48s   10.244.46.33   worker1.it-meta.space   &lt;none&gt;           &lt;none&gt;
+</span></span><span style="display:flex;"><span>nginx-test-local-pvc-2   1/1     Running   <span style="color:#bd93f9">0</span>          3m48s   10.244.46.35   worker1.it-meta.space   &lt;none&gt;           &lt;none&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># write to volume from pod1</span>
-</span></span><span style="display:flex;"><span>k exec -it nginx-test-local-pvc-1 -n test -- /bin/bash
-</span></span><span style="display:flex;"><span>cd /usr/share/nginx/html
-</span></span><span style="display:flex;"><span>cat &gt; index.html <span style="color:#e6db74">&lt;&lt;EOF
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;head&gt;&lt;/head&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;div&gt;Welcome to Jamie&#39;s testing space about kubernetes&lt;/dir&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;/body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;/html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># write to volume from pod1</span>
+</span></span><span style="display:flex;"><span>k <span style="color:#8be9fd;font-style:italic">exec</span> -it nginx-test-local-pvc-1 -n <span style="color:#8be9fd;font-style:italic">test</span> -- /bin/bash
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">cd</span> /usr/share/nginx/html
+</span></span><span style="display:flex;"><span>cat &gt; index.html <span style="color:#f1fa8c">&lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;html&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;head&gt;&lt;/head&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;body&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;div&gt;Welcome to Jamie&#39;s testing space about kubernetes&lt;/dir&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;/body&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;/html&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">EOF</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/workload-test/local-pv# curl 10.244.46.33
 </span></span><span style="display:flex;"><span>&lt;html&gt;
 </span></span><span style="display:flex;"><span>&lt;head&gt;&lt;/head&gt;
 </span></span><span style="display:flex;"><span>&lt;body&gt;
-</span></span><span style="display:flex;"><span>&lt;div&gt;Welcome to Jamie<span style="color:#e6db74">&#39;s testing space about kubernetes&lt;/dir&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;/body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;/html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># write to volume from pod2
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">k exec -it nginx-test-local-pvc-2 -n test -- /bin/bash
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">cd /usr/share/nginx/html
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">cat &gt; storageclass.html &lt;&lt;EOF
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;head&gt;&lt;/head&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;div&gt;Welcome to Jamie&#39;</span>s testing space about kubernetes&lt;/dir&gt;
-</span></span><span style="display:flex;"><span>&lt;textarea rows<span style="color:#f92672">=</span><span style="color:#ae81ff">15</span> cols<span style="color:#f92672">=</span><span style="color:#ae81ff">40</span> style<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;display:box&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;div&gt;Welcome to Jamie<span style="color:#f1fa8c">&#39;s testing space about kubernetes&lt;/dir&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;/body&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;/html&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"># write to volume from pod2
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">k exec -it nginx-test-local-pvc-2 -n test -- /bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">cd /usr/share/nginx/html
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">cat &gt; storageclass.html &lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;html&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;head&gt;&lt;/head&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;body&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;div&gt;Welcome to Jamie&#39;</span>s testing space about kubernetes&lt;/dir&gt;
+</span></span><span style="display:flex;"><span>&lt;textarea <span style="color:#8be9fd;font-style:italic">rows</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">15</span> <span style="color:#8be9fd;font-style:italic">cols</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">40</span> <span style="color:#8be9fd;font-style:italic">style</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;display:box&#34;</span>&gt;
 </span></span><span style="display:flex;"><span>kind: StorageClass
 </span></span><span style="display:flex;"><span>apiVersion: storage.k8s.io/v1
 </span></span><span style="display:flex;"><span>metadata:
@@ -491,8 +495,8 @@ appropriate PersistentVolume for a PersistentVolumeClaim.</p>
 </span></span><span style="display:flex;"><span>&lt;html&gt;
 </span></span><span style="display:flex;"><span>&lt;head&gt;&lt;/head&gt;
 </span></span><span style="display:flex;"><span>&lt;body&gt;
-</span></span><span style="display:flex;"><span>&lt;div&gt;Welcome to Jamie<span style="color:#960050;background-color:#1e0010">&#39;</span>s testing space about kubernetes&lt;/dir&gt;
-</span></span><span style="display:flex;"><span>&lt;textarea rows<span style="color:#f92672">=</span><span style="color:#ae81ff">15</span> cols<span style="color:#f92672">=</span><span style="color:#ae81ff">40</span> style<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;display:box&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;div&gt;Welcome to Jamie&#39;s testing space about kubernetes&lt;/dir&gt;
+</span></span><span style="display:flex;"><span>&lt;textarea <span style="color:#8be9fd;font-style:italic">rows</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">15</span> <span style="color:#8be9fd;font-style:italic">cols</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">40</span> <span style="color:#8be9fd;font-style:italic">style</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;display:box&#34;</span>&gt;
 </span></span><span style="display:flex;"><span>kind: StorageClass
 </span></span><span style="display:flex;"><span>apiVersion: storage.k8s.io/v1
 </span></span><span style="display:flex;"><span>metadata:
@@ -508,113 +512,113 @@ Two pods are scheduled onto worker1.it-meta.space only.
 Clean up disk files.</p>
 </blockquote>
 <h3 id="local-pv-rwx">Local PV RWX</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PersistentVolume</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pv</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">capacity</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">1Gi</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">accessModes</span>:
-</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">ReadWriteMany</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">persistentVolumeReclaimPolicy</span>: <span style="color:#ae81ff">Retain</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storageClassName</span>: <span style="color:#ae81ff">local-storage</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">local</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/data/local/</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">nodeAffinity</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">required</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">nodeSelectorTerms</span>:
-</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">matchExpressions</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">key</span>: <span style="color:#ae81ff">kubernetes.io/hostname</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">operator</span>: <span style="color:#ae81ff">In</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">values</span>:
-</span></span><span style="display:flex;"><span>          - <span style="color:#ae81ff">worker1.it-meta.space</span>
-</span></span><span style="display:flex;"><span>          - <span style="color:#ae81ff">worker2.it-meta.space</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: PersistentVolume
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: local-pv
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">capacity</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">storage</span>: 1Gi
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">accessModes</span>:
+</span></span><span style="display:flex;"><span>  - ReadWriteMany
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">persistentVolumeReclaimPolicy</span>: Retain
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">storageClassName</span>: local-storage
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">local</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">path</span>: /data/local/
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">nodeAffinity</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">required</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">nodeSelectorTerms</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ff79c6">matchExpressions</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">key</span>: kubernetes.io/hostname
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">operator</span>: In
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">values</span>:
+</span></span><span style="display:flex;"><span>          - worker1.it-meta.space
+</span></span><span style="display:flex;"><span>          - worker2.it-meta.space
 </span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PersistentVolumeClaim</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test-local-pvc</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">accessModes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">ReadWriteMany</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">resources</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">requests</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">1Gi</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storageClassName</span>: <span style="color:#ae81ff">local-storage</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: PersistentVolumeClaim
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: test-local-pvc
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">accessModes</span>:
+</span></span><span style="display:flex;"><span>    - ReadWriteMany
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">resources</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">requests</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">storage</span>: 1Gi
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">storageClassName</span>: local-storage
 </span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-1</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">containers</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-1</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">image</span>: <span style="color:#ae81ff">nginx</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">IfNotPresent</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">volumeMounts</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">mountPath</span>: <span style="color:#e6db74">&#34;/usr/share/nginx/html&#34;</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">volumes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">persistentVolumeClaim</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">claimName</span>: <span style="color:#ae81ff">test-local-pvc</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: Pod
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-1
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">containers</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-1
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">image</span>: nginx
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">imagePullPolicy</span>: IfNotPresent
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">volumeMounts</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">mountPath</span>: <span style="color:#f1fa8c">&#34;/usr/share/nginx/html&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">volumes</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">persistentVolumeClaim</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">claimName</span>: test-local-pvc
 </span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-2</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">containers</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-2</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">image</span>: <span style="color:#ae81ff">nginx</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">IfNotPresent</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">volumeMounts</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">mountPath</span>: <span style="color:#e6db74">&#34;/usr/share/nginx/html&#34;</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">volumes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">persistentVolumeClaim</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">claimName</span>: <span style="color:#ae81ff">test-local-pvc</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: Pod
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-2
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">containers</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-2
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">image</span>: nginx
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">imagePullPolicy</span>: IfNotPresent
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">volumeMounts</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">mountPath</span>: <span style="color:#f1fa8c">&#34;/usr/share/nginx/html&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">volumes</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">persistentVolumeClaim</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">claimName</span>: test-local-pvc
 </span></span></code></pre></div><p>Example output:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/workload-test/local-pv# k get pod -n test -o wide
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/workload-test/local-pv# k get pod -n <span style="color:#8be9fd;font-style:italic">test</span> -o wide
 </span></span><span style="display:flex;"><span>NAME                     READY   STATUS    RESTARTS   AGE    IP               NODE                    NOMINATED NODE   READINESS GATES
-</span></span><span style="display:flex;"><span>nginx-test-local-pvc-1   1/1     Running   <span style="color:#ae81ff">0</span>          109s   10.244.164.188   worker2.it-meta.space   &lt;none&gt;           &lt;none&gt;
-</span></span><span style="display:flex;"><span>nginx-test-local-pvc-2   1/1     Running   <span style="color:#ae81ff">0</span>          32s    10.244.46.49     worker1.it-meta.space   &lt;none&gt;           &lt;none&gt;
+</span></span><span style="display:flex;"><span>nginx-test-local-pvc-1   1/1     Running   <span style="color:#bd93f9">0</span>          109s   10.244.164.188   worker2.it-meta.space   &lt;none&gt;           &lt;none&gt;
+</span></span><span style="display:flex;"><span>nginx-test-local-pvc-2   1/1     Running   <span style="color:#bd93f9">0</span>          32s    10.244.46.49     worker1.it-meta.space   &lt;none&gt;           &lt;none&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># write to volume from pod1</span>
-</span></span><span style="display:flex;"><span>k exec -it nginx-test-local-pvc-1 -n test -- /bin/bash
-</span></span><span style="display:flex;"><span>cd /usr/share/nginx/html
-</span></span><span style="display:flex;"><span>cat &gt; index.html <span style="color:#e6db74">&lt;&lt;EOF
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;head&gt;&lt;/head&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;div&gt;Welcome to Jamie&#39;s testing space about kubernetes&lt;/dir&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;/body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;/html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># write to volume from pod1</span>
+</span></span><span style="display:flex;"><span>k <span style="color:#8be9fd;font-style:italic">exec</span> -it nginx-test-local-pvc-1 -n <span style="color:#8be9fd;font-style:italic">test</span> -- /bin/bash
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">cd</span> /usr/share/nginx/html
+</span></span><span style="display:flex;"><span>cat &gt; index.html <span style="color:#f1fa8c">&lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;html&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;head&gt;&lt;/head&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;body&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;div&gt;Welcome to Jamie&#39;s testing space about kubernetes&lt;/dir&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;/body&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;/html&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">EOF</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/workload-test/local-pv# curl 10.244.164.188
 </span></span><span style="display:flex;"><span>&lt;html&gt;
 </span></span><span style="display:flex;"><span>&lt;head&gt;&lt;/head&gt;
 </span></span><span style="display:flex;"><span>&lt;body&gt;
-</span></span><span style="display:flex;"><span>&lt;div&gt;Welcome to Jamie<span style="color:#e6db74">&#39;s testing space about kubernetes&lt;/dir&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;/body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;/html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># write to volume from pod2
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">k exec -it nginx-test-local-pvc-2 -n test -- /bin/bash
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">cd /usr/share/nginx/html
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">cat &gt; storageclass.html &lt;&lt;EOF
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;head&gt;&lt;/head&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;div&gt;Welcome to Jamie&#39;</span>s testing space about kubernetes&lt;/dir&gt;
-</span></span><span style="display:flex;"><span>&lt;textarea rows<span style="color:#f92672">=</span><span style="color:#ae81ff">15</span> cols<span style="color:#f92672">=</span><span style="color:#ae81ff">40</span> style<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;display:box&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;div&gt;Welcome to Jamie<span style="color:#f1fa8c">&#39;s testing space about kubernetes&lt;/dir&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;/body&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;/html&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"># write to volume from pod2
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">k exec -it nginx-test-local-pvc-2 -n test -- /bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">cd /usr/share/nginx/html
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">cat &gt; storageclass.html &lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;html&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;head&gt;&lt;/head&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;body&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;div&gt;Welcome to Jamie&#39;</span>s testing space about kubernetes&lt;/dir&gt;
+</span></span><span style="display:flex;"><span>&lt;textarea <span style="color:#8be9fd;font-style:italic">rows</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">15</span> <span style="color:#8be9fd;font-style:italic">cols</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">40</span> <span style="color:#8be9fd;font-style:italic">style</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;display:box&#34;</span>&gt;
 </span></span><span style="display:flex;"><span>kind: StorageClass
 </span></span><span style="display:flex;"><span>apiVersion: storage.k8s.io/v1
 </span></span><span style="display:flex;"><span>metadata:
@@ -630,8 +634,8 @@ Clean up disk files.</p>
 </span></span><span style="display:flex;"><span>&lt;html&gt;
 </span></span><span style="display:flex;"><span>&lt;head&gt;&lt;/head&gt;
 </span></span><span style="display:flex;"><span>&lt;body&gt;
-</span></span><span style="display:flex;"><span>&lt;div&gt;Welcome to Jamie<span style="color:#960050;background-color:#1e0010">&#39;</span>s testing space about kubernetes&lt;/dir&gt;
-</span></span><span style="display:flex;"><span>&lt;textarea rows<span style="color:#f92672">=</span><span style="color:#ae81ff">15</span> cols<span style="color:#f92672">=</span><span style="color:#ae81ff">40</span> style<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;display:box&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;div&gt;Welcome to Jamie&#39;s testing space about kubernetes&lt;/dir&gt;
+</span></span><span style="display:flex;"><span>&lt;textarea <span style="color:#8be9fd;font-style:italic">rows</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">15</span> <span style="color:#8be9fd;font-style:italic">cols</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">40</span> <span style="color:#8be9fd;font-style:italic">style</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;display:box&#34;</span>&gt;
 </span></span><span style="display:flex;"><span>kind: StorageClass
 </span></span><span style="display:flex;"><span>apiVersion: storage.k8s.io/v1
 </span></span><span style="display:flex;"><span>metadata:
@@ -642,112 +646,112 @@ Clean up disk files.</p>
 </span></span><span style="display:flex;"><span>&lt;/body&gt;
 </span></span><span style="display:flex;"><span>&lt;/html&gt;
 </span></span></code></pre></div><h3 id="local-pv-rox">Local PV ROX</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PersistentVolume</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pv</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">capacity</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">1Gi</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">accessModes</span>:
-</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">ReadOnlyMany</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">persistentVolumeReclaimPolicy</span>: <span style="color:#ae81ff">Retain</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storageClassName</span>: <span style="color:#ae81ff">local-storage</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">local</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/data/local/</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">nodeAffinity</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">required</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">nodeSelectorTerms</span>:
-</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">matchExpressions</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">key</span>: <span style="color:#ae81ff">kubernetes.io/hostname</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">operator</span>: <span style="color:#ae81ff">In</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">values</span>:
-</span></span><span style="display:flex;"><span>          - <span style="color:#ae81ff">worker1.it-meta.space</span>
-</span></span><span style="display:flex;"><span>          - <span style="color:#ae81ff">worker2.it-meta.space</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: PersistentVolume
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: local-pv
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">capacity</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">storage</span>: 1Gi
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">accessModes</span>:
+</span></span><span style="display:flex;"><span>  - ReadOnlyMany
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">persistentVolumeReclaimPolicy</span>: Retain
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">storageClassName</span>: local-storage
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">local</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">path</span>: /data/local/
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">nodeAffinity</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">required</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">nodeSelectorTerms</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ff79c6">matchExpressions</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">key</span>: kubernetes.io/hostname
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">operator</span>: In
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">values</span>:
+</span></span><span style="display:flex;"><span>          - worker1.it-meta.space
+</span></span><span style="display:flex;"><span>          - worker2.it-meta.space
 </span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PersistentVolumeClaim</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test-local-pvc</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">accessModes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">ReadOnlyMany</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">resources</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">requests</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">1Gi</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storageClassName</span>: <span style="color:#ae81ff">local-storage</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: PersistentVolumeClaim
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: test-local-pvc
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">accessModes</span>:
+</span></span><span style="display:flex;"><span>    - ReadOnlyMany
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">resources</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">requests</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">storage</span>: 1Gi
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">storageClassName</span>: local-storage
 </span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-1</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">containers</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-1</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">image</span>: <span style="color:#ae81ff">nginx</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">IfNotPresent</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">volumeMounts</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">mountPath</span>: <span style="color:#e6db74">&#34;/usr/share/nginx/html&#34;</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">volumes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">persistentVolumeClaim</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">claimName</span>: <span style="color:#ae81ff">test-local-pvc</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: Pod
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-1
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">containers</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-1
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">image</span>: nginx
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">imagePullPolicy</span>: IfNotPresent
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">volumeMounts</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">mountPath</span>: <span style="color:#f1fa8c">&#34;/usr/share/nginx/html&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">volumes</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">persistentVolumeClaim</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">claimName</span>: test-local-pvc
 </span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-2</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">containers</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-2</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">image</span>: <span style="color:#ae81ff">nginx</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">IfNotPresent</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">volumeMounts</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">mountPath</span>: <span style="color:#e6db74">&#34;/usr/share/nginx/html&#34;</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">volumes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">persistentVolumeClaim</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">claimName</span>: <span style="color:#ae81ff">test-local-pvc</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: Pod
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-2
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">containers</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-2
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">image</span>: nginx
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">imagePullPolicy</span>: IfNotPresent
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">volumeMounts</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">mountPath</span>: <span style="color:#f1fa8c">&#34;/usr/share/nginx/html&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">volumes</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">persistentVolumeClaim</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">claimName</span>: test-local-pvc
 </span></span></code></pre></div><p>Example output:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/workload-test/local-pv# k get pod -n test -o wide
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/workload-test/local-pv# k get pod -n <span style="color:#8be9fd;font-style:italic">test</span> -o wide
 </span></span><span style="display:flex;"><span>NAME                     READY   STATUS    RESTARTS   AGE    IP               NODE                    NOMINATED NODE   READINESS GATES
-</span></span><span style="display:flex;"><span>nginx-test-local-pvc-1   1/1     Running   <span style="color:#ae81ff">0</span>          4m8s   10.244.164.147   worker2.it-meta.space   &lt;none&gt;           &lt;none&gt;
-</span></span><span style="display:flex;"><span>nginx-test-local-pvc-2   1/1     Running   <span style="color:#ae81ff">0</span>          62s    10.244.164.149   worker2.it-meta.space   &lt;none&gt;           &lt;none&gt;
+</span></span><span style="display:flex;"><span>nginx-test-local-pvc-1   1/1     Running   <span style="color:#bd93f9">0</span>          4m8s   10.244.164.147   worker2.it-meta.space   &lt;none&gt;           &lt;none&gt;
+</span></span><span style="display:flex;"><span>nginx-test-local-pvc-2   1/1     Running   <span style="color:#bd93f9">0</span>          62s    10.244.164.149   worker2.it-meta.space   &lt;none&gt;           &lt;none&gt;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># write to volume from pod1</span>
-</span></span><span style="display:flex;"><span>k exec -it nginx-test-local-pvc-1 -n test -- /bin/bash
-</span></span><span style="display:flex;"><span>cd /usr/share/nginx/html
-</span></span><span style="display:flex;"><span>cat &gt; index.html <span style="color:#e6db74">&lt;&lt;EOF
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;head&gt;&lt;/head&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;div&gt;Welcome to Jamie&#39;s testing space about kubernetes&lt;/dir&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;/body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;/html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># write to volume from pod1</span>
+</span></span><span style="display:flex;"><span>k <span style="color:#8be9fd;font-style:italic">exec</span> -it nginx-test-local-pvc-1 -n <span style="color:#8be9fd;font-style:italic">test</span> -- /bin/bash
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">cd</span> /usr/share/nginx/html
+</span></span><span style="display:flex;"><span>cat &gt; index.html <span style="color:#f1fa8c">&lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;html&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;head&gt;&lt;/head&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;body&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;div&gt;Welcome to Jamie&#39;s testing space about kubernetes&lt;/dir&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;/body&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;/html&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">EOF</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>root@nginx-test-local-pvc-1:/usr/share/nginx/html# cat &gt; index.html <span style="color:#e6db74">&lt;&lt;EOF
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;head&gt;&lt;/head&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;div&gt;Welcome to Jamie&#39;s testing space about kubernetes&lt;/dir&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;/body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&lt;/html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span><span style="display:flex;"><span>root@nginx-test-local-pvc-1:/usr/share/nginx/html# cat &gt; index.html <span style="color:#f1fa8c">&lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;html&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;head&gt;&lt;/head&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;body&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;div&gt;Welcome to Jamie&#39;s testing space about kubernetes&lt;/dir&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;/body&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;/html&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">EOF</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>root@nginx-test-local-pvc-1:/usr/share/nginx/html# ls
 </span></span><span style="display:flex;"><span>index.html
 </span></span><span style="display:flex;"><span>root@nginx-test-local-pvc-1:/usr/share/nginx/html# ls -al
-</span></span><span style="display:flex;"><span>total <span style="color:#ae81ff">12</span>
-</span></span><span style="display:flex;"><span>drwxr-xr-x <span style="color:#ae81ff">2</span> root root <span style="color:#ae81ff">4096</span> Apr  <span style="color:#ae81ff">8</span> 15:20 .
-</span></span><span style="display:flex;"><span>drwxr-xr-x <span style="color:#ae81ff">3</span> root root <span style="color:#ae81ff">4096</span> Dec <span style="color:#ae81ff">29</span>  <span style="color:#ae81ff">2021</span> ..
-</span></span><span style="display:flex;"><span>-rw-r--r-- <span style="color:#ae81ff">1</span> root root  <span style="color:#ae81ff">105</span> Apr  <span style="color:#ae81ff">8</span> 15:31 index.html
+</span></span><span style="display:flex;"><span>total <span style="color:#bd93f9">12</span>
+</span></span><span style="display:flex;"><span>drwxr-xr-x <span style="color:#bd93f9">2</span> root root <span style="color:#bd93f9">4096</span> Apr  <span style="color:#bd93f9">8</span> 15:20 .
+</span></span><span style="display:flex;"><span>drwxr-xr-x <span style="color:#bd93f9">3</span> root root <span style="color:#bd93f9">4096</span> Dec <span style="color:#bd93f9">29</span>  <span style="color:#bd93f9">2021</span> ..
+</span></span><span style="display:flex;"><span>-rw-r--r-- <span style="color:#bd93f9">1</span> root root  <span style="color:#bd93f9">105</span> Apr  <span style="color:#bd93f9">8</span> 15:31 index.html
 </span></span></code></pre></div><table>
 <thead>
 <tr>
@@ -761,83 +765,83 @@ Clean up disk files.</p>
 </tbody>
 </table>
 <h3 id="local-pv-rxop">Local PV RXOP</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PersistentVolume</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pv</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">capacity</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">1Gi</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">accessModes</span>:
-</span></span><span style="display:flex;"><span>  - <span style="color:#ae81ff">ReadWriteOncePod</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">persistentVolumeReclaimPolicy</span>: <span style="color:#ae81ff">Retain</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storageClassName</span>: <span style="color:#ae81ff">local-storage</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">local</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/data/local/</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">nodeAffinity</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">required</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">nodeSelectorTerms</span>:
-</span></span><span style="display:flex;"><span>      - <span style="color:#f92672">matchExpressions</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">key</span>: <span style="color:#ae81ff">kubernetes.io/hostname</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">operator</span>: <span style="color:#ae81ff">In</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">values</span>:
-</span></span><span style="display:flex;"><span>          - <span style="color:#ae81ff">worker2.it-meta.space</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: PersistentVolume
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: local-pv
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">capacity</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">storage</span>: 1Gi
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">accessModes</span>:
+</span></span><span style="display:flex;"><span>  - ReadWriteOncePod
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">persistentVolumeReclaimPolicy</span>: Retain
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">storageClassName</span>: local-storage
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">local</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">path</span>: /data/local/
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">nodeAffinity</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">required</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">nodeSelectorTerms</span>:
+</span></span><span style="display:flex;"><span>      - <span style="color:#ff79c6">matchExpressions</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">key</span>: kubernetes.io/hostname
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">operator</span>: In
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">values</span>:
+</span></span><span style="display:flex;"><span>          - worker2.it-meta.space
 </span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">PersistentVolumeClaim</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test-local-pvc</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">accessModes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">ReadWriteOncePod</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">resources</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">requests</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">storage</span>: <span style="color:#ae81ff">1Gi</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">storageClassName</span>: <span style="color:#ae81ff">local-storage</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: PersistentVolumeClaim
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: test-local-pvc
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">accessModes</span>:
+</span></span><span style="display:flex;"><span>    - ReadWriteOncePod
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">resources</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">requests</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">storage</span>: 1Gi
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">storageClassName</span>: local-storage
 </span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-1</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">containers</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-1</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">image</span>: <span style="color:#ae81ff">nginx</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">IfNotPresent</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">volumeMounts</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">mountPath</span>: <span style="color:#e6db74">&#34;/usr/share/nginx/html&#34;</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">volumes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">persistentVolumeClaim</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">claimName</span>: <span style="color:#ae81ff">test-local-pvc</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: Pod
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-1
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">containers</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-1
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">image</span>: nginx
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">imagePullPolicy</span>: IfNotPresent
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">volumeMounts</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">mountPath</span>: <span style="color:#f1fa8c">&#34;/usr/share/nginx/html&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">volumes</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">persistentVolumeClaim</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">claimName</span>: test-local-pvc
 </span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Pod</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-2</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">test</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">containers</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">nginx-test-local-pvc-2</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">image</span>: <span style="color:#ae81ff">nginx</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">imagePullPolicy</span>: <span style="color:#ae81ff">IfNotPresent</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">volumeMounts</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">mountPath</span>: <span style="color:#e6db74">&#34;/usr/share/nginx/html&#34;</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">volumes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">local-pvc</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">persistentVolumeClaim</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">claimName</span>: <span style="color:#ae81ff">test-local-pvc</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: Pod
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-2
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: test
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">containers</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: nginx-test-local-pvc-2
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">image</span>: nginx
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">imagePullPolicy</span>: IfNotPresent
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">volumeMounts</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">mountPath</span>: <span style="color:#f1fa8c">&#34;/usr/share/nginx/html&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">volumes</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">name</span>: local-pvc
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">persistentVolumeClaim</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">claimName</span>: test-local-pvc
 </span></span></code></pre></div><p>Example output:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/workload-test/local-pv# k apply -f local-pv-rwop.yaml
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/workload-test/local-pv# k apply -f local-pv-rwop.yaml
 </span></span><span style="display:flex;"><span>pod/nginx-test-local-pvc-1 created
 </span></span><span style="display:flex;"><span>pod/nginx-test-local-pvc-2 created
-</span></span><span style="display:flex;"><span>Error from server <span style="color:#f92672">(</span>Invalid<span style="color:#f92672">)</span>: error when creating <span style="color:#e6db74">&#34;local-pv-rwop.yaml&#34;</span>: PersistentVolume <span style="color:#e6db74">&#34;local-pv&#34;</span> is invalid: spec.accessModes: Unsupported value: <span style="color:#e6db74">&#34;ReadWriteOncePod&#34;</span>: supported values: <span style="color:#e6db74">&#34;ReadOnlyMany&#34;</span>, <span style="color:#e6db74">&#34;ReadWriteMany&#34;</span>, <span style="color:#e6db74">&#34;ReadWriteOnce&#34;</span>
-</span></span><span style="display:flex;"><span>Error from server <span style="color:#f92672">(</span>Invalid<span style="color:#f92672">)</span>: error when creating <span style="color:#e6db74">&#34;local-pv-rwop.yaml&#34;</span>: PersistentVolumeClaim <span style="color:#e6db74">&#34;test-local-pvc&#34;</span> is invalid: spec.accessModes: Unsupported value: <span style="color:#e6db74">&#34;ReadWriteOncePod&#34;</span>: supported values: <span style="color:#e6db74">&#34;ReadOnlyMany&#34;</span>, <span style="color:#e6db74">&#34;ReadWriteMany&#34;</span>, <span style="color:#e6db74">&#34;ReadWriteOnce&#34;</span>
+</span></span><span style="display:flex;"><span>Error from server <span style="color:#ff79c6">(</span>Invalid<span style="color:#ff79c6">)</span>: error when creating <span style="color:#f1fa8c">&#34;local-pv-rwop.yaml&#34;</span>: PersistentVolume <span style="color:#f1fa8c">&#34;local-pv&#34;</span> is invalid: spec.accessModes: Unsupported value: <span style="color:#f1fa8c">&#34;ReadWriteOncePod&#34;</span>: supported values: <span style="color:#f1fa8c">&#34;ReadOnlyMany&#34;</span>, <span style="color:#f1fa8c">&#34;ReadWriteMany&#34;</span>, <span style="color:#f1fa8c">&#34;ReadWriteOnce&#34;</span>
+</span></span><span style="display:flex;"><span>Error from server <span style="color:#ff79c6">(</span>Invalid<span style="color:#ff79c6">)</span>: error when creating <span style="color:#f1fa8c">&#34;local-pv-rwop.yaml&#34;</span>: PersistentVolumeClaim <span style="color:#f1fa8c">&#34;test-local-pvc&#34;</span> is invalid: spec.accessModes: Unsupported value: <span style="color:#f1fa8c">&#34;ReadWriteOncePod&#34;</span>: supported values: <span style="color:#f1fa8c">&#34;ReadOnlyMany&#34;</span>, <span style="color:#f1fa8c">&#34;ReadWriteMany&#34;</span>, <span style="color:#f1fa8c">&#34;ReadWriteOnce&#34;</span>
 </span></span></code></pre></div><table>
 <thead>
 <tr>
@@ -866,7 +870,7 @@ Clean up disk files.</p>
 <div class="zs-modal-box">
 	<div class="zs-modal-head">
 		<button type="button" class="close">×</button>
-		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
         
 	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
 		
@@ -915,7 +919,6 @@ Clean up disk files.</p>
                 
 
                 
-
 
 
             </div>
@@ -986,6 +989,8 @@ Clean up disk files.</p>
                         
                         
                         
+                        
+                        
                         <a href="/tags/k8s" title="k8s">
                             k8s
                         </a>
@@ -995,6 +1000,8 @@ Clean up disk files.</p>
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -1044,8 +1051,8 @@ Clean up disk files.</p>
                         
                         
                         
-                        <a href="/tags/spring-cloud" title="spring-cloud">
-                            spring-cloud
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
                         </a>
                         
                         
@@ -1054,8 +1061,8 @@ Clean up disk files.</p>
                         
                         
                         
-                        <a href="/tags/transaction-management" title="transaction-management">
-                            transaction-management
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
                         </a>
                         
                         
@@ -1167,14 +1174,8 @@ Clean up disk files.</p>
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2023
-                    <br>
-                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
-                    <iframe
-                        style="margin-left: 2px; margin-bottom:-5px;"
-                        frameborder="0" scrolling="0" width="100px" height="20px"
-                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
-                    </iframe>
+                    Copyright &copy; Jamie&#39;s Blog 2024
+                    
                 </p>
             </div>
         </div>

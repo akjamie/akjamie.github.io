@@ -4,17 +4,16 @@
     <title>Websocket on Jamie&#39;s Blog</title>
     <link>http://akjamie.github.io/tags/websocket/</link>
     <description>Recent content in Websocket on Jamie&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 04 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/websocket/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 04 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/websocket/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Websocket集成</title>
       <link>http://akjamie.github.io/post/2022-07-04-spring-websocket-stomp/</link>
       <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-07-04-spring-websocket-stomp/</guid>
       <description>Background 最近在做一个类似于快速竞价的功能的技术设计，即在很短的时间内通过一个集中的平台拿到各家的报价，类似于支付宝上的那个车险报价，发送完汽车信息</description>
     </item>
-    
   </channel>
 </rss>

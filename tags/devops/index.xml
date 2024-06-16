@@ -4,19 +4,16 @@
     <title>DevOps on Jamie&#39;s Blog</title>
     <link>http://akjamie.github.io/tags/devops/</link>
     <description>Recent content in DevOps on Jamie&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 12 Apr 2022 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Kubernetes dashboard deployment</title>
       <link>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</link>
       <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</guid>
-      <description>Install dashboard To run the following command to deploy dashboard
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully. ps:
-On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service, the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</description>
+      <description>Install dashboard To run the following command to deploy dashboard&#xA;kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully. ps:&#xA;On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service, the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</description>
     </item>
-    
   </channel>
 </rss>

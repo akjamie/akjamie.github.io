@@ -4,288 +4,219 @@
     <title>Posts on Jamie&#39;s Blog</title>
     <link>http://akjamie.github.io/post/</link>
     <description>Recent content in Posts on Jamie&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 29 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 15 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Run LLM on Intel Iris Xe GPU Using IEPX-LLM &#43; Ollama</title>
+      <link>http://akjamie.github.io/post/2024-06-15-run-llm-on-intel-igpu/</link>
+      <pubDate>Sat, 15 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2024-06-15-run-llm-on-intel-igpu/</guid>
+      <description>In the realm of AI and machine learning, optimizing performance often hinges on utilizing GPU acceleration. However, Intel GPUs traditionally have not supported running AI workloads directly with popular frameworks like TensorFlow or PyTorch [5]. To address this, developers can turn to IEPX-LLM, a specialized library tailored for Intel&amp;rsquo;s XPU architecture.&#xA;Steps to Run LLM on Intel GPU with IEPX-LLM + Ollama Locally Install Prerequisites (Optional) Update GPU Driver Tips :information_source: It is recommended to update your GPU driver, if you have driver version lower than 31.</description>
+    </item>
     <item>
       <title>CKA &amp; important operation commands</title>
       <link>http://akjamie.github.io/post/2023-05-29-k8s-cka/</link>
       <pubDate>Mon, 29 May 2023 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2023-05-29-k8s-cka/</guid>
-      <description>Complains about the CKA exam:
-The CKA exam environment was changed from Terminal to Remote Desktop(VNC) from Last Jun, this is an absolutely shit
-decision. The huge lagging causes that large amount of candidate&amp;rsquo;s time-wasting on always-waiting, and also Mouse is nearly useless - very difficult to locate what you want on Firefox browser, and eventually it highlights the good user experience on the k8s built-in documentation - Kubectl explain, how ridiculous it is !</description>
+      <description>Complains about the CKA exam:&#xA;The CKA exam environment was changed from Terminal to Remote Desktop(VNC) from Last Jun, this is an absolutely shit&#xA;decision. The huge lagging causes that large amount of candidate&amp;rsquo;s time-wasting on always-waiting, and also Mouse is nearly useless - very difficult to locate what you want on Firefox browser, and eventually it highlights the good user experience on the k8s built-in documentation - Kubectl explain, how ridiculous it is !</description>
     </item>
-    
     <item>
       <title>Explore Kubernetes Local PV &amp; PVC access mode</title>
       <link>http://akjamie.github.io/post/2023-04-08-k8s-pv-pvc-access-mode/</link>
       <pubDate>Sat, 08 Apr 2023 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2023-04-08-k8s-pv-pvc-access-mode/</guid>
       <description>A local volume represents a mounted local storage device such as a disk, partition or directory. Local volumes can only be used as a statically created PersistentVolume. Dynamic provisioning is not supported. Compared to hostPath volumes, local volumes are used in a durable and portable manner without manually scheduling pods to nodes. The system is aware of the volume&amp;rsquo;s node constraints by looking at the node affinity on the PersistentVolume.</description>
     </item>
-    
     <item>
       <title>Vault Agent with Kubernetes</title>
       <link>http://akjamie.github.io/post/2023-03-26-vault-agent-with-k8s/</link>
       <pubDate>Sun, 26 Mar 2023 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2023-03-26-vault-agent-with-k8s/</guid>
-      <description>Challenge Nearly all requests to Vault must be accompanied by an authentication token. This includes all API requests, as well as via the Vault CLI and other libraries. If you can securely get the first secret from an originator to a consumer, all subsequent secrets transmitted between this originator and consumer can be authenticated with the trust established by the successful distribution and user of that first secret.
-The applications running in a Kubernetes environment is no exception.</description>
+      <description>Challenge Nearly all requests to Vault must be accompanied by an authentication token. This includes all API requests, as well as via the Vault CLI and other libraries. If you can securely get the first secret from an originator to a consumer, all subsequent secrets transmitted between this originator and consumer can be authenticated with the trust established by the successful distribution and user of that first secret.&#xA;The applications running in a Kubernetes environment is no exception.</description>
     </item>
-    
     <item>
       <title>Vault on Kubernetes</title>
       <link>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</link>
       <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</guid>
-      <description>What is Vault? Vault introduction HashiCorp Vault is an identity-based secrets and encryption management system. A secret is anything that you want to tightly
-control access to, such as API encryption keys, passwords, and certificates. Vault provides encryption services that are gated by authentication and authorization methods.Using Vault’s UI, CLI, or HTTP API, access to secrets and other sensitive data can be securely stored and managed, tightly controlled (restricted), and auditable.</description>
+      <description>What is Vault? Vault introduction HashiCorp Vault is an identity-based secrets and encryption management system. A secret is anything that you want to tightly&#xA;control access to, such as API encryption keys, passwords, and certificates. Vault provides encryption services that are gated by authentication and authorization methods.Using Vault’s UI, CLI, or HTTP API, access to secrets and other sensitive data can be securely stored and managed, tightly controlled (restricted), and auditable.</description>
     </item>
-    
     <item>
       <title>Redis advance III</title>
       <link>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</link>
       <pubDate>Sat, 09 Jul 2022 23:03:30 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</guid>
       <description>What&amp;rsquo;s Redis Cluster Redis Cluster is a distributed implementation of Redis with the following goals in order of importance in the design: High performance and linear scalability up to 1000 nodes. There are no proxies, asynchronous replication is used, and no merge operations are performed on values. 在多达 1000 个节点的时候仍能保持高性能及线性的可扩</description>
     </item>
-    
     <item>
       <title>Websocket集成</title>
       <link>http://akjamie.github.io/post/2022-07-04-spring-websocket-stomp/</link>
       <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-07-04-spring-websocket-stomp/</guid>
       <description>Background 最近在做一个类似于快速竞价的功能的技术设计，即在很短的时间内通过一个集中的平台拿到各家的报价，类似于支付宝上的那个车险报价，发送完汽车信息</description>
     </item>
-    
     <item>
       <title>Redis advance II</title>
       <link>http://akjamie.github.io/post/2022-06-28-redis-master-slave-replication/</link>
       <pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-06-28-redis-master-slave-replication/</guid>
       <description>主从复制 基本概念 主机数据更新后根据配置和策略，自动同步到备份机的master/slave机制，其中master以写为主，而slave主要以读</description>
     </item>
-    
     <item>
       <title>Redis foundation - III</title>
       <link>http://akjamie.github.io/post/2022-06-27-redis-basic-2/</link>
       <pubDate>Mon, 27 Jun 2022 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-06-27-redis-basic-2/</guid>
       <description>Redis 事务 事务概念和基本操作 其为命令提供一个单独的隔离环境，事务中所有的命令都会序列化，按顺序地执行，执行过程中不会被其他客户端发送过来的命令请</description>
     </item>
-    
     <item>
       <title>Redis advance I</title>
       <link>http://akjamie.github.io/post/2022-06-23-redis-advance/</link>
       <pubDate>Thu, 23 Jun 2022 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-06-23-redis-advance/</guid>
       <description>bitmap 在前面的基础回顾中提到了bitmap这种数据结构，主要用来应对string的位操作，简单高效 适用场景：单状态统计，如每天系统用户登录情况统</description>
     </item>
-    
     <item>
       <title>Redis foundation - II</title>
       <link>http://akjamie.github.io/post/2022-05-31-redis-basic-1/</link>
       <pubDate>Mon, 30 May 2022 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-05-31-redis-basic-1/</guid>
       <description>Redis基础 Common知识 Redis 有16个数据库，一般都使用0号库，使用select dbid 来切换db。 Redis是单线程 + 多路io服用技术 Redis vs memcache Redis</description>
     </item>
-    
     <item>
       <title>Kubernetes dashboard deployment</title>
       <link>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</link>
       <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</guid>
-      <description>Install dashboard To run the following command to deploy dashboard
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully. ps:
-On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service, the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</description>
+      <description>Install dashboard To run the following command to deploy dashboard&#xA;kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully. ps:&#xA;On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service, the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</description>
     </item>
-    
     <item>
       <title>Demo - AWS EC2 instance auto scaling</title>
       <link>http://akjamie.github.io/post/2021-08-09-aws-demo-01-autoscale-test/</link>
       <pubDate>Mon, 09 Aug 2021 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2021-08-09-aws-demo-01-autoscale-test/</guid>
-      <description>I&amp;rsquo;m on the path of AWS Professinal Certified Architect exam preparation, want to document some key points in the demos for later review to enhance the understanding of knowledge. In this demo, i&amp;rsquo;m going to test the AWS auto scaling and utilize the EC2 network knowledges.
-Objective To build a health checking springboot application and package as docker image hosted on AWS ECR. Setup basic network infrastructure, VPC, Subnet, Internet Gateway, Route table,Security group, etc.</description>
+      <description>I&amp;rsquo;m on the path of AWS Professinal Certified Architect exam preparation, want to document some key points in the demos for later review to enhance the understanding of knowledge. In this demo, i&amp;rsquo;m going to test the AWS auto scaling and utilize the EC2 network knowledges.&#xA;Objective To build a health checking springboot application and package as docker image hosted on AWS ECR. Setup basic network infrastructure, VPC, Subnet, Internet Gateway, Route table,Security group, etc.</description>
     </item>
-    
     <item>
       <title>Microservice design - practice</title>
       <link>http://akjamie.github.io/post/2021-05-08-microservice-data-sync/</link>
       <pubDate>Sat, 08 May 2021 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2021-05-08-microservice-data-sync/</guid>
-      <description>Summary To mark down a batch data sync accross system solution, tested daily sync data volume is around 10w.
-In this solution, adopted the message driven batch processing rather than traditional fixed time schedule batch.
-Also applied the microservice design to eliminate the system dependency and well protect the data/system boundry,which is also aligned with the DEVOPS,,both team could focus on their own domain/services&amp;rsquo; development and maintenance.
-Techniques used Springboot + Spring cloud config, constrained by infra, services are running on in hourse VM instances.</description>
+      <description>Summary To mark down a batch data sync accross system solution, tested daily sync data volume is around 10w.&#xA;In this solution, adopted the message driven batch processing rather than traditional fixed time schedule batch.&#xA;Also applied the microservice design to eliminate the system dependency and well protect the data/system boundry,which is also aligned with the DEVOPS,,both team could focus on their own domain/services&amp;rsquo; development and maintenance.&#xA;Techniques used Springboot + Spring cloud config, constrained by infra, services are running on in hourse VM instances.</description>
     </item>
-    
     <item>
       <title>How i prepare the Google Cloud Professional Cloud Architect Certificate</title>
       <link>http://akjamie.github.io/post/2021-03-09-gcp-professional-cerified-architecture-prep/</link>
       <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2021-03-09-gcp-professional-cerified-architecture-prep/</guid>
-      <description>Today i took Google Cloud Certified Professional Cloud Architect exam, the result is pass，through the final result is being reviewed for compliance with exam terms and conditions, i&amp;rsquo;d like to summarize the preparation path i went through for this exam, hope that could help others who want to take the same exam.
-About the exam Professional Cloud Architect is one of the google cloud professonal cerficates, it requires a thorough understanding of cloud architecture and Google Cloud Platform, and verifies the capability of design, develop, and manage robust, secure, scalable, highly available, and dynamic solutions to drive business objectives.</description>
+      <description>Today i took Google Cloud Certified Professional Cloud Architect exam, the result is pass，through the final result is being reviewed for compliance with exam terms and conditions, i&amp;rsquo;d like to summarize the preparation path i went through for this exam, hope that could help others who want to take the same exam.&#xA;About the exam Professional Cloud Architect is one of the google cloud professonal cerficates, it requires a thorough understanding of cloud architecture and Google Cloud Platform, and verifies the capability of design, develop, and manage robust, secure, scalable, highly available, and dynamic solutions to drive business objectives.</description>
     </item>
-    
     <item>
       <title>Kubernates - Practice</title>
       <link>http://akjamie.github.io/post/2020-11-29-run-application-on-k8s/</link>
       <pubDate>Sun, 29 Nov 2020 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2020-11-29-run-application-on-k8s/</guid>
-      <description>this page shows how to run a spring boot application on local K8S environment.
-Objectives 1.create spring boot application and build a docker image
-2.create local persistent volume to share the files from host
-3.create deployment and service to run this application and expose for external access.
-Before you begin install docker desktop in local and enable local k8s cluster, more details please refer to docker official guide or k8s local cluster setup guide.</description>
+      <description>this page shows how to run a spring boot application on local K8S environment.&#xA;Objectives 1.create spring boot application and build a docker image&#xA;2.create local persistent volume to share the files from host&#xA;3.create deployment and service to run this application and expose for external access.&#xA;Before you begin install docker desktop in local and enable local k8s cluster, more details please refer to docker official guide or k8s local cluster setup guide.</description>
     </item>
-    
     <item>
       <title>GCP Network Connection (1)</title>
       <link>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</link>
       <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</guid>
-      <description>To document the setup process for VPC peering accross different GCP project VPCs for demo purpose only.
-Setup VPC peering accross two GCP projects in this demo, will create two GCP projects, and setup VPC network peering to work as network bridge to make sure the vm in one of GCP project can access the MongoDB installed on VM of another GCP project. preparation Mongo backups 1&amp;gt; backup MongoDB
-to use mongo shell command to backup data, samples as below</description>
+      <description>To document the setup process for VPC peering accross different GCP project VPCs for demo purpose only.&#xA;Setup VPC peering accross two GCP projects in this demo, will create two GCP projects, and setup VPC network peering to work as network bridge to make sure the vm in one of GCP project can access the MongoDB installed on VM of another GCP project. preparation Mongo backups 1&amp;gt; backup MongoDB&#xA;to use mongo shell command to backup data, samples as below</description>
     </item>
-    
     <item>
       <title>Mongo DB Basics (1)</title>
       <link>http://akjamie.github.io/post/2020-09-05-mongo-basics/</link>
       <pubDate>Sat, 05 Sep 2020 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2020-09-05-mongo-basics/</guid>
       <description>Mongo installation(for test) docker command for local mongo installation docker run -p 27017:27017 -v /Users/jamie/Documents/work-benches/mongo/test:/data/db --name mongo -d mongo:latest check mongo running status docker ps | grep mongo 9161bd4811a8 mongo:latest &amp;ldquo;docker-entrypoint.s…&amp;rdquo; 6 days ago Up 6 days</description>
     </item>
-    
     <item>
       <title>Spring Transaction</title>
       <link>http://akjamie.github.io/post/2019-08-31-spring-global-transaction/</link>
       <pubDate>Sat, 31 Aug 2019 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2019-08-31-spring-global-transaction/</guid>
       <description>先回顾上一篇sprint local transaction的内容，本地事务是用于指定资源，即单一数据源，其主要结构如下： 那么我们来看看spring的g</description>
     </item>
-    
     <item>
       <title>Spring Transaction</title>
       <link>http://akjamie.github.io/post/2019-08-30-spring-local-transaction/</link>
       <pubDate>Fri, 30 Aug 2019 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2019-08-30-spring-local-transaction/</guid>
       <description>事务特性和隔离级别 事务基础 事务特性 - 原子性(Atomicity) 事务包含的所有操作是一个原子单元，要么全部成功，要么全部失败 - 一致性（Con</description>
     </item>
-    
     <item>
       <title>Redis foundation - I</title>
       <link>http://akjamie.github.io/post/2019-08-04-redis-basic/</link>
       <pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2019-08-04-redis-basic/</guid>
       <description>redis是一个key-value存储系统，它支持存储的value类型相对更多，包括string(字符串)、list(链表)、set(集合)</description>
     </item>
-    
     <item>
       <title>微服务中的分布式事务</title>
       <link>http://akjamie.github.io/post/2019-07-24-one-distributed-transaction-user-case/</link>
       <pubDate>Tue, 23 Jul 2019 19:40:10 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2019-07-24-one-distributed-transaction-user-case/</guid>
       <description>用户场景 在某企业app上做Payment业务，在app端准备好request data， 如debit account number, credit account number, amount, notes, 点击submit。 业务流程如</description>
     </item>
-    
     <item>
       <title>Spring batch - single process &amp; remote partitioning(multi instances)</title>
       <link>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</link>
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</guid>
       <description>Spring batch是轻量级，全面的批处理框架，旨在开发对企业系统日常运营至关重要的强大批处理应用程序。 Spring Batch负责大量记录，包括日志记录/跟踪</description>
     </item>
-    
     <item>
       <title>Spring Cloud Series</title>
       <link>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</link>
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</guid>
       <description>Demo的介绍 本文主要通过一个小demo，来综合运用spring cloud系列技术，demo中主要包含如下模块/组建： Authorization service, 基于Spring Security</description>
     </item>
-    
     <item>
       <title>Free CA Certs setup using Certbot &#43; Docker &#43; Nginx</title>
       <link>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</link>
       <pubDate>Sun, 14 Jul 2019 18:30:05 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</guid>
       <description>Background Let&amp;rsquo;s Encrypt is a certificate authority that provides X.509 certificates for Transport Layer Security (TLS) encryption at no charge,The certificate is valid for 90 days, during which renewal can take place at anytime. 这样我们就可以用上免费的CA cert来安全expose我们自己的网站或者</description>
     </item>
-    
     <item>
       <title>Linux network proxy setup for desktop and terminal</title>
       <link>http://akjamie.github.io/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/</link>
       <pubDate>Sun, 14 Jul 2019 14:50:52 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/</guid>
       <description>背景介绍 很多时候我们由于great firewall，我们无法访问某些网站，这时候就需要用到网络代理来应对一些比较urgent的case，本文</description>
     </item>
-    
     <item>
       <title>Harshicorp Vault Setup Config and integration with spring boot</title>
       <link>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</link>
       <pubDate>Sun, 14 Jul 2019 12:10:27 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</guid>
       <description>Install vault Prepare docker-compose.yml, content as below (just a sample here, please don&amp;rsquo;t use it for production, there are more aspects should be considered) version: &amp;#39;3&amp;#39; services: consul: container_name: consul.server command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect=1 image: consul:latest restart: always volumes: - ./consul.server/config:/consul/config - ./consul.server/data:/consul/data ports: - &amp;#34;9300:9300&amp;#34; - &amp;#34;9500:9500&amp;#34; - &amp;#34;9600:9600/udp&amp;#34; vault: container_name: vault.server image: vault ports: - &amp;#34;8200:8200&amp;#34; restart: always links: - consul:consul.server volumes: - ./vault.server/config:/mnt/vault/config</description>
     </item>
-    
     <item>
       <title>AWS Serveless Application Model</title>
       <link>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</link>
       <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2019-07-23-aws-server-application-model/</guid>
       <description>AWS SAM - lambda demo Demo User Case User requirement: dynamically get regional mobile app feature availability status,status data is kept in AWS dynamodb. Projectcodes hierarchical structure presented as below ├── README.md -- This instructions file ├── event.json -- API Gateway Proxy Integration event payload ├── feature_availability -- Source code for a lambda function │ ├── __init__.py │ ├── app.py</description>
     </item>
-    
     <item>
       <title>How to invoke python scripts in UIPath</title>
       <link>http://akjamie.github.io/2019/01/19/UIPath-invoke-python-method/</link>
       <pubDate>Sat, 19 Jan 2019 12:10:27 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/2019/01/19/UIPath-invoke-python-method/</guid>
       <description>UIPath是一个非常不错的RPA(Robotic Process Automation) 工具和平台，并且有开源社区版本可以方便RPA爱好者去尝试，本文是介绍如何在UIPath</description>
     </item>
-    
     <item>
       <title>Spring Data &amp; Data Persistent</title>
       <link>http://akjamie.github.io/post/2022-07-08-spring-data-series-01/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-07-08-spring-data-series-01/</guid>
-      <description>What is JPA? &amp;ldquo;The Java Persistence API is the Java API for the management of persistence and object/relational mapping in Java EE and Java SE environments. It provides an object/relational mapping facility for the Java application developer using a Java domain model to manage a relational database.&amp;rdquo;
-It&amp;rsquo;s quoted from JSR(Java Specification Request) managed by Java Community Process.
-This is just the definition of what&amp;rsquo;s JPA, let&amp;rsquo;s recall how we persist data before adopting JPA.</description>
+      <description>What is JPA? &amp;ldquo;The Java Persistence API is the Java API for the management of persistence and object/relational mapping in Java EE and Java SE environments. It provides an object/relational mapping facility for the Java application developer using a Java domain model to manage a relational database.&amp;rdquo;&#xA;It&amp;rsquo;s quoted from JSR(Java Specification Request) managed by Java Community Process.&#xA;This is just the definition of what&amp;rsquo;s JPA, let&amp;rsquo;s recall how we persist data before adopting JPA.</description>
     </item>
-    
   </channel>
 </rss>

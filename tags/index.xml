@@ -4,314 +4,261 @@
     <title>Tags on Jamie&#39;s Blog</title>
     <link>http://akjamie.github.io/tags/</link>
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 29 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 15 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IGPU</title>
+      <link>http://akjamie.github.io/tags/igpu/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/igpu/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>LLM</title>
+      <link>http://akjamie.github.io/tags/llm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/llm/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Kubernetes</title>
       <link>http://akjamie.github.io/tags/kubernetes/</link>
-      <pubDate>Mon, 29 May 2023 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/kubernetes/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Vault</title>
       <link>http://akjamie.github.io/tags/vault/</link>
-      <pubDate>Sun, 26 Mar 2023 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/vault/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>NoSQL</title>
       <link>http://akjamie.github.io/tags/nosql/</link>
-      <pubDate>Sat, 09 Jul 2022 23:03:30 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/nosql/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Redis</title>
       <link>http://akjamie.github.io/tags/redis/</link>
-      <pubDate>Sat, 09 Jul 2022 23:03:30 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/redis/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>K8S</title>
       <link>http://akjamie.github.io/tags/k8s/</link>
-      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/k8s/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>Spring-stomp</title>
+      <title>Spring-Stomp</title>
       <link>http://akjamie.github.io/tags/spring-stomp/</link>
-      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/spring-stomp/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Websocket</title>
       <link>http://akjamie.github.io/tags/websocket/</link>
-      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/websocket/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>DevOps</title>
       <link>http://akjamie.github.io/tags/devops/</link>
-      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/devops/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>AWS</title>
       <link>http://akjamie.github.io/tags/aws/</link>
-      <pubDate>Mon, 09 Aug 2021 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/aws/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Cloud</title>
       <link>http://akjamie.github.io/tags/cloud/</link>
-      <pubDate>Mon, 09 Aug 2021 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/cloud/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Batch</title>
       <link>http://akjamie.github.io/tags/batch/</link>
-      <pubDate>Sat, 08 May 2021 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/batch/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Microservice</title>
       <link>http://akjamie.github.io/tags/microservice/</link>
-      <pubDate>Sat, 08 May 2021 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/microservice/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Certificate</title>
       <link>http://akjamie.github.io/tags/certificate/</link>
-      <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/certificate/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>GCP</title>
       <link>http://akjamie.github.io/tags/gcp/</link>
-      <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/gcp/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Spring Cloud</title>
       <link>http://akjamie.github.io/tags/spring-cloud/</link>
-      <pubDate>Sun, 29 Nov 2020 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/spring-cloud/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Mongo</title>
       <link>http://akjamie.github.io/tags/mongo/</link>
-      <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/mongo/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>VPC</title>
       <link>http://akjamie.github.io/tags/vpc/</link>
-      <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/vpc/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Spring</title>
       <link>http://akjamie.github.io/tags/spring/</link>
-      <pubDate>Sat, 31 Aug 2019 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/spring/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Transaction Management</title>
       <link>http://akjamie.github.io/tags/transaction-management/</link>
-      <pubDate>Sat, 31 Aug 2019 00:00:00 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/transaction-management/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Design</title>
       <link>http://akjamie.github.io/tags/design/</link>
-      <pubDate>Tue, 23 Jul 2019 19:40:10 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/design/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Distributed Transaction</title>
       <link>http://akjamie.github.io/tags/distributed-transaction/</link>
-      <pubDate>Tue, 23 Jul 2019 19:40:10 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/distributed-transaction/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Docker</title>
       <link>http://akjamie.github.io/tags/docker/</link>
-      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/docker/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Spring Batch</title>
       <link>http://akjamie.github.io/tags/spring-batch/</link>
-      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/spring-batch/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Spring Boot</title>
       <link>http://akjamie.github.io/tags/spring-boot/</link>
-      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/spring-boot/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Let’s Encrypt</title>
       <link>http://akjamie.github.io/tags/lets-encrypt/</link>
-      <pubDate>Sun, 14 Jul 2019 18:30:05 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/lets-encrypt/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Nginx</title>
       <link>http://akjamie.github.io/tags/nginx/</link>
-      <pubDate>Sun, 14 Jul 2019 18:30:05 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/nginx/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Proxychain</title>
       <link>http://akjamie.github.io/tags/proxychain/</link>
-      <pubDate>Sun, 14 Jul 2019 14:50:52 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/proxychain/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Shadowsocks</title>
       <link>http://akjamie.github.io/tags/shadowsocks/</link>
-      <pubDate>Sun, 14 Jul 2019 14:50:52 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/shadowsocks/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Harshicorp Vault</title>
       <link>http://akjamie.github.io/tags/harshicorp-vault/</link>
-      <pubDate>Sun, 14 Jul 2019 12:10:27 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/harshicorp-vault/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Python</title>
       <link>http://akjamie.github.io/tags/python/</link>
-      <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/python/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Serveless</title>
       <link>http://akjamie.github.io/tags/serveless/</link>
-      <pubDate>Mon, 10 Jun 2019 13:36:10 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/serveless/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>UIPath</title>
       <link>http://akjamie.github.io/tags/uipath/</link>
-      <pubDate>Sat, 19 Jan 2019 12:10:27 +0000</pubDate>
-      
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/uipath/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>JPA</title>
       <link>http://akjamie.github.io/tags/jpa/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/tags/jpa/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Spring Data</title>
       <link>http://akjamie.github.io/tags/spring-data/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/tags/spring-data/</guid>
       <description></description>
     </item>
-    
   </channel>
 </rss>

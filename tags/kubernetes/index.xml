@@ -4,59 +4,44 @@
     <title>Kubernetes on Jamie&#39;s Blog</title>
     <link>http://akjamie.github.io/tags/kubernetes/</link>
     <description>Recent content in Kubernetes on Jamie&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 29 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 29 May 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CKA &amp; important operation commands</title>
       <link>http://akjamie.github.io/post/2023-05-29-k8s-cka/</link>
       <pubDate>Mon, 29 May 2023 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2023-05-29-k8s-cka/</guid>
-      <description>Complains about the CKA exam:
-The CKA exam environment was changed from Terminal to Remote Desktop(VNC) from Last Jun, this is an absolutely shit
-decision. The huge lagging causes that large amount of candidate&amp;rsquo;s time-wasting on always-waiting, and also Mouse is nearly useless - very difficult to locate what you want on Firefox browser, and eventually it highlights the good user experience on the k8s built-in documentation - Kubectl explain, how ridiculous it is !</description>
+      <description>Complains about the CKA exam:&#xA;The CKA exam environment was changed from Terminal to Remote Desktop(VNC) from Last Jun, this is an absolutely shit&#xA;decision. The huge lagging causes that large amount of candidate&amp;rsquo;s time-wasting on always-waiting, and also Mouse is nearly useless - very difficult to locate what you want on Firefox browser, and eventually it highlights the good user experience on the k8s built-in documentation - Kubectl explain, how ridiculous it is !</description>
     </item>
-    
     <item>
       <title>Explore Kubernetes Local PV &amp; PVC access mode</title>
       <link>http://akjamie.github.io/post/2023-04-08-k8s-pv-pvc-access-mode/</link>
       <pubDate>Sat, 08 Apr 2023 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2023-04-08-k8s-pv-pvc-access-mode/</guid>
       <description>A local volume represents a mounted local storage device such as a disk, partition or directory. Local volumes can only be used as a statically created PersistentVolume. Dynamic provisioning is not supported. Compared to hostPath volumes, local volumes are used in a durable and portable manner without manually scheduling pods to nodes. The system is aware of the volume&amp;rsquo;s node constraints by looking at the node affinity on the PersistentVolume.</description>
     </item>
-    
     <item>
       <title>Vault Agent with Kubernetes</title>
       <link>http://akjamie.github.io/post/2023-03-26-vault-agent-with-k8s/</link>
       <pubDate>Sun, 26 Mar 2023 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2023-03-26-vault-agent-with-k8s/</guid>
-      <description>Challenge Nearly all requests to Vault must be accompanied by an authentication token. This includes all API requests, as well as via the Vault CLI and other libraries. If you can securely get the first secret from an originator to a consumer, all subsequent secrets transmitted between this originator and consumer can be authenticated with the trust established by the successful distribution and user of that first secret.
-The applications running in a Kubernetes environment is no exception.</description>
+      <description>Challenge Nearly all requests to Vault must be accompanied by an authentication token. This includes all API requests, as well as via the Vault CLI and other libraries. If you can securely get the first secret from an originator to a consumer, all subsequent secrets transmitted between this originator and consumer can be authenticated with the trust established by the successful distribution and user of that first secret.&#xA;The applications running in a Kubernetes environment is no exception.</description>
     </item>
-    
     <item>
       <title>Vault on Kubernetes</title>
       <link>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</link>
       <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</guid>
-      <description>What is Vault? Vault introduction HashiCorp Vault is an identity-based secrets and encryption management system. A secret is anything that you want to tightly
-control access to, such as API encryption keys, passwords, and certificates. Vault provides encryption services that are gated by authentication and authorization methods.Using Vault’s UI, CLI, or HTTP API, access to secrets and other sensitive data can be securely stored and managed, tightly controlled (restricted), and auditable.</description>
+      <description>What is Vault? Vault introduction HashiCorp Vault is an identity-based secrets and encryption management system. A secret is anything that you want to tightly&#xA;control access to, such as API encryption keys, passwords, and certificates. Vault provides encryption services that are gated by authentication and authorization methods.Using Vault’s UI, CLI, or HTTP API, access to secrets and other sensitive data can be securely stored and managed, tightly controlled (restricted), and auditable.</description>
     </item>
-    
     <item>
       <title>Kubernetes dashboard deployment</title>
       <link>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</link>
       <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</guid>
-      <description>Install dashboard To run the following command to deploy dashboard
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully. ps:
-On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service, the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</description>
+      <description>Install dashboard To run the following command to deploy dashboard&#xA;kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully. ps:&#xA;On above screenshot, you can see the EXTERNAL-IP for kubernetes-dashboard service, the reason is i edit the service change the type from ClusterIp to LoadBalancer, and the loadbalancer is backed by Metallb.</description>
     </item>
-    
   </channel>
 </rss>

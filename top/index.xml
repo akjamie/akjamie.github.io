@@ -4,18 +4,16 @@
     <title>Tops on Jamie&#39;s Blog</title>
     <link>http://akjamie.github.io/top/</link>
     <description>Recent content in Tops on Jamie&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 14 Jul 2019 09:54:06 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/top/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 14 Jul 2019 09:54:06 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/top/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Jamie</title>
       <link>http://akjamie.github.io/top/about/</link>
       <pubDate>Sun, 14 Jul 2019 09:54:06 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/top/about/</guid>
-      <description>Jamie Zhang is from NorthWestern of China - Shaanxi province. He has 10+ years of experience in web/mobile application development and management, led a number of large-scale projects in big companies, e.g. Huawei, ChinaSoft, HSBC.
-He is experienced Agile Coach, and facilitated team to adopt scrum , maturer scrum practices and built their mindset of keeping improving and fast-iteration + fast-fail, which built good team culture, improved project delivery efficiency and great customer/market feedback.</description>
+      <description>Jamie Zhang is from NorthWestern of China - Shaanxi province. He has 10+ years of experience in web/mobile application development and management, led a number of large-scale projects in big companies, e.g. Huawei, ChinaSoft, HSBC.&#xA;He is experienced Agile Coach, and facilitated team to adopt scrum , maturer scrum practices and built their mindset of keeping improving and fast-iteration + fast-fail, which built good team culture, improved project delivery efficiency and great customer/market feedback.</description>
     </item>
-    
   </channel>
 </rss>

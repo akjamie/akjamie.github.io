@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="img/ai-01.jpg">
+    <meta property="twitter:image" content="img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="Run LLM on Intel Iris Xe GPU Using IEPX-LLM &#43; Ollama" />
+    <meta property="og:title" content="Run LLM on Intel Iris Xe GPU Using IEPX-LLM &#43; Ollama" />
+    <meta property="twitter:title" content="Run LLM on Intel Iris Xe GPU Using IEPX-LLM &#43; Ollama" />
+    
+
+    
+    <meta name="description" content="For windows demostration only.">
+    <meta property="og:description" content="For windows demostration only." />
+    <meta property="twitter:description" content="For windows demostration only." />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Run LLM on Intel Iris Xe GPU Using IEPX-LLM &#43; Ollama | Jamie&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/2024-06-15-run-llm-on-intel-igpu/">
+
+    
+    
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+                    
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/llm" title="LLM">
+                            LLM
+                        </a>
+                        
+                        <a class="tag" href="/tags/igpu" title="iGPU">
+                            iGPU
+                        </a>
+                        
+                    </div>
+                    <h1>Run LLM on Intel Iris Xe GPU Using IEPX-LLM &#43; Ollama</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Saturday, June 15, 2024
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <p>In the realm of AI and machine learning, optimizing performance often hinges on utilizing GPU acceleration. However, Intel GPUs traditionally have not supported running AI workloads directly with popular frameworks like TensorFlow or PyTorch [5]. To address this, developers can turn to IEPX-LLM, a specialized library tailored for Intel&rsquo;s XPU architecture.</p>
+<h1 id="steps-to-run-llm-on-intel-gpu-with-iepx-llm--ollama-locally">Steps to Run LLM on Intel GPU with IEPX-LLM + Ollama Locally</h1>
+<h2 id="install-prerequisites">Install Prerequisites</h2>
+<h3 id="optional-update-gpu-driver">(Optional) Update GPU Driver</h3>
+<blockquote>
+<p>Tips
+:information_source:
+It is recommended to update your GPU driver, if you have driver version lower than 31.0.101.5122. Refer to here for more information.</p>
+</blockquote>
+<p>Download and install the latest GPU driver from the official Intel download page. A system reboot is necessary to apply the changes after the installation is complete.</p>
+<blockquote>
+<p>The process could take around 10 minutes. After reboot, check for the Intel Arc Control application to verify the driver has been installed correctly. If the installation was successful, you should see the Arc Control interface similar to the figure below
+<img src='/img/2024-06-15-run-llm-on-intel-igpu/gpu-driver-version.jpg' style="height: 340px;margin-left: 0px;"/></p>
+</blockquote>
+<h3 id="setup-python-environment">Setup Python Environment</h3>
+<p>Visit <a href="https://conda-forge.org/download/">Miniforge installation page</a>, download the Miniforge installer for Windows, and follow the instructions to complete the installation.
+<img src='/img/2024-06-15-run-llm-on-intel-igpu/miniforge-01.jpg' style="height: 340px;margin-left: 0px;"/></p>
+<p>After installation, open the Miniforge Prompt, create a new python environment llm:</p>
+<pre tabindex="0"><code>conda create -n llm python=3.11 libuv
+</code></pre><p>Activate the newly created environment llm:</p>
+<pre tabindex="0"><code>conda activate llm
+</code></pre><h2 id="install-ipex-llm">Install ipex-llm</h2>
+<p>With the llm environment active, use pip to install ipex-llm for GPU. Choose either US or CN website for extra-index-url:</p>
+<pre><code>* US
+    pip install --pre --upgrade ipex-llm[xpu] --extra-index-url https://pytorch-extension.intel.com/release-whl/stable/xpu/us/
+
+* CN
+    pip install --pre --upgrade ipex-llm[xpu] --extra-index-url https://pytorch-extension.intel.com/release-whl/stable/xpu/cn/
+</code></pre>
+<blockquote>
+<p>If you encounter network issues while installing IPEX, refer to this <a href="https://ipex-llm.readthedocs.io/en/latest/doc/LLM/Overview/install_gpu.html#install-ipex-llm-from-wheel">guide</a> for troubleshooting advice.</p>
+</blockquote>
+<h2 id="verify-installation">Verify Installation</h2>
+<ul>
+<li>Open the Miniforge Prompt and activate the Python environment llm you previously created:
+Step 1: Runtime Configurations</li>
+</ul>
+<pre tabindex="0"><code>conda activate llm
+</code></pre><ul>
+<li>Set the following environment variables according to your device:</li>
+</ul>
+<blockquote>
+</blockquote>
+<pre><code>* Intel iGPU
+    set SYCL_CACHE_PERSISTENT=1  
+    set BIGDL_LLM_XMX_DISABLED=1  
+
+* Intel Arc A770
+    set SYCL_CACHE_PERSISTENT=1
+</code></pre>
+<p>Step 2: Run Python Code</p>
+<ul>
+<li>
+<p>Launch the Python interactive shell by typing python in the Miniforge Prompt window and then press Enter.</p>
+</li>
+<li>
+<p>Copy following code to Miniforge Prompt line by line and press Enter after copying each line.</p>
+</li>
+</ul>
+<pre tabindex="0"><code>import torch 
+from ipex_llm.transformers import AutoModel,AutoModelForCausalLM    
+tensor_1 = torch.randn(1, 1, 40, 128).to(&#39;xpu&#39;) 
+tensor_2 = torch.randn(1, 1, 128, 40).to(&#39;xpu&#39;) 
+print(torch.matmul(tensor_1, tensor_2).size()) 
+</code></pre><p>It will output following content at the end:</p>
+<blockquote>
+<p>torch.Size([1, 1, 40, 40])</p>
+</blockquote>
+<ul>
+<li>To exit the Python interactive shell, simply press Ctrl+Z then press Enter (or input exit() then press Enter).</li>
+</ul>
+<blockquote>
+<p>PS:
+If hit error on import the iepx, that might be caused by configure issue, or you may consider to reinstall the iepx-llm.</p>
+</blockquote>
+<h2 id="run-llama3-using-ollama">Run Llama3 using Ollama</h2>
+<h3 id="initialize-ollama">Initialize Ollama</h3>
+<p>Activate the llm conda environment and initialize Ollama by executing the commands below. A symbolic link to ollama will appear in your current directory.</p>
+<pre tabindex="0"><code># Please run the following command with administrator privilege in Miniforge Prompt.
+conda activate llm
+init-ollama.bat
+</code></pre><p>In this step, it will create two soft linkages, this step is very important, the ollama command will be use later to run LLM model, rather than the self-manual installed ollama tool.
+<img src='/img/2024-06-15-run-llm-on-intel-igpu/ollama-init.jpg' style="height: 140px;margin-left: 0px;"/></p>
+<blockquote>
+<p>If you have installed higher version ipex-llm[cpp] and want to upgrade your ollama binary file, don’t forget to remove old binary files first and initialize again with init-ollama or init-ollama.bat.</p>
+</blockquote>
+<p><strong>Now you can use this executable file by standard ollama’s usage.</strong></p>
+<h3 id="run-ollama-serve">Run Ollama Serve</h3>
+<p>Please run the following command in Miniforge Prompt.</p>
+<pre tabindex="0"><code>set no_proxy=localhost,127.0.0.1
+set ZES_ENABLE_SYSMAN=1
+set OLLAMA_NUM_GPU=999
+
+ollama serve
+</code></pre><blockquote>
+<ol>
+<li>To allow the service to accept connections from all IP addresses, use OLLAMA_HOST=0.0.0.0 ./ollama serve instead of just ./ollama serve.</li>
+<li>You can add this ollama command to PATH for later use purpose.</li>
+</ol>
+</blockquote>
+<p>Keep the Ollama service on and open another terminal and run llama3 with ollama run:</p>
+<pre tabindex="0"><code>set no_proxy=localhost,127.0.0.1
+ollama run llama3:8b-instruct-q4_K_M
+</code></pre><blockquote>
+<p>Notes:
+Here we just take llama3:8b-instruct-q4_K_M for example, you can replace it with any other Llama3 model you want.</p>
+</blockquote>
+<p>Below is a sample output on Intel Iris Xe GPU.
+<img src='/img/2024-06-15-run-llm-on-intel-igpu/llm-running-01.png' style="height: 680px;margin-left: 0px;"/></p>
+<h1 id="additional-resources">Additional Resources</h1>
+<p><a href="https://ipex-llm.readthedocs.io/">IPEX-LLM Documentation</a><br>
+<a href="https://ipex-llm.readthedocs.io/en/latest/doc/LLM/Quickstart/llama3_llamacpp_ollama_quickstart.html">Run Llama 3 on Intel GPU using ollama with IPEX-LLM</a><br>
+<a href="https://www.intel.com/content/www/us/en/developer/articles/technical/introducing-intel-extension-for-pytorch-for-gpus.html">Intel® Extension for PyTorch* for GPUs</a></p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2023-05-29-k8s-cka/" data-toggle="tooltip" data-placement="top" title="CKA &amp; important operation commands">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mongo" title="mongo">
+                            mongo
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">                  
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2024
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+</body>
+</html>

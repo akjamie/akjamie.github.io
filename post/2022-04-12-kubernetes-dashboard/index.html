@@ -31,7 +31,7 @@
     
     
 
-    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <meta name="keyword"  content="&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <title>Kubernetes dashboard deployment | Jamie&#39;s Blog</title>
@@ -100,6 +100,10 @@
                         <a href="/">All Posts</a>
                     </li>
                     
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
                         
                         <li>
                             <a href="/categories/cloud/">cloud</a>
@@ -222,7 +226,7 @@
                 
                 <h1 id="install-dashboard">Install dashboard</h1>
 <p>To run the following command to deploy dashboard</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
 </span></span></code></pre></div><p>once done, to check the resource status under the namespace of kubernetes-dashboard, if all the resources are running, that means dashboard is deployed successfully.
 <img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-01.png' style="height: 484px;margin-left: 0px;"/>
 ps:</p>
@@ -244,34 +248,34 @@ in the package downloaded, there are two files, 1 key file and 1 cert.
 <img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-02.png' style="width: 1310px;margin-left: 0px;"/></p>
 <h1 id="replace-tsl-cert">Replace TSL cert</h1>
 <p>Run following command to relace the TSL certs with newly downloaded in above steps.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># check existing secert</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#6272a4"># check existing secert</span>
 </span></span><span style="display:flex;"><span>kubectl get secret kubernetes-dashboard-certs -n kubernetes-dashboard
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># remove the current secert</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># remove the current secert</span>
 </span></span><span style="display:flex;"><span>kubectl delete secret kubernetes-dashboard-certs -n kubernetes-dashboard
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># create a secert with same name - kubernetes-dashboard-certs</span>
-</span></span><span style="display:flex;"><span>kubectl create secret generic kubernetes-dashboard-certs --from-file<span style="color:#f92672">=</span>7588655_dashboard.it-meta.space.key --from-file<span style="color:#f92672">=</span>7588655_dashboard.it-meta.space.pem -n kubernetes-dashboard
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># delete the kubernetes pod to force system to auto schedule a new one and applying the new secret.</span>
-</span></span><span style="display:flex;"><span>kubectl delete pod/<span style="color:#e6db74">${</span>kubectl get pod -n kubernetes-dashboard|grep kubernetes-dashboard-|awk <span style="color:#e6db74">&#39;{print $1}&#39;</span><span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># create a secert with same name - kubernetes-dashboard-certs</span>
+</span></span><span style="display:flex;"><span>kubectl create secret generic kubernetes-dashboard-certs --from-file<span style="color:#ff79c6">=</span>7588655_dashboard.it-meta.space.key --from-file<span style="color:#ff79c6">=</span>7588655_dashboard.it-meta.space.pem -n kubernetes-dashboard
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># delete the kubernetes pod to force system to auto schedule a new one and applying the new secret.</span>
+</span></span><span style="display:flex;"><span>kubectl delete pod/<span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">kubectl</span> get pod -n kubernetes-dashboard|grep kubernetes-dashboard-|awk <span style="color:#f1fa8c">&#39;{print $1}&#39;</span><span style="color:#f1fa8c">}</span>
 </span></span></code></pre></div><h1 id="setup-ingress-for-the-dashboard">Setup Ingress for the dashboard</h1>
 <p>In order to expose the dashboard endpoint with https protocol, here will leverage the Ingress-nginx to support TLS connection.</p>
 <h2 id="create-secret-for-ingress">Create Secret for ingress</h2>
 <p>To run following command to do the creation.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl create secret tls k8s-dashboard --key 7588655_dashboard.it-meta.space.key --cert 7588655_dashboard.it-meta.space.pem -n kubernetes-dashboard
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>kubectl create secret tls k8s-dashboard --key 7588655_dashboard.it-meta.space.key --cert 7588655_dashboard.it-meta.space.pem -n kubernetes-dashboard
 </span></span><span style="display:flex;"><span>kubectl get secret -n kubernetes-dashboard
 </span></span></code></pre></div><p>Captured screenshot for reference.
 <img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-04.png' style="height: 634px;margin-left: 0px;"/></p>
 <h2 id="create-ingress-for-dashboard">Create Ingress for dashboard</h2>
 <p>here is the sample of yaml file - k8s-dashboard-ingress.yaml</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apiVersion: networking.k8s.io/v1
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apiVersion: networking.k8s.io/v1
 </span></span><span style="display:flex;"><span>kind: Ingress
 </span></span><span style="display:flex;"><span>metadata:
 </span></span><span style="display:flex;"><span>  name: k8s-dashboard-ingress
 </span></span><span style="display:flex;"><span>  namespace: kubernetes-dashboard
 </span></span><span style="display:flex;"><span>  annotations:
-</span></span><span style="display:flex;"><span>    nginx.ingress.kubernetes.io/use-regex: <span style="color:#e6db74">&#34;true&#34;</span>
+</span></span><span style="display:flex;"><span>    nginx.ingress.kubernetes.io/use-regex: <span style="color:#f1fa8c">&#34;true&#34;</span>
 </span></span><span style="display:flex;"><span>    nginx.ingress.kubernetes.io/rewrite-target: /
-</span></span><span style="display:flex;"><span>    nginx.ingress.kubernetes.io/ssl-redirect: <span style="color:#e6db74">&#34;true&#34;</span>
-</span></span><span style="display:flex;"><span>    nginx.ingress.kubernetes.io/backend-protocol: <span style="color:#e6db74">&#34;HTTPS&#34;</span>
+</span></span><span style="display:flex;"><span>    nginx.ingress.kubernetes.io/ssl-redirect: <span style="color:#f1fa8c">&#34;true&#34;</span>
+</span></span><span style="display:flex;"><span>    nginx.ingress.kubernetes.io/backend-protocol: <span style="color:#f1fa8c">&#34;HTTPS&#34;</span>
 </span></span><span style="display:flex;"><span>spec:
 </span></span><span style="display:flex;"><span>  ingressClassName: nginx
 </span></span><span style="display:flex;"><span>  rules:
@@ -284,18 +288,18 @@ in the package downloaded, there are two files, 1 key file and 1 cert.
 </span></span><span style="display:flex;"><span>          service:
 </span></span><span style="display:flex;"><span>            name: kubernetes-dashboard
 </span></span><span style="display:flex;"><span>            port:
-</span></span><span style="display:flex;"><span>              number: <span style="color:#ae81ff">443</span>
+</span></span><span style="display:flex;"><span>              number: <span style="color:#bd93f9">443</span>
 </span></span><span style="display:flex;"><span>  tls:
 </span></span><span style="display:flex;"><span>  - secretName: k8s-dashboard
 </span></span><span style="display:flex;"><span>    hosts:
 </span></span><span style="display:flex;"><span>    - dashboard.it-meta.space
 </span></span></code></pre></div><p>kubectl apply -f k8s-dashboard-ingress.yaml</p>
 <p>After the ingress creation, if you want to know the nginx config, you can enter log into the ingress-nginx-controller pod to check the nginx.conf.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Jamies-MacBook-Pro:dashboard jamie$ kubectl get pod -n ingress-nginx
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>Jamies-MacBook-Pro:dashboard jamie$ kubectl get pod -n ingress-nginx
 </span></span><span style="display:flex;"><span>NAME                                               READY   STATUS    RESTARTS      AGE
-</span></span><span style="display:flex;"><span>ingress-ingress-nginx-controller-c8b8497fb-559sg   1/1     Running   <span style="color:#ae81ff">1</span> <span style="color:#f92672">(</span>13h ago<span style="color:#f92672">)</span>   24h
+</span></span><span style="display:flex;"><span>ingress-ingress-nginx-controller-c8b8497fb-559sg   1/1     Running   <span style="color:#bd93f9">1</span> <span style="color:#ff79c6">(</span>13h ago<span style="color:#ff79c6">)</span>   24h
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>Jamies-MacBook-Pro:dashboard jamie$ kubectl exec -it ingress-ingress-nginx-controller-c8b8497fb-559sg -n ingress-nginx -- bash 
+</span></span><span style="display:flex;"><span>Jamies-MacBook-Pro:dashboard jamie$ kubectl <span style="color:#8be9fd;font-style:italic">exec</span> -it ingress-ingress-nginx-controller-c8b8497fb-559sg -n ingress-nginx -- bash 
 </span></span><span style="display:flex;"><span>bash-5.1$ ls
 </span></span><span style="display:flex;"><span>fastcgi.conf            koi-win                 nginx.conf              template
 </span></span><span style="display:flex;"><span>fastcgi.conf.default    lua                     nginx.conf.default      uwsgi_params
@@ -306,24 +310,24 @@ in the package downloaded, there are two files, 1 key file and 1 cert.
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>bash-5.1$ cat nginx.conf
 </span></span><span style="display:flex;"><span>...
-</span></span><span style="display:flex;"><span><span style="color:#75715e">## start server dashboard.it-meta.space</span>
-</span></span><span style="display:flex;"><span>	server <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">## start server dashboard.it-meta.space</span>
+</span></span><span style="display:flex;"><span>	server <span style="color:#ff79c6">{</span>
 </span></span><span style="display:flex;"><span>		server_name dashboard.it-meta.space ;
 </span></span><span style="display:flex;"><span>		
-</span></span><span style="display:flex;"><span>		listen <span style="color:#ae81ff">80</span>  ;
-</span></span><span style="display:flex;"><span>		listen <span style="color:#ae81ff">443</span>  ssl http2 ;
+</span></span><span style="display:flex;"><span>		listen <span style="color:#bd93f9">80</span>  ;
+</span></span><span style="display:flex;"><span>		listen <span style="color:#bd93f9">443</span>  ssl http2 ;
 </span></span><span style="display:flex;"><span>		
-</span></span><span style="display:flex;"><span>		set $proxy_upstream_name <span style="color:#e6db74">&#34;-&#34;</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#8be9fd;font-style:italic">set</span> <span style="color:#8be9fd;font-style:italic">$proxy_upstream_name</span> <span style="color:#f1fa8c">&#34;-&#34;</span>;
 </span></span><span style="display:flex;"><span>		
-</span></span><span style="display:flex;"><span>		ssl_certificate_by_lua_block <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>			certificate.call<span style="color:#f92672">()</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>		ssl_certificate_by_lua_block <span style="color:#ff79c6">{</span>
+</span></span><span style="display:flex;"><span>			certificate.call<span style="color:#ff79c6">()</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff79c6">}</span>
 </span></span><span style="display:flex;"><span>...
 </span></span></code></pre></div><h1 id="access-the-dashboard">Access the dashboard</h1>
 <h2 id="dns-resolve-for-localoptional">DNS resolve for local(Optional)</h2>
 <p>if you are doing the setup on VM/machine which  has public access, then you could access the dashboard url directly.</p>
 <p>if you are doing it in local with host only network, then you have to take care of the DNS resolve, what need to do is to change the hosts file directly, thus for my case, i&rsquo;m using vmware fusion on Macbook, i have to change the hosts file to make the FQDN to point to the EXTERNAL-IP of the ingress nginx controller service.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>192.168.58.155 dashboard.it-meta.space
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>192.168.58.155 dashboard.it-meta.space
 </span></span></code></pre></div><h2 id="access-the-dashboard-1">Access the dashboard</h2>
 <p>Until now, the setup is almost done, let&rsquo;s try the dashboard.
 <img src='/img/2022-04-12-kubernetes-dashboard/k8s-dashboard-05.png' style="height: 620px;margin-left: 0px;"/></p>
@@ -332,7 +336,7 @@ Using below command to get login token and use it to login the dashboard console
 <span style="color:green;font-weight:bold">kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep kubernetes-dashboard | awk &lsquo;{print $1}&rsquo;)</span></p>
 <h2 id="optional----create-a-new-user-with-cluster-admin-role">Optional -  create a new user with cluster-admin role</h2>
 <p>Becuase the existing user kubernetes-dashboard has very limited access right to cluster resources, hence suggest to create a new service account.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apiVersion: v1
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apiVersion: v1
 </span></span><span style="display:flex;"><span>kind: ServiceAccount
 </span></span><span style="display:flex;"><span>metadata:
 </span></span><span style="display:flex;"><span>  name: dashboard-admin
@@ -371,7 +375,7 @@ v1.23 and older  version<br>
 <div class="zs-modal-box">
 	<div class="zs-modal-head">
 		<button type="button" class="close">×</button>
-		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
         
 	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
 		
@@ -420,7 +424,6 @@ v1.23 and older  version<br>
                 
 
                 
-
 
 
             </div>
@@ -491,6 +494,8 @@ v1.23 and older  version<br>
                         
                         
                         
+                        
+                        
                         <a href="/tags/k8s" title="k8s">
                             k8s
                         </a>
@@ -500,6 +505,8 @@ v1.23 and older  version<br>
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -549,8 +556,8 @@ v1.23 and older  version<br>
                         
                         
                         
-                        <a href="/tags/spring-cloud" title="spring-cloud">
-                            spring-cloud
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
                         </a>
                         
                         
@@ -559,8 +566,8 @@ v1.23 and older  version<br>
                         
                         
                         
-                        <a href="/tags/transaction-management" title="transaction-management">
-                            transaction-management
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
                         </a>
                         
                         
@@ -672,14 +679,8 @@ v1.23 and older  version<br>
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2023
-                    <br>
-                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
-                    <iframe
-                        style="margin-left: 2px; margin-bottom:-5px;"
-                        frameborder="0" scrolling="0" width="100px" height="20px"
-                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
-                    </iframe>
+                    Copyright &copy; Jamie&#39;s Blog 2024
+                    
                 </p>
             </div>
         </div>

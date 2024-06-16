@@ -21,9 +21,9 @@
     
 
     
-    <meta name="description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP,Scrum master">
-    <meta property="og:description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP,Scrum master" />
-    <meta property="twitter:description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP,Scrum master" />
+    <meta name="description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP, Scrum master">
+    <meta property="og:description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP, Scrum master" />
+    <meta property="twitter:description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP, Scrum master" />
     
 
     
@@ -31,7 +31,7 @@
     
     
 
-    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <meta name="keyword"  content="&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <title>CKA &amp; important operation commands | Jamie&#39;s Blog</title>
@@ -100,6 +100,10 @@
                         <a href="/">All Posts</a>
                     </li>
                     
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
                         
                         <li>
                             <a href="/categories/cloud/">cloud</a>
@@ -272,80 +276,80 @@ experience on the k8s built-in documentation - <strong>Kubectl explain</strong>,
 </tbody>
 </table>
 <h2 id="custom-output---custom-column">Custom output - custom column</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ae81ff">kubectl get pod -n book-store -o json | jq -c &#39;paths&#39; | grep nodeName</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>kubectl get pod -n book-store -o json | jq -c &#39;paths&#39; | grep nodeName
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">kubectl get pod -n kube-system -o=&#39;custom-columns=PodName:.metadata.name,Memory-Limit:.spec.containers[].resources.limits.memory,Memory-Requested:.spec.containers[].resources.requests.memory, CPU-Limit:.spec.containers[].resources.limits.cpu, CPU-Requested:.spec.containers[].resources.requests.cpu&#39;</span>
+</span></span><span style="display:flex;"><span>kubectl get pod -n kube-system -o=&#39;custom-columns=PodName:.metadata.name,Memory-Limit:.spec.containers[].resources.limits.memory,Memory-Requested:.spec.containers[].resources.requests.memory, CPU-Limit:.spec.containers[].resources.limits.cpu, CPU-Requested:.spec.containers[].resources.requests.cpu&#39;
 </span></span></code></pre></div><h2 id="list-all-the-context">List all the context</h2>
 <p>k config get-contexts &ndash;no-headers=true | awk &lsquo;{print $2}&rsquo;</p>
 <h2 id="check-cert-info--renew-certs">Check cert info &amp; renew certs</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt | grep Validity -A2
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>openssl x509 -noout -text -in /etc/kubernetes/pki/apiserver.crt | grep Validity -A2
 </span></span><span style="display:flex;"><span>kubeadm certs check-expiration
 </span></span><span style="display:flex;"><span>Kubeadm certs renew all
 </span></span></code></pre></div><h2 id="join-command--token">Join command &amp; token</h2>
 <p>Worker node：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubeadm token create --print-join-command
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubeadm token create --print-join-command
 </span></span></code></pre></div><h2 id="network-policy">Network policy</h2>
 <blockquote>
 <p>The matchLabel support wildcard function, e.g. &lsquo;app: user-service&rsquo;, it can work on pods whose has label of app=user-service*.</p>
 </blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">networking.k8s.io/v1</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">NetworkPolicy</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">test-network-policy</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">namespace</span>: <span style="color:#ae81ff">book-store</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">podSelector</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>:
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">app</span>: <span style="color:#ae81ff">nginx</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">policyTypes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">Ingress</span>
-</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">Egress</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># allowed only 10.244.46.9 from book-store to access app=busybox on protocol ICMP or TCP 22.</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># allow app=busybox to access user-service on TCP 8080</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">ingress</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">from</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># independent section for IP CIDR</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#- ipBlock:</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#    cidr: 10.244.0.0/16</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#    except:</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#      - 10.244.164.0/24</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># independent section for namespace</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#- namespaceSelector:</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#    matchLabels:</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#      kubernetes.io/metadata.name: test</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># independent section for current namespace(this is very important for understanding) + pod selector</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#- podSelector:</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#    matchLabels:</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#      app: nginx-client</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># namespace + pod selector as a combination</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#- namespaceSelector:</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#    matchLabels:</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#      kubernetes.io/metadata.name: test</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#  podSelector:</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#    matchLabels:</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#      app: nginx-client</span>
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">podSelector</span>:
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">matchExpressions</span>:
-</span></span><span style="display:flex;"><span>              - {<span style="color:#f92672">key: app, operator: In, values</span>: [<span style="color:#ae81ff">nginx-client]}</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">ports</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">port</span>: <span style="color:#ae81ff">22</span>
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">port</span>: <span style="color:#ae81ff">80</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">egress</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">to</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">podSelector</span>:
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">matchLabels</span>:
-</span></span><span style="display:flex;"><span>              <span style="color:#f92672">app</span>: <span style="color:#ae81ff">user-service</span>
-</span></span><span style="display:flex;"><span>      <span style="color:#f92672">ports</span>:
-</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">protocol</span>: <span style="color:#ae81ff">TCP</span>
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">port</span>: <span style="color:#ae81ff">8080</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">apiVersion</span>: networking.k8s.io/v1
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: NetworkPolicy
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">name</span>: test-network-policy
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">namespace</span>: book-store
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">podSelector</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">matchLabels</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">app</span>: nginx
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">policyTypes</span>:
+</span></span><span style="display:flex;"><span>    - Ingress
+</span></span><span style="display:flex;"><span>    - Egress
+</span></span><span style="display:flex;"><span>  <span style="color:#6272a4"># allowed only 10.244.46.9 from book-store to access app=busybox on protocol ICMP or TCP 22.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#6272a4"># allow app=busybox to access user-service on TCP 8080</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">ingress</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">from</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># independent section for IP CIDR</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#- ipBlock:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#    cidr: 10.244.0.0/16</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#    except:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#      - 10.244.164.0/24</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># independent section for namespace</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#- namespaceSelector:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#    matchLabels:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#      kubernetes.io/metadata.name: test</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># independent section for current namespace(this is very important for understanding) + pod selector</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#- podSelector:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#    matchLabels:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#      app: nginx-client</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># namespace + pod selector as a combination</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#- namespaceSelector:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#    matchLabels:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#      kubernetes.io/metadata.name: test</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#  podSelector:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#    matchLabels:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#      app: nginx-client</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">podSelector</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">matchExpressions</span>:
+</span></span><span style="display:flex;"><span>              - {<span style="color:#ff79c6">key: app, operator: In, values</span>: [nginx-client]}
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">ports</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">protocol</span>: TCP
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">port</span>: <span style="color:#bd93f9">22</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">protocol</span>: TCP
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">port</span>: <span style="color:#bd93f9">80</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">egress</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">to</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">podSelector</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">matchLabels</span>:
+</span></span><span style="display:flex;"><span>              <span style="color:#ff79c6">app</span>: user-service
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">ports</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ff79c6">protocol</span>: TCP
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">port</span>: <span style="color:#bd93f9">8080</span>
 </span></span></code></pre></div><h2 id="resource-allocatable">Resource allocatable</h2>
 <p>Node Allocatable Resource = Node Capacity - Kube-reserved - system-reserved - eviction-threshold</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl describe nodes | grep <span style="color:#e6db74">&#39;Name:\|  cpu\|  memory&#39;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl describe nodes | grep <span style="color:#f1fa8c">&#39;Name:\|  cpu\|  memory&#39;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>kubectl top nodes
-</span></span><span style="display:flex;"><span>kubectl top pod -A --containers<span style="color:#f92672">=</span>true
+</span></span><span style="display:flex;"><span>kubectl top pod -A --containers<span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">true</span>
 </span></span></code></pre></div><h2 id="role-operations">Role operations</h2>
 <pre><code>&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;create&quot;, &quot;update&quot;, &quot;patch&quot;, &quot;delete&quot;
 </code></pre>
@@ -358,7 +362,7 @@ kubectl logs -f deploy/xx -c xxx -n xxx</p>
 <h2 id="get-ingress-class-name">Get ingress class name</h2>
 <p>k get ingressclass</p>
 <h2 id="check-authorization">Check authorization</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl auth can-i get deployment --as system:serviceaccount:ns2:pipeline -n default
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl auth can-i get deployment --as system:serviceaccount:ns2:pipeline -n default
 </span></span><span style="display:flex;"><span>kubectl auth can-i create deployment --as system:serviceaccount:ns1:pipeline -n ns1
 </span></span><span style="display:flex;"><span>k auth can-i create pods --as smoke -n applications
 </span></span></code></pre></div><h2 id="check-priority-class">Check priority class</h2>
@@ -393,25 +397,25 @@ crictl images ls | awk '{ if ($2 == &quot;&lt;none&gt;&quot;) { print &quot;cric
 crictl rmi --prune
 </code></pre>
 <h2 id="etcd-backup--restore">Etcd backup &amp; restore</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># backup</span>
-</span></span><span style="display:flex;"><span>ETCDCTL_API<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> etcdctl --endpoints<span style="color:#f92672">=</span>https://127.0.0.1:2379 <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>--cacert<span style="color:#f92672">=</span>/etc/kubernetes/pki/etcd/ca.crt <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>--cert<span style="color:#f92672">=</span>/etc/kubernetes/pki/etcd/peer.crt <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>--key<span style="color:#f92672">=</span>/etc/kubernetes/pki/etcd/peer.key snapshot save <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>/opt/k8s/etcd/backup/etcd-snapshot-<span style="color:#e6db74">`</span>date +%Y%m%d<span style="color:#e6db74">`</span>.db
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#6272a4"># backup</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">ETCDCTL_API</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">3</span> etcdctl --endpoints<span style="color:#ff79c6">=</span>https://127.0.0.1:2379 <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>--cacert<span style="color:#ff79c6">=</span>/etc/kubernetes/pki/etcd/ca.crt <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>--cert<span style="color:#ff79c6">=</span>/etc/kubernetes/pki/etcd/peer.crt <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>--key<span style="color:#ff79c6">=</span>/etc/kubernetes/pki/etcd/peer.key snapshot save <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>/opt/k8s/etcd/backup/etcd-snapshot-<span style="color:#f1fa8c">`</span>date +%Y%m%d<span style="color:#f1fa8c">`</span>.db
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># check status</span>
-</span></span><span style="display:flex;"><span>ETCDCTL_API<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> etcdctl --write-out<span style="color:#f92672">=</span>table snapshot status /opt/k8s/etcd/backup/etcd-snapshot-20230525.db
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># check status</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">ETCDCTL_API</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">3</span> etcdctl --write-out<span style="color:#ff79c6">=</span>table snapshot status /opt/k8s/etcd/backup/etcd-snapshot-20230525.db
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># restore etcd</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># restore etcd</span>
 </span></span><span style="display:flex;"><span>systemctl stop kubelet.service
-</span></span><span style="display:flex;"><span>cd /var/lib/etcd/
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">cd</span> /var/lib/etcd/
 </span></span><span style="display:flex;"><span>rm -rf /var/lib/etcd
-</span></span><span style="display:flex;"><span>ETCDCTL_API<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> etcdctl snapshot restore /opt/k8s/etcd/backup/etcd-snapshot-20230529.db <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> --data-dir<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/var/lib/etcd&#34;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> --name<span style="color:#f92672">=</span>master.it-meta.space --skip-hash-check <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> --initial-advertise-peer-urls<span style="color:#f92672">=</span>https://192.168.179.128:2380 <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span> --initial-cluster<span style="color:#f92672">=</span>master.it-meta.space<span style="color:#f92672">=</span>https://192.168.179.128:2380
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">ETCDCTL_API</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">3</span> etcdctl snapshot restore /opt/k8s/etcd/backup/etcd-snapshot-20230529.db <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span> --data-dir<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;/var/lib/etcd&#34;</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span> --name<span style="color:#ff79c6">=</span>master.it-meta.space --skip-hash-check <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span> --initial-advertise-peer-urls<span style="color:#ff79c6">=</span>https://192.168.179.128:2380 <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span> --initial-cluster<span style="color:#ff79c6">=</span>master.it-meta.space<span style="color:#ff79c6">=</span>https://192.168.179.128:2380
 </span></span></code></pre></div><blockquote>
 <p>Notes: the etcd restore info passed in command should match with the configs in static pod /etc/kubernetes/manifests/etcd.yaml
 containers:</p>
@@ -452,7 +456,7 @@ containers:</p>
 <div class="zs-modal-box">
 	<div class="zs-modal-head">
 		<button type="button" class="close">×</button>
-		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
         
 	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
 		
@@ -492,11 +496,15 @@ containers:</p>
                     </li>
                     
                     
+                    <li class="next">
+                        <a href="/post/2024-06-15-run-llm-on-intel-igpu/" data-toggle="tooltip" data-placement="top" title="Run LLM on Intel Iris Xe GPU Using IEPX-LLM &#43; Ollama">Next
+                            Post &rarr;</a>
+                    </li>
+                    
                 </ul>
                 
 
                 
-
 
 
             </div>
@@ -567,6 +575,8 @@ containers:</p>
                         
                         
                         
+                        
+                        
                         <a href="/tags/k8s" title="k8s">
                             k8s
                         </a>
@@ -576,6 +586,8 @@ containers:</p>
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -625,8 +637,8 @@ containers:</p>
                         
                         
                         
-                        <a href="/tags/spring-cloud" title="spring-cloud">
-                            spring-cloud
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
                         </a>
                         
                         
@@ -635,8 +647,8 @@ containers:</p>
                         
                         
                         
-                        <a href="/tags/transaction-management" title="transaction-management">
-                            transaction-management
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
                         </a>
                         
                         
@@ -748,14 +760,8 @@ containers:</p>
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2023
-                    <br>
-                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
-                    <iframe
-                        style="margin-left: 2px; margin-bottom:-5px;"
-                        frameborder="0" scrolling="0" width="100px" height="20px"
-                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
-                    </iframe>
+                    Copyright &copy; Jamie&#39;s Blog 2024
+                    
                 </p>
             </div>
         </div>

@@ -4,28 +4,23 @@
     <title>Vault on Jamie&#39;s Blog</title>
     <link>http://akjamie.github.io/tags/vault/</link>
     <description>Recent content in Vault on Jamie&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 26 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/vault/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 26 Mar 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/vault/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Vault Agent with Kubernetes</title>
       <link>http://akjamie.github.io/post/2023-03-26-vault-agent-with-k8s/</link>
       <pubDate>Sun, 26 Mar 2023 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2023-03-26-vault-agent-with-k8s/</guid>
-      <description>Challenge Nearly all requests to Vault must be accompanied by an authentication token. This includes all API requests, as well as via the Vault CLI and other libraries. If you can securely get the first secret from an originator to a consumer, all subsequent secrets transmitted between this originator and consumer can be authenticated with the trust established by the successful distribution and user of that first secret.
-The applications running in a Kubernetes environment is no exception.</description>
+      <description>Challenge Nearly all requests to Vault must be accompanied by an authentication token. This includes all API requests, as well as via the Vault CLI and other libraries. If you can securely get the first secret from an originator to a consumer, all subsequent secrets transmitted between this originator and consumer can be authenticated with the trust established by the successful distribution and user of that first secret.&#xA;The applications running in a Kubernetes environment is no exception.</description>
     </item>
-    
     <item>
       <title>Vault on Kubernetes</title>
       <link>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</link>
       <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</guid>
-      <description>What is Vault? Vault introduction HashiCorp Vault is an identity-based secrets and encryption management system. A secret is anything that you want to tightly
-control access to, such as API encryption keys, passwords, and certificates. Vault provides encryption services that are gated by authentication and authorization methods.Using Vault’s UI, CLI, or HTTP API, access to secrets and other sensitive data can be securely stored and managed, tightly controlled (restricted), and auditable.</description>
+      <description>What is Vault? Vault introduction HashiCorp Vault is an identity-based secrets and encryption management system. A secret is anything that you want to tightly&#xA;control access to, such as API encryption keys, passwords, and certificates. Vault provides encryption services that are gated by authentication and authorization methods.Using Vault’s UI, CLI, or HTTP API, access to secrets and other sensitive data can be securely stored and managed, tightly controlled (restricted), and auditable.</description>
     </item>
-    
   </channel>
 </rss>

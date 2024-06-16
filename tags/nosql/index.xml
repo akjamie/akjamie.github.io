@@ -4,71 +4,58 @@
     <title>NoSQL on Jamie&#39;s Blog</title>
     <link>http://akjamie.github.io/tags/nosql/</link>
     <description>Recent content in NoSQL on Jamie&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 09 Jul 2022 23:03:30 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/nosql/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 09 Jul 2022 23:03:30 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/nosql/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Redis advance III</title>
       <link>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</link>
       <pubDate>Sat, 09 Jul 2022 23:03:30 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</guid>
       <description>What&amp;rsquo;s Redis Cluster Redis Cluster is a distributed implementation of Redis with the following goals in order of importance in the design: High performance and linear scalability up to 1000 nodes. There are no proxies, asynchronous replication is used, and no merge operations are performed on values. 在多达 1000 个节点的时候仍能保持高性能及线性的可扩</description>
     </item>
-    
     <item>
       <title>Redis advance II</title>
       <link>http://akjamie.github.io/post/2022-06-28-redis-master-slave-replication/</link>
       <pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-06-28-redis-master-slave-replication/</guid>
       <description>主从复制 基本概念 主机数据更新后根据配置和策略，自动同步到备份机的master/slave机制，其中master以写为主，而slave主要以读</description>
     </item>
-    
     <item>
       <title>Redis foundation - III</title>
       <link>http://akjamie.github.io/post/2022-06-27-redis-basic-2/</link>
       <pubDate>Mon, 27 Jun 2022 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-06-27-redis-basic-2/</guid>
       <description>Redis 事务 事务概念和基本操作 其为命令提供一个单独的隔离环境，事务中所有的命令都会序列化，按顺序地执行，执行过程中不会被其他客户端发送过来的命令请</description>
     </item>
-    
     <item>
       <title>Redis advance I</title>
       <link>http://akjamie.github.io/post/2022-06-23-redis-advance/</link>
       <pubDate>Thu, 23 Jun 2022 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-06-23-redis-advance/</guid>
       <description>bitmap 在前面的基础回顾中提到了bitmap这种数据结构，主要用来应对string的位操作，简单高效 适用场景：单状态统计，如每天系统用户登录情况统</description>
     </item>
-    
     <item>
       <title>Redis foundation - II</title>
       <link>http://akjamie.github.io/post/2022-05-31-redis-basic-1/</link>
       <pubDate>Mon, 30 May 2022 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2022-05-31-redis-basic-1/</guid>
       <description>Redis基础 Common知识 Redis 有16个数据库，一般都使用0号库，使用select dbid 来切换db。 Redis是单线程 + 多路io服用技术 Redis vs memcache Redis</description>
     </item>
-    
     <item>
       <title>Mongo DB Basics (1)</title>
       <link>http://akjamie.github.io/post/2020-09-05-mongo-basics/</link>
       <pubDate>Sat, 05 Sep 2020 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2020-09-05-mongo-basics/</guid>
       <description>Mongo installation(for test) docker command for local mongo installation docker run -p 27017:27017 -v /Users/jamie/Documents/work-benches/mongo/test:/data/db --name mongo -d mongo:latest check mongo running status docker ps | grep mongo 9161bd4811a8 mongo:latest &amp;ldquo;docker-entrypoint.s…&amp;rdquo; 6 days ago Up 6 days</description>
     </item>
-    
     <item>
       <title>Redis foundation - I</title>
       <link>http://akjamie.github.io/post/2019-08-04-redis-basic/</link>
       <pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2019-08-04-redis-basic/</guid>
       <description>redis是一个key-value存储系统，它支持存储的value类型相对更多，包括string(字符串)、list(链表)、set(集合)</description>
     </item>
-    
   </channel>
 </rss>

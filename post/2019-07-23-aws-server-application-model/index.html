@@ -31,7 +31,7 @@
     
     
 
-    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <meta name="keyword"  content="&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <title>AWS Serveless Application Model | Jamie&#39;s Blog</title>
@@ -100,6 +100,10 @@
                         <a href="/">All Posts</a>
                     </li>
                     
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
                         
                         <li>
                             <a href="/categories/cloud/">cloud</a>
@@ -251,55 +255,55 @@
 <h2 id="setup-process">Setup process</h2>
 <h3 id="local-development">Local development</h3>
 <p>Invoking function locally using a local sample payload</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam local invoke GetEntityConfigFunction --event event.json
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam <span style="color:#8be9fd;font-style:italic">local</span> invoke GetEntityConfigFunction --event event.json
 </span></span></code></pre></div><p>Invoking function locally through local API Gateway</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam local start-api
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam <span style="color:#8be9fd;font-style:italic">local</span> start-api
 </span></span></code></pre></div><p>If the previous command ran successfully you should now be able to hit the following local endpoint to invoke your function <code>http://localhost:3000/ca</code></p>
 <p>SAM CLI is used to emulate both Lambda and API Gateway locally and uses our <code>template.yaml</code> to understand how to bootstrap this environment (runtime, where the source code is, etc.) - The following excerpt is what the CLI will read in order to initialize an API and its routes</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>...
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">Events</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">FeatureAvailability</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">Type Api</span> <span style="color:#75715e"># More info about API Event Source httpsgithub.comawslabsserverless-application-modelblobmasterversions2016-10-31.md#api</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">Properties</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">Path {entity}</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">Method get</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>Events
+</span></span><span style="display:flex;"><span>    FeatureAvailability
+</span></span><span style="display:flex;"><span>        Type Api <span style="color:#6272a4"># More info about API Event Source httpsgithub.comawslabsserverless-application-modelblobmasterversions2016-10-31.md#api</span>
+</span></span><span style="display:flex;"><span>        Properties
+</span></span><span style="display:flex;"><span>            Path {entity}
+</span></span><span style="display:flex;"><span>            Method get
 </span></span></code></pre></div><h2 id="packaging-and-deployment">Packaging and deployment</h2>
 <p>AWS Lambda Python runtime requires a flat folder with all dependencies including the application. SAM will use <code>CodeUri</code> property to know where to look up for both application and dependencies</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>...
-</span></span><span style="display:flex;"><span><span style="color:#ae81ff">GetEntityConfigFunction</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">Type AWSServerlessFunction</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ae81ff">Properties</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">CodeUri feature_availability</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">...</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>GetEntityConfigFunction
+</span></span><span style="display:flex;"><span>    Type AWSServerlessFunction
+</span></span><span style="display:flex;"><span>    Properties
+</span></span><span style="display:flex;"><span>        CodeUri feature_availability
+</span></span><span style="display:flex;"><span>        ...
 </span></span></code></pre></div><p>Firstly, we need a <code>S3 bucket</code> where we can upload our Lambda functions packaged as ZIP before we deploy anything - If you don&rsquo;t have a S3 bucket to store code artifacts then this is a good time to create one</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws s3 mb s3BUCKET_NAME
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws s3 mb s3BUCKET_NAME
 </span></span></code></pre></div><p>Next, run the following command to package our Lambda function to S3</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam package 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam package 
 </span></span><span style="display:flex;"><span>    --output-template-file packaged.yaml 
 </span></span><span style="display:flex;"><span>    --s3-bucket REPLACE_THIS_WITH_YOUR_S3_BUCKET_NAME
 </span></span></code></pre></div><p>Next, the following command will create a Cloudformation Stack and deploy your SAM resources.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam deploy 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam deploy 
 </span></span><span style="display:flex;"><span>    --template-file packaged.yaml 
 </span></span><span style="display:flex;"><span>    --stack-name feature-availability-getentityconfig-api 
 </span></span><span style="display:flex;"><span>    --capabilities CAPABILITY_IAM
 </span></span></code></pre></div><p>See <a href="httpsdocs.aws.amazon.comserverless-application-modellatestdeveloperguideserverless-quick-start.html">Serverless Application Model (SAM) HOWTO Guide</a> for more details in how to get started.</p>
 <p>After deployment is complete you can run the following command to retrieve the API Gateway Endpoint URL</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws cloudformation describe-stacks 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws cloudformation describe-stacks 
 </span></span><span style="display:flex;"><span>    --stack-name feature-availability-getentityconfig-api 
-</span></span><span style="display:flex;"><span>    --query <span style="color:#e6db74">&#39;Stacks[].Outputs[OutputKey==`GetEntityConfigAPI`]&#39;</span> 
+</span></span><span style="display:flex;"><span>    --query <span style="color:#f1fa8c">&#39;Stacks[].Outputs[OutputKey==`GetEntityConfigAPI`]&#39;</span> 
 </span></span><span style="display:flex;"><span>    --output table
 </span></span></code></pre></div><h2 id="fetch-tail-and-filter-lambda-function-logs">Fetch, tail, and filter Lambda function logs</h2>
 <p>To simplify troubleshooting, SAM CLI has a command called sam logs. sam logs lets you fetch logs generated by your Lambda function from the command line. In addition to printing the logs on the terminal, this command has several nifty features to help you quickly find the bug.</p>
 <p><code>NOTE</code> This command works for all AWS Lambda functions; not just the ones you deploy using SAM.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam logs -n GetEntityConfigFunction --stack-name feature-availability-getentityconfig-api --tail
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam logs -n GetEntityConfigFunction --stack-name feature-availability-getentityconfig-api --tail
 </span></span></code></pre></div><p>You can find more information and examples about filtering Lambda function logs in the <a href="httpsdocs.aws.amazon.comserverless-application-modellatestdeveloperguideserverless-sam-cli-logging.html">SAM CLI Documentation</a>.</p>
 <h2 id="testing">Testing</h2>
 <p>Next, we install test dependencies and we run <code>pytest</code> against our <code>tests</code> folder to run our initial unit tests</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install pytest pytest-mock --user
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install pytest pytest-mock --user
 </span></span><span style="display:flex;"><span>python -m pytest tests -v
 </span></span></code></pre></div><h2 id="cleanup">Cleanup</h2>
 <p>In order to delete our Serverless Application recently deployed you can use the following AWS CLI Command</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws cloudformation delete-stack --stack-name feature-availability-get-entityconfig-api
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws cloudformation delete-stack --stack-name feature-availability-get-entityconfig-api
 </span></span></code></pre></div><h2 id="bringing-to-the-next-level">Bringing to the next level</h2>
 <p>Here are a few things you can try to get more acquainted with building serverless applications using SAM</p>
 <h3 id="learn-how-sam-build-can-help-you-with-dependencies">Learn how SAM Build can help you with dependencies</h3>
@@ -317,42 +321,42 @@ Update tests</p>
 <h3 id="building-the-project">Building the project</h3>
 <p><a href="httpsdocs.aws.amazon.comlambdalatestdglambda-python-how-to-create-deployment-package.html">AWS Lambda requires a flat folder</a> with the application as well as its dependencies in  deployment package. When you make changes to your source code or dependency manifest,
 run the following command to build your project local testing and deployment</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam build
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam build
 </span></span></code></pre></div><p>If your dependencies contain native modules that need to be compiled specifically for the operating system running on AWS Lambda, use this command to build inside a Lambda-like Docker container instead</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam build --use-container
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sam build --use-container
 </span></span></code></pre></div><p>By default, this command writes built artifacts to <code>.aws-sambuild</code> folder.</p>
 <h3 id="sam-and-aws-cli-commands">SAM and AWS CLI commands</h3>
 <p>All commands used throughout this document</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Generate event.json via generate-event command</span>
-</span></span><span style="display:flex;"><span>sam local generate-event apigateway aws-proxy  event.json
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#6272a4"># Generate event.json via generate-event command</span>
+</span></span><span style="display:flex;"><span>sam <span style="color:#8be9fd;font-style:italic">local</span> generate-event apigateway aws-proxy  event.json
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Invoke function locally with event.json as an input</span>
-</span></span><span style="display:flex;"><span>sam local invoke HelloWorldFunction --event event.json
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Invoke function locally with event.json as an input</span>
+</span></span><span style="display:flex;"><span>sam <span style="color:#8be9fd;font-style:italic">local</span> invoke HelloWorldFunction --event event.json
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Run API Gateway locally</span>
-</span></span><span style="display:flex;"><span>sam local start-api
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Run API Gateway locally</span>
+</span></span><span style="display:flex;"><span>sam <span style="color:#8be9fd;font-style:italic">local</span> start-api
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Create S3 bucket</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Create S3 bucket</span>
 </span></span><span style="display:flex;"><span>aws s3 mb s3BUCKET_NAME
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Package Lambda function defined locally and upload to S3 as an artifact</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Package Lambda function defined locally and upload to S3 as an artifact</span>
 </span></span><span style="display:flex;"><span>sam package 
 </span></span><span style="display:flex;"><span>    --output-template-file packaged.yaml 
 </span></span><span style="display:flex;"><span>    --s3-bucket REPLACE_THIS_WITH_YOUR_S3_BUCKET_NAME
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Deploy SAM template as a CloudFormation stack</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Deploy SAM template as a CloudFormation stack</span>
 </span></span><span style="display:flex;"><span>sam deploy 
 </span></span><span style="display:flex;"><span>    --template-file packaged.yaml 
 </span></span><span style="display:flex;"><span>    --stack-name sam-app 
 </span></span><span style="display:flex;"><span>    --capabilities CAPABILITY_IAM
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Describe Output section of CloudFormation stack previously created</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Describe Output section of CloudFormation stack previously created</span>
 </span></span><span style="display:flex;"><span>aws cloudformation describe-stacks 
 </span></span><span style="display:flex;"><span>    --stack-name sam-app 
-</span></span><span style="display:flex;"><span>    --query <span style="color:#e6db74">&#39;Stacks[].Outputs[OutputKey==`HelloWorldApi`]&#39;</span> 
+</span></span><span style="display:flex;"><span>    --query <span style="color:#f1fa8c">&#39;Stacks[].Outputs[OutputKey==`HelloWorldApi`]&#39;</span> 
 </span></span><span style="display:flex;"><span>    --output table
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Tail Lambda function Logs using Logical name defined in SAM Template</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Tail Lambda function Logs using Logical name defined in SAM Template</span>
 </span></span><span style="display:flex;"><span>sam logs -n HelloWorldFunction --stack-name sam-app --tail
 </span></span></code></pre></div><p>You can find source code on <a href="https://github.com/cloud-poc/py-lambda-sam-test.git">github</a></p>
 
@@ -369,7 +373,7 @@ run the following command to build your project local testing and deployment</p>
 <div class="zs-modal-box">
 	<div class="zs-modal-head">
 		<button type="button" class="close">×</button>
-		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
         
 	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
 		
@@ -418,7 +422,6 @@ run the following command to build your project local testing and deployment</p>
                 
 
                 
-
 
 
             </div>
@@ -489,6 +492,8 @@ run the following command to build your project local testing and deployment</p>
                         
                         
                         
+                        
+                        
                         <a href="/tags/k8s" title="k8s">
                             k8s
                         </a>
@@ -498,6 +503,8 @@ run the following command to build your project local testing and deployment</p>
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -547,8 +554,8 @@ run the following command to build your project local testing and deployment</p>
                         
                         
                         
-                        <a href="/tags/spring-cloud" title="spring-cloud">
-                            spring-cloud
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
                         </a>
                         
                         
@@ -557,8 +564,8 @@ run the following command to build your project local testing and deployment</p>
                         
                         
                         
-                        <a href="/tags/transaction-management" title="transaction-management">
-                            transaction-management
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
                         </a>
                         
                         
@@ -670,14 +677,8 @@ run the following command to build your project local testing and deployment</p>
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2023
-                    <br>
-                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
-                    <iframe
-                        style="margin-left: 2px; margin-bottom:-5px;"
-                        frameborder="0" scrolling="0" width="100px" height="20px"
-                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
-                    </iframe>
+                    Copyright &copy; Jamie&#39;s Blog 2024
+                    
                 </p>
             </div>
         </div>

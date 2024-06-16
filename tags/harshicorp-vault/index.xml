@@ -4,17 +4,16 @@
     <title>Harshicorp Vault on Jamie&#39;s Blog</title>
     <link>http://akjamie.github.io/tags/harshicorp-vault/</link>
     <description>Recent content in Harshicorp Vault on Jamie&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 14 Jul 2019 12:10:27 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/harshicorp-vault/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 14 Jul 2019 12:10:27 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/harshicorp-vault/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Harshicorp Vault Setup Config and integration with spring boot</title>
       <link>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</link>
       <pubDate>Sun, 14 Jul 2019 12:10:27 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</guid>
       <description>Install vault Prepare docker-compose.yml, content as below (just a sample here, please don&amp;rsquo;t use it for production, there are more aspects should be considered) version: &amp;#39;3&amp;#39; services: consul: container_name: consul.server command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect=1 image: consul:latest restart: always volumes: - ./consul.server/config:/consul/config - ./consul.server/data:/consul/data ports: - &amp;#34;9300:9300&amp;#34; - &amp;#34;9500:9500&amp;#34; - &amp;#34;9600:9600/udp&amp;#34; vault: container_name: vault.server image: vault ports: - &amp;#34;8200:8200&amp;#34; restart: always links: - consul:consul.server volumes: - ./vault.server/config:/mnt/vault/config</description>
     </item>
-    
   </channel>
 </rss>

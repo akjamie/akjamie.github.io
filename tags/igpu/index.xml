@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>IGPU on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/igpu/</link>
+    <description>Recent content in IGPU on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 15 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/igpu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Run LLM on Intel Iris Xe GPU Using IEPX-LLM &#43; Ollama</title>
+      <link>http://akjamie.github.io/post/2024-06-15-run-llm-on-intel-igpu/</link>
+      <pubDate>Sat, 15 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2024-06-15-run-llm-on-intel-igpu/</guid>
+      <description>In the realm of AI and machine learning, optimizing performance often hinges on utilizing GPU acceleration. However, Intel GPUs traditionally have not supported running AI workloads directly with popular frameworks like TensorFlow or PyTorch [5]. To address this, developers can turn to IEPX-LLM, a specialized library tailored for Intel&amp;rsquo;s XPU architecture.&#xA;Steps to Run LLM on Intel GPU with IEPX-LLM + Ollama Locally Install Prerequisites (Optional) Update GPU Driver Tips :information_source: It is recommended to update your GPU driver, if you have driver version lower than 31.</description>
+    </item>
+  </channel>
+</rss>

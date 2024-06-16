@@ -4,35 +4,30 @@
     <title>Docker on Jamie&#39;s Blog</title>
     <link>http://akjamie.github.io/tags/docker/</link>
     <description>Recent content in Docker on Jamie&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Jul 2019 13:36:10 +0000</lastBuildDate><atom:link href="http://akjamie.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 23 Jul 2019 13:36:10 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Spring Cloud Series</title>
       <link>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</link>
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</guid>
       <description>Demo的介绍 本文主要通过一个小demo，来综合运用spring cloud系列技术，demo中主要包含如下模块/组建： Authorization service, 基于Spring Security</description>
     </item>
-    
     <item>
       <title>Free CA Certs setup using Certbot &#43; Docker &#43; Nginx</title>
       <link>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</link>
       <pubDate>Sun, 14 Jul 2019 18:30:05 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/</guid>
       <description>Background Let&amp;rsquo;s Encrypt is a certificate authority that provides X.509 certificates for Transport Layer Security (TLS) encryption at no charge,The certificate is valid for 90 days, during which renewal can take place at anytime. 这样我们就可以用上免费的CA cert来安全expose我们自己的网站或者</description>
     </item>
-    
     <item>
       <title>Harshicorp Vault Setup Config and integration with spring boot</title>
       <link>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</link>
       <pubDate>Sun, 14 Jul 2019 12:10:27 +0000</pubDate>
-      
       <guid>http://akjamie.github.io/2019/07/14/harshicorp-vault-setup-config/</guid>
       <description>Install vault Prepare docker-compose.yml, content as below (just a sample here, please don&amp;rsquo;t use it for production, there are more aspects should be considered) version: &amp;#39;3&amp;#39; services: consul: container_name: consul.server command: agent -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect=1 image: consul:latest restart: always volumes: - ./consul.server/config:/consul/config - ./consul.server/data:/consul/data ports: - &amp;#34;9300:9300&amp;#34; - &amp;#34;9500:9500&amp;#34; - &amp;#34;9600:9600/udp&amp;#34; vault: container_name: vault.server image: vault ports: - &amp;#34;8200:8200&amp;#34; restart: always links: - consul:consul.server volumes: - ./vault.server/config:/mnt/vault/config</description>
     </item>
-    
   </channel>
 </rss>

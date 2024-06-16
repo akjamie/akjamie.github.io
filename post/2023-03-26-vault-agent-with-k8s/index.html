@@ -31,7 +31,7 @@
     
     
 
-    <meta name="keyword"  content="Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <meta name="keyword"  content="&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <title>Vault Agent with Kubernetes | Jamie&#39;s Blog</title>
@@ -100,6 +100,10 @@
                         <a href="/">All Posts</a>
                     </li>
                     
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
                         
                         <li>
                             <a href="/categories/cloud/">cloud</a>
@@ -230,13 +234,13 @@ authenticate the clients using a Kubernetes Service Account Token.</p>
 <p>However, Client is still responsible for managing the lifecycle of its Vault Tokens as illustrated on below diagram of
 Vault Workflow on kubernetes.
 <img src='/img/2023-03-26-vault-agent-with-k8s/vault-k8s-workflow-01.png' style="height: 840px;margin-left: 0px;"/></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>Major processes:
-</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">-</span> One-off setup/infrequent action for initial configuration <span style="color:#960050;background-color:#1e0010">&amp;</span> standard policy maintenance, e.g. enable auth method,  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>Major processes:
+</span></span><span style="display:flex;"><span> <span style="color:#ff79c6">-</span> One-off setup/infrequent action for initial configuration &amp; standard policy maintenance, e.g. enable auth method,  
 </span></span><span style="display:flex;"><span>create roles,policies.
-</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">-</span> Pod deployed with JWT token(service account token) injected.
-</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">-</span> API calls to Vault to authenticate from pod, Vault verifies the token and determine policies attached to the Auth token,
+</span></span><span style="display:flex;"><span> <span style="color:#ff79c6">-</span> Pod deployed with JWT token(service account token) injected.
+</span></span><span style="display:flex;"><span> <span style="color:#ff79c6">-</span> API calls to Vault to authenticate from pod, Vault verifies the token and determine policies attached to the Auth token,
 </span></span><span style="display:flex;"><span>and return to client.
-</span></span><span style="display:flex;"><span> <span style="color:#66d9ef">-</span> API calls to Vault with Auth token passed to retrieves required secrets.
+</span></span><span style="display:flex;"><span> <span style="color:#ff79c6">-</span> API calls to Vault with Auth token passed to retrieves required secrets.
 </span></span></code></pre></div><h1 id="vault-agent-solution">Vault Agent solution</h1>
 <p>Vault agent provides helper features to address the following challenges:</p>
 <ul>
@@ -252,59 +256,59 @@ Token. This token is provided to each pod when it is created.</p>
 <ol>
 <li>Create k8s manifest file</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>export WORKDIR<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>pwd<span style="color:#66d9ef">)</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span><span style="color:#8be9fd;font-style:italic">pwd</span><span style="color:#ff79c6">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cat &gt; <span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/vault-auth-service-account.yaml <span style="color:#e6db74">&lt;&lt;EOF
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">apiVersion: v1
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">kind: ServiceAccount
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">metadata:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  name: vault-auth
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">---
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">apiVersion: rbac.authorization.k8s.io/v1
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">kind: ClusterRoleBinding
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">metadata:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  name: role-tokenreview-binding
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">roleRef:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  apiGroup: rbac.authorization.k8s.io
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  kind: ClusterRole
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  name: system:auth-delegator
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">subjects:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  - kind: ServiceAccount
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    name: vault-auth
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span><span style="display:flex;"><span>cat &gt; <span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/vault-auth-service-account.yaml <span style="color:#f1fa8c">&lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">apiVersion: v1
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">kind: ServiceAccount
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">metadata:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  name: vault-auth
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">---
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">apiVersion: rbac.authorization.k8s.io/v1
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">kind: ClusterRoleBinding
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">metadata:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  name: role-tokenreview-binding
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">roleRef:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  apiGroup: rbac.authorization.k8s.io
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  kind: ClusterRole
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  name: system:auth-delegator
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">subjects:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  - kind: ServiceAccount
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    name: vault-auth
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">EOF</span>
 </span></span></code></pre></div><ol start="2">
 <li>Create the vault-auth service account.
 Important:  specify a namespace here!!!</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl apply --filename vault-auth-service-account.yaml -n default
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl apply --filename vault-auth-service-account.yaml -n default
 </span></span></code></pre></div><ol start="3">
 <li>(Kubernetes 1.24+ only) Create the secret explicitly</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>cat &gt; <span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/vault-auth-secret.yaml <span style="color:#e6db74">&lt;&lt;EOF
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">apiVersion: v1
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">kind: Secret
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">metadata:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  name: vault-auth-secret
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  annotations:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    kubernetes.io/service-account.name: vault-auth
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">type: kubernetes.io/service-account-token
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>cat &gt; <span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/vault-auth-secret.yaml <span style="color:#f1fa8c">&lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">apiVersion: v1
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">kind: Secret
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">metadata:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  name: vault-auth-secret
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  annotations:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    kubernetes.io/service-account.name: vault-auth
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">type: kubernetes.io/service-account-token
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">EOF</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>kubectl apply --filename vault-auth-secret.yaml
 </span></span></code></pre></div><h2 id="configure-kubernetes-auth-method">Configure Kubernetes auth method</h2>
 <ol>
 <li>Configure vault url &amp; login with root token.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># service url is also fine, here i changed master&#39;s host, and set ingress controller&#39;s IP to vault.it-meta.space also.</span>
-</span></span><span style="display:flex;"><span>export VAULT_ADDR<span style="color:#f92672">=</span>https://vault.it-meta.space
-</span></span><span style="display:flex;"><span>export CLUSTER_ROOT_TOKEN<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>cat <span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/cluster-keys.json | jq -r <span style="color:#e6db74">&#34;.root_token&#34;</span><span style="color:#66d9ef">)</span>
-</span></span><span style="display:flex;"><span>vault login token<span style="color:#f92672">=</span>$CLUSTER_ROOT_TOKEN
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#6272a4"># service url is also fine, here i changed master&#39;s host, and set ingress controller&#39;s IP to vault.it-meta.space also.</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">VAULT_ADDR</span><span style="color:#ff79c6">=</span>https://vault.it-meta.space
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">CLUSTER_ROOT_TOKEN</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span>cat <span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/cluster-keys.json | jq -r <span style="color:#f1fa8c">&#34;.root_token&#34;</span><span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span>vault login <span style="color:#8be9fd;font-style:italic">token</span><span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">$CLUSTER_ROOT_TOKEN</span>
 </span></span></code></pre></div><p>Sample output:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault# export VAULT_ADDR<span style="color:#f92672">=</span>https://vault.it-meta.space
-</span></span><span style="display:flex;"><span>export CLUSTER_ROOT_TOKEN<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>cat <span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/cluster-keys.json | jq -r <span style="color:#e6db74">&#34;.root_token&#34;</span><span style="color:#66d9ef">)</span>
-</span></span><span style="display:flex;"><span>vault login token<span style="color:#f92672">=</span>$CLUSTER_ROOT_TOKEN
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault# <span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">VAULT_ADDR</span><span style="color:#ff79c6">=</span>https://vault.it-meta.space
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">CLUSTER_ROOT_TOKEN</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span>cat <span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/cluster-keys.json | jq -r <span style="color:#f1fa8c">&#34;.root_token&#34;</span><span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span>vault login <span style="color:#8be9fd;font-style:italic">token</span><span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">$CLUSTER_ROOT_TOKEN</span>
 </span></span><span style="display:flex;"><span>Success! You are now authenticated. The token information displayed below
-</span></span><span style="display:flex;"><span>is already stored in the token helper. You <span style="color:#66d9ef">do</span> NOT need to run <span style="color:#e6db74">&#34;vault login&#34;</span>
+</span></span><span style="display:flex;"><span>is already stored in the token helper. You <span style="color:#ff79c6">do</span> NOT need to run <span style="color:#f1fa8c">&#34;vault login&#34;</span>
 </span></span><span style="display:flex;"><span>again. Future Vault requests will automatically use this token.
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>Key                  Value
@@ -312,102 +316,102 @@ Important:  specify a namespace here!!!</li>
 </span></span><span style="display:flex;"><span>token                hvs.oemGqKix23q5FMi6qkXiLsqN
 </span></span><span style="display:flex;"><span>token_accessor       BVDmPTEBLgdxLEvQs4p5bXaD
 </span></span><span style="display:flex;"><span>token_duration       ∞
-</span></span><span style="display:flex;"><span>token_renewable      false
-</span></span><span style="display:flex;"><span>token_policies       <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;root&#34;</span><span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span>identity_policies    <span style="color:#f92672">[]</span>
-</span></span><span style="display:flex;"><span>policies             <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;root&#34;</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>token_renewable      <span style="color:#8be9fd;font-style:italic">false</span>
+</span></span><span style="display:flex;"><span>token_policies       <span style="color:#ff79c6">[</span><span style="color:#f1fa8c">&#34;root&#34;</span><span style="color:#ff79c6">]</span>
+</span></span><span style="display:flex;"><span>identity_policies    <span style="color:#ff79c6">[]</span>
+</span></span><span style="display:flex;"><span>policies             <span style="color:#ff79c6">[</span><span style="color:#f1fa8c">&#34;root&#34;</span><span style="color:#ff79c6">]</span>
 </span></span></code></pre></div><ol start="2">
 <li>Set a secret in Vault</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>vault secrets enable -path<span style="color:#f92672">=</span>secret kv
-</span></span><span style="display:flex;"><span>vault kv put secret/data/app/config username<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;jamie&#34;</span> password<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;HLWD20230326&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>vault secrets <span style="color:#8be9fd;font-style:italic">enable</span> -path<span style="color:#ff79c6">=</span>secret kv
+</span></span><span style="display:flex;"><span>vault kv put secret/data/app/config <span style="color:#8be9fd;font-style:italic">username</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;jamie&#34;</span> <span style="color:#8be9fd;font-style:italic">password</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;HLWD20230326&#34;</span>
 </span></span><span style="display:flex;"><span>vault kv get secret/data/app/config
 </span></span></code></pre></div><ol start="3">
 <li>Configure Kubernetes authentication method</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>export SA_SECRET_NAME<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>kubectl get secrets --output<span style="color:#f92672">=</span>json <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    | jq -r <span style="color:#e6db74">&#39;.items[].metadata | select(.name|startswith(&#34;vault-auth-&#34;)).name&#39;</span><span style="color:#66d9ef">)</span>
-</span></span><span style="display:flex;"><span>export SA_JWT_TOKEN<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>kubectl get secret $SA_SECRET_NAME <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --output <span style="color:#e6db74">&#39;go-template={{ .data.token }}&#39;</span> | base64 --decode<span style="color:#66d9ef">)</span>
-</span></span><span style="display:flex;"><span>export SA_CA_CRT<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>kubectl config view --raw --minify --flatten <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --output <span style="color:#e6db74">&#39;jsonpath={.clusters[].cluster.certificate-authority-data}&#39;</span> | base64 --decode<span style="color:#66d9ef">)</span>
-</span></span><span style="display:flex;"><span>export K8S_HOST<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>kubectl config view --raw --minify --flatten <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --output <span style="color:#e6db74">&#39;jsonpath={.clusters[].cluster.server}&#39;</span><span style="color:#66d9ef">)</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">SA_SECRET_NAME</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span>kubectl get secrets --output<span style="color:#ff79c6">=</span>json <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>    | jq -r <span style="color:#f1fa8c">&#39;.items[].metadata | select(.name|startswith(&#34;vault-auth-&#34;)).name&#39;</span><span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">SA_JWT_TOKEN</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span>kubectl get secret <span style="color:#8be9fd;font-style:italic">$SA_SECRET_NAME</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>    --output <span style="color:#f1fa8c">&#39;go-template={{ .data.token }}&#39;</span> | base64 --decode<span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">SA_CA_CRT</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span>kubectl config view --raw --minify --flatten <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>    --output <span style="color:#f1fa8c">&#39;jsonpath={.clusters[].cluster.certificate-authority-data}&#39;</span> | base64 --decode<span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">export</span> <span style="color:#8be9fd;font-style:italic">K8S_HOST</span><span style="color:#ff79c6">=</span><span style="color:#ff79c6">$(</span>kubectl config view --raw --minify --flatten <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>    --output <span style="color:#f1fa8c">&#39;jsonpath={.clusters[].cluster.server}&#39;</span><span style="color:#ff79c6">)</span>
 </span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>vault auth enable kubernetes
+</span></span><span style="display:flex;"><span>vault auth <span style="color:#8be9fd;font-style:italic">enable</span> kubernetes
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>vault write auth/kubernetes/config <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>     token_reviewer_jwt<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$SA_JWT_TOKEN<span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>     kubernetes_host<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$K8S_HOST<span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>     kubernetes_ca_cert<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$SA_CA_CRT<span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>     issuer<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://kubernetes.default.svc.cluster.local&#34;</span>
+</span></span><span style="display:flex;"><span>vault write auth/kubernetes/config <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>     <span style="color:#8be9fd;font-style:italic">token_reviewer_jwt</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;</span><span style="color:#8be9fd;font-style:italic">$SA_JWT_TOKEN</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>     <span style="color:#8be9fd;font-style:italic">kubernetes_host</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;</span><span style="color:#8be9fd;font-style:italic">$K8S_HOST</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>     <span style="color:#8be9fd;font-style:italic">kubernetes_ca_cert</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;</span><span style="color:#8be9fd;font-style:italic">$SA_CA_CRT</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>     <span style="color:#8be9fd;font-style:italic">issuer</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;https://kubernetes.default.svc.cluster.local&#34;</span>
 </span></span></code></pre></div><ol start="4">
 <li>Create admin &amp; devops roles</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>vault write auth/kubernetes/role/app-admin <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>     bound_service_account_names<span style="color:#f92672">=</span>vault-auth <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>     bound_service_account_namespaces<span style="color:#f92672">=</span>default <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>     token_policies<span style="color:#f92672">=</span>policy-app-kv-rw <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>     ttl<span style="color:#f92672">=</span>1h
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>vault write auth/kubernetes/role/app-admin <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>     <span style="color:#8be9fd;font-style:italic">bound_service_account_names</span><span style="color:#ff79c6">=</span>vault-auth <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>     <span style="color:#8be9fd;font-style:italic">bound_service_account_namespaces</span><span style="color:#ff79c6">=</span>default <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>     <span style="color:#8be9fd;font-style:italic">token_policies</span><span style="color:#ff79c6">=</span>policy-app-kv-rw <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>     <span style="color:#8be9fd;font-style:italic">ttl</span><span style="color:#ff79c6">=</span>1h
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>vault write auth/kubernetes/role/app-devops <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>     bound_service_account_names<span style="color:#f92672">=</span>vault-auth <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>     bound_service_account_namespaces<span style="color:#f92672">=</span>default <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>     token_policies<span style="color:#f92672">=</span>policy-app-kv-ro <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>     ttl<span style="color:#f92672">=</span>4h   
+</span></span><span style="display:flex;"><span>vault write auth/kubernetes/role/app-devops <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>     <span style="color:#8be9fd;font-style:italic">bound_service_account_names</span><span style="color:#ff79c6">=</span>vault-auth <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>     <span style="color:#8be9fd;font-style:italic">bound_service_account_namespaces</span><span style="color:#ff79c6">=</span>default <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>     <span style="color:#8be9fd;font-style:italic">token_policies</span><span style="color:#ff79c6">=</span>policy-app-kv-ro <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>     <span style="color:#8be9fd;font-style:italic">ttl</span><span style="color:#ff79c6">=</span>4h   
 </span></span></code></pre></div><ol start="5">
 <li>Create RW &amp; RO policies</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>vault policy write policy-app-kv-rw - <span style="color:#e6db74">&lt;&lt;EOF
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">path &#34;secret/data/app/*&#34; {
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    capabilities = [&#34;read&#34;, &#34;list&#34;, &#34;delete&#34;, &#34;create&#34;, &#34;update&#34;]
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>vault policy write policy-app-kv-rw - <span style="color:#f1fa8c">&lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">path &#34;secret/data/app/*&#34; {
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    capabilities = [&#34;read&#34;, &#34;list&#34;, &#34;delete&#34;, &#34;create&#34;, &#34;update&#34;]
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">}
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">EOF</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>vault policy write policy-app-kv-ro - <span style="color:#e6db74">&lt;&lt;EOF
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">path &#34;secret/data/app/*&#34; {
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    capabilities = [&#34;read&#34;, &#34;list&#34;]
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span><span style="display:flex;"><span>vault policy write policy-app-kv-ro - <span style="color:#f1fa8c">&lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">path &#34;secret/data/app/*&#34; {
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    capabilities = [&#34;read&#34;, &#34;list&#34;]
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">}
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">EOF</span>
 </span></span></code></pre></div><h1 id="lunch-application-for-testing">Lunch application for testing</h1>
 <ol>
 <li>Create deployment/pod</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>cat &gt; <span style="color:#e6db74">${</span>WORKDIR<span style="color:#e6db74">}</span>/test-deployment-with-vault-agent.yaml <span style="color:#e6db74">&lt;&lt;EOF
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">apiVersion: apps/v1
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">kind: Deployment
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">metadata:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  name: nginx
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  labels:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    app: test-vault-agent
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">spec:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  selector:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    matchLabels:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      app: test-vault-agent
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  replicas: 1
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  template:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    metadata:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      annotations:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        vault.hashicorp.com/agent-inject: &#39;true&#39;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        vault.hashicorp.com/role: &#39;app-devops&#39;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        vault.hashicorp.com/tls-skip-verify: &#34;true&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        vault.hashicorp.com/agent-pre-populate-only: &#39;true&#39;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        vault.hashicorp.com/agent-inject-secret-app-config.yaml: &#39;secret/data/app/config&#39;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      labels:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        app: test-vault-agent
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    spec:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      serviceAccountName: vault-auth
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">      containers:
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        - name: nginx
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          image: nginx:latest
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">          imagePullPolicy: IfNotPresent
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>cat &gt; <span style="color:#f1fa8c">${</span><span style="color:#8be9fd;font-style:italic">WORKDIR</span><span style="color:#f1fa8c">}</span>/test-deployment-with-vault-agent.yaml <span style="color:#f1fa8c">&lt;&lt;EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">apiVersion: apps/v1
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">kind: Deployment
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">metadata:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  name: nginx
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  labels:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    app: test-vault-agent
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">spec:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  selector:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    matchLabels:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">      app: test-vault-agent
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  replicas: 1
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  template:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    metadata:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">      annotations:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        vault.hashicorp.com/agent-inject: &#39;true&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        vault.hashicorp.com/role: &#39;app-devops&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        vault.hashicorp.com/tls-skip-verify: &#34;true&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        vault.hashicorp.com/agent-pre-populate-only: &#39;true&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        vault.hashicorp.com/agent-inject-secret-app-config.yaml: &#39;secret/data/app/config&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">      labels:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        app: test-vault-agent
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    spec:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">      serviceAccountName: vault-auth
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">      containers:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        - name: nginx
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">          image: nginx:latest
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">          imagePullPolicy: IfNotPresent
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">EOF</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>k apply -f test-deployment-with-vault-agent.yaml
 </span></span></code></pre></div><ol start="2">
 <li>Login pod to check the secrets</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault# kubectl exec <span style="color:#66d9ef">$(</span>kubectl get pod -l app<span style="color:#f92672">=</span>test-vault-agent -o jsonpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{.items[0].metadata.name}&#34;</span><span style="color:#66d9ef">)</span> --container nginx -- cat /vault/secrets/app-config.yaml
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>root@master:/opt/k8s/config-repo/vault# kubectl <span style="color:#8be9fd;font-style:italic">exec</span> <span style="color:#ff79c6">$(</span>kubectl get pod -l <span style="color:#8be9fd;font-style:italic">app</span><span style="color:#ff79c6">=</span>test-vault-agent -o <span style="color:#8be9fd;font-style:italic">jsonpath</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;{.items[0].metadata.name}&#34;</span><span style="color:#ff79c6">)</span> --container nginx -- cat /vault/secrets/app-config.yaml
 </span></span><span style="display:flex;"><span>password: HLWD20230326
 </span></span><span style="display:flex;"><span>username: jamie
 </span></span></code></pre></div><ol start="3">
@@ -431,7 +435,7 @@ Important:  specify a namespace here!!!</li>
 <div class="zs-modal-box">
 	<div class="zs-modal-head">
 		<button type="button" class="close">×</button>
-		<span class="author"><a href="http://akjamie.github.io"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
         
 	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
 		
@@ -480,7 +484,6 @@ Important:  specify a namespace here!!!</li>
                 
 
                 
-
 
 
             </div>
@@ -551,6 +554,8 @@ Important:  specify a namespace here!!!</li>
                         
                         
                         
+                        
+                        
                         <a href="/tags/k8s" title="k8s">
                             k8s
                         </a>
@@ -560,6 +565,8 @@ Important:  specify a namespace here!!!</li>
                         <a href="/tags/kubernetes" title="kubernetes">
                             kubernetes
                         </a>
+                        
+                        
                         
                         
                         
@@ -609,8 +616,8 @@ Important:  specify a namespace here!!!</li>
                         
                         
                         
-                        <a href="/tags/spring-cloud" title="spring-cloud">
-                            spring-cloud
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
                         </a>
                         
                         
@@ -619,8 +626,8 @@ Important:  specify a namespace here!!!</li>
                         
                         
                         
-                        <a href="/tags/transaction-management" title="transaction-management">
-                            transaction-management
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
                         </a>
                         
                         
@@ -732,14 +739,8 @@ Important:  specify a namespace here!!!</li>
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2023
-                    <br>
-                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
-                    <iframe
-                        style="margin-left: 2px; margin-bottom:-5px;"
-                        frameborder="0" scrolling="0" width="100px" height="20px"
-                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
-                    </iframe>
+                    Copyright &copy; Jamie&#39;s Blog 2024
+                    
                 </p>
             </div>
         </div>
