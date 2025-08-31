@@ -633,22 +633,105 @@ flowchart TB
     window.setTimeout(loadMermaid, 0);
   }
 </script>
-<h2 id="deep-dive-into-masked-multi-head-attention">Deep Dive into Masked Multi-Head Attention</h2>
-<p>This is the secret sauce behind models like GPT-4. Let&rsquo;s break down the name and understand how it works:</p>
-<h3 id="what-is-attention">What is Attention?</h3>
-<p>As we discussed, the attention mechanism allows the model to look at other words in the sequence to understand the context of the current word. It&rsquo;s like a focused gaze that can selectively focus on different parts of the input.</p>
-<p>In a simple attention mechanism, each word can attend to all other words in the sequence. The attention weights determine how much focus to place on each word.</p>
+<h2 id="understanding-input-processing-embeddings">Understanding Input Processing: Embeddings</h2>
+<p>Before we dive into the layers and attention mechanisms, let&rsquo;s understand how text is prepared for processing by the Transformer model.</p>
+<h3 id="token-embeddings">Token Embeddings</h3>
+<p>When you input text to a Transformer model, the first step is to convert each word (or subword) into a numerical representation called an <strong>embedding</strong>. Think of an embedding as a list of numbers that capture the meaning of a word.</p>
+<p>For example, the word &ldquo;cat&rdquo; might be represented as a list like [0.2, -0.4, 0.7, &hellip;] with hundreds or thousands of numbers. Words with similar meanings will have similar embedding values.</p>
+<h3 id="positional-embeddings">Positional Embeddings</h3>
+<p>Since Transformers process all words simultaneously, they don&rsquo;t naturally understand the order of words in a sentence. To solve this, the model adds <strong>positional embeddings</strong> - special numbers that represent where each word appears in the sequence.</p>
+<p>This way, the model can distinguish between &ldquo;The cat chased the dog&rdquo; and &ldquo;The dog chased the cat&rdquo; even though they contain the same words.</p>
+
+<div class="mermaid">
+  
+graph LR
+    A["Input Text: The cat sat"] --> B[Tokenization]
+    B --> C["Tokens: [The, cat, sat]"]
+    C --> D[Token Embeddings]
+    C --> E[Positional Embeddings]
+    D --> F[Combined Embeddings]
+    E --> F
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<p>The combined embeddings (token + positional) are what gets fed into the first layer of the Transformer.</p>
+<h2 id="deep-dive-into-attention-mechanism">Deep Dive into Attention Mechanism</h2>
+<p>The attention mechanism is the core innovation that makes Transformers so powerful. But what exactly is &ldquo;attention&rdquo; in the context of AI?</p>
+<p>Think of attention like human focus. When you read a sentence, your brain doesn&rsquo;t process all words with equal importance. Instead, you naturally focus more on certain words that are relevant to understanding the meaning.</p>
+<p>For example, in the sentence &ldquo;The cat sat on the mat&rdquo;, when trying to understand what &ldquo;sat&rdquo; means, your brain pays more attention to &ldquo;cat&rdquo; (the one doing the action) than to &ldquo;the&rdquo; or &ldquo;on&rdquo;. This is exactly what the attention mechanism does in Transformers.</p>
+<h3 id="how-simple-attention-works">How Simple Attention Works</h3>
+<p>In a simple attention mechanism, each word can &ldquo;attend to&rdquo; or &ldquo;look at&rdquo; all other words in the sequence. The model calculates attention weights that determine how much focus to place on each word.</p>
 
 <div class="mermaid">
   
 flowchart LR
     subgraph "Simple Attention Mechanism"
-        A["Word: cat"] --> B[Attention Weights]
+        A["Word: sat"] --> B[Attention Weights Calculator]
         C["Word: The"] --> B
-        D["Word: sat"] --> B
-        E["Word: mat"] --> B
+        D["Word: cat"] --> B
+        E["Word: on"] --> B
+        F["Word: the"] --> B
+        G["Word: mat"] --> B
         
-        B --> F[Context-Aware Representation]
+        B --> H[Attention Weights]
+        H --> I["The: 0.1"]
+        H --> J["cat: 0.7"]
+        H --> K["sat: 0.05"]
+        H --> L["on: 0.05"]
+        H --> M["the: 0.05"]
+        H --> N["mat: 0.05"]
+        
+        I --> O[Context-Aware Representation]
+        J --> O
+        K --> O
+        L --> O
+        M --> O
+        N --> O
     end
 
 </div>
@@ -698,25 +781,108 @@ flowchart LR
     window.setTimeout(loadMermaid, 0);
   }
 </script>
-<h3 id="what-makes-attention-multi-head">What Makes Attention &ldquo;Multi-Head&rdquo;?</h3>
-<p>Instead of just one &ldquo;attention head&rdquo; looking at the entire context, the model uses multiple heads simultaneously. Each head learns to pay attention to different things. For example, one head might focus on grammatical relationships, while another focuses on semantic meaning. This gives the model a richer, more nuanced understanding of the input.</p>
+<p>In this example, when processing the word &ldquo;sat&rdquo;, the model assigns the highest attention weight (0.7) to &ldquo;cat&rdquo; because it&rsquo;s the subject performing the action. The word &ldquo;The&rdquo; gets a smaller weight (0.1) because it&rsquo;s less important for understanding the meaning.</p>
+<h3 id="the-magic-of-self-attention">The Magic of Self-Attention</h3>
+<p>What makes Transformers special is &ldquo;self-attention&rdquo;. This means each word can attend to all words in the sequence, including itself. This allows the model to build a rich understanding of context by considering relationships between all words simultaneously.</p>
+<p>For instance, in the sentence &ldquo;The chef cooked the books&rdquo;, self-attention helps the model understand that &ldquo;books&rdquo; likely refers to accounting records (because of &ldquo;cooked&rdquo;) rather than literature, even though &ldquo;books&rdquo; usually means literature.</p>
+
+<div class="mermaid">
+  
+graph LR
+    A["chef"] -- relates to --> B[cooked]
+    C["cooked"] -- relates to --> D[books]
+    E["The"] -- modifies --> A
+    F["the"] -- modifies --> D
+    
+    subgraph "Self-Attention Connections"
+        A
+        B
+        C
+        D
+        E
+        F
+    end
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<h3 id="multi-head-attention-getting-multiple-perspectives">Multi-Head Attention: Getting Multiple Perspectives</h3>
+<p>While simple attention is powerful, it only gives the model one way of looking at the relationships between words. Multi-head attention allows the model to look at these relationships from multiple perspectives simultaneously, just like how humans can interpret the same information in different ways.</p>
+<p>Think of it like a team of experts analyzing a sentence:</p>
+<ul>
+<li>One expert might focus on grammatical relationships</li>
+<li>Another might focus on semantic meaning</li>
+<li>A third might look for emotional context</li>
+</ul>
+<p>Each &ldquo;head&rdquo; in multi-head attention learns to focus on different types of relationships, and their insights are combined to create a more complete understanding.</p>
 
 <div class="mermaid">
   
 flowchart TB
     subgraph "Multi-Head Attention"
-        A[Input] --> B[Attention Head 1]
+        A["Input Sentence: The cat sat on the mat"] --> B[Attention Head 1]
         A --> C[Attention Head 2]
         A --> D[Attention Head 3]
         A --> E["..."]
+        A --> F[Attention Head h]
         
-        B --> F[Concatenate]
-        C --> F
-        D --> F
-        E --> F
+        B --> G["Head 1 Focus: Grammar"]
+        C --> H["Head 2 Focus: Meaning"]
+        D --> I["Head 3 Focus: Position"]
+        F --> J["Head h Focus: Other patterns"]
         
-        F --> G[Linear Transformation]
-        G --> H[Output]
+        G --> K[Concatenate]
+        H --> K
+        I --> K
+        E --> K
+        J --> K
+        
+        K --> L[Linear Transformation]
+        L --> M[Combined Output]
     end
 
 </div>
@@ -766,6 +932,7 @@ flowchart TB
     window.setTimeout(loadMermaid, 0);
   }
 </script>
+<p>In practice, models like GPT typically use 12 or more attention heads. Each head develops its own specialization through training, and together they provide a much richer understanding of the text than a single attention mechanism could.</p>
 <h3 id="why-is-it-masked">Why is it &ldquo;Masked&rdquo;?</h3>
 <p>This is the key difference for a generative model like GPT. During training, the model needs to learn to predict the next word. To prevent it from &ldquo;cheating&rdquo; and looking at the words that come after the current word, a mask is applied. This mask essentially hides future words in the sequence, ensuring that the model only uses the words it has already &ldquo;seen&rdquo; to make its prediction.</p>
 <p>This is what makes GPT an autoregressive model—it generates text one word at a time, based on the words that came before.</p>
@@ -833,6 +1000,280 @@ graph LR
   }
 </script>
 <p>So, in a nutshell, masked multi-head attention allows the model to consider the entire past context in a sophisticated, parallel way, without peeking at the future.</p>
+<h2 id="understanding-the-transformer-decoder-layer-components">Understanding the Transformer Decoder Layer Components</h2>
+<p>Now that we understand attention, let&rsquo;s look at how it fits into a complete decoder layer. Each decoder layer has several components that work together:</p>
+<h3 id="1-masked-multi-head-attention">1. Masked Multi-Head Attention</h3>
+<p>This is the first component in each decoder layer. It applies the masked multi-head attention mechanism we discussed earlier to the input embeddings. The &ldquo;masking&rdquo; ensures that when predicting a word, the model can only look at previous words, not future ones.</p>
+<h3 id="2-add--norm-residual-connection-and-layer-normalization">2. Add &amp; Norm (Residual Connection and Layer Normalization)</h3>
+<p>After the attention mechanism produces an output, the model applies &ldquo;Add &amp; Norm&rdquo; which consists of two operations:</p>
+<ul>
+<li><strong>Residual Connection (Add)</strong>: The input to the attention layer is added to its output. This helps with gradient flow during training and prevents the vanishing gradient problem.</li>
+<li><strong>Layer Normalization (Norm)</strong>: Normalizes the values to keep them in a reasonable range, which helps with training stability.</li>
+</ul>
+
+<div class="mermaid">
+  
+flowchart LR
+    A[Input] --> B[Attention]
+    A --> C[Residual Connection]
+    B --> C
+    C --> D[Layer Normalization]
+    D --> E[Output]
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<h3 id="3-feed-forward-network-ffn">3. Feed-Forward Network (FFN)</h3>
+<p>After the attention mechanism, the output goes through a Feed-Forward Network. This is a simple neural network that processes each position (word) independently. It consists of two linear transformations with a ReLU activation in between:</p>
+<ol>
+<li>First linear transformation (expands the dimension)</li>
+<li>ReLU activation function</li>
+<li>Second linear transformation (compresses back to original dimension)</li>
+</ol>
+<p>The FFN helps the model process the attention output further and adds more representational power.</p>
+
+<div class="mermaid">
+  
+flowchart LR
+    A[Input] --> B[Linear 1]
+    B --> C[ReLU]
+    C --> D[Linear 2]
+    D --> E[Output]
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<h3 id="4-another-add--norm">4. Another Add &amp; Norm</h3>
+<p>After the FFN, there&rsquo;s another Add &amp; Norm operation, similar to the one after attention. The input to the FFN is added to its output, and then layer normalization is applied.</p>
+<h3 id="complete-decoder-layer-flow">Complete Decoder Layer Flow</h3>
+<p>Here&rsquo;s how all components work together in a single decoder layer:</p>
+
+<div class="mermaid">
+  
+flowchart TB
+    subgraph "Complete Decoder Layer"
+        A[Input Embeddings] --> B[Masked Multi-Head Attention]
+        B --> C[Add & Norm]
+        C --> D[Feed Forward Network]
+        D --> E[Add & Norm]
+        E --> F[Output]
+        
+        A --> G[Residual Connection 1]
+        G --> C
+        
+        C --> H[Residual Connection 2]
+        H --> E
+    end
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<h2 id="how-layers-work-together-in-decoder-only-architecture">How Layers Work Together in Decoder-Only Architecture</h2>
+<p>In a decoder-only model like GPT, multiple decoder layers are stacked on top of each other. The output of one layer becomes the input to the next layer. This allows the model to build increasingly complex representations of the text as it goes through more layers.</p>
+
+<div class="mermaid">
+  
+flowchart TB
+    subgraph "Stack of Decoder Layers Processing"
+        A[Input Embeddings] --> B[Layer 1]
+        B --> C[Layer 2]
+        C --> D["..."]
+        D --> E[Layer N]
+        E --> F[Final Representations]
+    end
+    
+    subgraph "Inside Each Layer"
+        B --> G[Attention → Add & Norm → FFN → Add & Norm]
+        C --> H[Attention → Add & Norm → FFN → Add & Norm]
+        E --> I[Attention → Add & Norm → FFN → Add & Norm]
+    end
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<p>Each layer refines the representations from the previous layer:</p>
+<ul>
+<li>Early layers focus on basic syntax and word relationships</li>
+<li>Middle layers understand more complex sentence structure</li>
+<li>Later layers capture high-level meaning and context</li>
+</ul>
+<p>This hierarchical processing is what allows Transformers to understand complex language patterns and generate coherent text.</p>
 <h2 id="layers-and-layers-of-intelligence">Layers and Layers of Intelligence</h2>
 <p>Models like GPT-4 are not just one layer—they are a stack of these Transformer layers. While OpenAI has not released the exact details of GPT-4&rsquo;s architecture, it&rsquo;s widely believed to have a massive number of layers (possibly over 100) and an enormous number of parameters, which are the weights and biases the model learns during training.</p>
 <p>Each layer builds upon the representations learned by the previous layer, creating a hierarchical understanding of the text. The first layers might learn simple relationships between words, while the deeper layers can grasp complex concepts, long-range dependencies, and even a &ldquo;world model&rdquo; that allows them to reason and generate coherent text over long passages.</p>
@@ -841,10 +1282,10 @@ graph LR
   
 flowchart TB
     subgraph "Progressive Understanding Through Layers"
-        A["Input: The cat sat on the mat"] --> B["Layer 1: Basic Syntax"]
-        B --> C["Layer 2: Word Relationships"]
-        C --> D["Layer 3: Sentence Structure"]
-        D --> E["Layer N: Complex Semantics"]
+        A["Input: The cat sat on the mat"] --> B["Layer 1: Basic Syntax\nRecognizes word order and grammar"]
+        B --> C["Layer 2: Word Relationships\nUnderstands that 'cat' performs 'sat'"]
+        C --> D["Layer 3: Sentence Structure\nGrasps meaning of prepositional phrases"]
+        D --> E["Layer N: Complex Semantics\nUnderstands context, implications,\nand can generate similar sentences"]
         E --> F[Final Output]
     end
 
@@ -997,6 +1438,9 @@ flowchart LR
 <li><strong>Parallel Processing</strong>: Processing all words simultaneously rather than sequentially</li>
 <li><strong>Masking</strong>: Ensuring that generative models don&rsquo;t &ldquo;cheat&rdquo; by looking at future words</li>
 <li><strong>Deep Stacked Architecture</strong>: Building complex understanding through many layers</li>
+<li><strong>Embeddings</strong>: Converting text to numerical representations that capture meaning</li>
+<li><strong>Feed-Forward Networks</strong>: Processing each position independently to add representational power</li>
+<li><strong>Add &amp; Norm</strong>: Ensuring stable training through residual connections and normalization</li>
 </ol>
 <p>Understanding these concepts is crucial for anyone interested in modern AI and natural language processing. With this foundation, you can begin to explore more advanced topics like fine-tuning, prompt engineering, and even building your own Transformer models.</p>
 <p>I hope this has provided a clear, accessible introduction to this fascinating topic!</p>
