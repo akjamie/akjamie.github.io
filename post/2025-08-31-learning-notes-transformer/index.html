@@ -77,7 +77,6 @@
 
 
 
-
 <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
 
     <div class="container-fluid">
@@ -246,10 +245,61 @@
 <h3 id="feedforward-networks-ffns">Feedforward Networks (FFNs)</h3>
 <p>Feedforward Networks are the most basic type of neural network. Data flows in one direction, from input to output, with no loops. They can&rsquo;t remember past information, which makes them terrible for language, where context is everything.</p>
 <p>Think about it: the meaning of a word often depends on the words that came before it. A basic FFN has no way to capture this.</p>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">graph LR
-    A[&#34;Input: The cat sat on&#34;] --&gt; B[FFN]
-    B --&gt; C[&#34;Output: ?&#34;]
-</code></pre><p>As you can see, a Feedforward Network processes the input and produces an output without any memory of previous inputs. This is problematic for language understanding.</p>
+
+<div class="mermaid">
+  
+graph LR
+    A["Input: The cat sat on"] --> B[FFN]
+    B --> C["Output: ?"]
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<p>As you can see, a Feedforward Network processes the input and produces an output without any memory of previous inputs. This is problematic for language understanding.</p>
 <h3 id="recurrent-neural-networks-rnns">Recurrent Neural Networks (RNNs)</h3>
 <p>RNNs were designed to address the memory problem by having a &ldquo;memory&rdquo; or hidden state that allows them to process a sequence one element at a time, feeding the output of one step back into the input of the next. This lets them &ldquo;remember&rdquo; context.</p>
 <p>However, RNNs have significant limitations:</p>
@@ -258,36 +308,138 @@
 <li><strong>Vanishing Gradient Problem</strong>: It becomes difficult to learn long-range dependencies</li>
 <li><strong>Limited Parallelization</strong>: Due to their sequential nature, they can&rsquo;t take full advantage of modern parallel computing hardware</li>
 </ol>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart TB
-    subgraph &#34;RNN Processing Sequence&#34;
-        A[&#34;Input: The&#34;] --&gt; B[RNN]
-        B --&gt; C[Hidden State]
-        C --&gt; D[RNN]
-        D --&gt; E[Hidden State]
-        E --&gt; F[RNN]
-        F --&gt; G[Output]
+
+<div class="mermaid">
+  
+flowchart TB
+    subgraph "RNN Processing Sequence"
+        A["Input: The"] --> B[RNN]
+        B --> C[Hidden State]
+        C --> D[RNN]
+        D --> E[Hidden State]
+        E --> F[RNN]
+        F --> G[Output]
         
-        H[&#34;Input: cat&#34;] --&gt; D
-        I[&#34;Input: sat&#34;] --&gt; F
+        H["Input: cat"] --> D
+        I["Input: sat"] --> F
     end
-</code></pre><p>As shown above, RNNs process each word sequentially, with the hidden state carrying information from previous steps. While this provides some memory, it&rsquo;s still limited and inefficient.</p>
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<p>As shown above, RNNs process each word sequentially, with the hidden state carrying information from previous steps. While this provides some memory, it&rsquo;s still limited and inefficient.</p>
 <h3 id="the-transformer-solution">The Transformer Solution</h3>
 <p>The Transformer solves these problems by introducing two key innovations:</p>
 <ol>
 <li><strong>Attention Mechanism</strong>: Instead of processing sequences step-by-step, the model can look at all words simultaneously and determine which ones are most relevant to each other</li>
 <li><strong>Parallel Processing</strong>: Because words aren&rsquo;t processed sequentially, the entire sequence can be processed in parallel, dramatically speeding up training</li>
 </ol>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart LR
-    subgraph &#34;Transformer Approach&#34;
-        A[&#34;Input: The cat sat&#34;] --&gt; B[Attention]
-        A --&gt; C[Attention]
-        A --&gt; D[Attention]
+
+<div class="mermaid">
+  
+flowchart LR
+    subgraph "Transformer Approach"
+        A["Input: The cat sat"] --> B[Attention]
+        A --> C[Attention]
+        A --> D[Attention]
         
-        B --&gt; E[Output]
-        C --&gt; E
-        D --&gt; E
+        B --> E[Output]
+        C --> E
+        D --> E
     end
-</code></pre><h2 id="understanding-the-transformer-architecture">Understanding the Transformer Architecture</h2>
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<h2 id="understanding-the-transformer-architecture">Understanding the Transformer Architecture</h2>
 <p>The Transformer architecture, introduced in the 2017 paper &ldquo;Attention is All You Need,&rdquo; completely changed the game. Instead of processing data sequentially, it processes the entire sequence at once, relying on a mechanism called self-attention to understand context.</p>
 <p>The core idea is to let the model weigh the importance of all other words in a sentence when processing a single word. It can look at the entire sequence and decide which parts are most relevant to the word it&rsquo;s currently considering.</p>
 <h3 id="the-original-transformer-encoder-decoder-architecture">The Original Transformer: Encoder-Decoder Architecture</h3>
@@ -296,14 +448,65 @@
 <li><strong>Encoder</strong>: Processes the input sequence and creates representations of each word in context</li>
 <li><strong>Decoder</strong>: Uses the encoder&rsquo;s representations to generate the output sequence</li>
 </ol>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart LR
-    subgraph &#34;Original Transformer Architecture&#34;
-        A[Input Sequence] --&gt; B[Encoder Stack]
-        B --&gt; C[Encoder-Decoder Attention]
-        C --&gt; D[Decoder Stack]
-        D --&gt; E[Output Sequence]
+
+<div class="mermaid">
+  
+flowchart LR
+    subgraph "Original Transformer Architecture"
+        A[Input Sequence] --> B[Encoder Stack]
+        B --> C[Encoder-Decoder Attention]
+        C --> D[Decoder Stack]
+        D --> E[Output Sequence]
     end
-</code></pre><p>However, modern large language models (LLMs) like GPT-4 and GPT-5 use a <strong>decoder-only architecture</strong>, so we&rsquo;ll focus on that for the rest of this guide.</p>
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<p>However, modern large language models (LLMs) like GPT-4 and GPT-5 use a <strong>decoder-only architecture</strong>, so we&rsquo;ll focus on that for the rest of this guide.</p>
 <h3 id="decoder-only-architecture">Decoder-Only Architecture</h3>
 <p>In a decoder-only Transformer (like GPT models), the architecture consists of a stack of identical layers. Each layer contains three key components:</p>
 <ol>
@@ -311,82 +514,388 @@
 <li><strong>Feed-Forward Network (FFN)</strong>: A simple neural network that processes each word&rsquo;s representation independently</li>
 <li><strong>Residual Connections and Layer Normalization</strong>: Technical components that help with stable training</li>
 </ol>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart TB
-    subgraph &#34;Transformer Decoder Layer&#34;
-        A[Input Embeddings] --&gt; B[Masked Multi-Head Attention]
-        B --&gt; C[Add &amp; Norm]
-        C --&gt; D[Feed Forward Network]
-        D --&gt; E[Add &amp; Norm]
-        E --&gt; F[Output]
+
+<div class="mermaid">
+  
+flowchart TB
+    subgraph "Transformer Decoder Layer"
+        A[Input Embeddings] --> B[Masked Multi-Head Attention]
+        B --> C[Add & Norm]
+        C --> D[Feed Forward Network]
+        D --> E[Add & Norm]
+        E --> F[Output]
     end
-</code></pre><p>Multiple such layers are stacked together to form the complete model:</p>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart TB
-    subgraph &#34;Stack of Decoder Layers&#34;
-        A[Input] --&gt; B[Decoder Layer 1]
-        B --&gt; C[Decoder Layer 2]
-        C --&gt; D[&#34;...&#34;]
-        D --&gt; E[Decoder Layer N]
-        E --&gt; F[Output]
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<p>Multiple such layers are stacked together to form the complete model:</p>
+
+<div class="mermaid">
+  
+flowchart TB
+    subgraph "Stack of Decoder Layers"
+        A[Input] --> B[Decoder Layer 1]
+        B --> C[Decoder Layer 2]
+        C --> D["..."]
+        D --> E[Decoder Layer N]
+        E --> F[Output]
     end
-</code></pre><h2 id="deep-dive-into-masked-multi-head-attention">Deep Dive into Masked Multi-Head Attention</h2>
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<h2 id="deep-dive-into-masked-multi-head-attention">Deep Dive into Masked Multi-Head Attention</h2>
 <p>This is the secret sauce behind models like GPT-4. Let&rsquo;s break down the name and understand how it works:</p>
 <h3 id="what-is-attention">What is Attention?</h3>
 <p>As we discussed, the attention mechanism allows the model to look at other words in the sequence to understand the context of the current word. It&rsquo;s like a focused gaze that can selectively focus on different parts of the input.</p>
 <p>In a simple attention mechanism, each word can attend to all other words in the sequence. The attention weights determine how much focus to place on each word.</p>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart LR
-    subgraph &#34;Simple Attention Mechanism&#34;
-        A[&#34;Word: cat&#34;] --&gt; B[Attention Weights]
-        C[&#34;Word: The&#34;] --&gt; B
-        D[&#34;Word: sat&#34;] --&gt; B
-        E[&#34;Word: mat&#34;] --&gt; B
+
+<div class="mermaid">
+  
+flowchart LR
+    subgraph "Simple Attention Mechanism"
+        A["Word: cat"] --> B[Attention Weights]
+        C["Word: The"] --> B
+        D["Word: sat"] --> B
+        E["Word: mat"] --> B
         
-        B --&gt; F[Context-Aware Representation]
+        B --> F[Context-Aware Representation]
     end
-</code></pre><h3 id="what-makes-attention-multi-head">What Makes Attention &ldquo;Multi-Head&rdquo;?</h3>
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<h3 id="what-makes-attention-multi-head">What Makes Attention &ldquo;Multi-Head&rdquo;?</h3>
 <p>Instead of just one &ldquo;attention head&rdquo; looking at the entire context, the model uses multiple heads simultaneously. Each head learns to pay attention to different things. For example, one head might focus on grammatical relationships, while another focuses on semantic meaning. This gives the model a richer, more nuanced understanding of the input.</p>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart TB
-    subgraph &#34;Multi-Head Attention&#34;
-        A[Input] --&gt; B[Attention Head 1]
-        A --&gt; C[Attention Head 2]
-        A --&gt; D[Attention Head 3]
-        A --&gt; E[&#34;...&#34;]
+
+<div class="mermaid">
+  
+flowchart TB
+    subgraph "Multi-Head Attention"
+        A[Input] --> B[Attention Head 1]
+        A --> C[Attention Head 2]
+        A --> D[Attention Head 3]
+        A --> E["..."]
         
-        B --&gt; F[Concatenate]
-        C --&gt; F
-        D --&gt; F
-        E --&gt; F
+        B --> F[Concatenate]
+        C --> F
+        D --> F
+        E --> F
         
-        F --&gt; G[Linear Transformation]
-        G --&gt; H[Output]
+        F --> G[Linear Transformation]
+        G --> H[Output]
     end
-</code></pre><h3 id="why-is-it-masked">Why is it &ldquo;Masked&rdquo;?</h3>
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<h3 id="why-is-it-masked">Why is it &ldquo;Masked&rdquo;?</h3>
 <p>This is the key difference for a generative model like GPT. During training, the model needs to learn to predict the next word. To prevent it from &ldquo;cheating&rdquo; and looking at the words that come after the current word, a mask is applied. This mask essentially hides future words in the sequence, ensuring that the model only uses the words it has already &ldquo;seen&rdquo; to make its prediction.</p>
 <p>This is what makes GPT an autoregressive model—it generates text one word at a time, based on the words that came before.</p>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">graph LR
-    A[&#34;Input: The cat sat on ___&#34;] --&gt; B[Masked Attention]
+
+<div class="mermaid">
+  
+graph LR
+    A["Input: The cat sat on ___"] --> B[Masked Attention]
     
-    subgraph &#34;What the Model Can See&#34;
-        C[&#34;The&#34;] --&gt; B
-        D[&#34;cat&#34;] --&gt; B
-        E[&#34;sat&#34;] --&gt; B
-        F[&#34;on&#34;] --&gt; B
-        G[&#34;???&#34;] --&gt;|Masked| B
+    subgraph "What the Model Can See"
+        C["The"] --> B
+        D["cat"] --> B
+        E["sat"] --> B
+        F["on"] --> B
+        G["???"] -->|Masked| B
     end
     
-    B --&gt; H[&#34;Prediction: the&#34;]
-</code></pre><p>So, in a nutshell, masked multi-head attention allows the model to consider the entire past context in a sophisticated, parallel way, without peeking at the future.</p>
+    B --> H["Prediction: the"]
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<p>So, in a nutshell, masked multi-head attention allows the model to consider the entire past context in a sophisticated, parallel way, without peeking at the future.</p>
 <h2 id="layers-and-layers-of-intelligence">Layers and Layers of Intelligence</h2>
 <p>Models like GPT-4 are not just one layer—they are a stack of these Transformer layers. While OpenAI has not released the exact details of GPT-4&rsquo;s architecture, it&rsquo;s widely believed to have a massive number of layers (possibly over 100) and an enormous number of parameters, which are the weights and biases the model learns during training.</p>
 <p>Each layer builds upon the representations learned by the previous layer, creating a hierarchical understanding of the text. The first layers might learn simple relationships between words, while the deeper layers can grasp complex concepts, long-range dependencies, and even a &ldquo;world model&rdquo; that allows them to reason and generate coherent text over long passages.</p>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart TB
-    subgraph &#34;Progressive Understanding Through Layers&#34;
-        A[&#34;Input: The cat sat on the mat&#34;] --&gt; B[&#34;Layer 1: Basic Syntax&#34;]
-        B --&gt; C[&#34;Layer 2: Word Relationships&#34;]
-        C --&gt; D[&#34;Layer 3: Sentence Structure&#34;]
-        D --&gt; E[&#34;Layer N: Complex Semantics&#34;]
-        E --&gt; F[Final Output]
+
+<div class="mermaid">
+  
+flowchart TB
+    subgraph "Progressive Understanding Through Layers"
+        A["Input: The cat sat on the mat"] --> B["Layer 1: Basic Syntax"]
+        B --> C["Layer 2: Word Relationships"]
+        C --> D["Layer 3: Sentence Structure"]
+        D --> E["Layer N: Complex Semantics"]
+        E --> F[Final Output]
     end
-</code></pre><h2 id="summary-the-big-picture">Summary: The Big Picture</h2>
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<h2 id="summary-the-big-picture">Summary: The Big Picture</h2>
 <p>The Transformer architecture, with its reliance on the attention mechanism, has solved the key limitations of previous models by allowing for parallel processing and a superior ability to capture long-range dependencies.</p>
 <h3 id="transformer-vs-rnn">Transformer vs. RNN</h3>
 <table>
@@ -423,12 +932,63 @@
 <p>The Transformer&rsquo;s parallel processing makes it much faster and more efficient to train than the sequential RNN. The attention mechanism also helps it overcome the vanishing gradient problem, enabling it to handle much longer sequences of text effectively.</p>
 <h3 id="transformer-vs-ffn">Transformer vs. FFN</h3>
 <p>While both use feed-forward networks, the Transformer&rsquo;s self-attention layers provide the crucial context-awareness that FFNs completely lack.</p>
-<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart LR
-    subgraph &#34;Comparison&#34;
-        A[&#34;FFN: No Context&#34;] --&gt; B[Simple Output]
-        C[&#34;Transformer: Full Context&#34;] --&gt; D[Context-Aware Output]
+
+<div class="mermaid">
+  
+flowchart LR
+    subgraph "Comparison"
+        A["FFN: No Context"] --> B[Simple Output]
+        C["Transformer: Full Context"] --> D[Context-Aware Output]
     end
-</code></pre><h2 id="conclusion">Conclusion</h2>
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<h2 id="conclusion">Conclusion</h2>
 <p>Models like GPT-4 and the upcoming GPT-5 are simply massive, highly-tuned versions of this same basic architecture, proving that the Transformer is a truly scalable and powerful foundation for the future of AI.</p>
 <p>The key innovations that make Transformers so powerful are:</p>
 <ol>
@@ -494,6 +1054,11 @@
                             Previous Post</a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/post/test-highlight/" data-toggle="tooltip" data-placement="top" title="Code Highlight Test">Next
+                            Post &rarr;</a>
+                    </li>
                     
                 </ul>
                 
@@ -883,5 +1448,25 @@
 
 
 
+
+<script>
+
+if (document.querySelector('.mermaid')) {
+  
+  var script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+  script.onload = function() {
+    
+    mermaid.initialize({ 
+      startOnLoad: true,
+      theme: 'default'
+    });
+  };
+  document.head.appendChild(script);
+}
+</script>
+
+</body>
+</html>
 </body>
 </html>

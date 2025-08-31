@@ -77,7 +77,6 @@
 
 
 
-
 <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
 
     <div class="container-fluid">
@@ -956,5 +955,25 @@ c1682ccc3e5a86dafc78fe7a553a505718f4e9ba 192.168.0.110:6391@16391 slave 58b3c8fc
 
 
 
+
+<script>
+
+if (document.querySelector('.mermaid')) {
+  
+  var script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+  script.onload = function() {
+    
+    mermaid.initialize({ 
+      startOnLoad: true,
+      theme: 'default'
+    });
+  };
+  document.head.appendChild(script);
+}
+</script>
+
+</body>
+</html>
 </body>
 </html>

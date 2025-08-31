@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Testing on Jamie&#39;s Blog</title>
+    <link>http://localhost:1313/categories/testing/</link>
+    <description>Recent content in Testing on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 31 Aug 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/testing/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mermaid Test Page</title>
+      <link>http://localhost:1313/post/mermaid-test/</link>
+      <pubDate>Sun, 31 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/post/mermaid-test/</guid>
+      <description>Mermaid Test Page This is a simple test page to verify that Mermaid diagrams are working correctly with our Hugo theme.&#xA;Simple Flowchart graph TD A[Start] --&gt; B{Is it working?} B --&gt;|Yes| C[Great!] B --&gt;|No| D[Need to fix it] C --&gt; E[End] D --&gt; E Simple Sequence Diagram sequenceDiagram participant A as User participant B as System A-&gt;&gt;B: Request B-&gt;&gt;A: Response </description>
+    </item>
+  </channel>
+</rss>

@@ -78,7 +78,6 @@
 
 
 
-
 <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
 
     <div class="container-fluid">
@@ -199,6 +198,29 @@
 <div data-pagefind-ignore="all">
 
 <div class="post-preview">
+    <a href="http://akjamie.github.io/post/2023-03-26-vault-agent-with-k8s/">
+        <h2 class="post-title">
+            Vault Agent with Kubernetes
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            Nearly all requests to Vault must be accompanied by an authentication token. This includes all API requests, as well as via the Vault CLI and other libraries, therefore application running in kubernetes is no exception. Luckily, Vault provides Kubernetes auth method to authenticate the clients using a Kubernetes Service Account Token, and Vault Agent which could be leveraged to automatically inject the secrets from vault into kubernetes pods through init container pattern.
+        
+        </div>
+    </a>
+    <p class="post-meta">
+    
+        Posted by Jamie on Sunday, March 26, 2023
+        
+        
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="http://akjamie.github.io/post/2023-03-25-vault-on-k8s/">
         <h2 class="post-title">
             Vault on Kubernetes
@@ -298,33 +320,6 @@
     <p class="post-meta">
     
         Posted by Jamie Zhang on Tuesday, June 28, 2022
-        
-        
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="http://akjamie.github.io/post/2022-06-27-redis-basic-2/">
-        <h2 class="post-title">
-            Redis foundation - III
-        </h2>
-	
-        <h3 class="post-subtitle">
-            Redis basic knowledge - transaction &amp; data persistence
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            Redis事务和持久化
-        
-        </div>
-    </a>
-    <p class="post-meta">
-    
-        Posted by Jamie Zhang on Monday, June 27, 2022
         
         
     
@@ -794,5 +789,25 @@
 
 
 
+
+<script>
+
+if (document.querySelector('.mermaid')) {
+  
+  var script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+  script.onload = function() {
+    
+    mermaid.initialize({ 
+      startOnLoad: true,
+      theme: 'default'
+    });
+  };
+  document.head.appendChild(script);
+}
+</script>
+
+</body>
+</html>
 </body>
 </html>
