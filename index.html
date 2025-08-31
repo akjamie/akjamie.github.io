@@ -27,6 +27,8 @@
     <meta property="twitter:description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP, Scrum master" />
     
 
+    <meta property="og:url" content="http://akjamie.github.io/" />
+
     
     <meta property="twitter:card" content="summary" />
     
@@ -40,7 +42,7 @@
     <link rel="canonical" href="/">
 
     
-    
+
     
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
@@ -48,7 +50,7 @@
     <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
 
     
-    <link rel="stylesheet" href="/css/zanshang.css">
+    <link rel="stylesheet" href="/css/zanshang.min.css">
 
     
     <link rel="stylesheet" href="/css/font-awesome.all.min.css">
@@ -72,7 +74,6 @@
     
 
 </head>
-
 
 
 
@@ -198,6 +199,33 @@
 <div data-pagefind-ignore="all">
 
 <div class="post-preview">
+    <a href="http://akjamie.github.io/post/2025-08-31-learning-notes-transformer/">
+        <h2 class="post-title">
+            Understanding Transformer Architecture: The Foundation of Modern AI
+        </h2>
+	
+        <h3 class="post-subtitle">
+            A Comprehensive Guide to Attention Mechanisms and How They Power LLMs Like GPT
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            Learn how Transformer architecture works with clear explanations and visual diagrams. Understand the core concepts behind modern AI models like GPT-4 and GPT-5.
+        
+        </div>
+    </a>
+    <p class="post-meta">
+    
+        Posted by Jamie Zhang on Sunday, August 31, 2025
+        
+        
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="http://akjamie.github.io/post/2024-06-15-run-llm-on-intel-igpu/">
         <h2 class="post-title">
             Run LLM on Intel Iris Xe GPU Using IEPX-LLM &#43; Ollama
@@ -287,33 +315,6 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
     <p class="post-meta">
     
         Posted by Jamie on Sunday, March 26, 2023
-        
-        
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="http://akjamie.github.io/post/2023-03-25-vault-on-k8s/">
-        <h2 class="post-title">
-            Vault on Kubernetes
-        </h2>
-	
-        <h3 class="post-subtitle">
-            Install Vault on K8S with integrated storage via Helm
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            To setup a HA Vault Cluster in Kubernetes
-        
-        </div>
-    </a>
-    <p class="post-meta">
-    
-        Posted by Jamie on Saturday, March 25, 2023
         
         
     
@@ -431,9 +432,13 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
             
             
                
+            
+               
                     <a href="/tags/aws" title="aws">
                         aws
                     </a>
+               
+            
                
             
                
@@ -478,6 +483,12 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
                     </a>
                
             
+               
+            
+               
+                    <a href="/tags/llm" title="llm">
+                        llm
+                    </a>
                
             
                
@@ -545,6 +556,8 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
                
             
                
+            
+               
                     <a href="/tags/vault" title="vault">
                         vault
                     </a>
@@ -582,7 +595,7 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <ul class="list-inline text-center">                  
+                <ul class="list-inline text-center">
                     
                     <li>
                         <a href="mailto:akjamie.zhang@outlook.com">
@@ -652,7 +665,7 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2024
+                    Copyright &copy; Jamie&#39;s Blog 2025
                     
                 </p>
             </div>
@@ -727,7 +740,7 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
             n = $(this).prop('tagName').toLowerCase();
             i = "#" + $(this).prop('id');
             t = $(this).text();
-            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
             l = $('<li class="' + n + '_nav"></li>').append(c);
             $(selector).append(l);
         });

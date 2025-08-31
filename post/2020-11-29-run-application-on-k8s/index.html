@@ -26,6 +26,8 @@
     <meta property="twitter:description" content="to run a cloud config service which built using spring boot cloud config" />
     
 
+    <meta property="og:url" content="http://akjamie.github.io/post/2020-11-29-run-application-on-k8s/" />
+
     
     <meta property="twitter:card" content="summary" />
     
@@ -39,7 +41,7 @@
     <link rel="canonical" href="/post/2020-11-29-run-application-on-k8s/">
 
     
-    
+
     
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
@@ -47,7 +49,7 @@
     <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
 
     
-    <link rel="stylesheet" href="/css/zanshang.css">
+    <link rel="stylesheet" href="/css/zanshang.min.css">
 
     
     <link rel="stylesheet" href="/css/font-awesome.all.min.css">
@@ -71,7 +73,6 @@
     
 
 </head>
-
 
 
 
@@ -540,6 +541,8 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
                 
 
 
+
+
             </div>
 
             
@@ -574,9 +577,13 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
                         
                         
                         
+                        
+                        
                         <a href="/tags/aws" title="aws">
                             aws
                         </a>
+                        
+                        
                         
                         
                         
@@ -621,6 +628,12 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
                         </a>
                         
                         
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
                         
                         
                         
@@ -688,6 +701,8 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
                         
                         
                         
+                        
+                        
                         <a href="/tags/vault" title="vault">
                             vault
                         </a>
@@ -723,7 +738,7 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <ul class="list-inline text-center">                  
+                <ul class="list-inline text-center">
                     
                     <li>
                         <a href="mailto:akjamie.zhang@outlook.com">
@@ -793,7 +808,7 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2024
+                    Copyright &copy; Jamie&#39;s Blog 2025
                     
                 </p>
             </div>
@@ -868,7 +883,7 @@ Jamies-MacBook-Pro:scripts jamie$ curl http://localhost:30001/catalog-service/de
             n = $(this).prop('tagName').toLowerCase();
             i = "#" + $(this).prop('id');
             t = $(this).text();
-            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
             l = $('<li class="' + n + '_nav"></li>').append(c);
             $(selector).append(l);
         });

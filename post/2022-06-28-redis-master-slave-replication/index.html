@@ -26,6 +26,8 @@
     <meta property="twitter:description" content="Redis主从复制" />
     
 
+    <meta property="og:url" content="http://akjamie.github.io/post/2022-06-28-redis-master-slave-replication/" />
+
     
     <meta property="twitter:card" content="summary" />
     
@@ -39,7 +41,7 @@
     <link rel="canonical" href="/post/2022-06-28-redis-master-slave-replication/">
 
     
-    
+
     
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
@@ -47,7 +49,7 @@
     <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
 
     
-    <link rel="stylesheet" href="/css/zanshang.css">
+    <link rel="stylesheet" href="/css/zanshang.min.css">
 
     
     <link rel="stylesheet" href="/css/font-awesome.all.min.css">
@@ -71,7 +73,6 @@
     
 
 </head>
-
 
 
 
@@ -546,6 +547,8 @@ public class RedisWriteOperationWithFailover {
                 
 
 
+
+
             </div>
 
             
@@ -580,9 +583,13 @@ public class RedisWriteOperationWithFailover {
                         
                         
                         
+                        
+                        
                         <a href="/tags/aws" title="aws">
                             aws
                         </a>
+                        
+                        
                         
                         
                         
@@ -627,6 +634,12 @@ public class RedisWriteOperationWithFailover {
                         </a>
                         
                         
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
                         
                         
                         
@@ -694,6 +707,8 @@ public class RedisWriteOperationWithFailover {
                         
                         
                         
+                        
+                        
                         <a href="/tags/vault" title="vault">
                             vault
                         </a>
@@ -729,7 +744,7 @@ public class RedisWriteOperationWithFailover {
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <ul class="list-inline text-center">                  
+                <ul class="list-inline text-center">
                     
                     <li>
                         <a href="mailto:akjamie.zhang@outlook.com">
@@ -799,7 +814,7 @@ public class RedisWriteOperationWithFailover {
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2024
+                    Copyright &copy; Jamie&#39;s Blog 2025
                     
                 </p>
             </div>
@@ -874,7 +889,7 @@ public class RedisWriteOperationWithFailover {
             n = $(this).prop('tagName').toLowerCase();
             i = "#" + $(this).prop('id');
             t = $(this).text();
-            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
             l = $('<li class="' + n + '_nav"></li>').append(c);
             $(selector).append(l);
         });

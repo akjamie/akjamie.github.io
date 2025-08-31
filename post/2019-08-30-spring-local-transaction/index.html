@@ -26,6 +26,8 @@
     <meta property="twitter:description" content="Spring Transaction 之 Local Transaction实现原理" />
     
 
+    <meta property="og:url" content="http://akjamie.github.io/post/2019-08-30-spring-local-transaction/" />
+
     
     <meta property="twitter:card" content="summary" />
     
@@ -39,7 +41,7 @@
     <link rel="canonical" href="/post/2019-08-30-spring-local-transaction/">
 
     
-    
+
     
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
@@ -47,7 +49,7 @@
     <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
 
     
-    <link rel="stylesheet" href="/css/zanshang.css">
+    <link rel="stylesheet" href="/css/zanshang.min.css">
 
     
     <link rel="stylesheet" href="/css/font-awesome.all.min.css">
@@ -71,7 +73,6 @@
     
 
 </head>
-
 
 
 
@@ -430,6 +431,8 @@ public Customer add(Customer customer) {
                 
 
 
+
+
             </div>
 
             
@@ -464,9 +467,13 @@ public Customer add(Customer customer) {
                         
                         
                         
+                        
+                        
                         <a href="/tags/aws" title="aws">
                             aws
                         </a>
+                        
+                        
                         
                         
                         
@@ -511,6 +518,12 @@ public Customer add(Customer customer) {
                         </a>
                         
                         
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
                         
                         
                         
@@ -578,6 +591,8 @@ public Customer add(Customer customer) {
                         
                         
                         
+                        
+                        
                         <a href="/tags/vault" title="vault">
                             vault
                         </a>
@@ -613,7 +628,7 @@ public Customer add(Customer customer) {
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <ul class="list-inline text-center">                  
+                <ul class="list-inline text-center">
                     
                     <li>
                         <a href="mailto:akjamie.zhang@outlook.com">
@@ -683,7 +698,7 @@ public Customer add(Customer customer) {
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2024
+                    Copyright &copy; Jamie&#39;s Blog 2025
                     
                 </p>
             </div>
@@ -758,7 +773,7 @@ public Customer add(Customer customer) {
             n = $(this).prop('tagName').toLowerCase();
             i = "#" + $(this).prop('id');
             t = $(this).text();
-            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
             l = $('<li class="' + n + '_nav"></li>').append(c);
             $(selector).append(l);
         });

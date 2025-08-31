@@ -27,6 +27,8 @@
     <meta property="twitter:description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP, Scrum master" />
     
 
+    <meta property="og:url" content="http://akjamie.github.io/" />
+
     
     <meta property="twitter:card" content="summary" />
     
@@ -40,7 +42,7 @@
     <link rel="canonical" href="/">
 
     
-    
+
     
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
@@ -48,7 +50,7 @@
     <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
 
     
-    <link rel="stylesheet" href="/css/zanshang.css">
+    <link rel="stylesheet" href="/css/zanshang.min.css">
 
     
     <link rel="stylesheet" href="/css/font-awesome.all.min.css">
@@ -72,7 +74,6 @@
     
 
 </head>
-
 
 
 
@@ -198,6 +199,29 @@
 <div data-pagefind-ignore="all">
 
 <div class="post-preview">
+    <a href="http://akjamie.github.io/2019/07/14/free-https-certs-docker-nginx/">
+        <h2 class="post-title">
+            Free CA Certs setup using Certbot &#43; Docker &#43; Nginx
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            介绍用如何使用Let&#39;s Encrypt&#39;s Certbot生成CA证书，并配置在nginx中保护站点
+        
+        </div>
+    </a>
+    <p class="post-meta">
+    
+        Posted by Jamie Zhang on Sunday, July 14, 2019
+        
+        
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="http://akjamie.github.io/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/">
         <h2 class="post-title">
             Linux network proxy setup for desktop and terminal
@@ -301,35 +325,6 @@
 </div>
 <hr>
 
-<div class="post-preview">
-    <a href="http://akjamie.github.io/post/2022-07-08-spring-data-series-01/">
-        <h2 class="post-title">
-            Spring Data &amp; Data Persistent
-        </h2>
-	
-        <h3 class="post-subtitle">
-            Notes taken during studying spring data series - overview
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            What is JPA? &ldquo;The Java Persistence API is the Java API for the management of persistence and object/relational mapping in Java EE and Java SE environments. It provides an object/relational mapping facility for the Java application developer using a Java domain model to manage a relational database.&rdquo;
-It&rsquo;s quoted from JSR(Java Specification Request) managed by Java Community Process.
-This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persist data before adopting JPA.
-       
-        </div>
-    </a>
-    <p class="post-meta">
-    
-        Posted by Jamie Zhang on Monday, January 1, 0001
-        
-        
-    
-    </p>
-
-</div>
-<hr>
-
 </div>
 
             
@@ -341,6 +336,10 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
         <a href="/page/5/">&larr; Newer Posts</a>
     </li>
     
+    
+    <li class="next">
+        <a href="/page/7/">Older Posts &rarr;</a>
+    </li>
     
 </ul>
 
@@ -439,9 +438,13 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
             
             
                
+            
+               
                     <a href="/tags/aws" title="aws">
                         aws
                     </a>
+               
+            
                
             
                
@@ -486,6 +489,12 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
                     </a>
                
             
+               
+            
+               
+                    <a href="/tags/llm" title="llm">
+                        llm
+                    </a>
                
             
                
@@ -553,6 +562,8 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
                
             
                
+            
+               
                     <a href="/tags/vault" title="vault">
                         vault
                     </a>
@@ -590,7 +601,7 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <ul class="list-inline text-center">                  
+                <ul class="list-inline text-center">
                     
                     <li>
                         <a href="mailto:akjamie.zhang@outlook.com">
@@ -660,7 +671,7 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2024
+                    Copyright &copy; Jamie&#39;s Blog 2025
                     
                 </p>
             </div>
@@ -735,7 +746,7 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
             n = $(this).prop('tagName').toLowerCase();
             i = "#" + $(this).prop('id');
             t = $(this).text();
-            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
             l = $('<li class="' + n + '_nav"></li>').append(c);
             $(selector).append(l);
         });

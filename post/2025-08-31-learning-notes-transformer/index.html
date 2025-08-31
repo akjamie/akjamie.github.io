@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/header-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/header-01.jpg" />
+    
+
+    
+    <meta name="title" content="Understanding Transformer Architecture: The Foundation of Modern AI" />
+    <meta property="og:title" content="Understanding Transformer Architecture: The Foundation of Modern AI" />
+    <meta property="twitter:title" content="Understanding Transformer Architecture: The Foundation of Modern AI" />
+    
+
+    
+    <meta name="description" content="Learn how Transformer architecture works with clear explanations and visual diagrams. Understand the core concepts behind modern AI models like GPT-4 and GPT-5.">
+    <meta property="og:description" content="Learn how Transformer architecture works with clear explanations and visual diagrams. Understand the core concepts behind modern AI models like GPT-4 and GPT-5." />
+    <meta property="twitter:description" content="Learn how Transformer architecture works with clear explanations and visual diagrams. Understand the core concepts behind modern AI models like GPT-4 and GPT-5." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2025-08-31-learning-notes-transformer/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Understanding Transformer Architecture: The Foundation of Modern AI | Jamie&#39;s Blog</title>
+
+    <link rel="canonical" href="/post/2025-08-31-learning-notes-transformer/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+                    
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/header-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/llm" title="LLM">
+                            LLM
+                        </a>
+                        
+                        <a class="tag" href="/tags/transformer" title="Transformer">
+                            Transformer
+                        </a>
+                        
+                        <a class="tag" href="/tags/machine-learning" title="Machine Learning">
+                            Machine Learning
+                        </a>
+                        
+                        <a class="tag" href="/tags/deep-learning" title="Deep Learning">
+                            Deep Learning
+                        </a>
+                        
+                        <a class="tag" href="/tags/attention-mechanism" title="Attention Mechanism">
+                            Attention Mechanism
+                        </a>
+                        
+                    </div>
+                    <h1>Understanding Transformer Architecture: The Foundation of Modern AI</h1>
+                    <h2 class="subheading">A Comprehensive Guide to Attention Mechanisms and How They Power LLMs Like GPT</h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Sunday, August 31, 2025
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="introduction-to-transformer-architecture">Introduction to Transformer Architecture</h1>
+<p>In the rapidly evolving world of artificial intelligence, few innovations have been as transformative as the <strong>Transformer architecture</strong>. Introduced in the seminal 2017 paper <a href="https://arxiv.org/abs/1706.03762">&ldquo;Attention is All You Need&rdquo;</a> by Vaswani et al., Transformers have become the backbone of virtually all state-of-the-art language models, including GPT-4, ChatGPT, and Google&rsquo;s Bard.</p>
+<p>But what exactly is a Transformer, and why has it revolutionized natural language processing? In this comprehensive guide, we&rsquo;ll break down the Transformer architecture from the ground up, using clear explanations and visual diagrams to help you understand how these powerful models work.</p>
+<p>Whether you&rsquo;re a beginner just starting your AI journey or a practitioner looking to solidify your understanding, this guide will walk you through the core concepts that power today&rsquo;s most advanced language models.</p>
+<h2 id="the-problem-with-the-past-rnns-and-feedforward-networks">The Problem with the Past: RNNs and Feedforward Networks</h2>
+<p>Before Transformers, we had two main approaches for sequential data like text: <strong>Recurrent Neural Networks (RNNs)</strong> and simple <strong>Feedforward Networks (FFNs)</strong>. Let&rsquo;s understand why these approaches had limitations that needed to be addressed.</p>
+<h3 id="feedforward-networks-ffns">Feedforward Networks (FFNs)</h3>
+<p>Feedforward Networks are the most basic type of neural network. Data flows in one direction, from input to output, with no loops. They can&rsquo;t remember past information, which makes them terrible for language, where context is everything.</p>
+<p>Think about it: the meaning of a word often depends on the words that came before it. A basic FFN has no way to capture this.</p>
+<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">graph LR
+    A[&#34;Input: The cat sat on&#34;] --&gt; B[FFN]
+    B --&gt; C[&#34;Output: ?&#34;]
+</code></pre><p>As you can see, a Feedforward Network processes the input and produces an output without any memory of previous inputs. This is problematic for language understanding.</p>
+<h3 id="recurrent-neural-networks-rnns">Recurrent Neural Networks (RNNs)</h3>
+<p>RNNs were designed to address the memory problem by having a &ldquo;memory&rdquo; or hidden state that allows them to process a sequence one element at a time, feeding the output of one step back into the input of the next. This lets them &ldquo;remember&rdquo; context.</p>
+<p>However, RNNs have significant limitations:</p>
+<ol>
+<li><strong>Sequential Processing</strong>: They process data one step at a time, making them slow to train</li>
+<li><strong>Vanishing Gradient Problem</strong>: It becomes difficult to learn long-range dependencies</li>
+<li><strong>Limited Parallelization</strong>: Due to their sequential nature, they can&rsquo;t take full advantage of modern parallel computing hardware</li>
+</ol>
+<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart TB
+    subgraph &#34;RNN Processing Sequence&#34;
+        A[&#34;Input: The&#34;] --&gt; B[RNN]
+        B --&gt; C[Hidden State]
+        C --&gt; D[RNN]
+        D --&gt; E[Hidden State]
+        E --&gt; F[RNN]
+        F --&gt; G[Output]
+        
+        H[&#34;Input: cat&#34;] --&gt; D
+        I[&#34;Input: sat&#34;] --&gt; F
+    end
+</code></pre><p>As shown above, RNNs process each word sequentially, with the hidden state carrying information from previous steps. While this provides some memory, it&rsquo;s still limited and inefficient.</p>
+<h3 id="the-transformer-solution">The Transformer Solution</h3>
+<p>The Transformer solves these problems by introducing two key innovations:</p>
+<ol>
+<li><strong>Attention Mechanism</strong>: Instead of processing sequences step-by-step, the model can look at all words simultaneously and determine which ones are most relevant to each other</li>
+<li><strong>Parallel Processing</strong>: Because words aren&rsquo;t processed sequentially, the entire sequence can be processed in parallel, dramatically speeding up training</li>
+</ol>
+<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart LR
+    subgraph &#34;Transformer Approach&#34;
+        A[&#34;Input: The cat sat&#34;] --&gt; B[Attention]
+        A --&gt; C[Attention]
+        A --&gt; D[Attention]
+        
+        B --&gt; E[Output]
+        C --&gt; E
+        D --&gt; E
+    end
+</code></pre><h2 id="understanding-the-transformer-architecture">Understanding the Transformer Architecture</h2>
+<p>The Transformer architecture, introduced in the 2017 paper &ldquo;Attention is All You Need,&rdquo; completely changed the game. Instead of processing data sequentially, it processes the entire sequence at once, relying on a mechanism called self-attention to understand context.</p>
+<p>The core idea is to let the model weigh the importance of all other words in a sentence when processing a single word. It can look at the entire sequence and decide which parts are most relevant to the word it&rsquo;s currently considering.</p>
+<h3 id="the-original-transformer-encoder-decoder-architecture">The Original Transformer: Encoder-Decoder Architecture</h3>
+<p>The original Transformer model consists of two main parts:</p>
+<ol>
+<li><strong>Encoder</strong>: Processes the input sequence and creates representations of each word in context</li>
+<li><strong>Decoder</strong>: Uses the encoder&rsquo;s representations to generate the output sequence</li>
+</ol>
+<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart LR
+    subgraph &#34;Original Transformer Architecture&#34;
+        A[Input Sequence] --&gt; B[Encoder Stack]
+        B --&gt; C[Encoder-Decoder Attention]
+        C --&gt; D[Decoder Stack]
+        D --&gt; E[Output Sequence]
+    end
+</code></pre><p>However, modern large language models (LLMs) like GPT-4 and GPT-5 use a <strong>decoder-only architecture</strong>, so we&rsquo;ll focus on that for the rest of this guide.</p>
+<h3 id="decoder-only-architecture">Decoder-Only Architecture</h3>
+<p>In a decoder-only Transformer (like GPT models), the architecture consists of a stack of identical layers. Each layer contains three key components:</p>
+<ol>
+<li><strong>Masked Multi-Head Attention</strong>: The heart of the Transformer that allows the model to focus on relevant parts of the input</li>
+<li><strong>Feed-Forward Network (FFN)</strong>: A simple neural network that processes each word&rsquo;s representation independently</li>
+<li><strong>Residual Connections and Layer Normalization</strong>: Technical components that help with stable training</li>
+</ol>
+<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart TB
+    subgraph &#34;Transformer Decoder Layer&#34;
+        A[Input Embeddings] --&gt; B[Masked Multi-Head Attention]
+        B --&gt; C[Add &amp; Norm]
+        C --&gt; D[Feed Forward Network]
+        D --&gt; E[Add &amp; Norm]
+        E --&gt; F[Output]
+    end
+</code></pre><p>Multiple such layers are stacked together to form the complete model:</p>
+<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart TB
+    subgraph &#34;Stack of Decoder Layers&#34;
+        A[Input] --&gt; B[Decoder Layer 1]
+        B --&gt; C[Decoder Layer 2]
+        C --&gt; D[&#34;...&#34;]
+        D --&gt; E[Decoder Layer N]
+        E --&gt; F[Output]
+    end
+</code></pre><h2 id="deep-dive-into-masked-multi-head-attention">Deep Dive into Masked Multi-Head Attention</h2>
+<p>This is the secret sauce behind models like GPT-4. Let&rsquo;s break down the name and understand how it works:</p>
+<h3 id="what-is-attention">What is Attention?</h3>
+<p>As we discussed, the attention mechanism allows the model to look at other words in the sequence to understand the context of the current word. It&rsquo;s like a focused gaze that can selectively focus on different parts of the input.</p>
+<p>In a simple attention mechanism, each word can attend to all other words in the sequence. The attention weights determine how much focus to place on each word.</p>
+<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart LR
+    subgraph &#34;Simple Attention Mechanism&#34;
+        A[&#34;Word: cat&#34;] --&gt; B[Attention Weights]
+        C[&#34;Word: The&#34;] --&gt; B
+        D[&#34;Word: sat&#34;] --&gt; B
+        E[&#34;Word: mat&#34;] --&gt; B
+        
+        B --&gt; F[Context-Aware Representation]
+    end
+</code></pre><h3 id="what-makes-attention-multi-head">What Makes Attention &ldquo;Multi-Head&rdquo;?</h3>
+<p>Instead of just one &ldquo;attention head&rdquo; looking at the entire context, the model uses multiple heads simultaneously. Each head learns to pay attention to different things. For example, one head might focus on grammatical relationships, while another focuses on semantic meaning. This gives the model a richer, more nuanced understanding of the input.</p>
+<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart TB
+    subgraph &#34;Multi-Head Attention&#34;
+        A[Input] --&gt; B[Attention Head 1]
+        A --&gt; C[Attention Head 2]
+        A --&gt; D[Attention Head 3]
+        A --&gt; E[&#34;...&#34;]
+        
+        B --&gt; F[Concatenate]
+        C --&gt; F
+        D --&gt; F
+        E --&gt; F
+        
+        F --&gt; G[Linear Transformation]
+        G --&gt; H[Output]
+    end
+</code></pre><h3 id="why-is-it-masked">Why is it &ldquo;Masked&rdquo;?</h3>
+<p>This is the key difference for a generative model like GPT. During training, the model needs to learn to predict the next word. To prevent it from &ldquo;cheating&rdquo; and looking at the words that come after the current word, a mask is applied. This mask essentially hides future words in the sequence, ensuring that the model only uses the words it has already &ldquo;seen&rdquo; to make its prediction.</p>
+<p>This is what makes GPT an autoregressive model—it generates text one word at a time, based on the words that came before.</p>
+<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">graph LR
+    A[&#34;Input: The cat sat on ___&#34;] --&gt; B[Masked Attention]
+    
+    subgraph &#34;What the Model Can See&#34;
+        C[&#34;The&#34;] --&gt; B
+        D[&#34;cat&#34;] --&gt; B
+        E[&#34;sat&#34;] --&gt; B
+        F[&#34;on&#34;] --&gt; B
+        G[&#34;???&#34;] --&gt;|Masked| B
+    end
+    
+    B --&gt; H[&#34;Prediction: the&#34;]
+</code></pre><p>So, in a nutshell, masked multi-head attention allows the model to consider the entire past context in a sophisticated, parallel way, without peeking at the future.</p>
+<h2 id="layers-and-layers-of-intelligence">Layers and Layers of Intelligence</h2>
+<p>Models like GPT-4 are not just one layer—they are a stack of these Transformer layers. While OpenAI has not released the exact details of GPT-4&rsquo;s architecture, it&rsquo;s widely believed to have a massive number of layers (possibly over 100) and an enormous number of parameters, which are the weights and biases the model learns during training.</p>
+<p>Each layer builds upon the representations learned by the previous layer, creating a hierarchical understanding of the text. The first layers might learn simple relationships between words, while the deeper layers can grasp complex concepts, long-range dependencies, and even a &ldquo;world model&rdquo; that allows them to reason and generate coherent text over long passages.</p>
+<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart TB
+    subgraph &#34;Progressive Understanding Through Layers&#34;
+        A[&#34;Input: The cat sat on the mat&#34;] --&gt; B[&#34;Layer 1: Basic Syntax&#34;]
+        B --&gt; C[&#34;Layer 2: Word Relationships&#34;]
+        C --&gt; D[&#34;Layer 3: Sentence Structure&#34;]
+        D --&gt; E[&#34;Layer N: Complex Semantics&#34;]
+        E --&gt; F[Final Output]
+    end
+</code></pre><h2 id="summary-the-big-picture">Summary: The Big Picture</h2>
+<p>The Transformer architecture, with its reliance on the attention mechanism, has solved the key limitations of previous models by allowing for parallel processing and a superior ability to capture long-range dependencies.</p>
+<h3 id="transformer-vs-rnn">Transformer vs. RNN</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>RNN</th>
+<th>Transformer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Processing</td>
+<td>Sequential</td>
+<td>Parallel</td>
+</tr>
+<tr>
+<td>Speed</td>
+<td>Slow</td>
+<td>Fast</td>
+</tr>
+<tr>
+<td>Long-range dependencies</td>
+<td>Difficult</td>
+<td>Easy</td>
+</tr>
+<tr>
+<td>Training</td>
+<td>Time-consuming</td>
+<td>Efficient</td>
+</tr>
+</tbody>
+</table>
+<p>The Transformer&rsquo;s parallel processing makes it much faster and more efficient to train than the sequential RNN. The attention mechanism also helps it overcome the vanishing gradient problem, enabling it to handle much longer sequences of text effectively.</p>
+<h3 id="transformer-vs-ffn">Transformer vs. FFN</h3>
+<p>While both use feed-forward networks, the Transformer&rsquo;s self-attention layers provide the crucial context-awareness that FFNs completely lack.</p>
+<pre tabindex="0"><code class="language-mermaid" data-lang="mermaid">flowchart LR
+    subgraph &#34;Comparison&#34;
+        A[&#34;FFN: No Context&#34;] --&gt; B[Simple Output]
+        C[&#34;Transformer: Full Context&#34;] --&gt; D[Context-Aware Output]
+    end
+</code></pre><h2 id="conclusion">Conclusion</h2>
+<p>Models like GPT-4 and the upcoming GPT-5 are simply massive, highly-tuned versions of this same basic architecture, proving that the Transformer is a truly scalable and powerful foundation for the future of AI.</p>
+<p>The key innovations that make Transformers so powerful are:</p>
+<ol>
+<li><strong>Self-Attention</strong>: The ability to weigh the importance of different words in a sequence</li>
+<li><strong>Multi-Head Attention</strong>: Using multiple attention mechanisms to capture different types of relationships</li>
+<li><strong>Parallel Processing</strong>: Processing all words simultaneously rather than sequentially</li>
+<li><strong>Masking</strong>: Ensuring that generative models don&rsquo;t &ldquo;cheat&rdquo; by looking at future words</li>
+<li><strong>Deep Stacked Architecture</strong>: Building complex understanding through many layers</li>
+</ol>
+<p>Understanding these concepts is crucial for anyone interested in modern AI and natural language processing. With this foundation, you can begin to explore more advanced topics like fine-tuning, prompt engineering, and even building your own Transformer models.</p>
+<p>I hope this has provided a clear, accessible introduction to this fascinating topic!</p>
+<p>For more detail on the masked multi-head attention mechanism and how it&rsquo;s used in models like GPT, you can watch this video.</p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2024-06-15-run-llm-on-intel-igpu/" data-toggle="tooltip" data-placement="top" title="Run LLM on Intel Iris Xe GPU Using IEPX-LLM &#43; Ollama">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/gcp" title="gcp">
+                            gcp
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/mongo" title="mongo">
+                            mongo
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2025
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+</body>
+</html>

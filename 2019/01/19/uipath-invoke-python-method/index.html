@@ -26,6 +26,8 @@
     <meta property="twitter:description" content="simple demostration about how to implement python script invocation in UIPath" />
     
 
+    <meta property="og:url" content="http://akjamie.github.io/2019/01/19/UIPath-invoke-python-method/" />
+
     
     <meta property="twitter:card" content="summary" />
     
@@ -39,7 +41,7 @@
     <link rel="canonical" href="/2019/01/19/UIPath-invoke-python-method/">
 
     
-    
+
     
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
@@ -47,7 +49,7 @@
     <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
 
     
-    <link rel="stylesheet" href="/css/zanshang.css">
+    <link rel="stylesheet" href="/css/zanshang.min.css">
 
     
     <link rel="stylesheet" href="/css/font-awesome.all.min.css">
@@ -71,7 +73,6 @@
     
 
 </head>
-
 
 
 
@@ -370,6 +371,8 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
                 
 
 
+
+
             </div>
 
             
@@ -404,9 +407,13 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
                         
                         
                         
+                        
+                        
                         <a href="/tags/aws" title="aws">
                             aws
                         </a>
+                        
+                        
                         
                         
                         
@@ -451,6 +458,12 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
                         </a>
                         
                         
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
                         
                         
                         
@@ -518,6 +531,8 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
                         
                         
                         
+                        
+                        
                         <a href="/tags/vault" title="vault">
                             vault
                         </a>
@@ -553,7 +568,7 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <ul class="list-inline text-center">                  
+                <ul class="list-inline text-center">
                     
                     <li>
                         <a href="mailto:akjamie.zhang@outlook.com">
@@ -623,7 +638,7 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2024
+                    Copyright &copy; Jamie&#39;s Blog 2025
                     
                 </p>
             </div>
@@ -698,7 +713,7 @@ Input 为‘invoke python method’的返回对象，TypeArgument是要转化的
             n = $(this).prop('tagName').toLowerCase();
             i = "#" + $(this).prop('id');
             t = $(this).text();
-            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
             l = $('<li class="' + n + '_nav"></li>').append(c);
             $(selector).append(l);
         });

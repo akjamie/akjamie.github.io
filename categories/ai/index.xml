@@ -6,8 +6,15 @@
     <description>Recent content in AI on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 15 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 31 Aug 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/categories/ai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Understanding Transformer Architecture: The Foundation of Modern AI</title>
+      <link>http://akjamie.github.io/post/2025-08-31-learning-notes-transformer/</link>
+      <pubDate>Sun, 31 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2025-08-31-learning-notes-transformer/</guid>
+      <description>Introduction to Transformer Architecture In the rapidly evolving world of artificial intelligence, few innovations have been as transformative as the Transformer architecture. Introduced in the seminal 2017 paper &amp;ldquo;Attention is All You Need&amp;rdquo; by Vaswani et al., Transformers have become the backbone of virtually all state-of-the-art language models, including GPT-4, ChatGPT, and Google&amp;rsquo;s Bard.&#xA;But what exactly is a Transformer, and why has it revolutionized natural language processing? In this comprehensive guide, we&amp;rsquo;ll break down the Transformer architecture from the ground up, using clear explanations and visual diagrams to help you understand how these powerful models work.</description>
+    </item>
     <item>
       <title>Run LLM on Intel Iris Xe GPU Using IEPX-LLM &#43; Ollama</title>
       <link>http://akjamie.github.io/post/2024-06-15-run-llm-on-intel-igpu/</link>

@@ -27,6 +27,8 @@
     <meta property="twitter:description" content="Jamie，Senior Software Engineer, Open source enthusiasts, PMP, Scrum master" />
     
 
+    <meta property="og:url" content="http://akjamie.github.io/" />
+
     
     <meta property="twitter:card" content="summary" />
     
@@ -40,7 +42,7 @@
     <link rel="canonical" href="/">
 
     
-    
+
     
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
@@ -48,7 +50,7 @@
     <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
 
     
-    <link rel="stylesheet" href="/css/zanshang.css">
+    <link rel="stylesheet" href="/css/zanshang.min.css">
 
     
     <link rel="stylesheet" href="/css/font-awesome.all.min.css">
@@ -72,7 +74,6 @@
     
 
 </head>
-
 
 
 
@@ -198,6 +199,33 @@
 <div data-pagefind-ignore="all">
 
 <div class="post-preview">
+    <a href="http://akjamie.github.io/post/2022-06-23-redis-advance/">
+        <h2 class="post-title">
+            Redis advance I
+        </h2>
+	
+        <h3 class="post-subtitle">
+            Redis advanced knowledge
+        </h3>
+	
+        <div class="post-content-preview">
+	
+            Redis进阶知识总结
+        
+        </div>
+    </a>
+    <p class="post-meta">
+    
+        Posted by Jamie Zhang on Thursday, June 23, 2022
+        
+        
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="http://akjamie.github.io/post/2022-05-31-redis-basic-1/">
         <h2 class="post-title">
             Redis foundation - II
@@ -297,29 +325,6 @@
     <p class="post-meta">
     
         Posted by      &#34;Jamie Zhang&#34; on Saturday, May 8, 2021
-        
-        
-    
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="http://akjamie.github.io/post/2021-03-09-gcp-professional-cerified-architecture-prep/">
-        <h2 class="post-title">
-            How i prepare the Google Cloud Professional Cloud Architect Certificate
-        </h2>
-	
-        <div class="post-content-preview">
-	
-            Experience sharing
-        
-        </div>
-    </a>
-    <p class="post-meta">
-    
-        Posted by      &#34;Jamie Zhang&#34; on Tuesday, March 9, 2021
         
         
     
@@ -441,9 +446,13 @@
             
             
                
+            
+               
                     <a href="/tags/aws" title="aws">
                         aws
                     </a>
+               
+            
                
             
                
@@ -488,6 +497,12 @@
                     </a>
                
             
+               
+            
+               
+                    <a href="/tags/llm" title="llm">
+                        llm
+                    </a>
                
             
                
@@ -555,6 +570,8 @@
                
             
                
+            
+               
                     <a href="/tags/vault" title="vault">
                         vault
                     </a>
@@ -592,7 +609,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <ul class="list-inline text-center">                  
+                <ul class="list-inline text-center">
                     
                     <li>
                         <a href="mailto:akjamie.zhang@outlook.com">
@@ -662,7 +679,7 @@
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2024
+                    Copyright &copy; Jamie&#39;s Blog 2025
                     
                 </p>
             </div>
@@ -737,7 +754,7 @@
             n = $(this).prop('tagName').toLowerCase();
             i = "#" + $(this).prop('id');
             t = $(this).text();
-            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
             l = $('<li class="' + n + '_nav"></li>').append(c);
             $(selector).append(l);
         });
