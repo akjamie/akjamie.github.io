@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fine-Tune on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/fine-tune/</link>
+    <description>Recent content in Fine-Tune on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 02 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/fine-tune/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Learning Notes: Fine-Tuning Transformer Models</title>
+      <link>http://akjamie.github.io/post/2025-09-02-learning-notes-transformer-finetune/</link>
+      <pubDate>Tue, 02 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2025-09-02-learning-notes-transformer-finetune/</guid>
+      <description>Fine-Tuning Transformer Models: A Beginner&amp;rsquo;s Guide Fine-tuning is the process of adapting a pre-trained transformer model (like GPT, BERT, etc.) to a specific task or dataset. This blog will help you understand the basics, workflow, and best practices for fine-tuning.&#xA;What is Fine-Tuning? Pre-trained models learn general language patterns from massive datasets. Fine-tuning adapts these models to your specific task (e.g., sentiment analysis, Q&amp;amp;A, summarization) using a smaller, task-specific dataset. flowchart LR&#xD;A[Pre-trained Model] --&gt; B[Fine-tuning Process]&#xD;C[Task-specific Dataset] --&gt; B&#xD;B --&gt; D[Fine-tuned Model]&#xD;Why Fine-Tune?</description>
+    </item>
+  </channel>
+</rss>

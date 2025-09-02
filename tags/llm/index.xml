@@ -6,8 +6,15 @@
     <description>Recent content in LLM on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 31 Aug 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 02 Sep 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/tags/llm/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Learning Notes: Fine-Tuning Transformer Models</title>
+      <link>http://akjamie.github.io/post/2025-09-02-learning-notes-transformer-finetune/</link>
+      <pubDate>Tue, 02 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2025-09-02-learning-notes-transformer-finetune/</guid>
+      <description>Fine-Tuning Transformer Models: A Beginner&amp;rsquo;s Guide Fine-tuning is the process of adapting a pre-trained transformer model (like GPT, BERT, etc.) to a specific task or dataset. This blog will help you understand the basics, workflow, and best practices for fine-tuning.&#xA;What is Fine-Tuning? Pre-trained models learn general language patterns from massive datasets. Fine-tuning adapts these models to your specific task (e.g., sentiment analysis, Q&amp;amp;A, summarization) using a smaller, task-specific dataset. flowchart LR&#xD;A[Pre-trained Model] --&gt; B[Fine-tuning Process]&#xD;C[Task-specific Dataset] --&gt; B&#xD;B --&gt; D[Fine-tuned Model]&#xD;Why Fine-Tune?</description>
+    </item>
     <item>
       <title>Understanding Transformer Architecture: The Foundation of Modern AI</title>
       <link>http://akjamie.github.io/post/2025-08-31-learning-notes-transformer/</link>

@@ -2,37 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://akjamie.github.io/categories/ai/</loc>
-    <lastmod>2025-08-31T00:00:00+00:00</lastmod>
+    <loc>http://akjamie.github.io/tags/ai/</loc>
+    <lastmod>2025-09-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/tags/attention-mechanism/</loc>
-    <lastmod>2025-08-31T00:00:00+00:00</lastmod>
+    <loc>http://akjamie.github.io/categories/ai/</loc>
+    <lastmod>2025-09-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/categories/</loc>
-    <lastmod>2025-08-31T00:00:00+00:00</lastmod>
+    <lastmod>2025-09-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/post/test-highlight/</loc>
+    <loc>http://akjamie.github.io/categories/deep-learning/</loc>
+    <lastmod>2025-09-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/fine-tune/</loc>
+    <lastmod>2025-09-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/</loc>
+    <lastmod>2025-09-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/2025-09-02-learning-notes-transformer-finetune/</loc>
+    <lastmod>2025-09-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/llm/</loc>
+    <lastmod>2025-09-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/</loc>
+    <lastmod>2025-09-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/</loc>
+    <lastmod>2025-09-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/transformer/</loc>
+    <lastmod>2025-09-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/attention-mechanism/</loc>
     <lastmod>2025-08-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/deep-learning/</loc>
     <lastmod>2025-08-31T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/</loc>
-    <lastmod>2025-08-31T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/llm/</loc>
-    <lastmod>2025-08-31T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://akjamie.github.io/tags/machine-learning/</loc>
-    <lastmod>2025-08-31T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/post/</loc>
-    <lastmod>2025-08-31T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/</loc>
-    <lastmod>2025-08-31T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/transformer/</loc>
     <lastmod>2025-08-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/post/2025-08-31-learning-notes-transformer/</loc>

@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://akjamie.github.io//img/header-01.jpg">
-    <meta property="twitter:image" content="http://akjamie.github.io//img/header-01.jpg" />
+    <meta property="og:image" content="img/ai-01.jpg">
+    <meta property="twitter:image" content="img/ai-01.jpg" />
     
 
     
@@ -110,6 +110,10 @@
                         </li>
                         
                         <li>
+                            <a href="/categories/deep-learning/">deep learning</a>
+                        </li>
+                        
+                        <li>
                             <a href="/categories/microservice/">microservice</a>
                         </li>
                         
@@ -168,7 +172,7 @@
 
 <style type="text/css">
     header.intro-header {
-        background-image: url('/img/header-01.jpg')
+        background-image: url('/img/ai-01.jpg')
     }
 </style>
 
@@ -1145,12 +1149,64 @@ flowchart TB
         C --> D[Feed Forward Network]
         D --> E[Add & Norm]
         E --> F[Output]
+    end
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
         
-        A --> G[Residual Connection 1]
-        G --> C
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
         
-        C --> H[Residual Connection 2]
-        H --> E
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+
+<div class="mermaid">
+  
+flowchart LR
+    subgraph "Residual Connections"
+        G[Input] --> H[Attention Output]
+        G --> I[Residual to Add & Norm 1]
+        J[Add & Norm 1 Output] --> K[FFN Output]
+        J --> L[Residual to Add & Norm 2]
     end
 
 </div>
@@ -1213,11 +1269,60 @@ flowchart TB
         D --> E[Layer N]
         E --> F[Final Representations]
     end
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
     
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+
+<div class="mermaid">
+  
+flowchart TB
     subgraph "Inside Each Layer"
-        B --> G[Attention → Add & Norm → FFN → Add & Norm]
-        C --> H[Attention → Add & Norm → FFN → Add & Norm]
-        E --> I[Attention → Add & Norm → FFN → Add & Norm]
+        G[Attention → Add & Norm → FFN → Add & Norm]
     end
 
 </div>
@@ -1274,6 +1379,79 @@ flowchart TB
 <li>Later layers capture high-level meaning and context</li>
 </ul>
 <p>This hierarchical processing is what allows Transformers to understand complex language patterns and generate coherent text.</p>
+<h2 id="transformer-data-flow-visualization">Transformer Data Flow Visualization</h2>
+<p>To better understand how information flows through a Transformer, let&rsquo;s look at a complete visualization of the data processing pipeline:</p>
+
+<div class="mermaid">
+  
+flowchart TB
+    subgraph "Complete Transformer Data Flow"
+        A[Input Text] --> B[Tokenization]
+        B --> C[Token Embeddings]
+        C --> D[Positional Encoding]
+        D --> E[Embedding Layer]
+        E --> F[Decoder Layer 1]
+        F --> G[Decoder Layer 2]
+        G --> H["..."]
+        H --> I[Decoder Layer N]
+        I --> J[Output Probabilities]
+        J --> K[Next Token Prediction]
+    end
+    
+    subgraph "Inside a Decoder Layer"
+        L[Masked Attention]
+        L --> M[Add & Norm]
+        M --> N[FFN]
+        N --> O[Add & Norm]
+    end
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
 <h2 id="layers-and-layers-of-intelligence">Layers and Layers of Intelligence</h2>
 <p>Models like GPT-4 are not just one layer—they are a stack of these Transformer layers. While OpenAI has not released the exact details of GPT-4&rsquo;s architecture, it&rsquo;s widely believed to have a massive number of layers (possibly over 100) and an enormous number of parameters, which are the weights and biases the model learns during training.</p>
 <p>Each layer builds upon the representations learned by the previous layer, creating a hierarchical understanding of the text. The first layers might learn simple relationships between words, while the deeper layers can grasp complex concepts, long-range dependencies, and even a &ldquo;world model&rdquo; that allows them to reason and generate coherent text over long passages.</p>
@@ -1288,6 +1466,74 @@ flowchart TB
         D --> E["Layer N: Complex Semantics\nUnderstands context, implications,\nand can generate similar sentences"]
         E --> F[Final Output]
     end
+
+</div>
+<script>
+  function loadMermaid() {
+    if (typeof mermaid === 'undefined') {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
+      script.onload = function() {
+        
+        mermaid.initialize({
+          startOnLoad: true,
+          theme: 'default',
+          flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true
+          }
+        });
+        
+        
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0) {
+          mermaid.init(mermaidElements);
+        }
+      };
+      
+      
+      script.onerror = function(e) {
+        console.error('Failed to load Mermaid library', e);
+      };
+      
+      document.head.appendChild(script);
+    } else {
+      
+      const mermaidElements = document.querySelectorAll('.mermaid');
+      if (mermaidElements.length > 0) {
+        mermaid.init(mermaidElements);
+      }
+    }
+  }
+  
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadMermaid);
+  } else {
+    
+    window.setTimeout(loadMermaid, 0);
+  }
+</script>
+<h2 id="transformer-architecture-evolution">Transformer Architecture Evolution</h2>
+<p>Since the original Transformer was introduced in 2017, there have been many improvements and variations:</p>
+
+<div class="mermaid">
+  
+timeline
+    title Evolution of Transformer Architectures
+    section 2017
+    Attention is All You Need
+    section 2018
+    GPT-1: Decoder-only architecture
+    BERT: Encoder-only architecture
+    section 2019
+    GPT-2: Larger and more capable
+    section 2020
+    GPT-3: Massive scale
+    section 2021-2022
+    GPT-3.5: Instruction tuning
+    section 2023
+    GPT-4: Multimodal capabilities
 
 </div>
 <script>
@@ -1444,7 +1690,7 @@ flowchart LR
 </ol>
 <p>Understanding these concepts is crucial for anyone interested in modern AI and natural language processing. With this foundation, you can begin to explore more advanced topics like fine-tuning, prompt engineering, and even building your own Transformer models.</p>
 <p>I hope this has provided a clear, accessible introduction to this fascinating topic!</p>
-<p>For more detail on the masked multi-head attention mechanism and how it&rsquo;s used in models like GPT, you can watch this video.</p>
+<p>For more detail on the masked multi-head attention mechanism and how it&rsquo;s used in models like GPT, you can watch this <a href="https://www.youtube.com/watch?v=X6HWCoKdVo8">video</a>.</p>
 
 
                 
@@ -1500,7 +1746,7 @@ flowchart LR
                     
                     
                     <li class="next">
-                        <a href="/post/test-highlight/" data-toggle="tooltip" data-placement="top" title="Code Highlight Test">Next
+                        <a href="/post/2025-09-02-learning-notes-transformer-finetune/" data-toggle="tooltip" data-placement="top" title="Learning Notes: Fine-Tuning Transformer Models">Next
                             Post &rarr;</a>
                     </li>
                     
@@ -1548,6 +1794,8 @@ flowchart LR
                         
                         
                         
+                        
+                        
                         <a href="/tags/aws" title="aws">
                             aws
                         </a>
@@ -1571,6 +1819,8 @@ flowchart LR
                         <a href="/tags/docker" title="docker">
                             docker
                         </a>
+                        
+                        
                         
                         
                         
@@ -1667,6 +1917,10 @@ flowchart LR
                         </a>
                         
                         
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
                         
                         
                         
