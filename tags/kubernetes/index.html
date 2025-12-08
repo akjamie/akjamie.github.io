@@ -33,7 +33,8 @@
     
     
 
-    <meta name="keyword"  content="&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <title>Kubernetes | Jamie&#39;s Blog</title>
@@ -56,6 +57,8 @@
 
     
     
+    
+    
 
     
     <script src="/js/jquery.min.js"></script>
@@ -73,6 +76,7 @@
     
 
 </head>
+
 
 
 
@@ -111,6 +115,10 @@
                         
                         <li>
                             <a href="/categories/deep-learning/">deep learning</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/langchain/">langchain</a>
                         </li>
                         
                         <li>
@@ -212,9 +220,12 @@
 	
         <div class="post-content-preview">
 	
-            Complains about the CKA exam:
-The CKA exam environment was changed from Terminal to Remote Desktop(VNC) from Last Jun, this is an absolutely shit
-decision. The huge lagging causes that large amount of candidate&rsquo;s time-wasting on always-waiting, and also Mouse is nearly useless - very difficult to locate what you want on Firefox browser, and eventually it highlights the good user experience on the k8s built-in documentation - Kubectl explain, how ridiculous it is !
+            <blockquote>
+<p>Complains about the CKA exam:<br>
+The CKA exam environment was changed from Terminal to Remote Desktop(VNC) from Last Jun, this is an absolutely shit<br>
+decision. The huge lagging causes that large amount of candidate&rsquo;s time-wasting on always-waiting, and also Mouse is
+nearly useless - very difficult to locate what you want on Firefox browser, and eventually it highlights the good user
+experience on the k8s built-in documentation - <strong>Kubectl explain</strong>, how ridiculous it is !!!</p>
        
         </div>
     </a>
@@ -433,6 +444,8 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
                
             
                
+            
+               
                     <a href="/tags/aws" title="aws">
                         aws
                     </a>
@@ -461,10 +474,6 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
                
             
                
-                    <a href="/tags/gcp" title="gcp">
-                        gcp
-                    </a>
-               
             
                
             
@@ -487,6 +496,8 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
                
             
                
+            
+               
                     <a href="/tags/llm" title="llm">
                         llm
                     </a>
@@ -496,10 +507,6 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
             
                
             
-               
-                    <a href="/tags/mongo" title="mongo">
-                        mongo
-                    </a>
                
             
                
@@ -570,8 +577,6 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
             
                
             
-               
-            
         </div>
     </section>
     
@@ -585,6 +590,7 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
             
         </ul>
     </section>
+    
     
     
 </div>
@@ -786,24 +792,5 @@ decision. The huge lagging causes that large amount of candidate&rsquo;s time-wa
 
 
 
-<script>
-
-if (document.querySelector('.mermaid')) {
-  
-  var script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-  script.onload = function() {
-    
-    mermaid.initialize({ 
-      startOnLoad: true,
-      theme: 'default'
-    });
-  };
-  document.head.appendChild(script);
-}
-</script>
-
-</body>
-</html>
 </body>
 </html>

@@ -13,21 +13,21 @@
       <link>http://akjamie.github.io/post/2022-07-04-spring-websocket-stomp/</link>
       <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2022-07-04-spring-websocket-stomp/</guid>
-      <description>Background 最近在做一个类似于快速竞价的功能的技术设计，即在很短的时间内通过一个集中的平台拿到各家的报价，类似于支付宝上的那个车险报价，发送完汽车信息</description>
+      <description>&lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;&#xA;&lt;p&gt;最近在做一个类似于快速竞价的功能的技术设计，即在很短的时间内通过一个集中的平台拿到各家的报价，类似于支付宝上的那个车险报价，发送完汽车信息，得到各家保险公司的报价回复，然后可以选择某家性价比高的价格购买汽车保险。在设计的过程很快就想到了用websocket+stomp这种长链接和event-streaming 推送的方式，做了一些技术研究和验证，因此便记录这些零碎的知识便于以后查阅。&lt;/p&gt;</description>
     </item>
     <item>
       <title>Redis advance II</title>
       <link>http://akjamie.github.io/post/2022-06-28-redis-master-slave-replication/</link>
       <pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2022-06-28-redis-master-slave-replication/</guid>
-      <description>主从复制 基本概念 主机数据更新后根据配置和策略，自动同步到备份机的master/slave机制，其中master以写为主，而slave主要以读</description>
+      <description>&lt;h1 id=&#34;主从复制&#34;&gt;主从复制&lt;/h1&gt;&#xA;&lt;h2 id=&#34;基本概念&#34;&gt;基本概念&lt;/h2&gt;&#xA;&lt;p&gt;主机数据更新后根据配置和策略，自动同步到备份机的master/slave机制，其中master以写为主，而slave主要以读为主。 &lt;br&gt;&#xA;该机制使&lt;br&gt;&#xA;1》读写分离，性能获得提升&lt;br&gt;&#xA;2》容灾快速恢复&lt;/p&gt;</description>
     </item>
     <item>
       <title>Kubernates - Practice</title>
       <link>http://akjamie.github.io/post/2020-11-29-run-application-on-k8s/</link>
       <pubDate>Sun, 29 Nov 2020 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2020-11-29-run-application-on-k8s/</guid>
-      <description>this page shows how to run a spring boot application on local K8S environment.&#xA;Objectives 1.create spring boot application and build a docker image&#xA;2.create local persistent volume to share the files from host&#xA;3.create deployment and service to run this application and expose for external access.&#xA;Before you begin install docker desktop in local and enable local k8s cluster, more details please refer to docker official guide or k8s local cluster setup guide.</description>
+      <description>&lt;p&gt;this page shows how to run a spring boot application on local K8S environment.&lt;/p&gt;&#xA;&lt;h1 id=&#34;objectives&#34;&gt;Objectives&lt;/h1&gt;&#xA;&lt;p&gt;1.create spring boot application and build a docker image&lt;br&gt;&#xA;2.create local persistent volume to share the files from host&lt;br&gt;&#xA;3.create deployment and service to run this application and expose for external access.&lt;/p&gt;&#xA;&lt;h1 id=&#34;before-you-begin&#34;&gt;Before you begin&lt;/h1&gt;&#xA;&lt;p&gt;install docker desktop in local and enable local k8s cluster, more details please refer to docker official guide or k8s local&#xA;cluster setup &lt;a href=&#34;https://kubernetes.io/docs/tasks/tools/&#34;&gt;guide&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

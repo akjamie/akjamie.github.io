@@ -13,14 +13,14 @@
       <link>http://akjamie.github.io/post/2023-03-26-vault-agent-with-k8s/</link>
       <pubDate>Sun, 26 Mar 2023 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2023-03-26-vault-agent-with-k8s/</guid>
-      <description>Challenge Nearly all requests to Vault must be accompanied by an authentication token. This includes all API requests, as well as via the Vault CLI and other libraries. If you can securely get the first secret from an originator to a consumer, all subsequent secrets transmitted between this originator and consumer can be authenticated with the trust established by the successful distribution and user of that first secret.&#xA;The applications running in a Kubernetes environment is no exception.</description>
+      <description>&lt;h1 id=&#34;challenge&#34;&gt;Challenge&lt;/h1&gt;&#xA;&lt;p&gt;Nearly all requests to Vault must be accompanied by an authentication token. This includes all API requests, as well as&#xA;via the Vault CLI and other libraries. If you can securely get the first secret from an originator to a consumer,&#xA;all subsequent secrets transmitted between this originator and consumer can be authenticated with the trust&#xA;established by the successful distribution and user of that first secret.&lt;/p&gt;&#xA;&lt;p&gt;The applications running in a Kubernetes environment is no exception. Luckily, Vault provides Kubernetes auth method to&#xA;authenticate the clients using a Kubernetes Service Account Token.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Vault on Kubernetes</title>
       <link>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</link>
       <pubDate>Sat, 25 Mar 2023 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2023-03-25-vault-on-k8s/</guid>
-      <description>What is Vault? Vault introduction HashiCorp Vault is an identity-based secrets and encryption management system. A secret is anything that you want to tightly&#xA;control access to, such as API encryption keys, passwords, and certificates. Vault provides encryption services that are gated by authentication and authorization methods.Using Vault’s UI, CLI, or HTTP API, access to secrets and other sensitive data can be securely stored and managed, tightly controlled (restricted), and auditable.</description>
+      <description>&lt;h1 id=&#34;what-is-vault&#34;&gt;What is Vault?&lt;/h1&gt;&#xA;&lt;h2 id=&#34;vault-introduction&#34;&gt;Vault introduction&lt;/h2&gt;&#xA;&lt;p&gt;HashiCorp Vault is an identity-based secrets and encryption management system. A secret is anything that you want to tightly&lt;br&gt;&#xA;control access to, such as API encryption keys, passwords, and certificates. Vault provides encryption services that are gated&#xA;by authentication and authorization methods.Using Vault’s UI, CLI, or HTTP API, access to secrets and other sensitive data&#xA;can be securely stored and managed, tightly controlled (restricted), and auditable.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

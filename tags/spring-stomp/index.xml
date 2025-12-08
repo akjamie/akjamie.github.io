@@ -13,7 +13,7 @@
       <link>http://akjamie.github.io/post/2022-07-04-spring-websocket-stomp/</link>
       <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2022-07-04-spring-websocket-stomp/</guid>
-      <description>Background 最近在做一个类似于快速竞价的功能的技术设计，即在很短的时间内通过一个集中的平台拿到各家的报价，类似于支付宝上的那个车险报价，发送完汽车信息</description>
+      <description>&lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;&#xA;&lt;p&gt;最近在做一个类似于快速竞价的功能的技术设计，即在很短的时间内通过一个集中的平台拿到各家的报价，类似于支付宝上的那个车险报价，发送完汽车信息，得到各家保险公司的报价回复，然后可以选择某家性价比高的价格购买汽车保险。在设计的过程很快就想到了用websocket+stomp这种长链接和event-streaming 推送的方式，做了一些技术研究和验证，因此便记录这些零碎的知识便于以后查阅。&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

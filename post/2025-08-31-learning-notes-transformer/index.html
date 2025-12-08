@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="img/ai-01.jpg">
-    <meta property="twitter:image" content="img/ai-01.jpg" />
+    <meta property="og:image" content="http://akjamie.github.io/img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io/img/ai-01.jpg" />
     
 
     
@@ -33,7 +33,8 @@
     
     
 
-    <meta name="keyword"  content="&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <title>Understanding Transformer Architecture: The Foundation of Modern AI | Jamie&#39;s Blog</title>
@@ -56,6 +57,8 @@
 
     
     
+    
+    
 
     
     <script src="/js/jquery.min.js"></script>
@@ -73,6 +76,7 @@
     
 
 </head>
+
 
 
 
@@ -111,6 +115,10 @@
                         
                         <li>
                             <a href="/categories/deep-learning/">deep learning</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/langchain/">langchain</a>
                         </li>
                         
                         <li>
@@ -169,57 +177,14 @@
 
 
 
-
-<style type="text/css">
-    header.intro-header {
-        background-image: url('/img/ai-01.jpg')
-    }
-</style>
-
-<header class="intro-header" >
-
+<header class="intro-header" style="background-image: url('/img/header-01.jpg')">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <div class="tags">
-                        
-                        <a class="tag" href="/tags/llm" title="LLM">
-                            LLM
-                        </a>
-                        
-                        <a class="tag" href="/tags/transformer" title="Transformer">
-                            Transformer
-                        </a>
-                        
-                        <a class="tag" href="/tags/machine-learning" title="Machine Learning">
-                            Machine Learning
-                        </a>
-                        
-                        <a class="tag" href="/tags/deep-learning" title="Deep Learning">
-                            Deep Learning
-                        </a>
-                        
-                        <a class="tag" href="/tags/attention-mechanism" title="Attention Mechanism">
-                            Attention Mechanism
-                        </a>
-                        
-                    </div>
-                    <h1>Understanding Transformer Architecture: The Foundation of Modern AI</h1>
-                    <h2 class="subheading">A Comprehensive Guide to Attention Mechanisms and How They Power LLMs Like GPT</h2>
-                    <span class="meta">
-                        
-                            Posted by 
-                            
-                                Jamie Zhang
-                             
-                            on 
-                            Sunday, August 31, 2025
-                            
-                            
-                            
-                            
-                    </span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>Jamie&#39;s Blog </h1>
+                    
+		    <span class="subheading">Building the future, one line of code at a time.</span>
                 </div>
             </div>
         </div>
@@ -232,14 +197,14 @@
 <article>
     <div class="container">
         <div class="row">
-
             
             <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                post-container">
-
-                
+            col-lg-8 col-lg-offset-1
+            col-md-8 col-md-offset-1
+            col-sm-12
+            col-xs-12
+            post-container">
+            
                 <h1 id="introduction-to-transformer-architecture">Introduction to Transformer Architecture</h1>
 <p>In the rapidly evolving world of artificial intelligence, few innovations have been as transformative as the <strong>Transformer architecture</strong>. Introduced in the seminal 2017 paper <a href="https://arxiv.org/abs/1706.03762">&ldquo;Attention is All You Need&rdquo;</a> by Vaswani et al., Transformers have become the backbone of virtually all state-of-the-art language models, including GPT-4, ChatGPT, and Google&rsquo;s Bard.</p>
 <p>But what exactly is a Transformer, and why has it revolutionized natural language processing? In this comprehensive guide, we&rsquo;ll break down the Transformer architecture from the ground up, using clear explanations and visual diagrams to help you understand how these powerful models work.</p>
@@ -639,6 +604,10 @@ flowchart TB
 </script>
 <h2 id="understanding-input-processing-embeddings">Understanding Input Processing: Embeddings</h2>
 <p>Before we dive into the layers and attention mechanisms, let&rsquo;s understand how text is prepared for processing by the Transformer model.</p>
+<blockquote>
+<p><strong>2025 Update:</strong><br>
+Most state-of-the-art models now use <strong>rotary positional embeddings</strong> (RoPE) or dynamic position encodings, which better capture relative positions and scale to longer contexts than the original sinusoidal method.</p>
+</blockquote>
 <h3 id="token-embeddings">Token Embeddings</h3>
 <p>When you input text to a Transformer model, the first step is to convert each word (or subword) into a numerical representation called an <strong>embedding</strong>. Think of an embedding as a list of numbers that capture the meaning of a word.</p>
 <p>For example, the word &ldquo;cat&rdquo; might be represented as a list like [0.2, -0.4, 0.7, &hellip;] with hundreds or thousands of numbers. Words with similar meanings will have similar embedding values.</p>
@@ -936,6 +905,10 @@ flowchart TB
     window.setTimeout(loadMermaid, 0);
   }
 </script>
+<blockquote>
+<p><strong>2025 Update:</strong><br>
+Some models now use <strong>hybrid attention architectures</strong> (e.g., combining attention with state space models) to further improve efficiency and context length.</p>
+</blockquote>
 <p>In practice, models like GPT typically use 12 or more attention heads. Each head develops its own specialization through training, and together they provide a much richer understanding of the text than a single attention mechanism could.</p>
 <h3 id="why-is-it-masked">Why is it &ldquo;Masked&rdquo;?</h3>
 <p>This is the key difference for a generative model like GPT. During training, the model needs to learn to predict the next word. To prevent it from &ldquo;cheating&rdquo; and looking at the words that come after the current word, a mask is applied. This mask essentially hides future words in the sequence, ensuring that the model only uses the words it has already &ldquo;seen&rdquo; to make its prediction.</p>
@@ -1452,19 +1425,113 @@ flowchart TB
     window.setTimeout(loadMermaid, 0);
   }
 </script>
-<h2 id="layers-and-layers-of-intelligence">Layers and Layers of Intelligence</h2>
-<p>Models like GPT-4 are not just one layer—they are a stack of these Transformer layers. While OpenAI has not released the exact details of GPT-4&rsquo;s architecture, it&rsquo;s widely believed to have a massive number of layers (possibly over 100) and an enormous number of parameters, which are the weights and biases the model learns during training.</p>
-<p>Each layer builds upon the representations learned by the previous layer, creating a hierarchical understanding of the text. The first layers might learn simple relationships between words, while the deeper layers can grasp complex concepts, long-range dependencies, and even a &ldquo;world model&rdquo; that allows them to reason and generate coherent text over long passages.</p>
+<h2 id="anatomy-of-a-modern-llm-parameter-calculation-and-mixture-of-experts-moe">Anatomy of a Modern LLM: Parameter Calculation and Mixture of Experts (MoE)</h2>
+<p>A common misconception is that the self-attention mechanism holds the most parameters. In reality, the vast majority of parameters are in the <strong>Feed-Forward Networks (FFNs)</strong>. This insight is key to understanding one of the most important recent innovations in LLM architecture: the <strong>Mixture of Experts (MoE)</strong>.</p>
+<blockquote>
+<p><strong>2025 Update:</strong><br>
+MoE is now standard in most frontier models (GPT-4.5, DeepSeek-V2, Gemini Ultra, etc.), enabling efficient scaling to hundreds of billions of parameters without proportional increases in inference cost.</p>
+</blockquote>
+<p>Let&rsquo;s demystify this with a concrete example inspired by a modern MoE model like <strong>DeepSeek-V2</strong>.</p>
+<h3 id="how-many-layers-it-depends">How Many Layers? It Depends!</h3>
+<p>First, it&rsquo;s important to know that there&rsquo;s no single answer for the number of layers in an LLM. It&rsquo;s a key architectural choice that scales with the model&rsquo;s size. For example:</p>
+<ul>
+<li><strong>Llama 3 8B</strong> has <strong>32 layers</strong>.</li>
+<li><strong>Llama 3 70B</strong> has <strong>80 layers</strong>.</li>
+<li><strong>DeepSeek-V2</strong> has <strong>60 layers</strong>.</li>
+</ul>
+<p>More layers allow the model to build up more complex and abstract representations of the data.</p>
+<h3 id="parameter-breakdown-a-deepseek-v2-inspired-moe-model">Parameter Breakdown: A DeepSeek-V2-Inspired MoE Model</h3>
+<p>Let&rsquo;s design a hypothetical MoE model to see where the parameters are.</p>
+<p><strong>Key Architectural Specs:</strong></p>
+<ul>
+<li><strong>Total Layers (<code>n_layers</code>)</strong>: 60</li>
+<li><strong>Hidden Dimension (<code>d_model</code>)</strong>: 4096 (the main vector size)</li>
+<li><strong>Vocabulary Size (<code>vocab_size</code>)</strong>: 100,000</li>
+<li><strong>MoE Layers</strong>: MoE is applied to the FFNs in <strong>every other layer</strong> (30 MoE layers in total).</li>
+<li><strong>Number of Experts (<code>n_experts</code>)</strong>: 64 per MoE layer.</li>
+<li><strong>Active Experts (<code>n_routed_experts</code>)</strong>: 6 (only 6 are used for any given token).</li>
+</ul>
+<p>The model&rsquo;s parameters are split into two main categories: <strong>Shared Parameters</strong> (used by every token) and <strong>Expert Parameters</strong> (used selectively).</p>
+<h4 id="1-shared-parameters-the-backbone">1. Shared Parameters (The Backbone)</h4>
+<p>These are the parts of the model that are always active.</p>
+<ul>
+<li>
+<p><strong>Token Embeddings</strong>: Converts input tokens to vectors.</p>
+<ul>
+<li><code>vocab_size * d_model</code> = 100,000 * 4096 = <strong>410 Million</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Attention Blocks</strong>: Every layer has a self-attention mechanism. We&rsquo;ll use Grouped-Query Attention (GQA) for realism, which has separate projections for Query (Q), Key (K), and Value (V).</p>
+<ul>
+<li><strong>How is &ldquo;Attention parameters per layer ≈ 42 Million&rdquo; calculated?</strong>
+<ul>
+<li>In a standard multi-head attention, the parameter count is roughly <code>4 * d_model^2</code> (for Q, K, V, and output projections). For <code>d_model = 4096</code>, that&rsquo;s <code>4 * 4096^2 = 67M</code>.</li>
+<li>However, modern models use optimizations like GQA, multi-query attention, shared projections, or reduced head sizes, which typically bring this down to about <strong>42M per layer</strong> or even lower in practice (sometimes &lt;30M).</li>
+<li><strong>Architect&rsquo;s note:</strong> The exact number depends on implementation details (e.g., grouped-query, parameter sharing, or low-rank projections).</li>
+</ul>
+</li>
+<li>Total for all 60 layers: <code>60 * 42M</code> = <strong>2.5 Billion</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Total Shared Parameters</strong>: <code>0.41B (Embeddings) + 2.5B (Attention)</code> = <strong>~2.9 Billion</strong></p>
+</li>
+</ul>
+<p>These ~3B parameters form the model&rsquo;s backbone, handling the sequence processing and context-gathering for every token.</p>
+<h4 id="2-expert-parameters-the-knowledge-store">2. Expert Parameters (The Knowledge Store)</h4>
+<p>This is where the MoE architecture comes into play. Instead of one FFN per layer, we have many.</p>
+<ul>
+<li><strong>FFN / Expert Size</strong>: Each expert is a standard Feed-Forward Network.
+<ul>
+<li><strong>How is &ldquo;Parameters per expert ≈ 117 Million&rdquo; calculated?</strong>
+<ul>
+<li>Each FFN/expert has two weight matrices: input-to-hidden and hidden-to-output.</li>
+<li>Formula: <code>2 * d_model * ffn_dim</code>. If <code>ffn_dim = 3.5 * d_model</code>, then <code>2 * 4096 * (3.5 * 4096) = 117M</code>.</li>
+<li>If <code>ffn_dim = 4 * d_model</code>, the count would be <code>134M</code>—the actual multiplier is a design choice.</li>
+<li><strong>Architect&rsquo;s note:</strong> The FFN (expert) is the main parameter consumer in large LLMs.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Experts per MoE Layer</strong>: We have 64 of these experts.
+<ul>
+<li><code>64 experts * 117M params/expert</code> = <strong>7.5 Billion</strong> parameters in just one MoE layer&rsquo;s FFN block!</li>
+</ul>
+</li>
+<li><strong>Total Expert Parameters</strong>: We have 30 MoE layers in our model.
+<ul>
+<li><code>30 layers * 7.5B params/layer</code> = <strong>225 Billion</strong></li>
+</ul>
+</li>
+</ul>
 
 <div class="mermaid">
   
-flowchart TB
-    subgraph "Progressive Understanding Through Layers"
-        A["Input: The cat sat on the mat"] --> B["Layer 1: Basic Syntax\nRecognizes word order and grammar"]
-        B --> C["Layer 2: Word Relationships\nUnderstands that 'cat' performs 'sat'"]
-        C --> D["Layer 3: Sentence Structure\nGrasps meaning of prepositional phrases"]
-        D --> E["Layer N: Complex Semantics\nUnderstands context, implications,\nand can generate similar sentences"]
-        E --> F[Final Output]
+graph TD
+    subgraph "MoE Transformer Layer"
+        A[Input from Attention] --> B{Router};
+        B -- "Chooses 6" --> C[Expert 1];
+        B --> D[Expert 2];
+        B --> E[...];
+        B --> F[Expert 64];
+        
+        subgraph "Selected Experts for one Token"
+            C --> G((Combine Outputs));
+            D -- "e.g." --> G;
+            style D fill:#f9f,stroke:#333,stroke-width:2px
+            style C fill:#f9f,stroke:#333,stroke-width:2px
+            style H fill:#f9f,stroke:#333,stroke-width:2px
+            style I fill:#f9f,stroke:#333,stroke-width:2px
+            style J fill:#f9f,stroke:#333,stroke-width:2px
+            style K fill:#f9f,stroke:#333,stroke-width:2px
+            H("Expert 12") --> G;
+            I("Expert 28") --> G;
+            J("Expert 45") --> G;
+            K("Expert 51") --> G;
+        end
+
+        G --> L[Output of Layer];
     end
 
 </div>
@@ -1514,26 +1581,42 @@ flowchart TB
     window.setTimeout(loadMermaid, 0);
   }
 </script>
+<p><strong>Summary for architects:</strong></p>
+<ul>
+<li>The majority of parameters in a modern LLM are in the FFN/experts, not attention.</li>
+<li>Attention parameter count per layer is implementation-dependent (67M naive, ~42M with optimizations, sometimes lower with MQA/GQA).</li>
+<li>FFN/expert parameter count is set by <code>2 * d_model * ffn_dim</code> (e.g., 117M for 3.5× width).</li>
+<li>Design choices (like GQA, expert width, and number of experts) have a direct, order-of-magnitude impact on model size and compute.</li>
+<li><strong>2025 Note:</strong> Inference-time optimizations like speculative decoding, quantization, and efficient batching are now standard for production LLMs.</li>
+</ul>
 <h2 id="transformer-architecture-evolution">Transformer Architecture Evolution</h2>
 <p>Since the original Transformer was introduced in 2017, there have been many improvements and variations:</p>
+<blockquote>
+<p><strong>2025 Update:</strong><br>
+Recent research explores <strong>state space models</strong> (SSMs), <strong>hybrid attention/state space layers</strong>, and <strong>dynamic routing</strong> for even longer context and better efficiency. Some models now mix attention and SSM blocks within the same architecture.</p>
+</blockquote>
 
 <div class="mermaid">
   
 timeline
     title Evolution of Transformer Architectures
     section 2017
-    Attention is All You Need
+    Attention is All You Need (Original Transformer)
     section 2018
     GPT-1: Decoder-only architecture
     BERT: Encoder-only architecture
     section 2019
     GPT-2: Larger and more capable
     section 2020
-    GPT-3: Massive scale
+    GPT-3: Massive scale, early use of rotary embeddings
     section 2021-2022
-    GPT-3.5: Instruction tuning
+    GPT-3.5: Instruction tuning, efficient attention (GQA/MQA)
     section 2023
-    GPT-4: Multimodal capabilities
+    GPT-4 & MoE: Multimodal, MoE mainstream, longer context
+    section 2024
+    DeepSeek-V2, Gemini Ultra: MoE everywhere, grouped-query attention, 128k+ context, rotary/dynamic position encoding
+    section 2025
+    State Space Models (SSMs), Hybrid Attention/SSM Layers, Dynamic Routing, Efficient Inference (speculative decoding, quantization)
 
 </div>
 <script>
@@ -1586,35 +1669,35 @@ timeline
 <p>The Transformer architecture, with its reliance on the attention mechanism, has solved the key limitations of previous models by allowing for parallel processing and a superior ability to capture long-range dependencies.</p>
 <h3 id="transformer-vs-rnn">Transformer vs. RNN</h3>
 <table>
-<thead>
-<tr>
-<th>Aspect</th>
-<th>RNN</th>
-<th>Transformer</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Processing</td>
-<td>Sequential</td>
-<td>Parallel</td>
-</tr>
-<tr>
-<td>Speed</td>
-<td>Slow</td>
-<td>Fast</td>
-</tr>
-<tr>
-<td>Long-range dependencies</td>
-<td>Difficult</td>
-<td>Easy</td>
-</tr>
-<tr>
-<td>Training</td>
-<td>Time-consuming</td>
-<td>Efficient</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Aspect</th>
+          <th>RNN</th>
+          <th>Transformer</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Processing</td>
+          <td>Sequential</td>
+          <td>Parallel</td>
+      </tr>
+      <tr>
+          <td>Speed</td>
+          <td>Slow</td>
+          <td>Fast</td>
+      </tr>
+      <tr>
+          <td>Long-range dependencies</td>
+          <td>Difficult</td>
+          <td>Easy</td>
+      </tr>
+      <tr>
+          <td>Training</td>
+          <td>Time-consuming</td>
+          <td>Efficient</td>
+      </tr>
+  </tbody>
 </table>
 <p>The Transformer&rsquo;s parallel processing makes it much faster and more efficient to train than the sequential RNN. The attention mechanism also helps it overcome the vanishing gradient problem, enabling it to handle much longer sequences of text effectively.</p>
 <h3 id="transformer-vs-ffn">Transformer vs. FFN</h3>
@@ -1677,6 +1760,10 @@ flowchart LR
 </script>
 <h2 id="conclusion">Conclusion</h2>
 <p>Models like GPT-4 and the upcoming GPT-5 are simply massive, highly-tuned versions of this same basic architecture, proving that the Transformer is a truly scalable and powerful foundation for the future of AI.</p>
+<blockquote>
+<p><strong>2025 Perspective:</strong><br>
+The Transformer remains the backbone of LLMs, but the field is rapidly evolving. Expect to see more hybrid models, longer context windows, and smarter routing mechanisms in the next generation of AI systems.</p>
+</blockquote>
 <p>The key innovations that make Transformers so powerful are:</p>
 <ol>
 <li><strong>Self-Attention</strong>: The ability to weigh the importance of different words in a sequence</li>
@@ -1691,265 +1778,286 @@ flowchart LR
 <p>Understanding these concepts is crucial for anyone interested in modern AI and natural language processing. With this foundation, you can begin to explore more advanced topics like fine-tuning, prompt engineering, and even building your own Transformer models.</p>
 <p>I hope this has provided a clear, accessible introduction to this fascinating topic!</p>
 <p>For more detail on the masked multi-head attention mechanism and how it&rsquo;s used in models like GPT, you can watch this <a href="https://www.youtube.com/watch?v=X6HWCoKdVo8">video</a>.</p>
+<h2 id="further-reading--resources">Further Reading &amp; Resources</h2>
+<ul>
+<li><a href="https://arxiv.org/abs/1706.03762">Attention is All You Need (original paper)</a></li>
+<li><a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer (blog)</a></li>
+<li><a href="https://arxiv.org/abs/2111.00396">State Space Models for Sequence Modeling (overview)</a></li>
+<li><a href="https://huggingface.co/docs/transformers/index">HuggingFace Transformers (library &amp; tutorials)</a></li>
+<li><a href="https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard">Open LLM Leaderboard</a></li>
+<li><a href="https://platform.deepseek.com/">DeepSeek LLM Playground</a></li>
+<li><a href="https://ai.meta.com/llama/">Llama 3 Model Card</a></li>
+<li><a href="https://mistral.ai/news/announcing-mistral-7b/">Mistral AI Models</a></li>
+</ul>
+<p><strong>Hands-on suggestion:</strong><br>
+Try running a small transformer model using HuggingFace Transformers, or experiment with open-source LLMs like Llama or Mistral in a notebook or playground.</p>
+<p><strong>Glossary:</strong></p>
+<ul>
+<li><strong>GQA/MQA</strong>: Grouped/Multi-Query Attention, efficient attention variants.</li>
+<li><strong>MoE</strong>: Mixture of Experts, a way to scale models efficiently.</li>
+<li><strong>Rotary Embeddings</strong>: A positional encoding method for long context.</li>
+<li><strong>SSM</strong>: State Space Model, an alternative or complement to attention.</li>
+<li><strong>Speculative Decoding</strong>: An inference-time speedup technique.</li>
+</ul>
+
+            
+             
+            
 
 
-                
-                
-<div class="entry-shang text-center">
+
+
+            
+            </div>
+            
+            
+
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
     
-	    <p>「真诚赞赏，手留余香」</p>
 	
-	<button class="zs show-zs btn btn-bred">赞赏支持</button>
-</div>
-<div class="zs-modal-bg"></div>
-<div class="zs-modal-box">
-	<div class="zs-modal-head">
-		<button type="button" class="close">×</button>
-		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
-        
-	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
-		
- 
-	</div>
-	<div class="zs-modal-body">
-		<div class="zs-modal-btns">
-			<button class="btn btn-blink" data-num="2">2元</button>
-			<button class="btn btn-blink" data-num="5">5元</button>
-			<button class="btn btn-blink" data-num="10">10元</button>
-			<button class="btn btn-blink" data-num="50">50元</button>
-			<button class="btn btn-blink" data-num="100">100元</button>
-			<button class="btn btn-blink" data-num="1">任意金额</button>
-		</div>
-		<div class="zs-modal-pay">
-			<button class="btn btn-bred" id="pay-text">2元</button>
-			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
-			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
-		</div>
-	</div>
-	<div class="zs-modal-footer">
-		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
-		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
-	</div>
-</div>
-<script type="text/javascript" src="/js/reward.js"></script>
-
-                
-
-                
-                <hr>
-                <ul class="pager">
-                    
-                    <li class="previous">
-                        <a href="/post/2024-06-15-run-llm-on-intel-igpu/" data-toggle="tooltip" data-placement="top" title="Run LLM on Intel Iris Xe GPU Using IEPX-LLM &#43; Ollama">&larr;
-                            Previous Post</a>
-                    </li>
-                    
-                    
-                    <li class="next">
-                        <a href="/post/2025-09-02-learning-notes-transformer-finetune/" data-toggle="tooltip" data-placement="top" title="Learning Notes: Fine-Tuning Transformer Models">Next
-                            Post &rarr;</a>
-                    </li>
-                    
+    <section class="visible-md visible-lg">
+	
+        <div class="short-about">
+            
+            <a href="/about">
+               <img src="/img/20190713213835-3.jpg" alt="avatar" style="cursor: pointer" />
+            </a>
+            
+            
+                <p>Senior Software Engineer, Open source enthusiasts, PMP, Scrum master</p>
+            
+           
+           <ul class="list-inline">
+               
+               <li>
+                   <a href="mailto:akjamie.zhang@outlook.com">
+                      <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                      </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               
+               
+               <li>
+                   <a target="_blank" href="/img/wechat-qrcode.png">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               <li>
+                   <a target="_blank" href="https://github.com/akjamie">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               <li>
+                   <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               
+            
+            
+               
+               
+               
+               
                 </ul>
-                
-
-                
-
-
-
-
             </div>
-
+    </section>
+	
+    
+    
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FEATURED TAGS</h5>
+        <div class="tags">
             
             
-            <div class="
-                col-lg-2 col-lg-offset-0
-                visible-lg-block
-                sidebar-container
-                catalog-container">
-                <div class="side-catalog">
-                    <hr class="hidden-sm hidden-xs">
-                    <h5>
-                        <a class="catalog-toggle" href="#">CATALOG</a>
-                    </h5>
-                    <ul class="catalog-body"></ul>
-                </div>
-            </div>
+               
             
-
+               
             
-            <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                sidebar-container">
+               
+            
+               
+                    <a href="/tags/aws" title="aws">
+                        aws
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/docker" title="docker">
+                        docker
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/k8s" title="k8s">
+                        k8s
+                    </a>
+               
+            
+               
+                    <a href="/tags/kubernetes" title="kubernetes">
+                        kubernetes
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/llm" title="llm">
+                        llm
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/nosql" title="nosql">
+                        nosql
+                    </a>
+               
+            
+               
+            
+               
+                    <a href="/tags/python" title="python">
+                        python
+                    </a>
+               
+            
+               
+                    <a href="/tags/redis" title="redis">
+                        redis
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/spring" title="spring">
+                        spring
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/spring-cloud" title="spring cloud">
+                        spring cloud
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/transaction-management" title="transaction management">
+                        transaction management
+                    </a>
+               
+            
+               
+                    <a href="/tags/transformer" title="transformer">
+                        transformer
+                    </a>
+               
+            
+               
+            
+               
+                    <a href="/tags/vault" title="vault">
+                        vault
+                    </a>
+               
+            
+               
+            
+        </div>
+    </section>
+    
 
-                
-                
-                <section>
-                    <hr class="hidden-sm hidden-xs">
-                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
-                    <div class="tags">
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/aws" title="aws">
-                            aws
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/docker" title="docker">
-                            docker
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/gcp" title="gcp">
-                            gcp
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/k8s" title="k8s">
-                            k8s
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/kubernetes" title="kubernetes">
-                            kubernetes
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/llm" title="llm">
-                            llm
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/mongo" title="mongo">
-                            mongo
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/nosql" title="nosql">
-                            nosql
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/python" title="python">
-                            python
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/redis" title="redis">
-                            redis
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/spring" title="spring">
-                            spring
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/spring-cloud" title="spring cloud">
-                            spring cloud
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/transaction-management" title="transaction management">
-                            transaction management
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/transformer" title="transformer">
-                            transformer
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/vault" title="vault">
-                            vault
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                    </div>
-                </section>
-                
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FRIENDS</h5>
+        <ul class="list-inline">
+            
+        </ul>
+    </section>
+    
+    
+    
+</div>
 
-                
-                
-                <section>
-                    <hr>
-                    <h5>FRIENDS</h5>
-                    <ul class="list-inline">
-                        
-                    </ul>
-                </section>
-                
-            </div>
         </div>
     </div>
 </article>
@@ -2147,24 +2255,5 @@ flowchart LR
 
 
 
-<script>
-
-if (document.querySelector('.mermaid')) {
-  
-  var script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-  script.onload = function() {
-    
-    mermaid.initialize({ 
-      startOnLoad: true,
-      theme: 'default'
-    });
-  };
-  document.head.appendChild(script);
-}
-</script>
-
-</body>
-</html>
 </body>
 </html>

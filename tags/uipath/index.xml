@@ -13,7 +13,7 @@
       <link>http://akjamie.github.io/2019/01/19/UIPath-invoke-python-method/</link>
       <pubDate>Sat, 19 Jan 2019 12:10:27 +0000</pubDate>
       <guid>http://akjamie.github.io/2019/01/19/UIPath-invoke-python-method/</guid>
-      <description>UIPath是一个非常不错的RPA(Robotic Process Automation) 工具和平台，并且有开源社区版本可以方便RPA爱好者去尝试，本文是介绍如何在UIPath</description>
+      <description>&lt;p&gt;UIPath是一个非常不错的RPA(Robotic Process Automation) 工具和平台，并且有开源社区版本可以方便RPA爱好者去尝试，本文是介绍如何在UIPath下调用python的脚本中的方法并提取返回值&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

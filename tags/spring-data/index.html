@@ -33,7 +33,8 @@
     
     
 
-    <meta name="keyword"  content="&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <title>Spring Data | Jamie&#39;s Blog</title>
@@ -56,6 +57,8 @@
 
     
     
+    
+    
 
     
     <script src="/js/jquery.min.js"></script>
@@ -73,6 +76,7 @@
     
 
 </head>
+
 
 
 
@@ -111,6 +115,10 @@
                         
                         <li>
                             <a href="/categories/deep-learning/">deep learning</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/langchain/">langchain</a>
                         </li>
                         
                         <li>
@@ -212,15 +220,16 @@
 	
         <div class="post-content-preview">
 	
-            What is JPA? &ldquo;The Java Persistence API is the Java API for the management of persistence and object/relational mapping in Java EE and Java SE environments. It provides an object/relational mapping facility for the Java application developer using a Java domain model to manage a relational database.&rdquo;
-It&rsquo;s quoted from JSR(Java Specification Request) managed by Java Community Process.
-This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persist data before adopting JPA.
+            <h1 id="what-is-jpa">What is JPA?</h1>
+<p>&ldquo;The Java Persistence API is the Java API for the management of persistence and object/relational mapping in Java EE and Java SE environments. It provides an object/relational mapping facility for the Java application developer using a Java domain model to manage a relational database.&rdquo;<br>
+It&rsquo;s quoted from JSR(Java Specification Request) managed by Java Community Process.</p>
+<p>This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persist data before adopting JPA.</p>
        
         </div>
     </a>
     <p class="post-meta">
     
-        Posted by Jamie Zhang on Monday, January 1, 0001
+        Posted by Jamie Zhang on Friday, July 8, 2022
         
         
     
@@ -333,6 +342,8 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
                
             
                
+            
+               
                     <a href="/tags/aws" title="aws">
                         aws
                     </a>
@@ -361,10 +372,6 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
                
             
                
-                    <a href="/tags/gcp" title="gcp">
-                        gcp
-                    </a>
-               
             
                
             
@@ -387,6 +394,8 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
                
             
                
+            
+               
                     <a href="/tags/llm" title="llm">
                         llm
                     </a>
@@ -396,10 +405,6 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
             
                
             
-               
-                    <a href="/tags/mongo" title="mongo">
-                        mongo
-                    </a>
                
             
                
@@ -470,8 +475,6 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
             
                
             
-               
-            
         </div>
     </section>
     
@@ -485,6 +488,7 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
             
         </ul>
     </section>
+    
     
     
 </div>
@@ -686,24 +690,5 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
 
 
 
-<script>
-
-if (document.querySelector('.mermaid')) {
-  
-  var script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-  script.onload = function() {
-    
-    mermaid.initialize({ 
-      startOnLoad: true,
-      theme: 'default'
-    });
-  };
-  document.head.appendChild(script);
-}
-</script>
-
-</body>
-</html>
 </body>
 </html>

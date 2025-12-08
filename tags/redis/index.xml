@@ -13,42 +13,42 @@
       <link>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</link>
       <pubDate>Sat, 09 Jul 2022 23:03:30 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</guid>
-      <description>What&amp;rsquo;s Redis Cluster Redis Cluster is a distributed implementation of Redis with the following goals in order of importance in the design: High performance and linear scalability up to 1000 nodes. There are no proxies, asynchronous replication is used, and no merge operations are performed on values. 在多达 1000 个节点的时候仍能保持高性能及线性的可扩</description>
+      <description>&lt;h1 id=&#34;whats-redis-cluster&#34;&gt;What&amp;rsquo;s Redis Cluster&lt;/h1&gt;&#xA;&lt;p&gt;Redis Cluster is a distributed implementation of Redis with the following goals in order of importance in the design:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;High performance and linear scalability up to 1000 nodes. There are no proxies, asynchronous replication is used, and no merge operations are performed on values.&lt;/li&gt;&#xA;&lt;li&gt;在多达 1000 个节点的时候仍能保持高性能及线性的可扩展性。没有代理，使用异步复制，并且不对值执行合并操作&lt;/li&gt;&#xA;&lt;li&gt;Acceptable degree of write safety: the system tries (in a best-effort way) to retain all the writes originating from clients connected with the majority of the master nodes. Usually there are small windows where acknowledged writes can be lost. Windows to lose acknowledged writes are larger when clients are in a minority partition.&lt;/li&gt;&#xA;&lt;li&gt;可接受的写入安全：与多数派节点相连的客户端所做的写入操作，系统尝试全部都保存下来（以最大努力的方式）。不过极小概率下容忍小部分写入会丢失&lt;/li&gt;&#xA;&lt;li&gt;Availability: Redis Cluster is able to survive partitions where the majority of the master nodes are reachable and there is at least one reachable replica for every master node that is no longer reachable. Moreover using &lt;em&gt;replicas migration&lt;/em&gt;, masters no longer replicated by any replica will receive one from a master which is covered by multiple replicas.&lt;/li&gt;&#xA;&lt;li&gt;可用性：分区情况下在多数派这边，当绝大多数的主节点是可达的，并且对于每一个不可达的主节点都至少有一个它的从节点可达的情况下，Redis Cluster 仍能提供服务&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h1 id=&#34;local-redis-cluster&#34;&gt;Local redis cluster&lt;/h1&gt;&#xA;&lt;p&gt;Exploration starts from setting up a local redis cluster, the simulated nodes listed as below:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Redis advance II</title>
       <link>http://akjamie.github.io/post/2022-06-28-redis-master-slave-replication/</link>
       <pubDate>Tue, 28 Jun 2022 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2022-06-28-redis-master-slave-replication/</guid>
-      <description>主从复制 基本概念 主机数据更新后根据配置和策略，自动同步到备份机的master/slave机制，其中master以写为主，而slave主要以读</description>
+      <description>&lt;h1 id=&#34;主从复制&#34;&gt;主从复制&lt;/h1&gt;&#xA;&lt;h2 id=&#34;基本概念&#34;&gt;基本概念&lt;/h2&gt;&#xA;&lt;p&gt;主机数据更新后根据配置和策略，自动同步到备份机的master/slave机制，其中master以写为主，而slave主要以读为主。 &lt;br&gt;&#xA;该机制使&lt;br&gt;&#xA;1》读写分离，性能获得提升&lt;br&gt;&#xA;2》容灾快速恢复&lt;/p&gt;</description>
     </item>
     <item>
       <title>Redis foundation - III</title>
       <link>http://akjamie.github.io/post/2022-06-27-redis-basic-2/</link>
       <pubDate>Mon, 27 Jun 2022 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2022-06-27-redis-basic-2/</guid>
-      <description>Redis 事务 事务概念和基本操作 其为命令提供一个单独的隔离环境，事务中所有的命令都会序列化，按顺序地执行，执行过程中不会被其他客户端发送过来的命令请</description>
+      <description>&lt;h1 id=&#34;redis-事务&#34;&gt;Redis 事务&lt;/h1&gt;&#xA;&lt;h2 id=&#34;事务概念和基本操作&#34;&gt;事务概念和基本操作&lt;/h2&gt;&#xA;&lt;p&gt;其为命令提供一个单独的隔离环境，事务中所有的命令都会序列化，按顺序地执行，执行过程中不会被其他客户端发送过来的命令请求打断。&#xA;与dbms事物不同，redis事务的作用就是串联多个命令防止被其他命令插队&lt;/p&gt;</description>
     </item>
     <item>
       <title>Redis advance I</title>
       <link>http://akjamie.github.io/post/2022-06-23-redis-advance/</link>
       <pubDate>Thu, 23 Jun 2022 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2022-06-23-redis-advance/</guid>
-      <description>bitmap 在前面的基础回顾中提到了bitmap这种数据结构，主要用来应对string的位操作，简单高效 适用场景：单状态统计，如每天系统用户登录情况统</description>
+      <description>&lt;h1 id=&#34;bitmap&#34;&gt;bitmap&lt;/h1&gt;&#xA;&lt;p&gt;在前面的基础回顾中提到了bitmap这种数据结构，主要用来应对string的位操作，简单高效&lt;br&gt;&#xA;适用场景：单状态统计，如每天系统用户登录情况统计，github commit.&lt;br&gt;&#xA;其常用命令有 setbit, getbit, bitcount, bitop.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Redis foundation - II</title>
       <link>http://akjamie.github.io/post/2022-05-31-redis-basic-1/</link>
       <pubDate>Mon, 30 May 2022 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2022-05-31-redis-basic-1/</guid>
-      <description>Redis基础 Common知识 Redis 有16个数据库，一般都使用0号库，使用select dbid 来切换db。 Redis是单线程 + 多路io服用技术 Redis vs memcache Redis</description>
+      <description>&lt;h1 id=&#34;redis基础&#34;&gt;Redis基础&lt;/h1&gt;&#xA;&lt;h2 id=&#34;common知识&#34;&gt; Common知识&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Redis  有16个数据库，一般都使用0号库，使用select dbid 来切换db。&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Redis是单线程 + 多路io服用技术&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Redis vs memcache&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Redis -&amp;gt;  单线程 + 多路io复用 + 灵活支持多种数据类型&lt;/li&gt;&#xA;&lt;li&gt;Memcached -&amp;gt; 多线程+锁 + 单一数据类型&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Key 操作&lt;/p&gt;</description>
     </item>
     <item>
       <title>Redis foundation - I</title>
       <link>http://akjamie.github.io/post/2019-08-04-redis-basic/</link>
       <pubDate>Sun, 04 Aug 2019 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2019-08-04-redis-basic/</guid>
-      <description>redis是一个key-value存储系统，它支持存储的value类型相对更多，包括string(字符串)、list(链表)、set(集合)</description>
+      <description>&lt;p&gt;redis是一个key-value存储系统，它支持存储的value类型相对更多，包括string(字符串)、list(链表)、set(集合)、zset(sorted set &amp;ndash;有序集合)和hash（哈希类型）。这些数据类型都支持push/pop、add/remove及取交集并集和差集及更丰富的操作，而且这些操作都是原子性的。在此基础上，redis支持各种不同方式的排序。与memcached一样，为了保证效率，数据都是缓存在内存中。区别的是redis会周期性的把更新的数据写入磁盘或者把修改操作写入追加的记录文件，并且在此基础上实现了master-slave(主从)同步。&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

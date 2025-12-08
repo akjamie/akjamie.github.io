@@ -6,21 +6,14 @@
     <description>Recent content in Mongo on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Sep 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 05 Sep 2020 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/tags/mongo/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>GCP Network Connection (1)</title>
-      <link>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</link>
-      <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</guid>
-      <description>To document the setup process for VPC peering accross different GCP project VPCs for demo purpose only.&#xA;Setup VPC peering accross two GCP projects in this demo, will create two GCP projects, and setup VPC network peering to work as network bridge to make sure the vm in one of GCP project can access the MongoDB installed on VM of another GCP project. preparation Mongo backups 1&amp;gt; backup MongoDB&#xA;to use mongo shell command to backup data, samples as below</description>
-    </item>
     <item>
       <title>Mongo DB Basics (1)</title>
       <link>http://akjamie.github.io/post/2020-09-05-mongo-basics/</link>
       <pubDate>Sat, 05 Sep 2020 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2020-09-05-mongo-basics/</guid>
-      <description>Mongo installation(for test) docker command for local mongo installation docker run -p 27017:27017 -v /Users/jamie/Documents/work-benches/mongo/test:/data/db --name mongo -d mongo:latest check mongo running status docker ps | grep mongo 9161bd4811a8 mongo:latest &amp;ldquo;docker-entrypoint.s…&amp;rdquo; 6 days ago Up 6 days</description>
+      <description>&lt;h1 id=&#34;mongo-installationfor-test&#34;&gt;Mongo installation(for test)&lt;/h1&gt;&#xA;&lt;h2 id=&#34;docker-command-for-local-mongo-installation&#34;&gt;docker command for local mongo installation&lt;/h2&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;docker run -p 27017:27017 -v /Users/jamie/Documents/work-benches/mongo/test:/data/db --name mongo -d mongo:latest&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;check-mongo-running-status&#34;&gt;check mongo running status&lt;/h2&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;docker ps | grep mongo&lt;br&gt;&#xA;9161bd4811a8        mongo:latest        &amp;ldquo;docker-entrypoint.s…&amp;rdquo;   6 days ago          Up 6 days           0.0.0.0:27017-&amp;gt;27017/tcp   mongo&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

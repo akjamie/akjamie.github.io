@@ -13,7 +13,7 @@
       <link>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</link>
       <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</guid>
-      <description>Spring batch是轻量级，全面的批处理框架，旨在开发对企业系统日常运营至关重要的强大批处理应用程序。 Spring Batch负责大量记录，包括日志记录/跟踪</description>
+      <description>&lt;p&gt;Spring batch是轻量级，全面的批处理框架，旨在开发对企业系统日常运营至关重要的强大批处理应用程序。&lt;/p&gt;&#xA;&lt;p&gt;Spring Batch负责大量记录，包括日志记录/跟踪，事务管理，作业处理统计，作业重启，跳过和资源管理。 它还提供更高级的技术服务和功能，通过优化和分区技术实现极高容量和高性能的批处理作业。 简单和复杂的大批量批处理作业可以高度可扩展的方式利用框架来处理大量信息。&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

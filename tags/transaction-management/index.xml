@@ -13,21 +13,21 @@
       <link>http://akjamie.github.io/post/2019-08-31-spring-global-transaction/</link>
       <pubDate>Sat, 31 Aug 2019 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2019-08-31-spring-global-transaction/</guid>
-      <description>先回顾上一篇sprint local transaction的内容，本地事务是用于指定资源，即单一数据源，其主要结构如下： 那么我们来看看spring的g</description>
+      <description>&lt;p&gt;先回顾上一篇sprint local transaction的内容，本地事务是用于指定资源，即单一数据源，其主要结构如下：&#xA;&#xD;&#xA;  &lt;img src=&#34;http://akjamie.github.io/img/2019-08-31-spring-global-transaction/spring-txn-local.png&#34; alt=&#34;&#34;&gt;&#xD;&#xA;&#xD;&#xA;&#xA;那么我们来看看spring的global transaction管理，其主要用于多数据源的业务场景中，如mysql + mysql, oracle + mysql + rabbitmq等，但是说到全局事务，我们需要先来谈谈xa。&lt;/p&gt;</description>
     </item>
     <item>
       <title>Spring Transaction</title>
       <link>http://akjamie.github.io/post/2019-08-30-spring-local-transaction/</link>
       <pubDate>Fri, 30 Aug 2019 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2019-08-30-spring-local-transaction/</guid>
-      <description>事务特性和隔离级别 事务基础 事务特性 - 原子性(Atomicity) 事务包含的所有操作是一个原子单元，要么全部成功，要么全部失败 - 一致性（Con</description>
+      <description>&lt;h1 id=&#34;事务特性和隔离级别&#34;&gt;事务特性和隔离级别&lt;/h1&gt;&#xA;&lt;h2 id=&#34;事务基础&#34;&gt;事务基础&lt;/h2&gt;&#xA;&lt;h3 id=&#34;事务特性&#34;&gt;事务特性&lt;/h3&gt;&#xA;&lt;pre&gt;&lt;code&gt;- 原子性(Atomicity)&#xA;事务包含的所有操作是一个原子单元，要么全部成功，要么全部失败&#xA;- 一致性（Consistency）&#xA;A给B转钱，A减和B增这两个操作必须保持一致&#xA;- 隔离性（Isolation）&#xA;事务中的数据可见性，不同隔离级别，确保了不同的可见性级别，防止脏读，幻读等&#xA;- 持久性（Durability）&#xA;事务操作结果将被持久化到存储磁盘上&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;h3 id=&#34;事务的隔离级别&#34;&gt;事务的隔离级别&lt;/h3&gt;&#xA;&lt;pre&gt;&lt;code&gt;- Read Uncommitted，可以读取其它事务未完成的结果&#xA;- Read Committed，在该事务完成后，才能读取该事务的数据更新后的结果&#xA;- Repeatable Read，可以保证在整个事务的过程中，对同一笔数据的读取结果是相同的，不管其他事务是否同时在对同一笔数据进行更新，也不管其他事务对同一笔数 据的更新提交与否&#xA;- Serializable，最严格的事务隔离控制，类似于表级别锁，所有事务操作依次有序执行&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;h2 id=&#34;sql事务测试举例---mysql&#34;&gt;SQL事务测试举例 - mysql&lt;/h2&gt;&#xA;&lt;pre&gt;&lt;code&gt;查看事务隔离级别, 默认是REPEATABLE-READ&#xA;select @@global.transaction_isolation,@@transaction_isolation; &#xA;&#xA;设置事务隔离级别&#xA;SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;&#xA;level: { REPEATABLE READ | READ COMMITTED | READ UNCOMMITTED | SERIALIZABLE }&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;p&gt;通过设置mysql的session或者全局事务隔离级别，来查看事务执行结果&lt;/p&gt;</description>
     </item>
     <item>
       <title>微服务中的分布式事务</title>
       <link>http://akjamie.github.io/post/2019-07-24-one-distributed-transaction-user-case/</link>
       <pubDate>Tue, 23 Jul 2019 19:40:10 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2019-07-24-one-distributed-transaction-user-case/</guid>
-      <description>用户场景 在某企业app上做Payment业务，在app端准备好request data， 如debit account number, credit account number, amount, notes, 点击submit。 业务流程如</description>
+      <description>&lt;h1 id=&#34;用户场景&#34;&gt;用户场景&lt;/h1&gt;&#xA;&lt;p&gt;在某企业app上做Payment业务，在app端准备好request data， 如debit account number, credit account number, amount, notes, 点击submit。&lt;br&gt;&#xA;业务流程如下:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;用户提交payment 请求&lt;/li&gt;&#xA;&lt;li&gt;server校验用户所在公司的每日转账限额(account level)&lt;/li&gt;&#xA;&lt;li&gt;如果限额可以满足，则发起转账，否则reject请求&lt;br&gt;&#xA;&#xD;&#xA;  &lt;img src=&#34;http://akjamie.github.io/img/2019-07-24-one-distributed-transaction-user-case/overall-business-flow.png&#34; alt=&#34;&#34;&gt;&#xD;&#xA;&#xD;&#xA;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h1 id=&#34;问题和挑战&#34;&gt;问题和挑战&lt;/h1&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;如何规避重复提交&lt;/li&gt;&#xA;&lt;li&gt;如何避免分布式事务&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h1 id=&#34;解决思路&#34;&gt;解决思路&lt;/h1&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;如何规避重复提交&lt;br&gt;&#xA;采用前端/后端生成UUID(it will be used as payment id), 需要缓存起来便于request进来后的校验， 当然也可以不缓存，只是校验这个ID是否已经存在，如果存在就reject请求。&lt;/li&gt;&#xA;&lt;li&gt;如何避免分布式事务&lt;br&gt;&#xA;本例中，主要的分布式事务check point有3个，&lt;br&gt;&#xA;1)计算limit checking，在此过程中可能有新payment请求过来可能导致limit用尽或超支，这是业务上不能允许的;&lt;br&gt;&#xA;采用乐观锁,把锁控制在payment db里面而不是对entitlement db中的transaction limit进行CRUD，这样会使整个事务处理变得复杂; 且兵并发性能有大幅度提升&lt;br&gt;&#xA;2)payment data 写入transaction history db&lt;br&gt;&#xA;Oracle RAC事务，用spring transaction 注解，@Transactional&lt;br&gt;&#xA;3)update B/E system response - payment status(succ/fail)&lt;br&gt;&#xA;Oracle RAC事务，用spring transaction 注解，@Transactional&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h1 id=&#34;解决方案&#34;&gt;解决方案&lt;/h1&gt;&#xA;&lt;p&gt;一个方案proposal如下,主要针对limit checking部分加锁， payment data写入和status update 单独分开事务控制(主要由于如果B/E执行成功了，而update status failed导致payment数据回滚会导致数据丢失)&lt;br&gt;&#xA;处理流程diagram如下:&lt;br&gt;&#xA;&#xD;&#xA;  &lt;img src=&#34;http://akjamie.github.io/img/2019-07-24-one-distributed-transaction-user-case/solution.jpg&#34; alt=&#34;&#34;&gt;&#xD;&#xA;&#xD;&#xA;&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

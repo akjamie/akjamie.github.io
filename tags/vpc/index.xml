@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>VPC on Jamie&#39;s Blog</title>
-    <link>http://akjamie.github.io/tags/vpc/</link>
+    <link>http://localhost:1313/tags/vpc/</link>
     <description>Recent content in VPC on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 07 Sep 2020 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://akjamie.github.io/tags/vpc/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/vpc/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>GCP Network Connection (1)</title>
-      <link>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</link>
+      <link>http://localhost:1313/post/2020-09-07-gcp-network-connection/</link>
       <pubDate>Mon, 07 Sep 2020 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/post/2020-09-07-gcp-network-connection/</guid>
-      <description>To document the setup process for VPC peering accross different GCP project VPCs for demo purpose only.&#xA;Setup VPC peering accross two GCP projects in this demo, will create two GCP projects, and setup VPC network peering to work as network bridge to make sure the vm in one of GCP project can access the MongoDB installed on VM of another GCP project. preparation Mongo backups 1&amp;gt; backup MongoDB&#xA;to use mongo shell command to backup data, samples as below</description>
+      <guid>http://localhost:1313/post/2020-09-07-gcp-network-connection/</guid>
+      <description>&lt;p&gt;To document the setup process for VPC peering accross different GCP project VPCs for demo purpose only.&lt;/p&gt;&#xA;&lt;h1 id=&#34;setup-vpc-peering-accross-two-gcp-projects&#34;&gt;Setup VPC peering accross two GCP projects&lt;/h1&gt;&#xA;&lt;p&gt;in this demo, will create two GCP projects, and setup VPC network peering to work as network bridge to make sure the vm in one of GCP project can access the MongoDB installed on VM of another GCP project.&#xA;&lt;img src=&#39;http://localhost:1313/img/2020-09-07-gcp-network-connection/vpc-peering-network.png&#39; style=&#34;height: 380px;margin-left: 0px;&#34;/&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;preparation&#34;&gt;preparation&lt;/h2&gt;&#xA;&lt;h3 id=&#34;mongo-backups&#34;&gt;Mongo backups&lt;/h3&gt;&#xA;&lt;p&gt;1&amp;gt; backup MongoDB&lt;br&gt;&#xA;to use mongo shell command to backup data, samples as below&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

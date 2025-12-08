@@ -10,8 +10,8 @@
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="/img/background-06.jpg">
-    <meta property="twitter:image" content="/img/background-06.jpg" />
+    <meta property="og:image" content="http://akjamie.github.io//img/background-06.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/background-06.jpg" />
     
 
     
@@ -33,7 +33,8 @@
     
     
 
-    <meta name="keyword"  content="&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, 博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice&#34;">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <title>AWS Serveless Application Model | Jamie&#39;s Blog</title>
@@ -56,6 +57,8 @@
 
     
     
+    
+    
 
     
     <script src="/js/jquery.min.js"></script>
@@ -73,6 +76,7 @@
     
 
 </head>
+
 
 
 
@@ -111,6 +115,10 @@
                         
                         <li>
                             <a href="/categories/deep-learning/">deep learning</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/langchain/">langchain</a>
                         </li>
                         
                         <li>
@@ -169,49 +177,14 @@
 
 
 
-
-<style type="text/css">
-    header.intro-header {
-        background-image: url('/img/background-06.jpg')
-    }
-</style>
-
-<header class="intro-header" >
-
+<header class="intro-header" style="background-image: url('/img/header-01.jpg')">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <div class="tags">
-                        
-                        <a class="tag" href="/tags/python" title="Python">
-                            Python
-                        </a>
-                        
-                        <a class="tag" href="/tags/aws" title="AWS">
-                            AWS
-                        </a>
-                        
-                        <a class="tag" href="/tags/serveless" title="Serveless">
-                            Serveless
-                        </a>
-                        
-                    </div>
-                    <h1>AWS Serveless Application Model</h1>
-                    <h2 class="subheading">AWS 无服务器应用程序模型 (AWS SAM) 是一个开源框架，可用于在 AWS 上构建无服务器应用程序。它包含用于定义无服务器应用程序的 AWS SAM 模板规范和用于构建、测试和部署无服务器应用程序的 AWS SAM 命令行界面 (AWS SAM CLI)</h2>
-                    <span class="meta">
-                        
-                            Posted by 
-                            
-                                Jamie Zhang
-                             
-                            on 
-                            Monday, June 10, 2019
-                            
-                            
-                            
-                            
-                    </span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>Jamie&#39;s Blog </h1>
+                    
+		    <span class="subheading">Building the future, one line of code at a time.</span>
                 </div>
             </div>
         </div>
@@ -224,14 +197,14 @@
 <article>
     <div class="container">
         <div class="row">
-
             
             <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                post-container">
-
-                
+            col-lg-8 col-lg-offset-1
+            col-md-8 col-md-offset-1
+            col-sm-12
+            col-xs-12
+            post-container">
+            
                 <h1 id="aws-sam---lambda-demo">AWS SAM - lambda demo</h1>
 <h2 id="demo-user-case">Demo User Case</h2>
 <h3 id="user-requirement">User requirement:</h3>
@@ -364,264 +337,264 @@ run the following command to build your project local testing and deployment</p>
 </span></span><span style="display:flex;"><span>sam logs -n HelloWorldFunction --stack-name sam-app --tail
 </span></span></code></pre></div><p>You can find source code on <a href="https://github.com/cloud-poc/py-lambda-sam-test.git">github</a></p>
 
+            
+             
+            
 
-                
-                
-<div class="entry-shang text-center">
+
+
+
+            
+            </div>
+            
+            
+
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
     
-	    <p>「真诚赞赏，手留余香」</p>
 	
-	<button class="zs show-zs btn btn-bred">赞赏支持</button>
-</div>
-<div class="zs-modal-bg"></div>
-<div class="zs-modal-box">
-	<div class="zs-modal-head">
-		<button type="button" class="close">×</button>
-		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
-        
-	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
-		
- 
-	</div>
-	<div class="zs-modal-body">
-		<div class="zs-modal-btns">
-			<button class="btn btn-blink" data-num="2">2元</button>
-			<button class="btn btn-blink" data-num="5">5元</button>
-			<button class="btn btn-blink" data-num="10">10元</button>
-			<button class="btn btn-blink" data-num="50">50元</button>
-			<button class="btn btn-blink" data-num="100">100元</button>
-			<button class="btn btn-blink" data-num="1">任意金额</button>
-		</div>
-		<div class="zs-modal-pay">
-			<button class="btn btn-bred" id="pay-text">2元</button>
-			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
-			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
-		</div>
-	</div>
-	<div class="zs-modal-footer">
-		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
-		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
-	</div>
-</div>
-<script type="text/javascript" src="/js/reward.js"></script>
-
-                
-
-                
-                <hr>
-                <ul class="pager">
-                    
-                    <li class="previous">
-                        <a href="/2019/01/19/UIPath-invoke-python-method/" data-toggle="tooltip" data-placement="top" title="How to invoke python scripts in UIPath">&larr;
-                            Previous Post</a>
-                    </li>
-                    
-                    
-                    <li class="next">
-                        <a href="/2019/07/14/harshicorp-vault-setup-config/" data-toggle="tooltip" data-placement="top" title="Harshicorp Vault Setup Config and integration with spring boot">Next
-                            Post &rarr;</a>
-                    </li>
-                    
+    <section class="visible-md visible-lg">
+	
+        <div class="short-about">
+            
+            <a href="/about">
+               <img src="/img/20190713213835-3.jpg" alt="avatar" style="cursor: pointer" />
+            </a>
+            
+            
+                <p>Senior Software Engineer, Open source enthusiasts, PMP, Scrum master</p>
+            
+           
+           <ul class="list-inline">
+               
+               <li>
+                   <a href="mailto:akjamie.zhang@outlook.com">
+                      <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                      </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               
+               
+               <li>
+                   <a target="_blank" href="/img/wechat-qrcode.png">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               <li>
+                   <a target="_blank" href="https://github.com/akjamie">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               <li>
+                   <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               
+            
+            
+               
+               
+               
+               
                 </ul>
-                
-
-                
-
-
-
-
             </div>
-
+    </section>
+	
+    
+    
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FEATURED TAGS</h5>
+        <div class="tags">
             
             
-            <div class="
-                col-lg-2 col-lg-offset-0
-                visible-lg-block
-                sidebar-container
-                catalog-container">
-                <div class="side-catalog">
-                    <hr class="hidden-sm hidden-xs">
-                    <h5>
-                        <a class="catalog-toggle" href="#">CATALOG</a>
-                    </h5>
-                    <ul class="catalog-body"></ul>
-                </div>
-            </div>
+               
             
-
+               
             
-            <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                sidebar-container">
+               
+            
+               
+                    <a href="/tags/aws" title="aws">
+                        aws
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/docker" title="docker">
+                        docker
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/k8s" title="k8s">
+                        k8s
+                    </a>
+               
+            
+               
+                    <a href="/tags/kubernetes" title="kubernetes">
+                        kubernetes
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/llm" title="llm">
+                        llm
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/nosql" title="nosql">
+                        nosql
+                    </a>
+               
+            
+               
+            
+               
+                    <a href="/tags/python" title="python">
+                        python
+                    </a>
+               
+            
+               
+                    <a href="/tags/redis" title="redis">
+                        redis
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/spring" title="spring">
+                        spring
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/spring-cloud" title="spring cloud">
+                        spring cloud
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/transaction-management" title="transaction management">
+                        transaction management
+                    </a>
+               
+            
+               
+                    <a href="/tags/transformer" title="transformer">
+                        transformer
+                    </a>
+               
+            
+               
+            
+               
+                    <a href="/tags/vault" title="vault">
+                        vault
+                    </a>
+               
+            
+               
+            
+        </div>
+    </section>
+    
 
-                
-                
-                <section>
-                    <hr class="hidden-sm hidden-xs">
-                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
-                    <div class="tags">
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/aws" title="aws">
-                            aws
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/docker" title="docker">
-                            docker
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/gcp" title="gcp">
-                            gcp
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/k8s" title="k8s">
-                            k8s
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/kubernetes" title="kubernetes">
-                            kubernetes
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/llm" title="llm">
-                            llm
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/mongo" title="mongo">
-                            mongo
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/nosql" title="nosql">
-                            nosql
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/python" title="python">
-                            python
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/redis" title="redis">
-                            redis
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/spring" title="spring">
-                            spring
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/spring-cloud" title="spring cloud">
-                            spring cloud
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/transaction-management" title="transaction management">
-                            transaction management
-                        </a>
-                        
-                        
-                        
-                        <a href="/tags/transformer" title="transformer">
-                            transformer
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        <a href="/tags/vault" title="vault">
-                            vault
-                        </a>
-                        
-                        
-                        
-                        
-                        
-                        
-                    </div>
-                </section>
-                
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FRIENDS</h5>
+        <ul class="list-inline">
+            
+        </ul>
+    </section>
+    
+    
+    
+</div>
 
-                
-                
-                <section>
-                    <hr>
-                    <h5>FRIENDS</h5>
-                    <ul class="list-inline">
-                        
-                    </ul>
-                </section>
-                
-            </div>
         </div>
     </div>
 </article>
@@ -819,24 +792,5 @@ run the following command to build your project local testing and deployment</p>
 
 
 
-<script>
-
-if (document.querySelector('.mermaid')) {
-  
-  var script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-  script.onload = function() {
-    
-    mermaid.initialize({ 
-      startOnLoad: true,
-      theme: 'default'
-    });
-  };
-  document.head.appendChild(script);
-}
-</script>
-
-</body>
-</html>
 </body>
 </html>

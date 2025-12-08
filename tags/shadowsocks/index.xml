@@ -13,7 +13,7 @@
       <link>http://akjamie.github.io/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/</link>
       <pubDate>Sun, 14 Jul 2019 14:50:52 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2019-07-14-linux-network-proxy-setup-desktop-terminal/</guid>
-      <description>背景介绍 很多时候我们由于great firewall，我们无法访问某些网站，这时候就需要用到网络代理来应对一些比较urgent的case，本文</description>
+      <description>&lt;h1 id=&#34;背景介绍&#34;&gt;背景介绍&lt;/h1&gt;&#xA;&lt;p&gt;很多时候我们由于great firewall，我们无法访问某些网站，这时候就需要用到网络代理来应对一些比较urgent的case，本文主要会介绍如何使用Shadowsocks 和 Proxychain来 setup linux network proxy，这样在命令行下都可以起到代理和转发的作用，而不仅限于浏览器的代理。&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
