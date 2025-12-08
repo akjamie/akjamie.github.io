@@ -67,14 +67,14 @@
     <item>
       <title>Redis advance III</title>
       <link>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</link>
-      <pubDate>Sat, 09 Jul 2022 23:03:30 +0000</pubDate>
+      <pubDate>Sat, 09 Jul 2022 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2022-07-09-redis-cluster-01/</guid>
       <description>&lt;h1 id=&#34;whats-redis-cluster&#34;&gt;What&amp;rsquo;s Redis Cluster&lt;/h1&gt;&#xA;&lt;p&gt;Redis Cluster is a distributed implementation of Redis with the following goals in order of importance in the design:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;High performance and linear scalability up to 1000 nodes. There are no proxies, asynchronous replication is used, and no merge operations are performed on values.&lt;/li&gt;&#xA;&lt;li&gt;在多达 1000 个节点的时候仍能保持高性能及线性的可扩展性。没有代理，使用异步复制，并且不对值执行合并操作&lt;/li&gt;&#xA;&lt;li&gt;Acceptable degree of write safety: the system tries (in a best-effort way) to retain all the writes originating from clients connected with the majority of the master nodes. Usually there are small windows where acknowledged writes can be lost. Windows to lose acknowledged writes are larger when clients are in a minority partition.&lt;/li&gt;&#xA;&lt;li&gt;可接受的写入安全：与多数派节点相连的客户端所做的写入操作，系统尝试全部都保存下来（以最大努力的方式）。不过极小概率下容忍小部分写入会丢失&lt;/li&gt;&#xA;&lt;li&gt;Availability: Redis Cluster is able to survive partitions where the majority of the master nodes are reachable and there is at least one reachable replica for every master node that is no longer reachable. Moreover using &lt;em&gt;replicas migration&lt;/em&gt;, masters no longer replicated by any replica will receive one from a master which is covered by multiple replicas.&lt;/li&gt;&#xA;&lt;li&gt;可用性：分区情况下在多数派这边，当绝大多数的主节点是可达的，并且对于每一个不可达的主节点都至少有一个它的从节点可达的情况下，Redis Cluster 仍能提供服务&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h1 id=&#34;local-redis-cluster&#34;&gt;Local redis cluster&lt;/h1&gt;&#xA;&lt;p&gt;Exploration starts from setting up a local redis cluster, the simulated nodes listed as below:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Spring Data &amp; Data Persistent</title>
       <link>http://akjamie.github.io/post/2022-07-08-spring-data-series-01/</link>
-      <pubDate>Fri, 08 Jul 2022 14:40:10 +0000</pubDate>
+      <pubDate>Fri, 08 Jul 2022 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2022-07-08-spring-data-series-01/</guid>
       <description>&lt;h1 id=&#34;what-is-jpa&#34;&gt;What is JPA?&lt;/h1&gt;&#xA;&lt;p&gt;&amp;ldquo;The Java Persistence API is the Java API for the management of persistence and object/relational mapping in Java EE and Java SE environments. It provides an object/relational mapping facility for the Java application developer using a Java domain model to manage a relational database.&amp;rdquo;&lt;br&gt;&#xA;It&amp;rsquo;s quoted from JSR(Java Specification Request) managed by Java Community Process.&lt;/p&gt;&#xA;&lt;p&gt;This is just the definition of what&amp;rsquo;s JPA, let&amp;rsquo;s recall how we persist data before adopting JPA.&lt;/p&gt;</description>
     </item>
