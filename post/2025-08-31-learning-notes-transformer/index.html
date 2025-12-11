@@ -169,14 +169,191 @@
 
 
 
-<header class="intro-header" style="background-image: url('/img/header-03.png')">
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Jamie&#39;s Blog </h1>
-                    
-		    <span class="subheading">The curious developer&#39;s ODYSSEY, Exploring the Universe of TECH, CODE &amp; AI.</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/llm" title="LLM">
+                            LLM
+                        </a>
+                        
+                        <a class="tag" href="/tags/transformer" title="Transformer">
+                            Transformer
+                        </a>
+                        
+                        <a class="tag" href="/tags/machine-learning" title="Machine Learning">
+                            Machine Learning
+                        </a>
+                        
+                        <a class="tag" href="/tags/deep-learning" title="Deep Learning">
+                            Deep Learning
+                        </a>
+                        
+                        <a class="tag" href="/tags/attention-mechanism" title="Attention Mechanism">
+                            Attention Mechanism
+                        </a>
+                        
+                    </div>
+                    <h1>Understanding Transformer Architecture: The Foundation of Modern AI</h1>
+                    <h2 class="subheading">A Comprehensive Guide to Attention Mechanisms and How They Power LLMs Like GPT</h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Sunday, August 31, 2025
+                            
+                                <span id="/post/2025-08-31-learning-notes-transformer/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
                 </div>
             </div>
         </div>
@@ -189,14 +366,14 @@
 <article>
     <div class="container">
         <div class="row">
+
             
             <div class="
-            col-lg-8 col-lg-offset-1
-            col-md-8 col-md-offset-1
-            col-sm-12
-            col-xs-12
-            post-container">
-            
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
                 <h1 id="introduction-to-transformer-architecture">Introduction to Transformer Architecture</h1>
 <p>In the rapidly evolving world of artificial intelligence, few innovations have been as transformative as the <strong>Transformer architecture</strong>. Introduced in the seminal 2017 paper <a href="https://arxiv.org/abs/1706.03762">&ldquo;Attention is All You Need&rdquo;</a> by Vaswani et al., Transformers have become the backbone of virtually all state-of-the-art language models, including GPT-4, ChatGPT, and Google&rsquo;s Bard.</p>
 <p>But what exactly is a Transformer, and why has it revolutionized natural language processing? In this comprehensive guide, we&rsquo;ll break down the Transformer architecture from the ground up, using clear explanations and visual diagrams to help you understand how these powerful models work.</p>
@@ -206,60 +383,12 @@
 <h3 id="feedforward-networks-ffns">Feedforward Networks (FFNs)</h3>
 <p>Feedforward Networks are the most basic type of neural network. Data flows in one direction, from input to output, with no loops. They can&rsquo;t remember past information, which makes them terrible for language, where context is everything.</p>
 <p>Think about it: the meaning of a word often depends on the words that came before it. A basic FFN has no way to capture this.</p>
+<pre class="mermaid">
+  graph LR
+    A[&#34;Input: The cat sat on&#34;] --&gt; B[FFN]
+    B --&gt; C[&#34;Output: ?&#34;]
+</pre>
 
-<div class="mermaid">
-  
-graph LR
-    A["Input: The cat sat on"] --> B[FFN]
-    B --> C["Output: ?"]
-
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <p>As you can see, a Feedforward Network processes the input and produces an output without any memory of previous inputs. This is problematic for language understanding.</p>
 <h3 id="recurrent-neural-networks-rnns">Recurrent Neural Networks (RNNs)</h3>
 <p>RNNs were designed to address the memory problem by having a &ldquo;memory&rdquo; or hidden state that allows them to process a sequence one element at a time, feeding the output of one step back into the input of the next. This lets them &ldquo;remember&rdquo; context.</p>
@@ -269,69 +398,21 @@ graph LR
 <li><strong>Vanishing Gradient Problem</strong>: It becomes difficult to learn long-range dependencies</li>
 <li><strong>Limited Parallelization</strong>: Due to their sequential nature, they can&rsquo;t take full advantage of modern parallel computing hardware</li>
 </ol>
-
-<div class="mermaid">
-  
-flowchart TB
-    subgraph "RNN Processing Sequence"
-        A["Input: The"] --> B[RNN]
-        B --> C[Hidden State]
-        C --> D[RNN]
-        D --> E[Hidden State]
-        E --> F[RNN]
-        F --> G[Output]
+<pre class="mermaid">
+  flowchart TB
+    subgraph &#34;RNN Processing Sequence&#34;
+        A[&#34;Input: The&#34;] --&gt; B[RNN]
+        B --&gt; C[Hidden State]
+        C --&gt; D[RNN]
+        D --&gt; E[Hidden State]
+        E --&gt; F[RNN]
+        F --&gt; G[Output]
         
-        H["Input: cat"] --> D
-        I["Input: sat"] --> F
+        H[&#34;Input: cat&#34;] --&gt; D
+        I[&#34;Input: sat&#34;] --&gt; F
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <p>As shown above, RNNs process each word sequentially, with the hidden state carrying information from previous steps. While this provides some memory, it&rsquo;s still limited and inefficient.</p>
 <h3 id="the-transformer-solution">The Transformer Solution</h3>
 <p>The Transformer solves these problems by introducing two key innovations:</p>
@@ -339,67 +420,19 @@ flowchart TB
 <li><strong>Attention Mechanism</strong>: Instead of processing sequences step-by-step, the model can look at all words simultaneously and determine which ones are most relevant to each other</li>
 <li><strong>Parallel Processing</strong>: Because words aren&rsquo;t processed sequentially, the entire sequence can be processed in parallel, dramatically speeding up training</li>
 </ol>
-
-<div class="mermaid">
-  
-flowchart LR
-    subgraph "Transformer Approach"
-        A["Input: The cat sat"] --> B[Attention]
-        A --> C[Attention]
-        A --> D[Attention]
+<pre class="mermaid">
+  flowchart LR
+    subgraph &#34;Transformer Approach&#34;
+        A[&#34;Input: The cat sat&#34;] --&gt; B[Attention]
+        A --&gt; C[Attention]
+        A --&gt; D[Attention]
         
-        B --> E[Output]
-        C --> E
-        D --> E
+        B --&gt; E[Output]
+        C --&gt; E
+        D --&gt; E
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <h2 id="understanding-the-transformer-architecture">Understanding the Transformer Architecture</h2>
 <p>The Transformer architecture, introduced in the 2017 paper &ldquo;Attention is All You Need,&rdquo; completely changed the game. Instead of processing data sequentially, it processes the entire sequence at once, relying on a mechanism called self-attention to understand context.</p>
 <p>The core idea is to let the model weigh the importance of all other words in a sentence when processing a single word. It can look at the entire sequence and decide which parts are most relevant to the word it&rsquo;s currently considering.</p>
@@ -409,64 +442,16 @@ flowchart LR
 <li><strong>Encoder</strong>: Processes the input sequence and creates representations of each word in context</li>
 <li><strong>Decoder</strong>: Uses the encoder&rsquo;s representations to generate the output sequence</li>
 </ol>
-
-<div class="mermaid">
-  
-flowchart LR
-    subgraph "Original Transformer Architecture"
-        A[Input Sequence] --> B[Encoder Stack]
-        B --> C[Encoder-Decoder Attention]
-        C --> D[Decoder Stack]
-        D --> E[Output Sequence]
+<pre class="mermaid">
+  flowchart LR
+    subgraph &#34;Original Transformer Architecture&#34;
+        A[Input Sequence] --&gt; B[Encoder Stack]
+        B --&gt; C[Encoder-Decoder Attention]
+        C --&gt; D[Decoder Stack]
+        D --&gt; E[Output Sequence]
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <p>However, modern large language models (LLMs) like GPT-4 and GPT-5 use a <strong>decoder-only architecture</strong>, so we&rsquo;ll focus on that for the rest of this guide.</p>
 <h3 id="decoder-only-architecture">Decoder-Only Architecture</h3>
 <p>In a decoder-only Transformer (like GPT models), the architecture consists of a stack of identical layers. Each layer contains three key components:</p>
@@ -475,125 +460,29 @@ flowchart LR
 <li><strong>Feed-Forward Network (FFN)</strong>: A simple neural network that processes each word&rsquo;s representation independently</li>
 <li><strong>Residual Connections and Layer Normalization</strong>: Technical components that help with stable training</li>
 </ol>
-
-<div class="mermaid">
-  
-flowchart TB
-    subgraph "Transformer Decoder Layer"
-        A[Input Embeddings] --> B[Masked Multi-Head Attention]
-        B --> C[Add & Norm]
-        C --> D[Feed Forward Network]
-        D --> E[Add & Norm]
-        E --> F[Output]
+<pre class="mermaid">
+  flowchart TB
+    subgraph &#34;Transformer Decoder Layer&#34;
+        A[Input Embeddings] --&gt; B[Masked Multi-Head Attention]
+        B --&gt; C[Add &amp; Norm]
+        C --&gt; D[Feed Forward Network]
+        D --&gt; E[Add &amp; Norm]
+        E --&gt; F[Output]
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <p>Multiple such layers are stacked together to form the complete model:</p>
-
-<div class="mermaid">
-  
-flowchart TB
-    subgraph "Stack of Decoder Layers"
-        A[Input] --> B[Decoder Layer 1]
-        B --> C[Decoder Layer 2]
-        C --> D["..."]
-        D --> E[Decoder Layer N]
-        E --> F[Output]
+<pre class="mermaid">
+  flowchart TB
+    subgraph &#34;Stack of Decoder Layers&#34;
+        A[Input] --&gt; B[Decoder Layer 1]
+        B --&gt; C[Decoder Layer 2]
+        C --&gt; D[&#34;...&#34;]
+        D --&gt; E[Decoder Layer N]
+        E --&gt; F[Output]
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <h2 id="understanding-input-processing-embeddings">Understanding Input Processing: Embeddings</h2>
 <p>Before we dive into the layers and attention mechanisms, let&rsquo;s understand how text is prepared for processing by the Transformer model.</p>
 <blockquote>
@@ -606,64 +495,16 @@ Most state-of-the-art models now use <strong>rotary positional embeddings</stron
 <h3 id="positional-embeddings">Positional Embeddings</h3>
 <p>Since Transformers process all words simultaneously, they don&rsquo;t naturally understand the order of words in a sentence. To solve this, the model adds <strong>positional embeddings</strong> - special numbers that represent where each word appears in the sequence.</p>
 <p>This way, the model can distinguish between &ldquo;The cat chased the dog&rdquo; and &ldquo;The dog chased the cat&rdquo; even though they contain the same words.</p>
+<pre class="mermaid">
+  graph LR
+    A[&#34;Input Text: The cat sat&#34;] --&gt; B[Tokenization]
+    B --&gt; C[&#34;Tokens: [The, cat, sat]&#34;]
+    C --&gt; D[Token Embeddings]
+    C --&gt; E[Positional Embeddings]
+    D --&gt; F[Combined Embeddings]
+    E --&gt; F
+</pre>
 
-<div class="mermaid">
-  
-graph LR
-    A["Input Text: The cat sat"] --> B[Tokenization]
-    B --> C["Tokens: [The, cat, sat]"]
-    C --> D[Token Embeddings]
-    C --> E[Positional Embeddings]
-    D --> F[Combined Embeddings]
-    E --> F
-
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <p>The combined embeddings (token + positional) are what gets fed into the first layer of the Transformer.</p>
 <h2 id="deep-dive-into-attention-mechanism">Deep Dive into Attention Mechanism</h2>
 <p>The attention mechanism is the core innovation that makes Transformers so powerful. But what exactly is &ldquo;attention&rdquo; in the context of AI?</p>
@@ -671,95 +512,45 @@ graph LR
 <p>For example, in the sentence &ldquo;The cat sat on the mat&rdquo;, when trying to understand what &ldquo;sat&rdquo; means, your brain pays more attention to &ldquo;cat&rdquo; (the one doing the action) than to &ldquo;the&rdquo; or &ldquo;on&rdquo;. This is exactly what the attention mechanism does in Transformers.</p>
 <h3 id="how-simple-attention-works">How Simple Attention Works</h3>
 <p>In a simple attention mechanism, each word can &ldquo;attend to&rdquo; or &ldquo;look at&rdquo; all other words in the sequence. The model calculates attention weights that determine how much focus to place on each word.</p>
-
-<div class="mermaid">
-  
-flowchart LR
-    subgraph "Simple Attention Mechanism"
-        A["Word: sat"] --> B[Attention Weights Calculator]
-        C["Word: The"] --> B
-        D["Word: cat"] --> B
-        E["Word: on"] --> B
-        F["Word: the"] --> B
-        G["Word: mat"] --> B
+<pre class="mermaid">
+  flowchart LR
+    subgraph &#34;Simple Attention Mechanism&#34;
+        A[&#34;Word: sat&#34;] --&gt; B[Attention Weights Calculator]
+        C[&#34;Word: The&#34;] --&gt; B
+        D[&#34;Word: cat&#34;] --&gt; B
+        E[&#34;Word: on&#34;] --&gt; B
+        F[&#34;Word: the&#34;] --&gt; B
+        G[&#34;Word: mat&#34;] --&gt; B
         
-        B --> H[Attention Weights]
-        H --> I["The: 0.1"]
-        H --> J["cat: 0.7"]
-        H --> K["sat: 0.05"]
-        H --> L["on: 0.05"]
-        H --> M["the: 0.05"]
-        H --> N["mat: 0.05"]
+        B --&gt; H[Attention Weights]
+        H --&gt; I[&#34;The: 0.1&#34;]
+        H --&gt; J[&#34;cat: 0.7&#34;]
+        H --&gt; K[&#34;sat: 0.05&#34;]
+        H --&gt; L[&#34;on: 0.05&#34;]
+        H --&gt; M[&#34;the: 0.05&#34;]
+        H --&gt; N[&#34;mat: 0.05&#34;]
         
-        I --> O[Context-Aware Representation]
-        J --> O
-        K --> O
-        L --> O
-        M --> O
-        N --> O
+        I --&gt; O[Context-Aware Representation]
+        J --&gt; O
+        K --&gt; O
+        L --&gt; O
+        M --&gt; O
+        N --&gt; O
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <p>In this example, when processing the word &ldquo;sat&rdquo;, the model assigns the highest attention weight (0.7) to &ldquo;cat&rdquo; because it&rsquo;s the subject performing the action. The word &ldquo;The&rdquo; gets a smaller weight (0.1) because it&rsquo;s less important for understanding the meaning.</p>
 <h3 id="the-magic-of-self-attention">The Magic of Self-Attention</h3>
 <p>What makes Transformers special is &ldquo;self-attention&rdquo;. This means each word can attend to all words in the sequence, including itself. This allows the model to build a rich understanding of context by considering relationships between all words simultaneously.</p>
 <p>For instance, in the sentence &ldquo;The chef cooked the books&rdquo;, self-attention helps the model understand that &ldquo;books&rdquo; likely refers to accounting records (because of &ldquo;cooked&rdquo;) rather than literature, even though &ldquo;books&rdquo; usually means literature.</p>
-
-<div class="mermaid">
-  
-graph LR
-    A["chef"] -- relates to --> B[cooked]
-    C["cooked"] -- relates to --> D[books]
-    E["The"] -- modifies --> A
-    F["the"] -- modifies --> D
+<pre class="mermaid">
+  graph LR
+    A[&#34;chef&#34;] -- relates to --&gt; B[cooked]
+    C[&#34;cooked&#34;] -- relates to --&gt; D[books]
+    E[&#34;The&#34;] -- modifies --&gt; A
+    F[&#34;the&#34;] -- modifies --&gt; D
     
-    subgraph "Self-Attention Connections"
+    subgraph &#34;Self-Attention Connections&#34;
         A
         B
         C
@@ -767,54 +558,8 @@ graph LR
         E
         F
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <h3 id="multi-head-attention-getting-multiple-perspectives">Multi-Head Attention: Getting Multiple Perspectives</h3>
 <p>While simple attention is powerful, it only gives the model one way of looking at the relationships between words. Multi-head attention allows the model to look at these relationships from multiple perspectives simultaneously, just like how humans can interpret the same information in different ways.</p>
 <p>Think of it like a team of experts analyzing a sentence:</p>
@@ -824,79 +569,31 @@ graph LR
 <li>A third might look for emotional context</li>
 </ul>
 <p>Each &ldquo;head&rdquo; in multi-head attention learns to focus on different types of relationships, and their insights are combined to create a more complete understanding.</p>
-
-<div class="mermaid">
-  
-flowchart TB
-    subgraph "Multi-Head Attention"
-        A["Input Sentence: The cat sat on the mat"] --> B[Attention Head 1]
-        A --> C[Attention Head 2]
-        A --> D[Attention Head 3]
-        A --> E["..."]
-        A --> F[Attention Head h]
+<pre class="mermaid">
+  flowchart TB
+    subgraph &#34;Multi-Head Attention&#34;
+        A[&#34;Input Sentence: The cat sat on the mat&#34;] --&gt; B[Attention Head 1]
+        A --&gt; C[Attention Head 2]
+        A --&gt; D[Attention Head 3]
+        A --&gt; E[&#34;...&#34;]
+        A --&gt; F[Attention Head h]
         
-        B --> G["Head 1 Focus: Grammar"]
-        C --> H["Head 2 Focus: Meaning"]
-        D --> I["Head 3 Focus: Position"]
-        F --> J["Head h Focus: Other patterns"]
+        B --&gt; G[&#34;Head 1 Focus: Grammar&#34;]
+        C --&gt; H[&#34;Head 2 Focus: Meaning&#34;]
+        D --&gt; I[&#34;Head 3 Focus: Position&#34;]
+        F --&gt; J[&#34;Head h Focus: Other patterns&#34;]
         
-        G --> K[Concatenate]
-        H --> K
-        I --> K
-        E --> K
-        J --> K
+        G --&gt; K[Concatenate]
+        H --&gt; K
+        I --&gt; K
+        E --&gt; K
+        J --&gt; K
         
-        K --> L[Linear Transformation]
-        L --> M[Combined Output]
+        K --&gt; L[Linear Transformation]
+        L --&gt; M[Combined Output]
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <blockquote>
 <p><strong>2025 Update:</strong><br>
 Some models now use <strong>hybrid attention architectures</strong> (e.g., combining attention with state space models) to further improve efficiency and context length.</p>
@@ -905,69 +602,21 @@ Some models now use <strong>hybrid attention architectures</strong> (e.g., combi
 <h3 id="why-is-it-masked">Why is it &ldquo;Masked&rdquo;?</h3>
 <p>This is the key difference for a generative model like GPT. During training, the model needs to learn to predict the next word. To prevent it from &ldquo;cheating&rdquo; and looking at the words that come after the current word, a mask is applied. This mask essentially hides future words in the sequence, ensuring that the model only uses the words it has already &ldquo;seen&rdquo; to make its prediction.</p>
 <p>This is what makes GPT an autoregressive model—it generates text one word at a time, based on the words that came before.</p>
-
-<div class="mermaid">
-  
-graph LR
-    A["Input: The cat sat on ___"] --> B[Masked Attention]
+<pre class="mermaid">
+  graph LR
+    A[&#34;Input: The cat sat on ___&#34;] --&gt; B[Masked Attention]
     
-    subgraph "What the Model Can See"
-        C["The"] --> B
-        D["cat"] --> B
-        E["sat"] --> B
-        F["on"] --> B
-        G["???"] -->|Masked| B
+    subgraph &#34;What the Model Can See&#34;
+        C[&#34;The&#34;] --&gt; B
+        D[&#34;cat&#34;] --&gt; B
+        E[&#34;sat&#34;] --&gt; B
+        F[&#34;on&#34;] --&gt; B
+        G[&#34;???&#34;] --&gt;|Masked| B
     end
     
-    B --> H["Prediction: the"]
+    B --&gt; H[&#34;Prediction: the&#34;]
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <p>So, in a nutshell, masked multi-head attention allows the model to consider the entire past context in a sophisticated, parallel way, without peeking at the future.</p>
 <h2 id="understanding-the-transformer-decoder-layer-components">Understanding the Transformer Decoder Layer Components</h2>
 <p>Now that we understand attention, let&rsquo;s look at how it fits into a complete decoder layer. Each decoder layer has several components that work together:</p>
@@ -979,63 +628,15 @@ graph LR
 <li><strong>Residual Connection (Add)</strong>: The input to the attention layer is added to its output. This helps with gradient flow during training and prevents the vanishing gradient problem.</li>
 <li><strong>Layer Normalization (Norm)</strong>: Normalizes the values to keep them in a reasonable range, which helps with training stability.</li>
 </ul>
+<pre class="mermaid">
+  flowchart LR
+    A[Input] --&gt; B[Attention]
+    A --&gt; C[Residual Connection]
+    B --&gt; C
+    C --&gt; D[Layer Normalization]
+    D --&gt; E[Output]
+</pre>
 
-<div class="mermaid">
-  
-flowchart LR
-    A[Input] --> B[Attention]
-    A --> C[Residual Connection]
-    B --> C
-    C --> D[Layer Normalization]
-    D --> E[Output]
-
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <h3 id="3-feed-forward-network-ffn">3. Feed-Forward Network (FFN)</h3>
 <p>After the attention mechanism, the output goes through a Feed-Forward Network. This is a simple neural network that processes each position (word) independently. It consists of two linear transformations with a ReLU activation in between:</p>
 <ol>
@@ -1044,299 +645,59 @@ flowchart LR
 <li>Second linear transformation (compresses back to original dimension)</li>
 </ol>
 <p>The FFN helps the model process the attention output further and adds more representational power.</p>
+<pre class="mermaid">
+  flowchart LR
+    A[Input] --&gt; B[Linear 1]
+    B --&gt; C[ReLU]
+    C --&gt; D[Linear 2]
+    D --&gt; E[Output]
+</pre>
 
-<div class="mermaid">
-  
-flowchart LR
-    A[Input] --> B[Linear 1]
-    B --> C[ReLU]
-    C --> D[Linear 2]
-    D --> E[Output]
-
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <h3 id="4-another-add--norm">4. Another Add &amp; Norm</h3>
 <p>After the FFN, there&rsquo;s another Add &amp; Norm operation, similar to the one after attention. The input to the FFN is added to its output, and then layer normalization is applied.</p>
 <h3 id="complete-decoder-layer-flow">Complete Decoder Layer Flow</h3>
 <p>Here&rsquo;s how all components work together in a single decoder layer:</p>
-
-<div class="mermaid">
-  
-flowchart TB
-    subgraph "Complete Decoder Layer"
-        A[Input Embeddings] --> B[Masked Multi-Head Attention]
-        B --> C[Add & Norm]
-        C --> D[Feed Forward Network]
-        D --> E[Add & Norm]
-        E --> F[Output]
+<pre class="mermaid">
+  flowchart TB
+    subgraph &#34;Complete Decoder Layer&#34;
+        A[Input Embeddings] --&gt; B[Masked Multi-Head Attention]
+        B --&gt; C[Add &amp; Norm]
+        C --&gt; D[Feed Forward Network]
+        D --&gt; E[Add &amp; Norm]
+        E --&gt; F[Output]
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
-
-<div class="mermaid">
-  
-flowchart LR
-    subgraph "Residual Connections"
-        G[Input] --> H[Attention Output]
-        G --> I[Residual to Add & Norm 1]
-        J[Add & Norm 1 Output] --> K[FFN Output]
-        J --> L[Residual to Add & Norm 2]
+<pre class="mermaid">
+  flowchart LR
+    subgraph &#34;Residual Connections&#34;
+        G[Input] --&gt; H[Attention Output]
+        G --&gt; I[Residual to Add &amp; Norm 1]
+        J[Add &amp; Norm 1 Output] --&gt; K[FFN Output]
+        J --&gt; L[Residual to Add &amp; Norm 2]
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <h2 id="how-layers-work-together-in-decoder-only-architecture">How Layers Work Together in Decoder-Only Architecture</h2>
 <p>In a decoder-only model like GPT, multiple decoder layers are stacked on top of each other. The output of one layer becomes the input to the next layer. This allows the model to build increasingly complex representations of the text as it goes through more layers.</p>
-
-<div class="mermaid">
-  
-flowchart TB
-    subgraph "Stack of Decoder Layers Processing"
-        A[Input Embeddings] --> B[Layer 1]
-        B --> C[Layer 2]
-        C --> D["..."]
-        D --> E[Layer N]
-        E --> F[Final Representations]
+<pre class="mermaid">
+  flowchart TB
+    subgraph &#34;Stack of Decoder Layers Processing&#34;
+        A[Input Embeddings] --&gt; B[Layer 1]
+        B --&gt; C[Layer 2]
+        C --&gt; D[&#34;...&#34;]
+        D --&gt; E[Layer N]
+        E --&gt; F[Final Representations]
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
-
-<div class="mermaid">
-  
-flowchart TB
-    subgraph "Inside Each Layer"
-        G[Attention → Add & Norm → FFN → Add & Norm]
+<pre class="mermaid">
+  flowchart TB
+    subgraph &#34;Inside Each Layer&#34;
+        G[Attention → Add &amp; Norm → FFN → Add &amp; Norm]
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <p>Each layer refines the representations from the previous layer:</p>
 <ul>
 <li>Early layers focus on basic syntax and word relationships</li>
@@ -1346,77 +707,29 @@ flowchart TB
 <p>This hierarchical processing is what allows Transformers to understand complex language patterns and generate coherent text.</p>
 <h2 id="transformer-data-flow-visualization">Transformer Data Flow Visualization</h2>
 <p>To better understand how information flows through a Transformer, let&rsquo;s look at a complete visualization of the data processing pipeline:</p>
-
-<div class="mermaid">
-  
-flowchart TB
-    subgraph "Complete Transformer Data Flow"
-        A[Input Text] --> B[Tokenization]
-        B --> C[Token Embeddings]
-        C --> D[Positional Encoding]
-        D --> E[Embedding Layer]
-        E --> F[Decoder Layer 1]
-        F --> G[Decoder Layer 2]
-        G --> H["..."]
-        H --> I[Decoder Layer N]
-        I --> J[Output Probabilities]
-        J --> K[Next Token Prediction]
+<pre class="mermaid">
+  flowchart TB
+    subgraph &#34;Complete Transformer Data Flow&#34;
+        A[Input Text] --&gt; B[Tokenization]
+        B --&gt; C[Token Embeddings]
+        C --&gt; D[Positional Encoding]
+        D --&gt; E[Embedding Layer]
+        E --&gt; F[Decoder Layer 1]
+        F --&gt; G[Decoder Layer 2]
+        G --&gt; H[&#34;...&#34;]
+        H --&gt; I[Decoder Layer N]
+        I --&gt; J[Output Probabilities]
+        J --&gt; K[Next Token Prediction]
     end
     
-    subgraph "Inside a Decoder Layer"
+    subgraph &#34;Inside a Decoder Layer&#34;
         L[Masked Attention]
-        L --> M[Add & Norm]
-        M --> N[FFN]
-        N --> O[Add & Norm]
+        L --&gt; M[Add &amp; Norm]
+        M --&gt; N[FFN]
+        N --&gt; O[Add &amp; Norm]
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <h2 id="anatomy-of-a-modern-llm-parameter-calculation-and-mixture-of-experts-moe">Anatomy of a Modern LLM: Parameter Calculation and Mixture of Experts (MoE)</h2>
 <p>A common misconception is that the self-attention mechanism holds the most parameters. In reality, the vast majority of parameters are in the <strong>Feed-Forward Networks (FFNs)</strong>. This insight is key to understanding one of the most important recent innovations in LLM architecture: the <strong>Mixture of Experts (MoE)</strong>.</p>
 <blockquote>
@@ -1497,82 +810,34 @@ MoE is now standard in most frontier models (GPT-4.5, DeepSeek-V2, Gemini Ultra,
 </ul>
 </li>
 </ul>
-
-<div class="mermaid">
-  
-graph TD
-    subgraph "MoE Transformer Layer"
-        A[Input from Attention] --> B{Router};
-        B -- "Chooses 6" --> C[Expert 1];
-        B --> D[Expert 2];
-        B --> E[...];
-        B --> F[Expert 64];
+<pre class="mermaid">
+  graph TD
+    subgraph &#34;MoE Transformer Layer&#34;
+        A[Input from Attention] --&gt; B{Router};
+        B -- &#34;Chooses 6&#34; --&gt; C[Expert 1];
+        B --&gt; D[Expert 2];
+        B --&gt; E[...];
+        B --&gt; F[Expert 64];
         
-        subgraph "Selected Experts for one Token"
-            C --> G((Combine Outputs));
-            D -- "e.g." --> G;
+        subgraph &#34;Selected Experts for one Token&#34;
+            C --&gt; G((Combine Outputs));
+            D -- &#34;e.g.&#34; --&gt; G;
             style D fill:#f9f,stroke:#333,stroke-width:2px
             style C fill:#f9f,stroke:#333,stroke-width:2px
             style H fill:#f9f,stroke:#333,stroke-width:2px
             style I fill:#f9f,stroke:#333,stroke-width:2px
             style J fill:#f9f,stroke:#333,stroke-width:2px
             style K fill:#f9f,stroke:#333,stroke-width:2px
-            H("Expert 12") --> G;
-            I("Expert 28") --> G;
-            J("Expert 45") --> G;
-            K("Expert 51") --> G;
+            H(&#34;Expert 12&#34;) --&gt; G;
+            I(&#34;Expert 28&#34;) --&gt; G;
+            J(&#34;Expert 45&#34;) --&gt; G;
+            K(&#34;Expert 51&#34;) --&gt; G;
         end
 
-        G --> L[Output of Layer];
+        G --&gt; L[Output of Layer];
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <p><strong>Summary for architects:</strong></p>
 <ul>
 <li>The majority of parameters in a modern LLM are in the FFN/experts, not attention.</li>
@@ -1587,10 +852,8 @@ graph TD
 <p><strong>2025 Update:</strong><br>
 Recent research explores <strong>state space models</strong> (SSMs), <strong>hybrid attention/state space layers</strong>, and <strong>dynamic routing</strong> for even longer context and better efficiency. Some models now mix attention and SSM blocks within the same architecture.</p>
 </blockquote>
-
-<div class="mermaid">
-  
-timeline
+<pre class="mermaid">
+  timeline
     title Evolution of Transformer Architectures
     section 2017
     Attention is All You Need (Original Transformer)
@@ -1604,59 +867,13 @@ timeline
     section 2021-2022
     GPT-3.5: Instruction tuning, efficient attention (GQA/MQA)
     section 2023
-    GPT-4 & MoE: Multimodal, MoE mainstream, longer context
+    GPT-4 &amp; MoE: Multimodal, MoE mainstream, longer context
     section 2024
     DeepSeek-V2, Gemini Ultra: MoE everywhere, grouped-query attention, 128k+ context, rotary/dynamic position encoding
     section 2025
     State Space Models (SSMs), Hybrid Attention/SSM Layers, Dynamic Routing, Efficient Inference (speculative decoding, quantization)
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <h2 id="summary-the-big-picture">Summary: The Big Picture</h2>
 <p>The Transformer architecture, with its reliance on the attention mechanism, has solved the key limitations of previous models by allowing for parallel processing and a superior ability to capture long-range dependencies.</p>
 <h3 id="transformer-vs-rnn">Transformer vs. RNN</h3>
@@ -1694,62 +911,14 @@ timeline
 <p>The Transformer&rsquo;s parallel processing makes it much faster and more efficient to train than the sequential RNN. The attention mechanism also helps it overcome the vanishing gradient problem, enabling it to handle much longer sequences of text effectively.</p>
 <h3 id="transformer-vs-ffn">Transformer vs. FFN</h3>
 <p>While both use feed-forward networks, the Transformer&rsquo;s self-attention layers provide the crucial context-awareness that FFNs completely lack.</p>
-
-<div class="mermaid">
-  
-flowchart LR
-    subgraph "Comparison"
-        A["FFN: No Context"] --> B[Simple Output]
-        C["Transformer: Full Context"] --> D[Context-Aware Output]
+<pre class="mermaid">
+  flowchart LR
+    subgraph &#34;Comparison&#34;
+        A[&#34;FFN: No Context&#34;] --&gt; B[Simple Output]
+        C[&#34;Transformer: Full Context&#34;] --&gt; D[Context-Aware Output]
     end
+</pre>
 
-</div>
-<script>
-  function loadMermaid() {
-    if (typeof mermaid === 'undefined') {
-      var script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js';
-      script.onload = function() {
-        
-        mermaid.initialize({
-          startOnLoad: true,
-          theme: 'default',
-          flowchart: {
-            useMaxWidth: true,
-            htmlLabels: true
-          }
-        });
-        
-        
-        const mermaidElements = document.querySelectorAll('.mermaid');
-        if (mermaidElements.length > 0) {
-          mermaid.init(mermaidElements);
-        }
-      };
-      
-      
-      script.onerror = function(e) {
-        console.error('Failed to load Mermaid library', e);
-      };
-      
-      document.head.appendChild(script);
-    } else {
-      
-      const mermaidElements = document.querySelectorAll('.mermaid');
-      if (mermaidElements.length > 0) {
-        mermaid.init(mermaidElements);
-      }
-    }
-  }
-  
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadMermaid);
-  } else {
-    
-    window.setTimeout(loadMermaid, 0);
-  }
-</script>
 <h2 id="conclusion">Conclusion</h2>
 <p>Models like GPT-4 and the upcoming GPT-5 are simply massive, highly-tuned versions of this same basic architecture, proving that the Transformer is a truly scalable and powerful foundation for the future of AI.</p>
 <blockquote>
@@ -1792,274 +961,268 @@ Try running a small transformer model using HuggingFace Transformers, or experim
 <li><strong>Speculative Decoding</strong>: An inference-time speedup technique.</li>
 </ul>
 
-            
-             
-            
 
-
-
-
-            
-            </div>
-            
-            
-
-<div class="
-    col-lg-3 col-lg-offset-0
-    col-md-3 col-md-offset-0
-    col-sm-12
-    col-xs-12
-    sidebar-container
-">
+                
+                
+<div class="entry-shang text-center">
     
+	    <p>「真诚赞赏，手留余香」</p>
 	
-    <section class="visible-md visible-lg">
-	
-        <div class="short-about">
-            
-            <a href="/about">
-               <img src="/img/20190713213835-3.jpg" alt="avatar" style="cursor: pointer" />
-            </a>
-            
-            
-                <p>Senior Software Engineer, Open source enthusiast, PMP, Scrum master</p>
-            
-           
-           <ul class="list-inline">
-               
-               <li>
-                   <a href="mailto:akjamie.zhang@outlook.com">
-                      <span class="fa-stack fa-lg">
-                          <i class="fa fa-circle fa-stack-2x"></i>
-                          <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
-                      </span>
-                   </a>
-               </li>
-               
-               
-               
-               
-               
-               
-               <li>
-                   <a target="_blank" href="/img/wechat-qrcode.png">
-                       <span class="fa-stack fa-lg">
-                           <i class="fas fa-circle fa-stack-2x"></i>
-                           <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
-                       </span>
-                   </a>
-               </li>
-               
-               
-               <li>
-                   <a target="_blank" href="https://github.com/akjamie">
-                       <span class="fa-stack fa-lg">
-                           <i class="fas fa-circle fa-stack-2x"></i>
-                           <i class="fab fa-github fa-stack-1x fa-inverse"></i>
-                       </span>
-                   </a>
-               </li>
-               
-               
-               
-               
-               <li>
-                   <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
-                       <span class="fa-stack fa-lg">
-                           <i class="fas fa-circle fa-stack-2x"></i>
-                           <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
-                       </span>
-                   </a>
-               </li>
-               
-               
-               
-            
-            
-               
-               
-               
-               
-                </ul>
-            </div>
-    </section>
-	
-    
-    
-    
-    
-    <section>
-        <hr class="hidden-sm hidden-xs">
-        <h5>FEATURED TAGS</h5>
-        <div class="tags">
-            
-            
-               
-            
-               
-            
-               
-            
-               
-            
-               
-            
-               
-                    <a href="/tags/aws" title="aws">
-                        aws
-                    </a>
-               
-            
-               
-            
-               
-            
-               
-            
-               
-            
-               
-            
-               
-            
-               
-            
-               
-                    <a href="/tags/docker" title="docker">
-                        docker
-                    </a>
-               
-            
-               
-            
-               
-            
-               
-            
-               
-            
-               
-            
-               
-                    <a href="/tags/k8s" title="k8s">
-                        k8s
-                    </a>
-               
-            
-               
-                    <a href="/tags/kubernetes" title="kubernetes">
-                        kubernetes
-                    </a>
-               
-            
-               
-            
-               
-            
-               
-                    <a href="/tags/llm" title="llm">
-                        llm
-                    </a>
-               
-            
-               
-            
-               
-            
-               
-            
-               
-            
-               
-            
-               
-                    <a href="/tags/nosql" title="nosql">
-                        nosql
-                    </a>
-               
-            
-               
-            
-               
-            
-               
-                    <a href="/tags/python" title="python">
-                        python
-                    </a>
-               
-            
-               
-                    <a href="/tags/redis" title="redis">
-                        redis
-                    </a>
-               
-            
-               
-            
-               
-            
-               
-                    <a href="/tags/spring" title="spring">
-                        spring
-                    </a>
-               
-            
-               
-            
-               
-            
-               
-                    <a href="/tags/spring-cloud" title="spring cloud">
-                        spring cloud
-                    </a>
-               
-            
-               
-            
-               
-            
-               
-            
-               
-                    <a href="/tags/transaction-management" title="transaction management">
-                        transaction management
-                    </a>
-               
-            
-               
-                    <a href="/tags/transformer" title="transformer">
-                        transformer
-                    </a>
-               
-            
-               
-            
-               
-                    <a href="/tags/vault" title="vault">
-                        vault
-                    </a>
-               
-            
-               
-            
-        </div>
-    </section>
-    
-
-    
-    
-    <section>
-        <hr class="hidden-sm hidden-xs">
-        <h5>FRIENDS</h5>
-        <ul class="list-inline">
-            
-        </ul>
-    </section>
-    
-    
-    
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
 </div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
 
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2024-06-15-run-llm-on-intel-igpu/" data-toggle="tooltip" data-placement="top" title="Run LLM on Intel Iris Xe GPU Using IEPX-LLM &#43; Ollama">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/2025-09-02-learning-notes-transformer-finetune/" data-toggle="tooltip" data-placement="top" title="Learning Notes: Fine-Tuning Transformer Models">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
         </div>
     </div>
 </article>
@@ -2256,6 +1419,15 @@ Try running a small transformer model using HuggingFace Transformers, or experim
 
 
 
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"
+          data-cfasync="false" defer></script>
+  <script data-cfasync="false" defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
+    });
+  </script>
 
 </body>
 </html>
