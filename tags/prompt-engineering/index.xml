@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Prompt Engineering on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/prompt-engineering/</link>
+    <description>Recent content in Prompt Engineering on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 11 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/prompt-engineering/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Complete Guide to Building Agentic AI Systems: From Basics to Production</title>
+      <link>http://akjamie.github.io/post/2025-12-11-build-agentic-ai/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2025-12-11-build-agentic-ai/</guid>
+      <description>&lt;h1 id=&#34;building-production-agentic-ai-a-tech-leads-guide&#34;&gt;Building Production Agentic AI: A Tech Lead&amp;rsquo;s Guide&lt;/h1&gt;&#xA;&lt;h2 id=&#34;why-this-guide-matters&#34;&gt;Why This Guide Matters&lt;/h2&gt;&#xA;&lt;p&gt;If you&amp;rsquo;ve shipped LLM-based features, you&amp;rsquo;ve probably hit the wall where simple prompt engineering stops working. Your PM wants the AI to &amp;ldquo;do more,&amp;rdquo; your team is drowning in edge cases, and you&amp;rsquo;re not sure if you need better prompts, more tools, or an entirely different architecture.&lt;/p&gt;&#xA;&lt;p&gt;I&amp;rsquo;ve been there. After building several production agentic systems, here&amp;rsquo;s what I wish someone had told me on day one: &lt;strong&gt;The difference between teams that ship working AI agents and those that don&amp;rsquo;t isn&amp;rsquo;t the model—it&amp;rsquo;s the discipline around evaluation and error analysis.&lt;/strong&gt;&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -6,8 +6,50 @@
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 08 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 11 Dec 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agentic AI</title>
+      <link>http://akjamie.github.io/tags/agentic-ai/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/agentic-ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Agents</title>
+      <link>http://akjamie.github.io/tags/ai-agents/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/ai-agents/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>LLM</title>
+      <link>http://akjamie.github.io/tags/llm/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/llm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Multi-Agent Systems</title>
+      <link>http://akjamie.github.io/tags/multi-agent-systems/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/multi-agent-systems/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Prompt Engineering</title>
+      <link>http://akjamie.github.io/tags/prompt-engineering/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/prompt-engineering/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Tool Use</title>
+      <link>http://akjamie.github.io/tags/tool-use/</link>
+      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/tool-use/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Agentic</title>
       <link>http://akjamie.github.io/tags/agentic/</link>
@@ -20,13 +62,6 @@
       <link>http://akjamie.github.io/tags/langchain/</link>
       <pubDate>Mon, 08 Dec 2025 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/langchain/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>LLM</title>
-      <link>http://akjamie.github.io/tags/llm/</link>
-      <pubDate>Mon, 08 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/llm/</guid>
       <description></description>
     </item>
     <item>

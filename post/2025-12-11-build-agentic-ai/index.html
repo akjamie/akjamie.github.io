@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="The Complete Guide to Building Agentic AI Systems: From Basics to Production" />
+    <meta property="og:title" content="The Complete Guide to Building Agentic AI Systems: From Basics to Production" />
+    <meta property="twitter:title" content="The Complete Guide to Building Agentic AI Systems: From Basics to Production" />
+    
+
+    
+    <meta name="description" content="Master the art of building production-ready agentic AI systems with reflection patterns, tool use, planning, and multi-agent collaboration. A comprehensive guide covering evaluation strategies, error analysis, and optimization techniques.">
+    <meta property="og:description" content="Master the art of building production-ready agentic AI systems with reflection patterns, tool use, planning, and multi-agent collaboration. A comprehensive guide covering evaluation strategies, error analysis, and optimization techniques." />
+    <meta property="twitter:description" content="Master the art of building production-ready agentic AI systems with reflection patterns, tool use, planning, and multi-agent collaboration. A comprehensive guide covering evaluation strategies, error analysis, and optimization techniques." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2025-12-11-build-agentic-ai/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>The Complete Guide to Building Agentic AI Systems: From Basics to Production | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2025-12-11-build-agentic-ai/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+                    
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+<header class="intro-header" style="background-image: url('/img/header-03.png')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>Jamie&#39;s Blog </h1>
+                    
+		    <span class="subheading">The curious developer&#39;s ODYSSEY, Exploring the Universe of TECH, CODE &amp; AI.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+            
+            <div class="
+            col-lg-8 col-lg-offset-1
+            col-md-8 col-md-offset-1
+            col-sm-12
+            col-xs-12
+            post-container">
+            
+                <h1 id="building-production-agentic-ai-a-tech-leads-guide">Building Production Agentic AI: A Tech Lead&rsquo;s Guide</h1>
+<h2 id="why-this-guide-matters">Why This Guide Matters</h2>
+<p>If you&rsquo;ve shipped LLM-based features, you&rsquo;ve probably hit the wall where simple prompt engineering stops working. Your PM wants the AI to &ldquo;do more,&rdquo; your team is drowning in edge cases, and you&rsquo;re not sure if you need better prompts, more tools, or an entirely different architecture.</p>
+<p>I&rsquo;ve been there. After building several production agentic systems, here&rsquo;s what I wish someone had told me on day one: <strong>The difference between teams that ship working AI agents and those that don&rsquo;t isn&rsquo;t the model—it&rsquo;s the discipline around evaluation and error analysis.</strong></p>
+<p>This guide distills lessons from Andrew Ng&rsquo;s Agentic AI course and my own production experience into actionable patterns for senior engineers and technical leaders.</p>
+<h2 id="what-youll-learn">What You&rsquo;ll Learn</h2>
+<p>This isn&rsquo;t another &ldquo;ChatGPT is amazing&rdquo; article. We&rsquo;re diving deep into:</p>
+<ul>
+<li><strong>Why agentic workflows outperform</strong> even the best one-shot prompts (spoiler: GPT-3.5 with agents beats GPT-4 without them)</li>
+<li><strong>Four core design patterns</strong> that power every production agent system</li>
+<li><strong>The evaluation framework</strong> that separates high-performing teams from everyone else</li>
+<li><strong>Real cost/latency trade-offs</strong> and when to optimize what</li>
+<li><strong>Multi-agent architectures</strong> and when they&rsquo;re worth the complexity</li>
+</ul>
+<hr>
+<h2 id="the-agentic-ai-paradigm-shift">The Agentic AI Paradigm Shift</h2>
+<h3 id="the-old-way-one-shot-generation">The Old Way: One-Shot Generation</h3>
+<p>Remember when we thought the future was just bigger context windows and smarter prompts?</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># The old approach</span>
+</span></span><span style="display:flex;"><span>prompt <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;Write a comprehensive research report on quantum computing&#34;</span>
+</span></span><span style="display:flex;"><span>response <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>generate(prompt)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Hope it&#39;s good 🤞</span>
+</span></span></code></pre></div><p>This is like asking someone to write an essay without backspace—from first word to last, no revision, no research breaks.</p>
+<h3 id="the-new-way-iterative-agentic-workflows">The New Way: Iterative Agentic Workflows</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># The agentic approach</span>
+</span></span><span style="display:flex;"><span>outline <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>generate(<span style="color:#f1fa8c">&#34;Create an outline for quantum computing report&#34;</span>)
+</span></span><span style="display:flex;"><span>research_data <span style="color:#ff79c6">=</span> web_search(extract_topics(outline))
+</span></span><span style="display:flex;"><span>first_draft <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>generate(<span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;Write report with this outline and data...&#34;</span>)
+</span></span><span style="display:flex;"><span>critique <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>reflect(<span style="color:#f1fa8c">&#34;Review this draft for gaps and weaknesses...&#34;</span>)
+</span></span><span style="display:flex;"><span>final_report <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>revise(first_draft, critique, research_data)
+</span></span></code></pre></div><p>This mirrors how humans actually work—iteratively, with research, reflection, and revision.</p>
+<h3 id="the-performance-gap">The Performance Gap</h3>
+<p>Here&rsquo;s data that should make you reconsider your architecture:</p>
+<p><strong>HumanEval Coding Benchmark:</strong></p>
+<ul>
+<li>GPT-3.5 (direct): 48%</li>
+<li>GPT-4 (direct): 67%</li>
+<li><strong>GPT-3.5 + agentic workflow: 95%</strong> 🎯</li>
+</ul>
+<p>That&rsquo;s right—last-gen models with good workflows beat current-gen models without them. The implication? <strong>Architecture matters more than model selection</strong> for many real-world tasks.</p>
+<h3 id="the-autonomy-spectrum">The Autonomy Spectrum</h3>
+<p>Not all agents need the same level of autonomy:</p>
+<pre class="mermaid">
+  graph LR
+    A[Deterministic&lt;br/&gt;Fixed Pipeline] --&gt; B[Semi-Autonomous&lt;br/&gt;Tool Selection] --&gt; C[Highly Autonomous&lt;br/&gt;Dynamic Planning]
+    
+    A1[Invoice Processing] -.-&gt; A
+    B1[Customer Support] -.-&gt; B
+    C1[Research Agent] -.-&gt; C
+    
+    style A fill:#e8f5e1
+    style B fill:#fff4e1
+    style C fill:#ffe1e1
+</pre>
+
+<p><strong>Start simple. Add autonomy only when deterministic workflows fail.</strong></p>
+<p>Most production systems I&rsquo;ve seen succeed with semi-autonomous agents—they choose from predefined tools but follow predictable patterns. The full autonomy of &ldquo;do whatever it takes&rdquo; agents is powerful but hard to control and debug.</p>
+<hr>
+<h2 id="pattern-1-reflectionthe-easy-win">Pattern 1: Reflection—The Easy Win</h2>
+<h3 id="why-it-works">Why It Works</h3>
+<p>Reflection is the simplest pattern that consistently improves output quality. The insight: <strong>LLMs are better critics than creators.</strong></p>
+<p>Here&rsquo;s a real example from a production code generator:</p>
+<p><strong>Without Reflection:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">calculate_interest</span>(principal, rate, time):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> principal <span style="color:#ff79c6">*</span> rate <span style="color:#ff79c6">*</span> time  <span style="color:#6272a4"># Wrong formula!</span>
+</span></span></code></pre></div><p><strong>With Reflection:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Generation</span>
+</span></span><span style="display:flex;"><span>code_v1 <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>generate(<span style="color:#f1fa8c">&#34;Write compound interest calculator&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Reflection</span>
+</span></span><span style="display:flex;"><span>critique <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>reflect(<span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">Review this code for correctness:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span><span style="color:#f1fa8c">{code_v1}</span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">Check: formulas, edge cases, variable names
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Output: &#34;Uses simple interest formula, should be compound&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Revision</span>
+</span></span><span style="display:flex;"><span>code_v2 <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>revise(code_v1, critique)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Correct implementation</span>
+</span></span></code></pre></div><h3 id="the-secret-sauce-external-feedback">The Secret Sauce: External Feedback</h3>
+<p>But here&rsquo;s where it gets interesting. Reflection with <strong>external feedback</strong> is dramatically more effective:</p>
+<pre class="mermaid">
+  sequenceDiagram
+    participant LLM
+    participant Executor
+    participant LLM as LLM (Reflect)
+    
+    LLM-&gt;&gt;LLM: Generate Code v1
+    LLM-&gt;&gt;Executor: Run Code
+    Executor-&gt;&gt;Executor: SyntaxError: line 5
+    Executor-&gt;&gt;LLM: Error: &#34;SyntaxError...&#34;
+    LLM-&gt;&gt;LLM: Fix Error
+    LLM-&gt;&gt;Executor: Run Code v2
+    Executor-&gt;&gt;LLM: Success!
+</pre>
+
+<p><strong>The principle:</strong> New information from outside the LLM&rsquo;s context (execution results, API responses, validation checks) makes reflection exponentially more powerful.</p>
+<h3 id="production-implementation">Production Implementation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">generate_with_reflection</span>(task: <span style="color:#8be9fd;font-style:italic">str</span>, max_iterations: <span style="color:#8be9fd;font-style:italic">int</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">3</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Generate with self-correction loop
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    output <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>generate(task)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(max_iterations):
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># External feedback (execution, validation, etc.)</span>
+</span></span><span style="display:flex;"><span>        feedback <span style="color:#ff79c6">=</span> validate_output(output)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> feedback<span style="color:#ff79c6">.</span>is_valid:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> output
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># Reflect with concrete feedback</span>
+</span></span><span style="display:flex;"><span>        critique <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>reflect(<span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Task: </span><span style="color:#f1fa8c">{</span>task<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Output: </span><span style="color:#f1fa8c">{</span>output<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Issues found: </span><span style="color:#f1fa8c">{</span>feedback<span style="color:#ff79c6">.</span>errors<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Provide specific improvements.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#34;&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        output <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>revise(output, critique)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> output
+</span></span></code></pre></div><h3 id="when-reflection-helps">When Reflection Helps</h3>
+<p><strong>High-value use cases:</strong></p>
+<ul>
+<li>✅ Code generation (with execution feedback)</li>
+<li>✅ Structured data (HTML, JSON) with validation</li>
+<li>✅ Multi-step instructions</li>
+<li>✅ Domain-specific content with expert critique</li>
+</ul>
+<p><strong>Lower value:</strong></p>
+<ul>
+<li>❌ Simple factual questions</li>
+<li>❌ Tasks with single correct answers</li>
+<li>❌ Latency-critical applications</li>
+</ul>
+<h3 id="a-word-of-caution">A Word of Caution</h3>
+<p>Research shows reflection improves performance by 10-30% on average, but it&rsquo;s not magic. I&rsquo;ve seen teams waste weeks trying to fix fundamental prompt issues with reflection. <strong>Fix your base prompts first, then add reflection.</strong></p>
+<hr>
+<h2 id="pattern-2-tool-useextending-llm-capabilities">Pattern 2: Tool Use—Extending LLM Capabilities</h2>
+<h3 id="the-mental-model">The Mental Model</h3>
+<p>Think of tool use as giving your LLM an API to the outside world. Without tools, it&rsquo;s a brain in a jar. With tools, it can:</p>
+<ul>
+<li>Access real-time data (web search, databases)</li>
+<li>Perform exact computations (code execution)</li>
+<li>Take actions (send emails, create calendar events)</li>
+<li>Integrate with your systems (CRM, ticketing, etc.)</li>
+</ul>
+<h3 id="how-it-actually-works">How It Actually Works</h3>
+<p>Here&rsquo;s what happens under the hood:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># 1. You define a function</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">get_weather</span>(city: <span style="color:#8be9fd;font-style:italic">str</span>, units: <span style="color:#8be9fd;font-style:italic">str</span> <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;celsius&#34;</span>) <span style="color:#ff79c6">-&gt;</span> <span style="color:#8be9fd;font-style:italic">dict</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Get current weather for a city.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Args:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        city: City name
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        units: Temperature units (celsius/fahrenheit)
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> weather_api<span style="color:#ff79c6">.</span>fetch(city, units)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 2. LLM sees this description</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;name&#34;</span>: <span style="color:#f1fa8c">&#34;get_weather&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;description&#34;</span>: <span style="color:#f1fa8c">&#34;Get current weather for a city.&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;parameters&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;city&#34;</span>: {<span style="color:#f1fa8c">&#34;type&#34;</span>: <span style="color:#f1fa8c">&#34;string&#34;</span>},
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;units&#34;</span>: {<span style="color:#f1fa8c">&#34;type&#34;</span>: <span style="color:#f1fa8c">&#34;string&#34;</span>, <span style="color:#f1fa8c">&#34;enum&#34;</span>: [<span style="color:#f1fa8c">&#34;celsius&#34;</span>, <span style="color:#f1fa8c">&#34;fahrenheit&#34;</span>]}
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 3. When user asks &#34;What&#39;s the weather in Tokyo?&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># LLM outputs:</span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;tool_call&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;function&#34;</span>: <span style="color:#f1fa8c">&#34;get_weather&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;arguments&#34;</span>: {<span style="color:#f1fa8c">&#34;city&#34;</span>: <span style="color:#f1fa8c">&#34;Tokyo&#34;</span>, <span style="color:#f1fa8c">&#34;units&#34;</span>: <span style="color:#f1fa8c">&#34;celsius&#34;</span>}
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 4. YOU execute the function (LLM doesn&#39;t do it)</span>
+</span></span><span style="display:flex;"><span>result <span style="color:#ff79c6">=</span> get_weather(<span style="color:#f1fa8c">&#34;Tokyo&#34;</span>, <span style="color:#f1fa8c">&#34;celsius&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 5. Feed result back to LLM</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># LLM generates: &#34;It&#39;s currently 18°C in Tokyo...&#34;</span>
+</span></span></code></pre></div><p><strong>Critical insight:</strong> The LLM never directly executes functions. It <em>requests</em> execution by generating structured output. Your code parses this and runs the function.</p>
+<h3 id="the-code-execution-game-changer">The Code Execution Game-Changer</h3>
+<p>Code execution is special—it&rsquo;s the Swiss Army knife of tools:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Instead of creating tools for:</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># - calculate_compound_interest()</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># - calculate_roi()</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># - calculate_depreciation()</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># - calculate_... (hundreds more)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Just give it ONE tool:</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">execute_code</span>(code: <span style="color:#8be9fd;font-style:italic">str</span>) <span style="color:#ff79c6">-&gt;</span> <span style="color:#8be9fd;font-style:italic">str</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;&#34;&#34;Execute Python code and return output&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> run_in_sandbox(code)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Now it can do anything:</span>
+</span></span><span style="display:flex;"><span>llm: <span style="color:#f1fa8c">&#34;What&#39;s the compound interest on $1000 at 5</span><span style="color:#f1fa8c">% f</span><span style="color:#f1fa8c">or 10 years?&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Generates:</span>
+</span></span><span style="display:flex;"><span>principal <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1000</span>
+</span></span><span style="display:flex;"><span>rate <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0.05</span>
+</span></span><span style="display:flex;"><span>time <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">10</span>
+</span></span><span style="display:flex;"><span>result <span style="color:#ff79c6">=</span> principal <span style="color:#ff79c6">*</span> (<span style="color:#bd93f9">1</span> <span style="color:#ff79c6">+</span> rate) <span style="color:#ff79c6">**</span> time
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;$</span><span style="color:#f1fa8c">{</span>result<span style="color:#f1fa8c">:</span><span style="color:#f1fa8c">.2f</span><span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Output: $1628.89</span>
+</span></span></code></pre></div><p><strong>Why this works:</strong> LLMs have seen massive amounts of code during training. They&rsquo;re better at writing code than describing every possible calculation in natural language.</p>
+<h3 id="security-the-elephant-in-the-room">Security: The Elephant in the Room</h3>
+<p>Real story from our team:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># LLM generated this once:</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os
+</span></span><span style="display:flex;"><span>os<span style="color:#ff79c6">.</span>system(<span style="color:#f1fa8c">&#34;rm -rf *.py&#34;</span>)  <span style="color:#6272a4"># 😱</span>
+</span></span></code></pre></div><p><strong>Always sandbox code execution:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># ❌ Dangerous</span>
+</span></span><span style="display:flex;"><span>exec(llm_generated_code)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># ✅ Safe</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> docker
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">execute_safely</span>(code: <span style="color:#8be9fd;font-style:italic">str</span>, timeout: <span style="color:#8be9fd;font-style:italic">int</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">30</span>):
+</span></span><span style="display:flex;"><span>    client <span style="color:#ff79c6">=</span> docker<span style="color:#ff79c6">.</span>from_env()
+</span></span><span style="display:flex;"><span>    container <span style="color:#ff79c6">=</span> client<span style="color:#ff79c6">.</span>containers<span style="color:#ff79c6">.</span>run(
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;python:3.11-slim&#34;</span>,
+</span></span><span style="display:flex;"><span>        command<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;python -c &#39;</span><span style="color:#f1fa8c">{</span>code<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">&#39;&#34;</span>,
+</span></span><span style="display:flex;"><span>        timeout<span style="color:#ff79c6">=</span>timeout,
+</span></span><span style="display:flex;"><span>        mem_limit<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;256m&#34;</span>,
+</span></span><span style="display:flex;"><span>        network_disabled<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>,
+</span></span><span style="display:flex;"><span>        remove<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> container<span style="color:#ff79c6">.</span>decode()
+</span></span></code></pre></div><p><strong>Production checklist:</strong></p>
+<ul>
+<li>✅ Run in isolated environment (Docker, E2B, etc.)</li>
+<li>✅ Limit execution time</li>
+<li>✅ Restrict file system access</li>
+<li>✅ Disable network access (unless needed)</li>
+<li>✅ Monitor resource usage</li>
+</ul>
+<h3 id="model-context-protocol-mcp-the-ecosystem-play">Model Context Protocol (MCP): The Ecosystem Play</h3>
+<p>Here&rsquo;s the problem MCP solves:</p>
+<p><strong>Before MCP:</strong>
+Every team building an agent has to write their own GitHub integration, their own Google Drive connector, their own Slack wrapper&hellip;</p>
+<p>M teams × N integrations = M×N total work 😫</p>
+<p><strong>With MCP:</strong>
+Someone builds a GitHub MCP server once. Everyone uses it.</p>
+<p>M teams + N servers = M+N total work 🎉</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Using GitHub MCP server</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">with</span> mcp<span style="color:#ff79c6">.</span>connect(<span style="color:#f1fa8c">&#34;github&#34;</span>) <span style="color:#ff79c6">as</span> github:
+</span></span><span style="display:flex;"><span>    readme <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> github<span style="color:#ff79c6">.</span>get_file(<span style="color:#f1fa8c">&#34;org/repo&#34;</span>, <span style="color:#f1fa8c">&#34;README.md&#34;</span>)
+</span></span><span style="display:flex;"><span>    prs <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> github<span style="color:#ff79c6">.</span>list_pull_requests(<span style="color:#f1fa8c">&#34;org/repo&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Your LLM can now naturally interact with GitHub</span>
+</span></span></code></pre></div><p><strong>Strategic insight for tech leads:</strong> Invest in MCP servers for your internal systems. Write once, use across all your agent projects. The ROI compounds quickly.</p>
+<hr>
+<h2 id="the-evaluation-discipline-what-separates-winners-from-losers">The Evaluation Discipline: What Separates Winners from Losers</h2>
+<p>This is the section that will make or break your agentic AI project. I&rsquo;ve reviewed dozens of struggling AI teams, and 90% of the time, the issue isn&rsquo;t their prompts or their architecture—it&rsquo;s that they have no systematic way to measure and improve.</p>
+<h3 id="the-hard-truth">The Hard Truth</h3>
+<p><strong>Without evals:</strong></p>
+<ul>
+<li>You&rsquo;re flying blind</li>
+<li>Every change is a gamble</li>
+<li>You&rsquo;ll spend weeks on things that don&rsquo;t matter</li>
+<li>You can&rsquo;t justify resource allocation to leadership</li>
+</ul>
+<p><strong>With evals:</strong></p>
+<ul>
+<li>Data-driven decisions</li>
+<li>Clear ROI on improvements</li>
+<li>Efficient use of engineering time</li>
+<li>Objective progress tracking for stakeholders</li>
+</ul>
+<h3 id="the-build-analyze-cycle">The Build-Analyze Cycle</h3>
+<pre class="mermaid">
+  graph TB
+    Start[Build Quick&lt;br/&gt;End-to-End System] --&gt; Examine[Examine&lt;br/&gt;Outputs &amp; Traces]
+    Examine --&gt; Identify[Identify&lt;br/&gt;Problems]
+    Identify --&gt; Eval[Build&lt;br/&gt;Evaluations]
+    Eval --&gt; Improve[Make Targeted&lt;br/&gt;Improvements]
+    Improve --&gt; Measure[Measure&lt;br/&gt;Impact]
+    Measure --&gt; Decision{Good Enough?}
+    Decision --&gt;|No| Identify
+    Decision --&gt;|Yes| Optimize[Optimize&lt;br/&gt;Cost/Latency]
+    
+    style Start fill:#e8f5e1
+    style Eval fill:#ffe1e1
+    style Improve fill:#e1f5ff
+</pre>
+
+<p><strong>What I see in struggling teams:</strong> 80% building, 20% analyzing
+<strong>What I see in high-performing teams:</strong> 50% building, 50% analyzing</p>
+<h3 id="start-small-scale-smart">Start Small, Scale Smart</h3>
+<p><strong>Week 1: Quick &amp; Dirty</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Just collect 10-15 examples</span>
+</span></span><span style="display:flex;"><span>test_cases <span style="color:#ff79c6">=</span> [
+</span></span><span style="display:flex;"><span>    {<span style="color:#f1fa8c">&#34;input&#34;</span>: <span style="color:#f1fa8c">&#34;...&#34;</span>, <span style="color:#f1fa8c">&#34;expected&#34;</span>: <span style="color:#f1fa8c">&#34;...&#34;</span>},
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># ... 9 more</span>
+</span></span><span style="display:flex;"><span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Simple pass/fail</span>
+</span></span><span style="display:flex;"><span>correct <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">sum</span>(<span style="color:#bd93f9">1</span> <span style="color:#ff79c6">for</span> t <span style="color:#ff79c6">in</span> test_cases <span style="color:#ff79c6">if</span> system(t[<span style="color:#f1fa8c">&#34;input&#34;</span>]) <span style="color:#ff79c6">==</span> t[<span style="color:#f1fa8c">&#34;expected&#34;</span>])
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;Accuracy: </span><span style="color:#f1fa8c">{</span>correct<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">/</span><span style="color:#f1fa8c">{</span><span style="color:#8be9fd;font-style:italic">len</span>(test_cases)<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">&#34;</span>)
+</span></span></code></pre></div><p><strong>This is enough to get started.</strong> Don&rsquo;t let perfect be the enemy of good.</p>
+<p><strong>Week 4: More Sophisticated</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">EvaluationSuite</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">__init__</span>(<span style="font-style:italic">self</span>):
+</span></span><span style="display:flex;"><span>        <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>test_cases <span style="color:#ff79c6">=</span> load_test_cases()  <span style="color:#6272a4"># Now 50+ examples</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">evaluate_end_to_end</span>(<span style="font-style:italic">self</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;&#34;&#34;Overall system performance&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;accuracy&#34;</span>: <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_calculate_accuracy(),
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;latency_p95&#34;</span>: <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_measure_latency(),
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;cost_per_request&#34;</span>: <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_calculate_cost()
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">evaluate_component</span>(<span style="font-style:italic">self</span>, component_name):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;&#34;&#34;Individual component performance&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_run_component_eval(component_name)
+</span></span></code></pre></div><h3 id="the-evaluation-matrix">The Evaluation Matrix</h3>
+<p>Understanding when to use which eval type is crucial:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Type</th>
+          <th style="text-align: left">Use Code-Based Evals</th>
+          <th style="text-align: left">Use LLM-as-Judge</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Per-Example Ground Truth</strong></td>
+          <td style="text-align: left">✅ Invoice date extraction<br/>✅ Database query correctness<br/>✅ Structured data validation</td>
+          <td style="text-align: left">✅ Essay contains required points<br/>✅ Response addresses customer issue<br/>✅ Code implements specified features</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Fixed Criteria</strong></td>
+          <td style="text-align: left">✅ Output length checks<br/>✅ Format validation<br/>✅ Regex pattern matching</td>
+          <td style="text-align: left">✅ Chart quality (rubric)<br/>✅ Email professionalism<br/>✅ Explanation clarity</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="llm-as-judge-the-right-way">LLM-as-Judge: The Right Way</h3>
+<p><strong>❌ Don&rsquo;t do this</strong> (position bias is real):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>prompt <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">Which output is better?
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">Output A: </span><span style="color:#f1fa8c">{output_a}</span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">Output B: </span><span style="color:#f1fa8c">{output_b}</span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">Answer: A or B
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># LLMs consistently favor the first option ~60% of the time</span>
+</span></span></code></pre></div><p><strong>✅ Do this instead</strong> (rubric-based):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>rubric <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">Evaluate this chart on these criteria (0 or 1 point each):
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">1. Has clear, descriptive title
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">2. Axis labels are present and readable
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">3. Uses appropriate chart type for data
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">4. Data points are clearly visible
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">5. Legend present (if needed)
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">6. Professional appearance
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">7. No visual clutter
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">Return JSON: {&#34;scores&#34;: [1,1,0,1,1,1,0], &#34;total&#34;: 5, &#34;explanation&#34;: &#34;...&#34;}
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>score <span style="color:#ff79c6">=</span> llm_judge(output, rubric)
+</span></span></code></pre></div><p><strong>Why this works:</strong></p>
+<ul>
+<li>Binary criteria are more reliable than scales</li>
+<li>Avoids position bias</li>
+<li>Provides granular feedback</li>
+<li>Easier to debug and improve</li>
+</ul>
+<h3 id="error-analysis-your-secret-weapon">Error Analysis: Your Secret Weapon</h3>
+<p>This is where senior engineers separate themselves. Anyone can build evals. Great engineers use them to drive strategic decisions.</p>
+<p><strong>The Process:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># 1. Focus on failures only</span>
+</span></span><span style="display:flex;"><span>failures <span style="color:#ff79c6">=</span> [test <span style="color:#ff79c6">for</span> test <span style="color:#ff79c6">in</span> test_suite <span style="color:#ff79c6">if</span> test<span style="color:#ff79c6">.</span>failed()]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 2. Examine traces for each failure</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">for</span> failure <span style="color:#ff79c6">in</span> failures:
+</span></span><span style="display:flex;"><span>    traces <span style="color:#ff79c6">=</span> failure<span style="color:#ff79c6">.</span>get_intermediate_outputs()
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Look at output of each component</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 3. Build error taxonomy spreadsheet</span>
+</span></span></code></pre></div><p><strong>Example Error Analysis:</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Test Case</th>
+          <th style="text-align: left">Search Terms</th>
+          <th style="text-align: left">Search Results</th>
+          <th style="text-align: left">Source Selection</th>
+          <th style="text-align: left">Final Output</th>
+          <th style="text-align: left">Root Cause</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Quantum computing</td>
+          <td style="text-align: left">✅ Good</td>
+          <td style="text-align: left">❌ Too broad</td>
+          <td style="text-align: left">⚠️ Limited input</td>
+          <td style="text-align: left">❌ Shallow</td>
+          <td style="text-align: left">Search results</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Black holes</td>
+          <td style="text-align: left">✅ Good</td>
+          <td style="text-align: left">❌ Blog posts</td>
+          <td style="text-align: left">❌ Low quality</td>
+          <td style="text-align: left">❌ Missing key facts</td>
+          <td style="text-align: left">Search results</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">AI ethics</td>
+          <td style="text-align: left">⚠️ Too generic</td>
+          <td style="text-align: left">❌ Opinion pieces</td>
+          <td style="text-align: left">❌ Wrong sources</td>
+          <td style="text-align: left">❌ One-sided</td>
+          <td style="text-align: left">Search terms + results</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Climate change</td>
+          <td style="text-align: left">✅ Good</td>
+          <td style="text-align: left">✅ Good</td>
+          <td style="text-align: left">✅ Good</td>
+          <td style="text-align: left">⚠️ Missing nuance</td>
+          <td style="text-align: left">Final synthesis</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Component Error Rates:</strong></p>
+<ul>
+<li>Search terms: 15%</li>
+<li>Search results: 65% ← <strong>Focus here first</strong></li>
+<li>Source selection: 20%</li>
+<li>Final synthesis: 10%</li>
+</ul>
+<p><strong>This data tells you exactly where to invest your time.</strong></p>
+<h3 id="component-level-evals">Component-Level Evals</h3>
+<p>Once error analysis identifies a problematic component, component-level evals let you iterate faster:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Instead of running full workflow every time...</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># (which might take 60s and cost $0.50)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Just evaluate the component you&#39;re improving</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># (takes 5s, costs $0.02)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">evaluate_search_component</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;&#34;&#34;Faster iteration on search quality&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    gold_standard <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;quantum computing&#34;</span>: [<span style="color:#f1fa8c">&#34;arxiv.org/...&#34;</span>, <span style="color:#f1fa8c">&#34;nature.com/...&#34;</span>, <span style="color:#f1fa8c">&#34;quantum.gov/...&#34;</span>],
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;black holes&#34;</span>: [<span style="color:#f1fa8c">&#34;nasa.gov/...&#34;</span>, <span style="color:#f1fa8c">&#34;eso.org/...&#34;</span>, <span style="color:#f1fa8c">&#34;arxiv.org/...&#34;</span>],
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># ...</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> query, expected_sources <span style="color:#ff79c6">in</span> gold_standard<span style="color:#ff79c6">.</span>items():
+</span></span><span style="display:flex;"><span>        actual_results <span style="color:#ff79c6">=</span> search_engine(query)
+</span></span><span style="display:flex;"><span>        f1_score <span style="color:#ff79c6">=</span> calculate_overlap(actual_results, expected_sources)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># Quick feedback on search quality</span>
+</span></span></code></pre></div><p><strong>Strategic value:</strong></p>
+<ul>
+<li>Iterate 10x faster</li>
+<li>Test parameter changes quickly</li>
+<li>Don&rsquo;t waste money on end-to-end runs</li>
+<li>Validate with full eval before deploying</li>
+</ul>
+<hr>
+<h2 id="pattern-3-planningwhen-agents-decide-the-strategy">Pattern 3: Planning—When Agents Decide the Strategy</h2>
+<h3 id="the-paradigm-shift">The Paradigm Shift</h3>
+<p>Up until now, we&rsquo;ve been <strong>hard-coding the sequence</strong> of operations:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Developer decides the steps</span>
+</span></span><span style="display:flex;"><span>step1 <span style="color:#ff79c6">=</span> search_web(query)
+</span></span><span style="display:flex;"><span>step2 <span style="color:#ff79c6">=</span> select_sources(step1)
+</span></span><span style="display:flex;"><span>step3 <span style="color:#ff79c6">=</span> write_essay(step2)
+</span></span></code></pre></div><p>With planning, the <strong>LLM decides the sequence</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># LLM generates a plan, then executes it</span>
+</span></span><span style="display:flex;"><span>plan <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>plan(query, available_tools)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Plan might be: [search, validate, search_more, synthesize]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">for</span> step <span style="color:#ff79c6">in</span> plan:
+</span></span><span style="display:flex;"><span>    result <span style="color:#ff79c6">=</span> execute_step(step)
+</span></span></code></pre></div><h3 id="when-you-need-planning">When You Need Planning</h3>
+<p><strong>Indicators you&rsquo;ve outgrown deterministic workflows:</strong></p>
+<ul>
+<li>Queries require different approaches (can&rsquo;t hard-code one path)</li>
+<li>Number of &ldquo;if-else&rdquo; conditions exploding</li>
+<li>User requests are too varied to predict</li>
+<li>You keep adding special cases</li>
+</ul>
+<p><strong>Example: Customer Service Agent</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Deterministic approach (breaks easily):</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> <span style="color:#f1fa8c">&#34;order&#34;</span> <span style="color:#ff79c6">in</span> query:
+</span></span><span style="display:flex;"><span>    check_order_status()
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">elif</span> <span style="color:#f1fa8c">&#34;return&#34;</span> <span style="color:#ff79c6">in</span> query:
+</span></span><span style="display:flex;"><span>    process_return()
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">elif</span> <span style="color:#f1fa8c">&#34;product&#34;</span> <span style="color:#ff79c6">in</span> query:
+</span></span><span style="display:flex;"><span>    search_catalog()
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># ... 50 more elif statements</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Planning approach:</span>
+</span></span><span style="display:flex;"><span>plan <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>create_plan(query, tools<span style="color:#ff79c6">=</span>[
+</span></span><span style="display:flex;"><span>    check_order_status,
+</span></span><span style="display:flex;"><span>    process_return,
+</span></span><span style="display:flex;"><span>    search_catalog,
+</span></span><span style="display:flex;"><span>    check_inventory,
+</span></span><span style="display:flex;"><span>    contact_support_team
+</span></span><span style="display:flex;"><span>])
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># LLM decides which tools to use and in what order</span>
+</span></span></code></pre></div><h3 id="planning-with-json">Planning with JSON</h3>
+<p><strong>The System Prompt:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>system_prompt <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">You have access to these tools:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- get_item_descriptions(category): Get product descriptions
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- check_inventory(item_ids): Check stock levels
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- get_item_price(item_ids): Get current prices
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- process_return(order_id, item_id): Handle returns
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">Create a step-by-step plan in JSON to answer user queries.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">Format:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">{
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  &#34;plan&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    {
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">      &#34;step&#34;: 1,
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">      &#34;description&#34;: &#34;What this step does&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">      &#34;tool&#34;: &#34;tool_name&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">      &#34;arguments&#34;: {...},
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">      &#34;depends_on&#34;: [] // Previous step numbers needed
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    }
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  ]
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">}
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>
+</span></span></code></pre></div><p><strong>LLM Generates:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;plan&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;step&#34;</span>: <span style="color:#bd93f9">1</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;description&#34;</span>: <span style="color:#f1fa8c">&#34;Find all round sunglasses&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;tool&#34;</span>: <span style="color:#f1fa8c">&#34;get_item_descriptions&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;arguments&#34;</span>: {<span style="color:#ff79c6">&#34;category&#34;</span>: <span style="color:#f1fa8c">&#34;sunglasses&#34;</span>, <span style="color:#ff79c6">&#34;filter&#34;</span>: <span style="color:#f1fa8c">&#34;round&#34;</span>},
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;depends_on&#34;</span>: []
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;step&#34;</span>: <span style="color:#bd93f9">2</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;description&#34;</span>: <span style="color:#f1fa8c">&#34;Check which round sunglasses are in stock&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;tool&#34;</span>: <span style="color:#f1fa8c">&#34;check_inventory&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;arguments&#34;</span>: {<span style="color:#ff79c6">&#34;item_ids&#34;</span>: <span style="color:#f1fa8c">&#34;from_step_1&#34;</span>},
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;depends_on&#34;</span>: [<span style="color:#bd93f9">1</span>]
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;step&#34;</span>: <span style="color:#bd93f9">3</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;description&#34;</span>: <span style="color:#f1fa8c">&#34;Get prices for in-stock items&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;tool&#34;</span>: <span style="color:#f1fa8c">&#34;get_item_price&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;arguments&#34;</span>: {<span style="color:#ff79c6">&#34;item_ids&#34;</span>: <span style="color:#f1fa8c">&#34;from_step_2&#34;</span>},
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;depends_on&#34;</span>: [<span style="color:#bd93f9">2</span>]
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Execution Engine:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">execute_plan</span>(plan, context):
+</span></span><span style="display:flex;"><span>    results <span style="color:#ff79c6">=</span> {}
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> step <span style="color:#ff79c6">in</span> plan[<span style="color:#f1fa8c">&#34;plan&#34;</span>]:
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># Wait for dependencies</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">for</span> dep <span style="color:#ff79c6">in</span> step[<span style="color:#f1fa8c">&#34;depends_on&#34;</span>]:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> dep <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">in</span> results:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">raise</span> Exception(<span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;Step </span><span style="color:#f1fa8c">{</span>step[<span style="color:#f1fa8c">&#39;step&#39;</span>]<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c"> depends on incomplete step </span><span style="color:#f1fa8c">{</span>dep<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">&#34;</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># Resolve arguments from previous steps</span>
+</span></span><span style="display:flex;"><span>        args <span style="color:#ff79c6">=</span> resolve_arguments(step[<span style="color:#f1fa8c">&#34;arguments&#34;</span>], results)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># Execute</span>
+</span></span><span style="display:flex;"><span>        tool <span style="color:#ff79c6">=</span> get_tool(step[<span style="color:#f1fa8c">&#34;tool&#34;</span>])
+</span></span><span style="display:flex;"><span>        results[step[<span style="color:#f1fa8c">&#34;step&#34;</span>]] <span style="color:#ff79c6">=</span> tool(<span style="color:#ff79c6">**</span>args)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> results
+</span></span></code></pre></div><h3 id="planning-with-code-the-power-move">Planning with Code: The Power Move</h3>
+<p>Here&rsquo;s where planning gets really interesting. Instead of JSON, let the LLM write <strong>code as the plan</strong>:</p>
+<p><strong>The Problem:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># You&#39;d need dozens of specific tools:</span>
+</span></span><span style="display:flex;"><span>get_column_max()
+</span></span><span style="display:flex;"><span>get_column_mean()
+</span></span><span style="display:flex;"><span>filter_rows()
+</span></span><span style="display:flex;"><span>get_unique_values()
+</span></span><span style="display:flex;"><span>sort_by_column()
+</span></span><span style="display:flex;"><span>group_by()
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># ... hundreds more</span>
+</span></span></code></pre></div><p><strong>The Solution:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>system_prompt <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">You have access to Python with pandas library.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">Write code to answer the user&#39;s query.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">Return format:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;execute_python&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"># Your code here
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&lt;/execute_python&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># User: &#34;What were the amounts of the last 5 transactions?&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># LLM generates:</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> pandas <span style="color:#ff79c6">as</span> pd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Step 1: Load data</span>
+</span></span><span style="display:flex;"><span>df <span style="color:#ff79c6">=</span> pd<span style="color:#ff79c6">.</span>read_csv(<span style="color:#f1fa8c">&#39;transactions.csv&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Step 2: Ensure proper date parsing</span>
+</span></span><span style="display:flex;"><span>df[<span style="color:#f1fa8c">&#39;date&#39;</span>] <span style="color:#ff79c6">=</span> pd<span style="color:#ff79c6">.</span>to_datetime(df[<span style="color:#f1fa8c">&#39;date&#39;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Step 3: Sort by date (most recent first)</span>
+</span></span><span style="display:flex;"><span>df_sorted <span style="color:#ff79c6">=</span> df<span style="color:#ff79c6">.</span>sort_values(<span style="color:#f1fa8c">&#39;date&#39;</span>, ascending<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Step 4: Get last 5 transactions</span>
+</span></span><span style="display:flex;"><span>last_5 <span style="color:#ff79c6">=</span> df_sorted<span style="color:#ff79c6">.</span>head(<span style="color:#bd93f9">5</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Step 5: Extract amounts</span>
+</span></span><span style="display:flex;"><span>amounts <span style="color:#ff79c6">=</span> last_5[<span style="color:#f1fa8c">&#39;amount&#39;</span>]<span style="color:#ff79c6">.</span>tolist()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(amounts)
+</span></span></code></pre></div><p><strong>Why This Works:</strong></p>
+<ol>
+<li><strong>Massive function library:</strong> Python+pandas has 1000s of functions LLMs know</li>
+<li><strong>Extensive training data:</strong> LLMs have seen millions of pandas examples</li>
+<li><strong>One tool replaces hundreds:</strong> <code>execute_code()</code> vs. hundreds of specific functions</li>
+<li><strong>Natural expressiveness:</strong> Code naturally expresses complex multi-step logic</li>
+</ol>
+<p><strong>Production Considerations:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">safe_code_execution</span>(code: <span style="color:#8be9fd;font-style:italic">str</span>, timeout: <span style="color:#8be9fd;font-style:italic">int</span> <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">30</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Execute LLM-generated code safely
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># 1. Sandbox environment</span>
+</span></span><span style="display:flex;"><span>    container <span style="color:#ff79c6">=</span> create_sandbox()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># 2. Resource limits</span>
+</span></span><span style="display:flex;"><span>    container<span style="color:#ff79c6">.</span>set_memory_limit(<span style="color:#f1fa8c">&#34;512MB&#34;</span>)
+</span></span><span style="display:flex;"><span>    container<span style="color:#ff79c6">.</span>set_cpu_limit(<span style="color:#bd93f9">1.0</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># 3. Network isolation</span>
+</span></span><span style="display:flex;"><span>    container<span style="color:#ff79c6">.</span>disable_network()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># 4. Timeout</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>        result <span style="color:#ff79c6">=</span> container<span style="color:#ff79c6">.</span>run(code, timeout<span style="color:#ff79c6">=</span>timeout)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">except</span> TimeoutError:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> {<span style="color:#f1fa8c">&#34;error&#34;</span>: <span style="color:#f1fa8c">&#34;Execution timeout&#34;</span>}
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> result
+</span></span></code></pre></div><h3 id="real-world-example-agentic-coding">Real-World Example: Agentic Coding</h3>
+<p>The most successful application of planning today is in coding assistants:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># User: &#34;Build a REST API for a todo app with auth&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># LLM generates plan:</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">☐ Step 1: Design database schema
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">☐ Step 2: Implement user model and authentication
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">☐ Step 3: Create todo model with user association
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">☐ Step 4: Build API endpoints (CRUD for todos)
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">☐ Step 5: Add input validation and error handling
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">☐ Step 6: Write unit tests
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">☐ Step 7: Write integration tests
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">☐ Step 8: Create API documentation
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Then executes each step systematically</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># If tests fail → revise → retest</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Until working application delivered</span>
+</span></span></code></pre></div><p><strong>Why it works well for coding:</strong></p>
+<ul>
+<li>Clear success criteria (tests pass/fail)</li>
+<li>Immediate feedback (code runs or doesn&rsquo;t)</li>
+<li>Well-structured domain (software has clear components)</li>
+<li>LLMs trained extensively on code</li>
+</ul>
+<h3 id="when-planning-struggles">When Planning Struggles</h3>
+<p><strong>Challenges:</strong></p>
+<ul>
+<li>Harder to control and predict</li>
+<li>More complex debugging</li>
+<li>Can get stuck in loops</li>
+<li>Higher token costs</li>
+</ul>
+<p><strong>Mitigation strategies:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">planning_with_guardrails</span>(query, max_steps<span style="color:#ff79c6">=</span><span style="color:#bd93f9">10</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Planning with safety limits
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    plan <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>generate_plan(query)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Validate plan before execution</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">len</span>(plan) <span style="color:#ff79c6">&gt;</span> max_steps:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> {<span style="color:#f1fa8c">&#34;error&#34;</span>: <span style="color:#f1fa8c">&#34;Plan too complex, please simplify query&#34;</span>}
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Check for dangerous patterns</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> contains_risky_operations(plan):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> {<span style="color:#f1fa8c">&#34;error&#34;</span>: <span style="color:#f1fa8c">&#34;Plan contains operations requiring human approval&#34;</span>}
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Execute with monitoring</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> step <span style="color:#ff79c6">in</span> plan:
+</span></span><span style="display:flex;"><span>        result <span style="color:#ff79c6">=</span> execute_with_monitoring(step)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> result<span style="color:#ff79c6">.</span>error_rate <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">0.5</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> {<span style="color:#f1fa8c">&#34;error&#34;</span>: <span style="color:#f1fa8c">&#34;Plan execution failing, aborting&#34;</span>}
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> result
+</span></span></code></pre></div><p><strong>Strategic advice:</strong> Start with deterministic workflows. Add planning only when the complexity of conditional logic becomes unmaintainable.</p>
+<hr>
+<h2 id="pattern-4-multi-agent-systemsthe-team-approach">Pattern 4: Multi-Agent Systems—The Team Approach</h2>
+<h3 id="why-multiple-agents">Why Multiple Agents?</h3>
+<p>Just as you wouldn&rsquo;t hire one person to do everything in a complex project, sometimes breaking AI work across specialized agents makes sense.</p>
+<p><strong>The mental model shift:</strong></p>
+<ul>
+<li>From: &ldquo;What&rsquo;s the one AI that can do this?&rdquo;</li>
+<li>To: &ldquo;What team of specialized AIs should I assemble?&rdquo;</li>
+</ul>
+<h3 id="when-multi-agent-makes-sense">When Multi-Agent Makes Sense</h3>
+<p><strong>Good candidates:</strong></p>
+<ul>
+<li>✅ Tasks naturally split into specialized roles</li>
+<li>✅ Different steps need different expertise</li>
+<li>✅ Opportunities for parallel processing</li>
+<li>✅ Clear hand-off points between phases</li>
+</ul>
+<p><strong>Example: Marketing Campaign</strong></p>
+<p>Instead of one mega-agent:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># One agent doing everything (gets confused)</span>
+</span></span><span style="display:flex;"><span>marketing_agent <span style="color:#ff79c6">=</span> LLM(<span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">You&#39;re responsible for research, design, and copywriting...
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Tries to do too much, does nothing well</span>
+</span></span></code></pre></div><p>Use specialized agents:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>researcher <span style="color:#ff79c6">=</span> LLM(<span style="color:#f1fa8c">&#34;Expert at market analysis and competitor research&#34;</span>)
+</span></span><span style="display:flex;"><span>designer <span style="color:#ff79c6">=</span> LLM(<span style="color:#f1fa8c">&#34;Skilled at data visualization and graphic design&#34;</span>)
+</span></span><span style="display:flex;"><span>writer <span style="color:#ff79c6">=</span> LLM(<span style="color:#f1fa8c">&#34;Compelling marketing copywriter&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Each does what it&#39;s best at</span>
+</span></span></code></pre></div><h3 id="communication-patterns">Communication Patterns</h3>
+<p>The architecture of how agents communicate is critical. Here are the four main patterns:</p>
+<h4 id="1-linear-sequential-pipeline">1. Linear (Sequential Pipeline)</h4>
+<pre class="mermaid">
+  graph LR
+    R[Researcher] --&gt; D[Designer] --&gt; W[Writer]
+</pre>
+
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Clean handoffs, predictable flow</span>
+</span></span><span style="display:flex;"><span>research <span style="color:#ff79c6">=</span> researcher<span style="color:#ff79c6">.</span>analyze(<span style="color:#f1fa8c">&#34;sunglasses market trends&#34;</span>)
+</span></span><span style="display:flex;"><span>graphics <span style="color:#ff79c6">=</span> designer<span style="color:#ff79c6">.</span>create(research)
+</span></span><span style="display:flex;"><span>brochure <span style="color:#ff79c6">=</span> writer<span style="color:#ff79c6">.</span>compose(research, graphics)
+</span></span></code></pre></div><p><strong>Best for:</strong> Assembly-line workflows with clear stages
+<strong>Pros:</strong> Simple, debuggable, predictable
+<strong>Cons:</strong> No parallelization, sequential bottleneck</p>
+<h4 id="2-hierarchical-manager-worker">2. Hierarchical (Manager-Worker)</h4>
+<pre class="mermaid">
+  graph TB
+    M[Manager Agent] --&gt; R[Researcher]
+    M --&gt; D[Designer]
+    M --&gt; W[Writer]
+</pre>
+
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>manager_prompt <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">You&#39;re a marketing manager with this team:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- Researcher: Market analysis expert
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- Designer: Visual content creator
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- Writer: Marketing copywriter
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">Create a plan and delegate tasks.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>manager <span style="color:#ff79c6">=</span> LLM(manager_prompt, tools<span style="color:#ff79c6">=</span>[
+</span></span><span style="display:flex;"><span>    call_researcher,
+</span></span><span style="display:flex;"><span>    call_designer,
+</span></span><span style="display:flex;"><span>    call_writer
+</span></span><span style="display:flex;"><span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Manager decides who does what and when</span>
+</span></span><span style="display:flex;"><span>plan <span style="color:#ff79c6">=</span> manager<span style="color:#ff79c6">.</span>create_plan(<span style="color:#f1fa8c">&#34;Summer sunglasses campaign&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Might decide: researcher → designer + writer in parallel → final review</span>
+</span></span></code></pre></div><p><strong>Best for:</strong> Tasks requiring coordination and dynamic work allocation
+<strong>Pros:</strong> Flexible, can parallelize, adapts to results
+<strong>Cons:</strong> Manager becomes bottleneck, more complex</p>
+<h4 id="3-deep-hierarchy-organizational">3. Deep Hierarchy (Organizational)</h4>
+<pre tabindex="0"><code>Marketing Director
+├── Research Team Lead
+│   ├── Web Researcher
+│   └── Competitor Analyst
+├── Creative Team Lead
+│   ├── Graphic Designer
+│   └── Art Director
+└── Content Team Lead
+    ├── Copywriter
+    └── Editor
+</code></pre><p><strong>Best for:</strong> Very large, complex projects
+<strong>Pros:</strong> Scales to many agents, mirrors org structure
+<strong>Cons:</strong> High complexity, slower, expensive</p>
+<p><strong>Real talk:</strong> I&rsquo;ve rarely seen this work well in production. The coordination overhead usually outweighs benefits. Consider carefully before going this deep.</p>
+<h4 id="4-all-to-all-collaborative">4. All-to-All (Collaborative)</h4>
+<pre class="mermaid">
+  graph TB
+    R[Researcher] &lt;--&gt; D[Designer]
+    D &lt;--&gt; W[Writer]
+    W &lt;--&gt; E[Editor]
+    E &lt;--&gt; R
+    R &lt;--&gt; W
+    D &lt;--&gt; E
+</pre>
+
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Everyone can talk to everyone</span>
+</span></span><span style="display:flex;"><span>agents <span style="color:#ff79c6">=</span> [researcher, designer, writer, editor]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">for</span> agent <span style="color:#ff79c6">in</span> agents:
+</span></span><span style="display:flex;"><span>    agent<span style="color:#ff79c6">.</span>team_members <span style="color:#ff79c6">=</span> [a <span style="color:#ff79c6">for</span> a <span style="color:#ff79c6">in</span> agents <span style="color:#ff79c6">if</span> a <span style="color:#ff79c6">!=</span> agent]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Free-form collaboration</span>
+</span></span><span style="display:flex;"><span>conversation <span style="color:#ff79c6">=</span> []
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">while</span> <span style="color:#ff79c6">not</span> consensus_reached():
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> agent <span style="color:#ff79c6">in</span> agents:
+</span></span><span style="display:flex;"><span>        message <span style="color:#ff79c6">=</span> agent<span style="color:#ff79c6">.</span>respond_to(conversation)
+</span></span><span style="display:flex;"><span>        conversation<span style="color:#ff79c6">.</span>append(message)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>final_output <span style="color:#ff79c6">=</span> synthesize(conversation)
+</span></span></code></pre></div><p><strong>Best for:</strong> Creative brainstorming, exploratory problems
+<strong>Pros:</strong> Maximum flexibility, emergent solutions
+<strong>Cons:</strong> Unpredictable, expensive, may not converge</p>
+<p><strong>My experience:</strong> This pattern is exciting in demos, frustrating in production. Use for non-critical applications where you can tolerate variability.</p>
+<h3 id="implementing-individual-agents">Implementing Individual Agents</h3>
+<p>Each agent is just an LLM with a specialized prompt and toolset:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Agent</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">__init__</span>(<span style="font-style:italic">self</span>, role: <span style="color:#8be9fd;font-style:italic">str</span>, tools: <span style="color:#8be9fd;font-style:italic">list</span>, prompt_template: <span style="color:#8be9fd;font-style:italic">str</span>):
+</span></span><span style="display:flex;"><span>        <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>role <span style="color:#ff79c6">=</span> role
+</span></span><span style="display:flex;"><span>        <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>tools <span style="color:#ff79c6">=</span> tools
+</span></span><span style="display:flex;"><span>        <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>prompt <span style="color:#ff79c6">=</span> prompt_template
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">execute</span>(<span style="font-style:italic">self</span>, task: <span style="color:#8be9fd;font-style:italic">str</span>, context: <span style="color:#8be9fd;font-style:italic">dict</span> <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Execute task with role-specific behavior
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        full_prompt <span style="color:#ff79c6">=</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>prompt<span style="color:#ff79c6">.</span>format(
+</span></span><span style="display:flex;"><span>            task<span style="color:#ff79c6">=</span>task,
+</span></span><span style="display:flex;"><span>            context<span style="color:#ff79c6">=</span>context <span style="color:#ff79c6">or</span> {}
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> llm<span style="color:#ff79c6">.</span>generate(
+</span></span><span style="display:flex;"><span>            full_prompt,
+</span></span><span style="display:flex;"><span>            tools<span style="color:#ff79c6">=</span><span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>tools
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Create specialized agents</span>
+</span></span><span style="display:flex;"><span>researcher <span style="color:#ff79c6">=</span> Agent(
+</span></span><span style="display:flex;"><span>    role<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;Market Researcher&#34;</span>,
+</span></span><span style="display:flex;"><span>    tools<span style="color:#ff79c6">=</span>[web_search, fetch_article],
+</span></span><span style="display:flex;"><span>    prompt_template<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    You&#39;re an expert market researcher. Analyze:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    - Market trends and patterns
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    - Competitor positioning
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    - Customer preferences
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Task: </span><span style="color:#f1fa8c">{task}</span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Context: </span><span style="color:#f1fa8c">{context}</span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Provide data-driven insights with citations.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>designer <span style="color:#ff79c6">=</span> Agent(
+</span></span><span style="display:flex;"><span>    role<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;Graphic Designer&#34;</span>,
+</span></span><span style="display:flex;"><span>    tools<span style="color:#ff79c6">=</span>[generate_image, create_chart, code_execution],
+</span></span><span style="display:flex;"><span>    prompt_template<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    You&#39;re a skilled graphic designer. Create:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    - Data visualizations
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    - Marketing graphics
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    - Brand-consistent artwork
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Task: </span><span style="color:#f1fa8c">{task}</span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Context: </span><span style="color:#f1fa8c">{context}</span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Focus on visual impact and clarity.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><h3 id="multi-agent-frameworks">Multi-Agent Frameworks</h3>
+<p>Don&rsquo;t build this from scratch. Leverage existing frameworks:</p>
+<p><strong>Popular options:</strong></p>
+<ul>
+<li><strong>LangGraph</strong>: Graph-based workflows (my current go-to)</li>
+<li><strong>AutoGen</strong>: Microsoft&rsquo;s conversational agents</li>
+<li><strong>CrewAI</strong>: Role-based teams</li>
+<li><strong>ChatDev</strong>: Simulated software company</li>
+</ul>
+<p><strong>Example with LangGraph:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">from</span> langgraph.graph <span style="color:#ff79c6">import</span> Graph
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Define workflow</span>
+</span></span><span style="display:flex;"><span>workflow <span style="color:#ff79c6">=</span> Graph()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Add agents as nodes</span>
+</span></span><span style="display:flex;"><span>workflow<span style="color:#ff79c6">.</span>add_node(<span style="color:#f1fa8c">&#34;researcher&#34;</span>, researcher<span style="color:#ff79c6">.</span>execute)
+</span></span><span style="display:flex;"><span>workflow<span style="color:#ff79c6">.</span>add_node(<span style="color:#f1fa8c">&#34;designer&#34;</span>, designer<span style="color:#ff79c6">.</span>execute)
+</span></span><span style="display:flex;"><span>workflow<span style="color:#ff79c6">.</span>add_node(<span style="color:#f1fa8c">&#34;writer&#34;</span>, writer<span style="color:#ff79c6">.</span>execute)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Define edges (communication flow)</span>
+</span></span><span style="display:flex;"><span>workflow<span style="color:#ff79c6">.</span>add_edge(<span style="color:#f1fa8c">&#34;researcher&#34;</span>, <span style="color:#f1fa8c">&#34;designer&#34;</span>)
+</span></span><span style="display:flex;"><span>workflow<span style="color:#ff79c6">.</span>add_edge(<span style="color:#f1fa8c">&#34;researcher&#34;</span>, <span style="color:#f1fa8c">&#34;writer&#34;</span>)
+</span></span><span style="display:flex;"><span>workflow<span style="color:#ff79c6">.</span>add_edge(<span style="color:#f1fa8c">&#34;designer&#34;</span>, <span style="color:#f1fa8c">&#34;writer&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Compile and run</span>
+</span></span><span style="display:flex;"><span>app <span style="color:#ff79c6">=</span> workflow<span style="color:#ff79c6">.</span>compile()
+</span></span><span style="display:flex;"><span>result <span style="color:#ff79c6">=</span> app<span style="color:#ff79c6">.</span>invoke({<span style="color:#f1fa8c">&#34;query&#34;</span>: <span style="color:#f1fa8c">&#34;Create sunglasses campaign&#34;</span>})
+</span></span></code></pre></div><h3 id="when-not-to-use-multi-agent">When NOT to Use Multi-Agent</h3>
+<p><strong>Red flags:</strong></p>
+<ul>
+<li>Simple, linear tasks (just use a pipeline)</li>
+<li>Real-time requirements (coordination adds latency)</li>
+<li>Tight budget (more agents = more tokens)</li>
+<li>First version of anything (start simpler)</li>
+</ul>
+<p><strong>My rule of thumb:</strong> If you can&rsquo;t clearly articulate why each agent exists and what unique value it provides, you don&rsquo;t need multi-agent. Start with a single agent or simple pipeline.</p>
+<hr>
+<h2 id="optimization-making-it-production-ready">Optimization: Making It Production-Ready</h2>
+<p>You&rsquo;ve built something that works. Now let&rsquo;s make it ready for real users.</p>
+<h3 id="the-priority-stack">The Priority Stack</h3>
+<p><strong>In order of importance:</strong></p>
+<ol>
+<li>
+<p><strong>Output Quality</strong> (80% of your initial effort)</p>
+<ul>
+<li>Nothing else matters if the output is wrong</li>
+<li>Get to &ldquo;good enough&rdquo; before optimizing anything else</li>
+</ul>
+</li>
+<li>
+<p><strong>Latency</strong> (15% of initial effort)</p>
+<ul>
+<li>Impacts user experience directly</li>
+<li>But users tolerate slow if results are good</li>
+</ul>
+</li>
+<li>
+<p><strong>Cost</strong> (5% of initial effort)</p>
+<ul>
+<li>Only becomes urgent at scale</li>
+<li>Premature optimization wastes time</li>
+</ul>
+</li>
+</ol>
+<p><strong>The tipping point:</strong> Optimize cost when your monthly bill makes you uncomfortable. For most teams, that&rsquo;s around $5-10K/month.</p>
+<h3 id="latency-optimization">Latency Optimization</h3>
+<p><strong>Step 1: Measure Everything</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> dataclasses <span style="color:#ff79c6">import</span> dataclass
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>@dataclass
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">PerformanceMetrics</span>:
+</span></span><span style="display:flex;"><span>    component: <span style="color:#8be9fd;font-style:italic">str</span>
+</span></span><span style="display:flex;"><span>    duration_ms: <span style="color:#8be9fd;font-style:italic">float</span>
+</span></span><span style="display:flex;"><span>    cost_dollars: <span style="color:#8be9fd;font-style:italic">float</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">benchmark_workflow</span>(query):
+</span></span><span style="display:flex;"><span>    metrics <span style="color:#ff79c6">=</span> []
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Time each component</span>
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    terms <span style="color:#ff79c6">=</span> generate_search_terms(query)
+</span></span><span style="display:flex;"><span>    metrics<span style="color:#ff79c6">.</span>append(PerformanceMetrics(
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;generate_terms&#34;</span>,
+</span></span><span style="display:flex;"><span>        (time<span style="color:#ff79c6">.</span>time() <span style="color:#ff79c6">-</span> start) <span style="color:#ff79c6">*</span> <span style="color:#bd93f9">1000</span>,
+</span></span><span style="display:flex;"><span>        calculate_cost(terms)
+</span></span><span style="display:flex;"><span>    ))
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    results <span style="color:#ff79c6">=</span> web_search(terms)
+</span></span><span style="display:flex;"><span>    metrics<span style="color:#ff79c6">.</span>append(PerformanceMetrics(
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;web_search&#34;</span>,
+</span></span><span style="display:flex;"><span>        (time<span style="color:#ff79c6">.</span>time() <span style="color:#ff79c6">-</span> start) <span style="color:#ff79c6">*</span> <span style="color:#bd93f9">1000</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#bd93f9">0.016</span>  <span style="color:#6272a4"># API cost</span>
+</span></span><span style="display:flex;"><span>    ))
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># ... rest of workflow</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> metrics
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Example output:</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># generate_terms: 7000ms, $0.04</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># web_search: 5000ms, $0.016</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># fetch_pages: 11000ms, $0.040</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># write_essay: 18000ms, $2.80</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># TOTAL: 41000ms, $2.896</span>
+</span></span></code></pre></div><p><strong>Step 2: Attack the Biggest Bottlenecks</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Before: 18s for essay generation with GPT-4</span>
+</span></span><span style="display:flex;"><span>essay <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> llm<span style="color:#ff79c6">.</span>generate(
+</span></span><span style="display:flex;"><span>    model<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;gpt-4o&#34;</span>,
+</span></span><span style="display:flex;"><span>    prompt<span style="color:#ff79c6">=</span>essay_prompt
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Strategy 1: Faster model (if quality acceptable)</span>
+</span></span><span style="display:flex;"><span>essay <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> llm<span style="color:#ff79c6">.</span>generate(
+</span></span><span style="display:flex;"><span>    model<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;gpt-4o-mini&#34;</span>,  <span style="color:#6272a4"># 3x faster, 70% cheaper</span>
+</span></span><span style="display:flex;"><span>    prompt<span style="color:#ff79c6">=</span>essay_prompt
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Now: 6s</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Strategy 2: Streaming (feels faster)</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">for</span> chunk <span style="color:#ff79c6">in</span> llm<span style="color:#ff79c6">.</span>stream(model<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;gpt-4o&#34;</span>, prompt<span style="color:#ff79c6">=</span>essay_prompt):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">yield</span> chunk  <span style="color:#6272a4"># User sees progress immediately</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Strategy 3: Specialized provider (same model, faster hardware)</span>
+</span></span><span style="display:flex;"><span>essay <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> llm<span style="color:#ff79c6">.</span>generate(
+</span></span><span style="display:flex;"><span>    model<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;groq:llama3-70b&#34;</span>,  <span style="color:#6272a4"># Specialized hardware</span>
+</span></span><span style="display:flex;"><span>    prompt<span style="color:#ff79c6">=</span>essay_prompt
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Now: 3s</span>
+</span></span></code></pre></div><p><strong>Step 3: Parallelize Everything Possible</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Before: Sequential fetching (15s total)</span>
+</span></span><span style="display:flex;"><span>page1 <span style="color:#ff79c6">=</span> fetch(url1)  <span style="color:#6272a4"># 5s</span>
+</span></span><span style="display:flex;"><span>page2 <span style="color:#ff79c6">=</span> fetch(url2)  <span style="color:#6272a4"># 5s</span>
+</span></span><span style="display:flex;"><span>page3 <span style="color:#ff79c6">=</span> fetch(url3)  <span style="color:#6272a4"># 5s</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># After: Parallel fetching (5s total)</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pages <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>gather(
+</span></span><span style="display:flex;"><span>    fetch(url1),
+</span></span><span style="display:flex;"><span>    fetch(url2),
+</span></span><span style="display:flex;"><span>    fetch(url3)
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Now: 5s (max of all requests)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Savings: 10s per request</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># At 1000 requests/day: 2.8 hours saved daily</span>
+</span></span></code></pre></div><h3 id="cost-optimization">Cost Optimization</h3>
+<p><strong>Step 1: Profile Your Spend</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">analyze_costs</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Break down costs by component
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    costs <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#39;generate_search_terms&#39;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#39;model&#39;</span>: <span style="color:#f1fa8c">&#39;gpt-4o&#39;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#39;avg_tokens&#39;</span>: <span style="color:#bd93f9">200</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#39;cost_per_request&#39;</span>: <span style="color:#bd93f9">0.04</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#39;requests_per_day&#39;</span>: <span style="color:#bd93f9">1000</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#39;daily_cost&#39;</span>: <span style="color:#bd93f9">40.00</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#39;web_search&#39;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#39;cost_per_request&#39;</span>: <span style="color:#bd93f9">0.016</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#39;requests_per_day&#39;</span>: <span style="color:#bd93f9">1000</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#39;daily_cost&#39;</span>: <span style="color:#bd93f9">16.00</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#39;write_essay&#39;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#39;model&#39;</span>: <span style="color:#f1fa8c">&#39;gpt-4o&#39;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#39;avg_tokens&#39;</span>: <span style="color:#bd93f9">3000</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#39;cost_per_request&#39;</span>: <span style="color:#bd93f9">2.80</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#39;requests_per_day&#39;</span>: <span style="color:#bd93f9">1000</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#39;daily_cost&#39;</span>: <span style="color:#bd93f9">2800.00</span>  <span style="color:#6272a4"># ← 97% of total cost!</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    total_daily <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">sum</span>(c[<span style="color:#f1fa8c">&#39;daily_cost&#39;</span>] <span style="color:#ff79c6">for</span> c <span style="color:#ff79c6">in</span> costs<span style="color:#ff79c6">.</span>values())
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># $2,856/day = $85,680/month 😱</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> costs
+</span></span></code></pre></div><p><strong>Step 2: Optimize High-Impact Components</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Before: GPT-4 for everything</span>
+</span></span><span style="display:flex;"><span>write_essay_cost <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">2.80</span> <span style="color:#ff79c6">*</span> <span style="color:#bd93f9">1000</span> <span style="color:#ff79c6">=</span> $<span style="color:#bd93f9">2</span>,<span style="color:#bd93f9">800</span><span style="color:#ff79c6">/</span>day
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># After: Strategic model selection</span>
+</span></span><span style="display:flex;"><span>costs <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Non-critical: Use cheap models</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#39;search_terms&#39;</span>: (<span style="color:#f1fa8c">&#39;claude-haiku&#39;</span>, <span style="color:#bd93f9">0.01</span>),  <span style="color:#6272a4"># Was $40, now $10</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#39;source_selection&#39;</span>: (<span style="color:#f1fa8c">&#39;gpt-3.5&#39;</span>, <span style="color:#bd93f9">0.02</span>),   <span style="color:#6272a4"># Was $40, now $20</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Critical quality: Keep premium model</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#39;essay_writing&#39;</span>: (<span style="color:#f1fa8c">&#39;gpt-4o&#39;</span>, <span style="color:#bd93f9">2.80</span>),       <span style="color:#6272a4"># Still $2,800</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># OR: Use cheaper premium model</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#39;essay_writing&#39;</span>: (<span style="color:#f1fa8c">&#39;claude-sonnet&#39;</span>, <span style="color:#bd93f9">0.80</span>), <span style="color:#6272a4"># Now $800 (71% savings!)</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># New total: $830/day = $24,900/month</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Savings: $60,780/month 💰</span>
+</span></span></code></pre></div><p><strong>Step 3: Caching and Deduplication</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">from</span> functools <span style="color:#ff79c6">import</span> lru_cache
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> hashlib
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">SmartCache</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">__init__</span>(<span style="font-style:italic">self</span>, redis_client):
+</span></span><span style="display:flex;"><span>        <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>cache <span style="color:#ff79c6">=</span> redis_client
+</span></span><span style="display:flex;"><span>        <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>ttl <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">3600</span>  <span style="color:#6272a4"># 1 hour</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">cached_llm_call</span>(<span style="font-style:italic">self</span>, prompt: <span style="color:#8be9fd;font-style:italic">str</span>, model: <span style="color:#8be9fd;font-style:italic">str</span>) <span style="color:#ff79c6">-&gt;</span> <span style="color:#8be9fd;font-style:italic">str</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Cache LLM responses for identical prompts
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        cache_key <span style="color:#ff79c6">=</span> hashlib<span style="color:#ff79c6">.</span>sha256(
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">{</span>model<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">:</span><span style="color:#f1fa8c">{</span>prompt<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">.</span>encode()
+</span></span><span style="display:flex;"><span>        )<span style="color:#ff79c6">.</span>hexdigest()
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># Check cache</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> cached <span style="color:#ff79c6">:=</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>cache<span style="color:#ff79c6">.</span>get(cache_key):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> cached  <span style="color:#6272a4"># $0.00 cost!</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># Call LLM</span>
+</span></span><span style="display:flex;"><span>        response <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>generate(model<span style="color:#ff79c6">=</span>model, prompt<span style="color:#ff79c6">=</span>prompt)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># Store in cache</span>
+</span></span><span style="display:flex;"><span>        <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>cache<span style="color:#ff79c6">.</span>setex(cache_key, <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>ttl, response)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> response
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Real-world impact:</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># - Research queries: 30% cache hit rate</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># - Savings: 30% of $24,900 = $7,470/month</span>
+</span></span></code></pre></div><p><strong>Step 4: Batch Processing</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Before: Individual processing</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">for</span> item <span style="color:#ff79c6">in</span> items:  <span style="color:#6272a4"># 1000 items</span>
+</span></span><span style="display:flex;"><span>    result <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>process(item)  <span style="color:#6272a4"># $0.10 each = $100</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># After: Batch processing</span>
+</span></span><span style="display:flex;"><span>batch_size <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">10</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">0</span>, <span style="color:#8be9fd;font-style:italic">len</span>(items), batch_size):
+</span></span><span style="display:flex;"><span>    batch <span style="color:#ff79c6">=</span> items[i:i<span style="color:#ff79c6">+</span>batch_size]
+</span></span><span style="display:flex;"><span>    results <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>process_batch(batch)  <span style="color:#6272a4"># $0.50 per batch</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Cost: 100 batches × $0.50 = $50 (50% savings)</span>
+</span></span></code></pre></div><h3 id="real-world-optimization-case-study">Real-World Optimization Case Study</h3>
+<p><strong>Initial State:</strong></p>
+<pre tabindex="0"><code>Research Agent Performance:
+- Latency: 65s average
+- Cost: $2.93 per query
+- Volume: 10,000 queries/month
+- Monthly cost: $29,300
+</code></pre><p><strong>After Optimization:</strong></p>
+<pre tabindex="0"><code>Research Agent Performance:
+- Latency: 27s average (58% improvement)
+- Cost: $0.86 per query (71% reduction)
+- Volume: 10,000 queries/month
+- Monthly cost: $8,600
+
+Savings: $20,700/month = $248,400/year
+</code></pre><p><strong>What we did:</strong></p>
+<ol>
+<li>Switched search term generation to Claude Haiku ($0.04 → $0.005)</li>
+<li>Optimized search queries (3 calls → 1 call)</li>
+<li>Parallelized page fetching (25s → 8s)</li>
+<li>Switched essay writing to Claude Sonnet ($2.80 → $0.80)</li>
+<li>Added caching layer (30% hit rate)</li>
+</ol>
+<hr>
+<h2 id="production-checklist-shipping-with-confidence">Production Checklist: Shipping with Confidence</h2>
+<p>Before you deploy to real users, make sure you have these covered:</p>
+<h3 id="quality-gates">Quality Gates</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">ProductionReadiness</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">check_quality</span>(<span style="font-style:italic">self</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Minimum quality thresholds
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>end_to_end_accuracy <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">0.90</span>, <span style="color:#f1fa8c">&#34;Not accurate enough&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>critical_component_accuracy <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">0.95</span>, <span style="color:#f1fa8c">&#34;Component failing&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>error_analysis_complete, <span style="color:#f1fa8c">&#34;Don&#39;t know failure modes&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>edge_cases_handled, <span style="color:#f1fa8c">&#34;Will break on edge cases&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">check_performance</span>(<span style="font-style:italic">self</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Performance requirements
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>p95_latency <span style="color:#ff79c6">&lt;</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>sla_requirement
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>cost_per_request <span style="color:#ff79c6">&lt;</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>budget_limit
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>parallelization_optimized
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">check_reliability</span>(<span style="font-style:italic">self</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Production hardening
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>error_handling_comprehensive
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>retry_logic_implemented
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>timeout_protection_enabled
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>rate_limiting_configured
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>graceful_degradation_works
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">check_safety</span>(<span style="font-style:italic">self</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Security and safety
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>code_execution_sandboxed
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>input_validation_active
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>output_filtering_enabled
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>pii_protection_configured
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>content_safety_checked
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">check_observability</span>(<span style="font-style:italic">self</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Monitoring and debugging
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>logging_comprehensive
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>trace_storage_enabled
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>metrics_dashboard_ready
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>alerting_configured
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">assert</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>cost_tracking_active
+</span></span></code></pre></div><h3 id="the-monitoring-stack">The Monitoring Stack</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> structlog
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> prometheus_client <span style="color:#ff79c6">import</span> Counter, Histogram
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Structured logging</span>
+</span></span><span style="display:flex;"><span>logger <span style="color:#ff79c6">=</span> structlog<span style="color:#ff79c6">.</span>get_logger()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Metrics</span>
+</span></span><span style="display:flex;"><span>requests_total <span style="color:#ff79c6">=</span> Counter(<span style="color:#f1fa8c">&#39;agent_requests_total&#39;</span>, <span style="color:#f1fa8c">&#39;Total requests&#39;</span>)
+</span></span><span style="display:flex;"><span>request_duration <span style="color:#ff79c6">=</span> Histogram(<span style="color:#f1fa8c">&#39;agent_request_duration_seconds&#39;</span>, <span style="color:#f1fa8c">&#39;Request duration&#39;</span>)
+</span></span><span style="display:flex;"><span>request_cost <span style="color:#ff79c6">=</span> Histogram(<span style="color:#f1fa8c">&#39;agent_request_cost_dollars&#39;</span>, <span style="color:#f1fa8c">&#39;Request cost&#39;</span>)
+</span></span><span style="display:flex;"><span>errors_total <span style="color:#ff79c6">=</span> Counter(<span style="color:#f1fa8c">&#39;agent_errors_total&#39;</span>, <span style="color:#f1fa8c">&#39;Total errors&#39;</span>, [<span style="color:#f1fa8c">&#39;component&#39;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">AgentObservability</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">trace_request</span>(<span style="font-style:italic">self</span>, request_id: <span style="color:#8be9fd;font-style:italic">str</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Comprehensive request tracing
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">with</span> request_duration<span style="color:#ff79c6">.</span>time():
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#6272a4"># Log request start</span>
+</span></span><span style="display:flex;"><span>                logger<span style="color:#ff79c6">.</span>info(<span style="color:#f1fa8c">&#34;request_started&#34;</span>,
+</span></span><span style="display:flex;"><span>                    request_id<span style="color:#ff79c6">=</span>request_id,
+</span></span><span style="display:flex;"><span>                    query<span style="color:#ff79c6">=</span>request<span style="color:#ff79c6">.</span>query
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                <span style="color:#6272a4"># Execute workflow</span>
+</span></span><span style="display:flex;"><span>                result <span style="color:#ff79c6">=</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>execute_workflow(request)
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                <span style="color:#6272a4"># Log success</span>
+</span></span><span style="display:flex;"><span>                logger<span style="color:#ff79c6">.</span>info(<span style="color:#f1fa8c">&#34;request_completed&#34;</span>,
+</span></span><span style="display:flex;"><span>                    request_id<span style="color:#ff79c6">=</span>request_id,
+</span></span><span style="display:flex;"><span>                    latency_ms<span style="color:#ff79c6">=</span>result<span style="color:#ff79c6">.</span>latency,
+</span></span><span style="display:flex;"><span>                    cost_dollars<span style="color:#ff79c6">=</span>result<span style="color:#ff79c6">.</span>cost,
+</span></span><span style="display:flex;"><span>                    output_length<span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">len</span>(result<span style="color:#ff79c6">.</span>output)
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                <span style="color:#6272a4"># Update metrics</span>
+</span></span><span style="display:flex;"><span>                requests_total<span style="color:#ff79c6">.</span>inc()
+</span></span><span style="display:flex;"><span>                request_cost<span style="color:#ff79c6">.</span>observe(result<span style="color:#ff79c6">.</span>cost)
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">return</span> result
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">except</span> Exception <span style="color:#ff79c6">as</span> e:
+</span></span><span style="display:flex;"><span>                <span style="color:#6272a4"># Log failure</span>
+</span></span><span style="display:flex;"><span>                logger<span style="color:#ff79c6">.</span>error(<span style="color:#f1fa8c">&#34;request_failed&#34;</span>,
+</span></span><span style="display:flex;"><span>                    request_id<span style="color:#ff79c6">=</span>request_id,
+</span></span><span style="display:flex;"><span>                    error<span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">str</span>(e),
+</span></span><span style="display:flex;"><span>                    component<span style="color:#ff79c6">=</span>e<span style="color:#ff79c6">.</span>component
+</span></span><span style="display:flex;"><span>                )
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                <span style="color:#6272a4"># Update error metrics</span>
+</span></span><span style="display:flex;"><span>                errors_total<span style="color:#ff79c6">.</span>labels(component<span style="color:#ff79c6">=</span>e<span style="color:#ff79c6">.</span>component)<span style="color:#ff79c6">.</span>inc()
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">raise</span>
+</span></span></code></pre></div><h3 id="the-incident-response-playbook">The Incident Response Playbook</h3>
+<p>When things go wrong (and they will):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">INCIDENT RESPONSE PLAYBOOK
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">1. DETECT
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Alert fires from monitoring
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - User reports issues
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Cost spike detected
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">2. TRIAGE
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Check dashboard: Which component failing?
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Review recent traces: Pattern in failures?
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Check error logs: New error types?
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">3. IMMEDIATE MITIGATION
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Can we roll back recent changes?
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Can we disable problematic component?
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Can we route to fallback system?
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">4. ROOT CAUSE ANALYSIS
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Examine traces of failed requests
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Compare to successful requests
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Check for:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">     * Model provider issues
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">     * API rate limits hit
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">     * Input pattern changes
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">     * Prompt regressions
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">5. FIX &amp; VERIFY
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Implement fix
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Test with recent failures
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Monitor closely for 24h
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">6. POSTMORTEM
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Document what happened
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Update evals to catch this
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Improve monitoring
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   - Update runbook
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>
+</span></span></code></pre></div><hr>
+<h2 id="the-strategic-roadmap-building-your-agentic-ai-team">The Strategic Roadmap: Building Your Agentic AI Team</h2>
+<p>As a tech lead, here&rsquo;s how I&rsquo;d approach building organizational capability:</p>
+<h3 id="phase-1-foundation-month-1-2">Phase 1: Foundation (Month 1-2)</h3>
+<p><strong>Goals:</strong></p>
+<ul>
+<li>Ship first working agent</li>
+<li>Establish eval discipline</li>
+<li>Build team intuition</li>
+</ul>
+<p><strong>Actions:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>week_1_2 <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;build&#34;</span>: <span style="color:#f1fa8c">&#34;Simple agent with deterministic workflow&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;focus&#34;</span>: <span style="color:#f1fa8c">&#34;Output quality above all else&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;team_size&#34;</span>: <span style="color:#f1fa8c">&#34;2-3 engineers&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>week_3_4 <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;build&#34;</span>: <span style="color:#f1fa8c">&#34;Basic eval suite (20-30 examples)&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;focus&#34;</span>: <span style="color:#f1fa8c">&#34;Identify failure modes&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;deliverable&#34;</span>: <span style="color:#f1fa8c">&#34;Error analysis document&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>week_5_8 <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;build&#34;</span>: <span style="color:#f1fa8c">&#34;Iterate based on evals&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;focus&#34;</span>: <span style="color:#f1fa8c">&#34;Get to 85-90</span><span style="color:#f1fa8c">% a</span><span style="color:#f1fa8c">ccuracy&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;gate&#34;</span>: <span style="color:#f1fa8c">&#34;Quality threshold before proceeding&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="phase-2-production-hardening-month-3-4">Phase 2: Production Hardening (Month 3-4)</h3>
+<p><strong>Goals:</strong></p>
+<ul>
+<li>Make it reliable</li>
+<li>Optimize critical path</li>
+<li>Instrument everything</li>
+</ul>
+<p><strong>Actions:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>month_3 <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;build&#34;</span>: [
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Comprehensive error handling&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Retry logic and timeouts&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Monitoring and alerting&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Component-level evals&#34;</span>
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;focus&#34;</span>: <span style="color:#f1fa8c">&#34;Reliability engineering&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>month_4 <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;build&#34;</span>: [
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Latency optimization&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Cost optimization (if needed)&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Load testing&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Incident playbooks&#34;</span>
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;focus&#34;</span>: <span style="color:#f1fa8c">&#34;Performance and ops readiness&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="phase-3-scale-and-sophistication-month-5-6">Phase 3: Scale and Sophistication (Month 5-6)</h3>
+<p><strong>Goals:</strong></p>
+<ul>
+<li>Handle edge cases</li>
+<li>Add advanced patterns</li>
+<li>Build reusable components</li>
+</ul>
+<p><strong>Actions:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>month_5 <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;build&#34;</span>: [
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Expand eval set (50-100 examples)&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Add reflection where beneficial&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Implement caching layer&#34;</span>
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;focus&#34;</span>: <span style="color:#f1fa8c">&#34;Quality improvements&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>month_6 <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;build&#34;</span>: [
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Planning capabilities (if needed)&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Multi-agent (if justified)&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Reusable agent components&#34;</span>
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;focus&#34;</span>: <span style="color:#f1fa8c">&#34;Advanced capabilities&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="team-structure">Team Structure</h3>
+<pre tabindex="0"><code>Agentic AI Team (6-8 people)
+
+├── Tech Lead (You)
+│   ├── Architecture decisions
+│   ├── Strategic direction
+│   └── Stakeholder management
+│
+├── Senior ML Engineers (2)
+│   ├── Prompt engineering
+│   ├── Model selection
+│   └── Agent design
+│
+├── ML Engineers (2-3)
+│   ├── Eval development
+│   ├── Error analysis
+│   └── Component optimization
+│
+├── ML Ops Engineer (1)
+│   ├── Infrastructure
+│   ├── Monitoring
+│   └── Cost optimization
+│
+└── Product Manager (1)
+    ├── Use case prioritization
+    ├── Success metrics
+    └── User research
+</code></pre><h3 id="budget-planning">Budget Planning</h3>
+<p><strong>Realistic cost structure:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>monthly_costs <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;compute&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;development&#34;</span>: <span style="color:#bd93f9">2000</span>,   <span style="color:#6272a4"># Experimentation</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;production&#34;</span>: <span style="color:#bd93f9">10000</span>,   <span style="color:#6272a4"># 10K queries/day</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;overhead&#34;</span>: <span style="color:#bd93f9">2000</span>       <span style="color:#6272a4"># Monitoring, logs</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;people&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;engineers&#34;</span>: <span style="color:#bd93f9">6</span> <span style="color:#ff79c6">*</span> <span style="color:#bd93f9">15000</span>,  <span style="color:#6272a4"># Loaded cost</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;pm&#34;</span>: <span style="color:#bd93f9">12000</span>
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;tools&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;monitoring&#34;</span>: <span style="color:#bd93f9">500</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;frameworks&#34;</span>: <span style="color:#bd93f9">200</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;misc&#34;</span>: <span style="color:#bd93f9">300</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>total_monthly <span style="color:#ff79c6">=</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">sum</span>(monthly_costs[<span style="color:#f1fa8c">&#34;compute&#34;</span>]<span style="color:#ff79c6">.</span>values()) <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">sum</span>(monthly_costs[<span style="color:#f1fa8c">&#34;people&#34;</span>]<span style="color:#ff79c6">.</span>values()) <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">sum</span>(monthly_costs[<span style="color:#f1fa8c">&#34;tools&#34;</span>]<span style="color:#ff79c6">.</span>values())
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># = $116,000/month</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># With 10K queries/day at $5 value each</span>
+</span></span><span style="display:flex;"><span>revenue_potential <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">10000</span> <span style="color:#ff79c6">*</span> <span style="color:#bd93f9">5</span> <span style="color:#ff79c6">*</span> <span style="color:#bd93f9">30</span>  <span style="color:#6272a4"># $1.5M/month</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># ROI = 1300% (if you capture the value!)</span>
+</span></span></code></pre></div><hr>
+<h2 id="key-takeaways-for-technical-leaders">Key Takeaways for Technical Leaders</h2>
+<p>After working on multiple production agentic systems, here are my hard-earned lessons:</p>
+<h3 id="1-evals-are-not-optional">1. <strong>Evals Are Not Optional</strong></h3>
+<p>The #1 differentiator between teams that succeed and those that struggle is evaluation discipline. You cannot improve what you don&rsquo;t measure.</p>
+<p><strong>Action item:</strong> Before writing a single line of production code, define how you&rsquo;ll measure success.</p>
+<h3 id="2-start-simple-add-complexity-deliberately">2. <strong>Start Simple, Add Complexity Deliberately</strong></h3>
+<p>Every team that jumped straight to multi-agent planning regretted it.</p>
+<p><strong>Progressive complexity:</strong></p>
+<ol>
+<li>Deterministic pipeline</li>
+<li>Add reflection (if beneficial)</li>
+<li>Add tool use (as needed)</li>
+<li>Consider planning (rarely)</li>
+<li>Multi-agent (very rarely)</li>
+</ol>
+<h3 id="3-error-analysis-drives-strategy">3. <strong>Error Analysis Drives Strategy</strong></h3>
+<p>Don&rsquo;t guess where the problems are. Count them. A spreadsheet tracking failure modes by component will tell you exactly where to invest engineering time.</p>
+<h3 id="4-model-selection-matters-less-than-you-think">4. <strong>Model Selection Matters Less Than You Think</strong></h3>
+<p>Architecture and prompting usually matter more than GPT-4 vs Claude vs Llama. I&rsquo;ve seen GPT-3.5 with good architecture outperform GPT-4 with poor architecture.</p>
+<p><strong>Exception:</strong> Reasoning-heavy tasks genuinely need frontier models.</p>
+<h3 id="5-optimize-in-order-quality--latency--cost">5. <strong>Optimize in Order: Quality → Latency → Cost</strong></h3>
+<p>Premature cost optimization is the root of much evil. Get it working well first, then make it fast, then make it cheap.</p>
+<h3 id="6-plan-for-observability-from-day-one">6. <strong>Plan for Observability from Day One</strong></h3>
+<p>You will have production incidents. Comprehensive logging and tracing are the difference between 10-minute and 10-hour debugging sessions.</p>
+<h3 id="7-human-in-the-loop-is-often-better-than-full-autonomy">7. <strong>Human-in-the-Loop is Often Better Than Full Autonomy</strong></h3>
+<p>For high-stakes decisions, having an agent draft + human review often beats trying to make the agent 100% autonomous.</p>
+<h3 id="8-external-feedback-makes-everything-better">8. <strong>External Feedback Makes Everything Better</strong></h3>
+<p>Whether it&rsquo;s code execution results, API responses, or validation checks, getting new information from outside the LLM dramatically improves reflection and planning.</p>
+<hr>
+<h2 id="whats-next-the-future-of-agentic-ai">What&rsquo;s Next: The Future of Agentic AI</h2>
+<h3 id="emerging-trends">Emerging Trends</h3>
+<p><strong>Constitutional AI:</strong> Training agents with values and principles, not just instructions</p>
+<p><strong>Memory Systems:</strong> Long-term memory across sessions, agents that learn from experience</p>
+<p><strong>Self-Improvement:</strong> Agents that write better versions of themselves</p>
+<p><strong>Human-AI Collaboration:</strong> Seamless blending of human expertise and agent capabilities</p>
+<h3 id="research-frontiers">Research Frontiers</h3>
+<p>What&rsquo;s being actively worked on:</p>
+<ul>
+<li>More reliable planning mechanisms</li>
+<li>Better confidence calibration</li>
+<li>Improved error recovery</li>
+<li>Lower computational costs</li>
+<li>Stronger safety guarantees</li>
+</ul>
+<h3 id="your-learning-path">Your Learning Path</h3>
+<p><strong>Next steps:</strong></p>
+<ol>
+<li><strong>Build something this week:</strong> Start with a simple reflection pattern</li>
+<li><strong>Instrument everything:</strong> Add logging and metrics from day one</li>
+<li><strong>Create your first eval:</strong> Even 10 examples beats intuition</li>
+<li><strong>Join the community:</strong> Share your learnings, learn from others</li>
+<li><strong>Read others&rsquo; prompts:</strong> Study open-source projects deeply</li>
+</ol>
+<p><strong>Resources:</strong></p>
+<ul>
+<li>DeepLearning.AI courses (Andrew Ng)</li>
+<li>Anthropic&rsquo;s prompt engineering guide</li>
+<li>OpenAI function calling documentation</li>
+<li>LangChain/LangGraph documentation</li>
+<li>Community forums and Discord servers</li>
+</ul>
+<hr>
+<h2 id="final-thoughts">Final Thoughts</h2>
+<p>Building production agentic AI systems is equal parts engineering, science, and art:</p>
+<p><strong>Engineering:</strong> Designing robust workflows and integrating components
+<strong>Science:</strong> Measuring systematically and optimizing data-driven
+<strong>Art:</strong> Crafting prompts and choosing appropriate patterns</p>
+<p>The field is evolving rapidly, but the core principles—systematic evaluation, error analysis, iterative improvement—will remain valuable regardless of which models or tools dominate tomorrow.</p>
+<p>The teams winning with agentic AI aren&rsquo;t the ones with the best models or the biggest budgets. They&rsquo;re the ones with the best development discipline.</p>
+<p><strong>Now go build something amazing.</strong> 🚀</p>
+<hr>
+<p><em>This guide synthesizes insights from Andrew Ng&rsquo;s Agentic AI course and practical experience shipping production agentic systems. The patterns and practices described are battle-tested across multiple real-world deployments.</em></p>
+
+            
+             
+            
+
+
+
+
+            
+            </div>
+            
+            
+
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
+    
+	
+    <section class="visible-md visible-lg">
+	
+        <div class="short-about">
+            
+            <a href="/about">
+               <img src="/img/20190713213835-3.jpg" alt="avatar" style="cursor: pointer" />
+            </a>
+            
+            
+                <p>Senior Software Engineer, Open source enthusiast, PMP, Scrum master</p>
+            
+           
+           <ul class="list-inline">
+               
+               <li>
+                   <a href="mailto:akjamie.zhang@outlook.com">
+                      <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                      </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               
+               
+               <li>
+                   <a target="_blank" href="/img/wechat-qrcode.png">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               <li>
+                   <a target="_blank" href="https://github.com/akjamie">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               <li>
+                   <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               
+            
+            
+               
+               
+               
+               
+                </ul>
+            </div>
+    </section>
+	
+    
+    
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FEATURED TAGS</h5>
+        <div class="tags">
+            
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/aws" title="aws">
+                        aws
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/docker" title="docker">
+                        docker
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/k8s" title="k8s">
+                        k8s
+                    </a>
+               
+            
+               
+                    <a href="/tags/kubernetes" title="kubernetes">
+                        kubernetes
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/llm" title="llm">
+                        llm
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/nosql" title="nosql">
+                        nosql
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/python" title="python">
+                        python
+                    </a>
+               
+            
+               
+                    <a href="/tags/redis" title="redis">
+                        redis
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/spring" title="spring">
+                        spring
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/spring-cloud" title="spring cloud">
+                        spring cloud
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/transaction-management" title="transaction management">
+                        transaction management
+                    </a>
+               
+            
+               
+                    <a href="/tags/transformer" title="transformer">
+                        transformer
+                    </a>
+               
+            
+               
+            
+               
+                    <a href="/tags/vault" title="vault">
+                        vault
+                    </a>
+               
+            
+               
+            
+        </div>
+    </section>
+    
+
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FRIENDS</h5>
+        <ul class="list-inline">
+            
+        </ul>
+    </section>
+    
+    
+    
+</div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2025
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"
+          data-cfasync="false" defer></script>
+  <script data-cfasync="false" defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
+    });
+  </script>
+
+</body>
+</html>
