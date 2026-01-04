@@ -1,0 +1,2237 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/header-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/header-01.jpg" />
+    
+
+    
+    <meta name="title" content="The Architectural Evolution of the Java Platform: A Comprehensive Technical Analysis of Versions 8 through 25" />
+    <meta property="og:title" content="The Architectural Evolution of the Java Platform: A Comprehensive Technical Analysis of Versions 8 through 25" />
+    <meta property="twitter:title" content="The Architectural Evolution of the Java Platform: A Comprehensive Technical Analysis of Versions 8 through 25" />
+    
+
+    
+    <meta name="description" content="A comprehensive technical analysis of Java&#39;s architectural evolution from versions 8 to 25, featuring detailed feature comparisons, code examples, architectural insights, and impact on enterprise application design for senior engineers and solution architects.">
+    <meta property="og:description" content="A comprehensive technical analysis of Java&#39;s architectural evolution from versions 8 to 25, featuring detailed feature comparisons, code examples, architectural insights, and impact on enterprise application design for senior engineers and solution architects." />
+    <meta property="twitter:description" content="A comprehensive technical analysis of Java&#39;s architectural evolution from versions 8 to 25, featuring detailed feature comparisons, code examples, architectural insights, and impact on enterprise application design for senior engineers and solution architects." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-01-04-java-feature-envolve-from-21-to-25/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>The Architectural Evolution of the Java Platform: A Comprehensive Technical Analysis of Versions 8 through 25 | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-01-04-java-feature-envolve-from-21-to-25/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/architecture/">architecture</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+                    
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/header-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/jdk" title="JDK">
+                            JDK
+                        </a>
+                        
+                        <a class="tag" href="/tags/java" title="Java">
+                            Java
+                        </a>
+                        
+                        <a class="tag" href="/tags/jep" title="JEP">
+                            JEP
+                        </a>
+                        
+                        <a class="tag" href="/tags/architecture" title="Architecture">
+                            Architecture
+                        </a>
+                        
+                    </div>
+                    <h1>The Architectural Evolution of the Java Platform: A Comprehensive Technical Analysis of Versions 8 through 25</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Sunday, January 4, 2026
+                            
+                                <span id="/post/2026-01-04-java-feature-envolve-from-21-to-25/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="the-architectural-evolution-of-the-java-platform-a-comprehensive-technical-analysis-of-versions-8-through-25">The Architectural Evolution of the Java Platform: A Comprehensive Technical Analysis of Versions 8 through 25</h1>
+<h2 id="introduction">Introduction</h2>
+<p>The Java platform has undergone significant architectural evolution since its inception, with each release introducing fundamental improvements to performance, developer productivity, and application design patterns. This comprehensive analysis examines the architectural shifts from Java 8 through Java 25, focusing on how each version has shaped modern Java development practices and influenced system design decisions for enterprise applications.</p>
+<h2 id="architectural-themes-across-versions">Architectural Themes Across Versions</h2>
+<p>The evolution of Java can be categorized into several major architectural themes:</p>
+<ol>
+<li><strong>Functional Programming Paradigm</strong> (Java 8): Introduction of lambda expressions and streams</li>
+<li><strong>Modularity and Encapsulation</strong> (Java 9): Project Jigsaw and the module system</li>
+<li><strong>Developer Productivity</strong> (Java 10-15): Type inference, text blocks, and pattern matching</li>
+<li><strong>Performance and Scalability</strong> (Java 17-21): Sealed classes, pattern matching, and virtual threads</li>
+<li><strong>Memory Management and Native Integration</strong> (Java 17-22): Foreign Function &amp; Memory API</li>
+<li><strong>Modern Development Experience</strong> (Java 23-25): Enhanced documentation, class file API, and scoped values</li>
+</ol>
+<hr>
+<h2 id="java-8-features-lts---the-functional-revolution">Java 8 Features (LTS) - The Functional Revolution</h2>
+<p><strong>Release Date:</strong> March 2014</p>
+<h3 id="feature-summary-table">Feature Summary Table</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">JEP/JSR</th>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Impact</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Lambda Expressions</td>
+          <td style="text-align: left">JSR 335</td>
+          <td style="text-align: left">Functional Programming</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Stream API</td>
+          <td style="text-align: left">JEP 107</td>
+          <td style="text-align: left">Functional Programming</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Default Methods</td>
+          <td style="text-align: left">JSR 335</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Optional Class</td>
+          <td style="text-align: left">N/A</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">CompletableFuture</td>
+          <td style="text-align: left">N/A</td>
+          <td style="text-align: left">Concurrency</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="lambda-expressions-jsr-335">Lambda Expressions (JSR 335)</h3>
+<p>Lambda expressions introduced functional programming concepts to Java, fundamentally changing how developers approach collection processing and callback-based APIs.</p>
+<p><strong>Before Java 8:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>List<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span> list <span style="color:#ff79c6">=</span> Arrays.<span style="color:#50fa7b">asList</span>(<span style="color:#f1fa8c">&#34;A&#34;</span>, <span style="color:#f1fa8c">&#34;B&#34;</span>, <span style="color:#f1fa8c">&#34;C&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">for</span> (String s : list) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#50fa7b">out</span>.<span style="color:#50fa7b">println</span>(s);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Anonymous inner class approach</span>
+</span></span><span style="display:flex;"><span>list.<span style="color:#50fa7b">forEach</span>(<span style="color:#ff79c6">new</span> Consumer<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span>() {
+</span></span><span style="display:flex;"><span>    @Override
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">accept</span>(String s) {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#50fa7b">out</span>.<span style="color:#50fa7b">println</span>(s);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p><strong>Java 8+ Approach:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>List<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span> list <span style="color:#ff79c6">=</span> Arrays.<span style="color:#50fa7b">asList</span>(<span style="color:#f1fa8c">&#34;A&#34;</span>, <span style="color:#f1fa8c">&#34;B&#34;</span>, <span style="color:#f1fa8c">&#34;C&#34;</span>);
+</span></span><span style="display:flex;"><span>list.<span style="color:#50fa7b">forEach</span>(s <span style="color:#ff79c6">-&gt;</span> System.<span style="color:#50fa7b">out</span>.<span style="color:#50fa7b">println</span>(s));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Or even more concise with method reference</span>
+</span></span><span style="display:flex;"><span>list.<span style="color:#50fa7b">forEach</span>(System.<span style="color:#50fa7b">out</span>.<span style="color:#50fa7b">println</span>);
+</span></span></code></pre></div><p><strong>Architectural Insight:</strong> Lambda expressions enabled a shift from imperative to functional programming, reducing boilerplate code and enabling more declarative APIs. This change influenced the design of modern Java frameworks and APIs, promoting immutability and composability.</p>
+<h3 id="stream-api-jep-107">Stream API (JEP 107)</h3>
+<p>The Stream API provides a functional approach to processing collections, enabling complex operations like filtering, mapping, and reducing in a declarative manner.</p>
+<p><strong>Before Java 8:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>List<span style="color:#ff79c6">&lt;</span>Integer<span style="color:#ff79c6">&gt;</span> numbers <span style="color:#ff79c6">=</span> Arrays.<span style="color:#50fa7b">asList</span>(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+</span></span><span style="display:flex;"><span>List<span style="color:#ff79c6">&lt;</span>Integer<span style="color:#ff79c6">&gt;</span> evenNumbers <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> ArrayList<span style="color:#ff79c6">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">for</span> (Integer n : numbers) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> (n <span style="color:#ff79c6">%</span> 2 <span style="color:#ff79c6">==</span> 0) {
+</span></span><span style="display:flex;"><span>        evenNumbers.<span style="color:#50fa7b">add</span>(n);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>List<span style="color:#ff79c6">&lt;</span>Integer<span style="color:#ff79c6">&gt;</span> doubledEvens <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> ArrayList<span style="color:#ff79c6">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">for</span> (Integer n : evenNumbers) {
+</span></span><span style="display:flex;"><span>    doubledEvens.<span style="color:#50fa7b">add</span>(n <span style="color:#ff79c6">*</span> 2);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd">int</span> sum <span style="color:#ff79c6">=</span> 0;
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">for</span> (Integer n : doubledEvens) {
+</span></span><span style="display:flex;"><span>    sum <span style="color:#ff79c6">+=</span> n;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Java 8+ Approach:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>List<span style="color:#ff79c6">&lt;</span>Integer<span style="color:#ff79c6">&gt;</span> numbers <span style="color:#ff79c6">=</span> Arrays.<span style="color:#50fa7b">asList</span>(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd">int</span> sum <span style="color:#ff79c6">=</span> numbers.<span style="color:#50fa7b">stream</span>()
+</span></span><span style="display:flex;"><span>    .<span style="color:#50fa7b">filter</span>(n <span style="color:#ff79c6">-&gt;</span> n <span style="color:#ff79c6">%</span> 2 <span style="color:#ff79c6">==</span> 0)  <span style="color:#6272a4">// Filter even numbers</span>
+</span></span><span style="display:flex;"><span>    .<span style="color:#50fa7b">mapToInt</span>(n <span style="color:#ff79c6">-&gt;</span> n <span style="color:#ff79c6">*</span> 2)     <span style="color:#6272a4">// Double each number</span>
+</span></span><span style="display:flex;"><span>    .<span style="color:#50fa7b">sum</span>();                   <span style="color:#6272a4">// Sum all results</span>
+</span></span></code></pre></div><p><strong>Architectural Insight:</strong> The Stream API promotes a functional approach to data processing, making code more readable and maintainable. It enables parallel processing through parallelStream(), which is crucial for modern applications dealing with large datasets.</p>
+<h3 id="default-methods-jep-200">Default Methods (JEP 200)</h3>
+<p>Default methods allow interfaces to provide implementation for methods without breaking existing implementations.</p>
+<p><strong>Before Java 8:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">interface</span> <span style="color:#50fa7b">MyInterface</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">existingMethod</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// Adding a new method would break all existing implementations</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">MyClass</span> <span style="color:#8be9fd;font-style:italic">implements</span> MyInterface {
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">existingMethod</span>() {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#50fa7b">out</span>.<span style="color:#50fa7b">println</span>(<span style="color:#f1fa8c">&#34;Existing implementation&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Java 8+ Approach:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">interface</span> <span style="color:#50fa7b">MyInterface</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">existingMethod</span>();
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">default</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">newMethod</span>() {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#50fa7b">out</span>.<span style="color:#50fa7b">println</span>(<span style="color:#f1fa8c">&#34;Default implementation - no breaking changes!&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">default</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">log</span>(String msg) {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#50fa7b">out</span>.<span style="color:#50fa7b">println</span>(<span style="color:#f1fa8c">&#34;Logging: &#34;</span> <span style="color:#ff79c6">+</span> msg);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">MyClass</span> <span style="color:#8be9fd;font-style:italic">implements</span> MyInterface {
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">existingMethod</span>() {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#50fa7b">out</span>.<span style="color:#50fa7b">println</span>(<span style="color:#f1fa8c">&#34;Existing implementation&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Architectural Insight:</strong> Default methods solved the versioning problem for interfaces, allowing API evolution without breaking existing implementations. This was crucial for the evolution of the Collections framework and other core Java APIs.</p>
+<hr>
+<h2 id="java-9-features">Java 9 Features</h2>
+<p><strong>Release Date:</strong> September 2017</p>
+<h3 id="feature-summary-table-1">Feature Summary Table</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">JEP</th>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Impact</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Module System</td>
+          <td style="text-align: left">JEP 261</td>
+          <td style="text-align: left">Modularity</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">JShell (REPL)</td>
+          <td style="text-align: left">JEP 222</td>
+          <td style="text-align: left">Developer Experience</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Factory Methods for Collections</td>
+          <td style="text-align: left">JEP 269</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Process API Updates</td>
+          <td style="text-align: left">JEP 102</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">Low</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Variable Handles</td>
+          <td style="text-align: left">JEP 193</td>
+          <td style="text-align: left">Low-Level API</td>
+          <td style="text-align: left">Low</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="module-system-jep-261-module-system--project-jigsaw">Module System (JEP 261: Module System / Project Jigsaw)</h3>
+<p>The Java Platform Module System (JPMS) introduced a new level of encapsulation and dependency management at the platform level.</p>
+<p><strong>Before Java 9:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// No explicit module boundaries - everything was in the classpath</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Hard to determine what was public API vs implementation details</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">DatabaseConnector</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// Implementation details exposed to all code in classpath</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">private</span> InternalConnectionPool pool;
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// ...</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Java 9+ Approach:</strong></p>
+<pre tabindex="0"><code>// module-info.java
+module com.mycompany.mymodule {
+    requires java.base;
+    requires java.sql;
+    requires java.logging;
+    
+    exports com.mycompany.mymodule.api;
+    exports com.mycompany.mymodule.model;
+    
+    uses com.mycompany.mymodule.spi.DataProcessor;
+    
+    provides com.mycompany.mymodule.spi.DataProcessor 
+        with com.mycompany.mymodule.impl.JsonProcessor;
+}
+</code></pre><p><strong>Architectural Insight:</strong> The module system provides strong encapsulation at the platform level, enabling better maintainability and security. It allows JDK components to be deployed as independent modules, reducing the footprint of Java applications and enabling better control over dependencies.</p>
+<h3 id="jshell-jep-222-java-shell">JShell (JEP 222: Java Shell)</h3>
+<p>JShell provides a Read-Eval-Print Loop (REPL) for interactive Java programming.</p>
+<p><strong>Use Case:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// Interactive development and testing</span>
+</span></span><span style="display:flex;"><span>jshell<span style="color:#ff79c6">&gt;</span> <span style="color:#8be9fd">int</span> x <span style="color:#ff79c6">=</span> 10
+</span></span><span style="display:flex;"><span>x <span style="color:#ff79c6">==&gt;</span> 10
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>jshell<span style="color:#ff79c6">&gt;</span> List<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span> list <span style="color:#ff79c6">=</span> List.<span style="color:#50fa7b">of</span>(<span style="color:#f1fa8c">&#34;a&#34;</span>, <span style="color:#f1fa8c">&#34;b&#34;</span>, <span style="color:#f1fa8c">&#34;c&#34;</span>)
+</span></span><span style="display:flex;"><span>list <span style="color:#ff79c6">==&gt;</span> <span style="color:#ff79c6">[</span>a, b, c<span style="color:#ff79c6">]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>jshell<span style="color:#ff79c6">&gt;</span> list.<span style="color:#50fa7b">stream</span>().<span style="color:#50fa7b">map</span>(String::toUpperCase).<span style="color:#50fa7b">collect</span>(Collectors.<span style="color:#50fa7b">toList</span>())
+</span></span><span style="display:flex;"><span>$3 <span style="color:#ff79c6">==&gt;</span> <span style="color:#ff79c6">[</span>A, B, C<span style="color:#ff79c6">]</span>
+</span></span></code></pre></div><p><strong>Architectural Insight:</strong> JShell enhances developer productivity by enabling rapid prototyping and experimentation with Java code without the overhead of creating class files and compilation cycles.</p>
+<h3 id="convenience-factory-methods-for-collections-jep-269">Convenience Factory Methods for Collections (JEP 269)</h3>
+<p>These methods provide a concise way to create immutable collections.</p>
+<p><strong>Before Java 9:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// Creating immutable collections required verbose code</span>
+</span></span><span style="display:flex;"><span>List<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span> list <span style="color:#ff79c6">=</span> Collections.<span style="color:#50fa7b">unmodifiableList</span>(
+</span></span><span style="display:flex;"><span>    Arrays.<span style="color:#50fa7b">asList</span>(<span style="color:#f1fa8c">&#34;one&#34;</span>, <span style="color:#f1fa8c">&#34;two&#34;</span>, <span style="color:#f1fa8c">&#34;three&#34;</span>)
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Or for sets</span>
+</span></span><span style="display:flex;"><span>Set<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span> set <span style="color:#ff79c6">=</span> Collections.<span style="color:#50fa7b">unmodifiableSet</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">new</span> HashSet<span style="color:#ff79c6">&lt;&gt;</span>(Arrays.<span style="color:#50fa7b">asList</span>(<span style="color:#f1fa8c">&#34;a&#34;</span>, <span style="color:#f1fa8c">&#34;b&#34;</span>, <span style="color:#f1fa8c">&#34;c&#34;</span>))
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Or using Guava (if available)</span>
+</span></span><span style="display:flex;"><span>ImmutableList<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span> list <span style="color:#ff79c6">=</span> ImmutableList.<span style="color:#50fa7b">of</span>(<span style="color:#f1fa8c">&#34;one&#34;</span>, <span style="color:#f1fa8c">&#34;two&#34;</span>, <span style="color:#f1fa8c">&#34;three&#34;</span>);
+</span></span></code></pre></div><p><strong>Java 9+ Approach:</strong></p>
+<pre tabindex="0"><code>List&lt;String&gt; list = List.of(&#34;one&#34;, &#34;two&#34;, &#34;three&#34;);
+Set&lt;String&gt; set = Set.of(&#34;a&#34;, &#34;b&#34;, &#34;c&#34;);
+Map&lt;String, Integer&gt; map = Map.of(&#34;one&#34;, 1, &#34;two&#34;, 2, &#34;three&#34;, 3);
+// For maps with more than 10 entries
+Map&lt;String, Integer&gt; largeMap = Map.ofEntries(
+    Map.entry(&#34;one&#34;, 1),
+    Map.entry(&#34;two&#34;, 2),
+    Map.entry(&#34;three&#34;, 3)
+    // ... more entries
+);
+</code></pre><p><strong>Architectural Insight:</strong> These factory methods promote immutability by default, which is crucial for concurrent programming and functional programming patterns. They reduce boilerplate code and encourage the use of immutable data structures.</p>
+<hr>
+<h2 id="java-10-features">Java 10 Features</h2>
+<p><strong>Release Date:</strong> March 2018</p>
+<h3 id="feature-summary-table-2">Feature Summary Table</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">JEP</th>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Impact</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Local-Variable Type Inference</td>
+          <td style="text-align: left">JEP 286</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Application Class-Data Sharing</td>
+          <td style="text-align: left">JEP 310</td>
+          <td style="text-align: left">Performance</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Root Certificates</td>
+          <td style="text-align: left">JEP 319</td>
+          <td style="text-align: left">Security</td>
+          <td style="text-align: left">Low</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="local-variable-type-inference-jep-286">Local-Variable Type Inference (JEP 286)</h3>
+<p>The <code>var</code> keyword allows the compiler to infer the type of local variables, reducing verbosity while maintaining type safety.</p>
+<p><strong>Before Java 10:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>BufferedReader reader <span style="color:#ff79c6">=</span> Files.<span style="color:#50fa7b">newBufferedReader</span>(path);
+</span></span><span style="display:flex;"><span>List<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span> list <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> ArrayList<span style="color:#ff79c6">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>Map<span style="color:#ff79c6">&lt;</span>String, List<span style="color:#ff79c6">&lt;</span>File<span style="color:#ff79c6">&gt;&gt;</span> map <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> HashMap<span style="color:#ff79c6">&lt;&gt;</span>();
+</span></span></code></pre></div><p><strong>Java 10+ Approach:</strong></p>
+<pre tabindex="0"><code>var reader = Files.newBufferedReader(path);  // Inferred as BufferedReader
+var list = new ArrayList&lt;String&gt;();          // Inferred as ArrayList&lt;String&gt;
+var map = new HashMap&lt;String, List&lt;File&gt;&gt;(); // Inferred as HashMap&lt;String, List&lt;File&gt;&gt;
+
+// Complex generic types become much cleaner
+var complexMap = new HashMap&lt;String, List&lt;Map.Entry&lt;String, Integer&gt;&gt;&gt;();
+</code></pre><p><strong>Architectural Insight:</strong> Type inference reduces boilerplate while maintaining the benefits of static typing. It makes code more readable by focusing on the logic rather than type declarations, without sacrificing type safety or performance.</p>
+<hr>
+<h2 id="java-11-features-lts">Java 11 Features (LTS)</h2>
+<p><strong>Release Date:</strong> September 2018</p>
+<h3 id="feature-summary-table-3">Feature Summary Table</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">JEP</th>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Impact</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">HTTP Client API</td>
+          <td style="text-align: left">JEP 321</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Single-File Source-Code Programs</td>
+          <td style="text-align: left">JEP 330</td>
+          <td style="text-align: left">Developer Experience</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">String API Additions</td>
+          <td style="text-align: left">JEP 321</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">Low</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Files API Additions</td>
+          <td style="text-align: left">JEP 321</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">Low</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Local-Variable Syntax for Lambda Parameters</td>
+          <td style="text-align: left">JEP 323</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Low</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="http-client-api-jep-321">HTTP Client API (JEP 321)</h3>
+<p>The new HTTP Client API provides a modern, fluent API for HTTP communication, supporting HTTP/2 and WebSocket.</p>
+<p><strong>Before Java 11:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// Using legacy HttpURLConnection</span>
+</span></span><span style="display:flex;"><span>URL url <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> URL(<span style="color:#f1fa8c">&#34;https://api.example.com/data&#34;</span>);
+</span></span><span style="display:flex;"><span>HttpURLConnection conn <span style="color:#ff79c6">=</span> (HttpURLConnection) url.<span style="color:#50fa7b">openConnection</span>();
+</span></span><span style="display:flex;"><span>conn.<span style="color:#50fa7b">setRequestMethod</span>(<span style="color:#f1fa8c">&#34;GET&#34;</span>);
+</span></span><span style="display:flex;"><span>conn.<span style="color:#50fa7b">setRequestProperty</span>(<span style="color:#f1fa8c">&#34;Accept&#34;</span>, <span style="color:#f1fa8c">&#34;application/json&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd">int</span> responseCode <span style="color:#ff79c6">=</span> conn.<span style="color:#50fa7b">getResponseCode</span>();
+</span></span><span style="display:flex;"><span>BufferedReader reader <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> BufferedReader(
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">new</span> InputStreamReader(conn.<span style="color:#50fa7b">getInputStream</span>())
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>String response <span style="color:#ff79c6">=</span> reader.<span style="color:#50fa7b">lines</span>().<span style="color:#50fa7b">collect</span>(Collectors.<span style="color:#50fa7b">joining</span>(<span style="color:#f1fa8c">&#34;\n&#34;</span>));
+</span></span></code></pre></div><p><strong>Java 11+ Approach:</strong></p>
+<pre tabindex="0"><code>HttpClient client = HttpClient.newHttpClient();
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create(&#34;https://api.example.com/data&#34;))
+    .timeout(Duration.ofSeconds(10))
+    .header(&#34;Accept&#34;, &#34;application/json&#34;)
+    .build();
+
+// Synchronous request
+HttpResponse&lt;String&gt; response = client.send(request, 
+    HttpResponse.BodyHandlers.ofString());
+
+// Asynchronous request
+CompletableFuture&lt;HttpResponse&lt;String&gt;&gt; futureResponse = client
+    .sendAsync(request, HttpResponse.BodyHandlers.ofString());
+    
+// HTTP/2 support
+HttpRequest http2Request = HttpRequest.newBuilder()
+    .uri(URI.create(&#34;https://api.example.com/data&#34;))
+    .version(HttpClient.Version.HTTP_2)
+    .build();
+</code></pre><p><strong>Architectural Insight:</strong> The new HTTP Client API enables modern web service consumption patterns, supporting both synchronous and asynchronous operations. It&rsquo;s crucial for microservices architectures where HTTP communication is frequent and performance is critical.</p>
+<h3 id="single-file-source-code-programs-jep-330">Single-File Source-Code Programs (JEP 330)</h3>
+<p>Java can now run single-source-file programs directly without explicit compilation.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#6272a4"># Direct execution of Java source file</span>
+</span></span><span style="display:flex;"><span>java HelloWorld.java
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Or with parameters</span>
+</span></span><span style="display:flex;"><span>java -Dproperty<span style="color:#ff79c6">=</span>value Script.java arg1 arg2
+</span></span></code></pre></div><p><strong>Architectural Insight:</strong> This feature makes Java more approachable for scripting and rapid prototyping, similar to other languages like Python and JavaScript, while maintaining Java&rsquo;s performance and type safety benefits.</p>
+<hr>
+<h2 id="java-12-13-features">Java 12-13 Features</h2>
+<p><strong>Release Dates:</strong> 2019</p>
+<h3 id="feature-summary-table-4">Feature Summary Table</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">JEP</th>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Impact</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Switch Expressions (Preview)</td>
+          <td style="text-align: left">JEP 325/354</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Text Blocks (Preview)</td>
+          <td style="text-align: left">JEP 355</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Switch Expressions (Standard)</td>
+          <td style="text-align: left">JEP 361</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Text Blocks (Standard)</td>
+          <td style="text-align: left">JEP 378</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="switch-expressions-jep-325354361">Switch Expressions (JEP 325/354/361)</h3>
+<p>Switch expressions provide a more concise and powerful alternative to traditional switch statements.</p>
+<p><strong>Before Java 13:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>String result;
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">switch</span> (day) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">case</span> MONDAY:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">case</span> FRIDAY:
+</span></span><span style="display:flex;"><span>        result <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;Work&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">break</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">case</span> SATURDAY:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">case</span> SUNDAY:
+</span></span><span style="display:flex;"><span>        result <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;Rest&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">break</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">default</span>:
+</span></span><span style="display:flex;"><span>        System.<span style="color:#50fa7b">out</span>.<span style="color:#50fa7b">println</span>(<span style="color:#f1fa8c">&#34;Midweek&#34;</span>);
+</span></span><span style="display:flex;"><span>        result <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;Work&#34;</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">break</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Java 13+ Approach:</strong></p>
+<pre tabindex="0"><code>String result = switch (day) {
+    case MONDAY, FRIDAY -&gt; &#34;Work&#34;;
+    case SATURDAY, SUNDAY -&gt; &#34;Rest&#34;;
+    default -&gt; {
+        System.out.println(&#34;Midweek&#34;);
+        yield &#34;Work&#34;;
+    }
+};
+
+// As an expression (not just statement)
+int numLetters = switch (day) {
+    case MONDAY, FRIDAY, SUNDAY -&gt; 6;
+    case TUESDAY -&gt; 7;
+    case WEDNESDAY, THURSDAY, SATURDAY -&gt; 9;
+};
+</code></pre><p><strong>Architectural Insight:</strong> Switch expressions make code more readable and less error-prone by preventing fall-through issues and providing a functional approach to conditional logic. They encourage more declarative programming patterns.</p>
+<h3 id="text-blocks-jep-355378">Text Blocks (JEP 355/378)</h3>
+<p>Text blocks provide a way to create multi-line string literals without escape characters.</p>
+<p><strong>Before Java 13:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>String json <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;{\n&#34;</span> <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;  \&#34;name\&#34;: \&#34;Java\&#34;,\n&#34;</span> <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;  \&#34;version\&#34;: 11\n&#34;</span> <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;}&#34;</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>String sql <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;SELECT id, name, email FROM users &#34;</span> <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;WHERE age &gt; 18 AND status = &#39;active&#39; &#34;</span> <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;ORDER BY name&#34;</span>;
+</span></span></code></pre></div><p><strong>Java 13+ Approach:</strong></p>
+<pre tabindex="0"><code>String json = &#34;&#34;&#34;
+    {
+      &#34;name&#34;: &#34;Java&#34;,
+      &#34;version&#34;: 13
+    }
+    &#34;&#34;&#34;;
+    
+String sql = &#34;&#34;&#34;
+    SELECT id, name, email FROM users \
+    WHERE age &gt; 18 AND status = &#39;active&#39; \
+    ORDER BY name
+    &#34;&#34;&#34;;
+    
+// With variable substitution
+String name = &#34;Alice&#34;;
+int age = 30;
+String template = &#34;&#34;&#34;
+    Hello %s,
+    You are %d years old.
+    &#34;&#34;&#34;.formatted(name, age);
+</code></pre><p><strong>Architectural Insight:</strong> Text blocks significantly improve code readability for multi-line strings, particularly useful for SQL queries, JSON, XML, and HTML templates. This feature reduces errors in string formatting and improves maintainability.</p>
+<hr>
+<h2 id="java-14-15-features">Java 14-15 Features</h2>
+<p><strong>Release Dates:</strong> 2020</p>
+<h3 id="feature-summary-table-5">Feature Summary Table</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">JEP</th>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Impact</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Pattern Matching for instanceof</td>
+          <td style="text-align: left">JEP 305/394</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Records</td>
+          <td style="text-align: left">JEP 359/395</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Helpful NullPointerExceptions</td>
+          <td style="text-align: left">JEP 358</td>
+          <td style="text-align: left">Developer Experience</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Records Classes (Second Preview)</td>
+          <td style="text-align: left">JEP 384</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Pattern Matching for instanceof (Second Preview)</td>
+          <td style="text-align: left">JEP 305</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">High</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="pattern-matching-for-instanceof-jep-305394">Pattern Matching for instanceof (JEP 305/394)</h3>
+<p>This feature eliminates the need for explicit casting after instanceof checks.</p>
+<p><strong>Before Java 14:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">equals</span>(Object obj) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> (obj <span style="color:#ff79c6">instanceof</span> String) {
+</span></span><span style="display:flex;"><span>        String str <span style="color:#ff79c6">=</span> (String) obj;  <span style="color:#6272a4">// Explicit cast required</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">this</span>.<span style="color:#50fa7b">value</span>.<span style="color:#50fa7b">equals</span>(str);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">false</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// In collections processing</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">for</span> (Object obj : list) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> (obj <span style="color:#ff79c6">instanceof</span> Integer) {
+</span></span><span style="display:flex;"><span>        Integer num <span style="color:#ff79c6">=</span> (Integer) obj;  <span style="color:#6272a4">// Explicit cast</span>
+</span></span><span style="display:flex;"><span>        processNumber(num);
+</span></span><span style="display:flex;"><span>    } <span style="color:#ff79c6">else</span> <span style="color:#ff79c6">if</span> (obj <span style="color:#ff79c6">instanceof</span> String) {
+</span></span><span style="display:flex;"><span>        String str <span style="color:#ff79c6">=</span> (String) obj;    <span style="color:#6272a4">// Explicit cast</span>
+</span></span><span style="display:flex;"><span>        processString(str);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Java 14+ Approach:</strong></p>
+<pre tabindex="0"><code>public boolean equals(Object obj) {
+    if (obj instanceof String str) {  // Pattern variable &#39;str&#39; introduced
+        return this.value.equals(str);
+    }
+    return false;
+}
+
+// In collections processing
+for (Object obj : list) {
+    if (obj instanceof Integer num) {
+        processNumber(num);  // No explicit cast needed
+    } else if (obj instanceof String str) {
+        processString(str);  // No explicit cast needed
+    }
+}
+</code></pre><p><strong>Architectural Insight:</strong> Pattern matching reduces boilerplate code and potential ClassCastException errors by combining type checking and casting in a single operation. It makes code more readable and less error-prone.</p>
+<h3 id="records-jep-359395">Records (JEP 359/395)</h3>
+<p>Records provide a concise way to create immutable data carriers.</p>
+<p><strong>Before Java 14:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">Point</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">int</span> x;
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">int</span> y;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">Point</span>(<span style="color:#8be9fd">int</span> x, <span style="color:#8be9fd">int</span> y) {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">this</span>.<span style="color:#50fa7b">x</span> <span style="color:#ff79c6">=</span> x;
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">this</span>.<span style="color:#50fa7b">y</span> <span style="color:#ff79c6">=</span> y;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">x</span>() { <span style="color:#ff79c6">return</span> x; }
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">y</span>() { <span style="color:#ff79c6">return</span> y; }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    @Override
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">equals</span>(Object obj) {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> (obj <span style="color:#ff79c6">instanceof</span> Point) {
+</span></span><span style="display:flex;"><span>            Point other <span style="color:#ff79c6">=</span> (Point) obj;
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> x <span style="color:#ff79c6">==</span> other.<span style="color:#50fa7b">x</span> <span style="color:#ff79c6">&amp;&amp;</span> y <span style="color:#ff79c6">==</span> other.<span style="color:#50fa7b">y</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">false</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    @Override
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">hashCode</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> Objects.<span style="color:#50fa7b">hash</span>(x, y);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    @Override
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> String <span style="color:#50fa7b">toString</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> String.<span style="color:#50fa7b">format</span>(<span style="color:#f1fa8c">&#34;Point[x=%d, y=%d]&#34;</span>, x, y);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Java 14+ Approach:</strong></p>
+<pre tabindex="0"><code>public record Point(int x, int y) {}
+
+// Usage
+Point p = new Point(10, 20);
+System.out.println(p.x());      // 10
+System.out.println(p.y());      // 20
+System.out.println(p.toString()); // Point[x=10, y=20]
+System.out.println(p.equals(new Point(10, 20))); // true
+
+// Custom implementation possible
+public record Point(int x, int y) {
+    public Point {
+        if (x &lt; 0 || y &lt; 0) {
+            throw new IllegalArgumentException(&#34;Coordinates must be non-negative&#34;);
+        }
+    }
+    
+    public double distanceFromOrigin() {
+        return Math.sqrt(x * x + y * y);
+    }
+}
+</code></pre><p><strong>Architectural Insight:</strong> Records promote immutability and reduce boilerplate code for data classes. They&rsquo;re particularly valuable in functional programming, data transfer objects, and when working with streams and collections.</p>
+<hr>
+<h2 id="java-17-features-lts">Java 17 Features (LTS)</h2>
+<p><strong>Release Date:</strong> September 2021</p>
+<h3 id="feature-summary-table-6">Feature Summary Table</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">JEP</th>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Impact</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Sealed Classes</td>
+          <td style="text-align: left">JEP 409</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Pattern Matching for switch (Preview)</td>
+          <td style="text-align: left">JEP 406</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Helpful NullPointerExceptions (Standard)</td>
+          <td style="text-align: left">JEP 358</td>
+          <td style="text-align: left">Developer Experience</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Strong Encapsulation of JDK Internals</td>
+          <td style="text-align: left">JEP 403</td>
+          <td style="text-align: left">Security</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Deprecate Applet API</td>
+          <td style="text-align: left">JEP 398</td>
+          <td style="text-align: left">API Removal</td>
+          <td style="text-align: left">Low</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="sealed-classes-jep-409">Sealed Classes (JEP 409)</h3>
+<p>Sealed classes restrict which other classes can extend or implement them, providing better control over class hierarchies.</p>
+<p><strong>Before Java 17:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// Any class could extend Shape - no control over the hierarchy</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">abstract</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">Shape</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">abstract</span> <span style="color:#8be9fd">double</span> <span style="color:#50fa7b">area</span>();
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">Circle</span> <span style="color:#8be9fd;font-style:italic">extends</span> Shape {
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">double</span> radius;
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// implementation</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">Rectangle</span> <span style="color:#8be9fd;font-style:italic">extends</span> Shape {
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">double</span> width, height;
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// implementation</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Any third-party code could extend Shape, making it hard to maintain</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">Triangle</span> <span style="color:#8be9fd;font-style:italic">extends</span> Shape { <span style="color:#6272a4">/* ... */</span> }
+</span></span></code></pre></div><p><strong>Java 17+ Approach:</strong></p>
+<pre tabindex="0"><code>public sealed interface Shape 
+    permits Circle, Rectangle, Triangle {
+    double area();
+}
+
+public final class Circle implements Shape {
+    private final double radius;
+    // implementation
+}
+
+public final class Rectangle implements Shape {
+    private final double width, height;
+    // implementation
+}
+
+public final class Triangle implements Shape {
+    private final double base, height;
+    // implementation
+}
+
+// Usage with pattern matching
+double calculateArea(Shape shape) {
+    return switch (shape) {
+        case Circle c -&gt; Math.PI * c.radius() * c.radius();
+        case Rectangle r -&gt; r.width() * r.height();
+        case Triangle t -&gt; 0.5 * t.base() * t.height();
+    };
+}
+</code></pre><p><strong>Architectural Insight:</strong> Sealed classes provide architectural control over class hierarchies, making it possible to create exhaustive pattern matching and ensuring that all possible cases are handled. This is crucial for domain-driven design and functional programming patterns.</p>
+<hr>
+<h2 id="java-18-20-features">Java 18-20 Features</h2>
+<p><strong>Release Dates:</strong> 2022-2023</p>
+<h3 id="feature-summary-table-7">Feature Summary Table</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">JEP</th>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Impact</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">UTF-8 by Default</td>
+          <td style="text-align: left">JEP 400</td>
+          <td style="text-align: left">Platform Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Virtual Threads (Preview)</td>
+          <td style="text-align: left">JEP 429</td>
+          <td style="text-align: left">Concurrency</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Structured Concurrency (Incubator)</td>
+          <td style="text-align: left">JEP 428</td>
+          <td style="text-align: left">Concurrency</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Pattern Matching for switch (Second Preview)</td>
+          <td style="text-align: left">JEP 432</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Record Patterns (Preview)</td>
+          <td style="text-align: left">JEP 405</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Pattern Matching for switch (Third Preview)</td>
+          <td style="text-align: left">JEP 433</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="virtual-threads-jep-429-436">Virtual Threads (JEP 429, 436)</h3>
+<p>Virtual threads provide a lightweight alternative to platform threads for high-throughput concurrent applications.</p>
+<p><strong>Before Java 19:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// Traditional approach - limited by OS threads</span>
+</span></span><span style="display:flex;"><span>ExecutorService executor <span style="color:#ff79c6">=</span> Executors.<span style="color:#50fa7b">newFixedThreadPool</span>(
+</span></span><span style="display:flex;"><span>    Runtime.<span style="color:#50fa7b">getRuntime</span>().<span style="color:#50fa7b">availableProcessors</span>()
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>List<span style="color:#ff79c6">&lt;</span>CompletableFuture<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;&gt;</span> futures <span style="color:#ff79c6">=</span> IntStream.<span style="color:#50fa7b">range</span>(0, 10000)
+</span></span><span style="display:flex;"><span>    .<span style="color:#50fa7b">mapToObj</span>(i <span style="color:#ff79c6">-&gt;</span> CompletableFuture.<span style="color:#50fa7b">supplyAsync</span>(() <span style="color:#ff79c6">-&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">// Simulate I/O operation</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">try</span> {
+</span></span><span style="display:flex;"><span>            Thread.<span style="color:#50fa7b">sleep</span>(1000);  <span style="color:#6272a4">// Blocking I/O</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#f1fa8c">&#34;Task &#34;</span> <span style="color:#ff79c6">+</span> i <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#34; completed&#34;</span>;
+</span></span><span style="display:flex;"><span>        } <span style="color:#ff79c6">catch</span> (InterruptedException e) {
+</span></span><span style="display:flex;"><span>            Thread.<span style="color:#50fa7b">currentThread</span>().<span style="color:#50fa7b">interrupt</span>();
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#f1fa8c">&#34;Task &#34;</span> <span style="color:#ff79c6">+</span> i <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#34; failed&#34;</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }, executor))
+</span></span><span style="display:flex;"><span>    .<span style="color:#50fa7b">collect</span>(Collectors.<span style="color:#50fa7b">toList</span>());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>CompletableFuture.<span style="color:#50fa7b">allOf</span>(futures.<span style="color:#50fa7b">toArray</span>(<span style="color:#ff79c6">new</span> CompletableFuture<span style="color:#ff79c6">[</span>0<span style="color:#ff79c6">]</span>))
+</span></span><span style="display:flex;"><span>    .<span style="color:#50fa7b">join</span>();
+</span></span></code></pre></div><p><strong>Java 19+ Approach:</strong></p>
+<pre tabindex="0"><code>// Virtual threads approach - can handle millions of concurrent tasks
+try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+    List&lt;CompletableFuture&lt;String&gt;&gt; futures = IntStream.range(0, 10000)
+        .mapToObj(i -&gt; CompletableFuture.supplyAsync(() -&gt; {
+            // Simulate I/O operation
+            try {
+                Thread.sleep(1000);  // Virtual threads handle blocking efficiently
+                return &#34;Task &#34; + i + &#34; completed&#34;;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return &#34;Task &#34; + i + &#34; failed&#34;;
+            }
+        }, executor))
+        .collect(Collectors.toList());
+
+    CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+        .join();
+}
+</code></pre><p><strong>Architectural Insight:</strong> Virtual threads revolutionize concurrent programming by making it practical to use a thread-per-request model even for I/O-bound applications. This dramatically simplifies concurrent programming and enables massive scalability with minimal code changes.</p>
+<hr>
+<h2 id="java-21-features-lts">Java 21 Features (LTS)</h2>
+<p><strong>Release Date:</strong> September 2023</p>
+<h3 id="feature-summary-table-8">Feature Summary Table</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">JEP</th>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Impact</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Virtual Threads (Standard)</td>
+          <td style="text-align: left">JEP 444</td>
+          <td style="text-align: left">Concurrency</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Sequenced Collections</td>
+          <td style="text-align: left">JEP 431</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Record Patterns</td>
+          <td style="text-align: left">JEP 440</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Pattern Matching for switch (Standard)</td>
+          <td style="text-align: left">JEP 441</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Foreign Function &amp; Memory API</td>
+          <td style="text-align: left">JEP 442</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Unnamed Patterns and Variables (Preview)</td>
+          <td style="text-align: left">JEP 443</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Low</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="virtual-threads-standard">Virtual Threads (Standard)</h3>
+<p>Virtual threads became a standard feature, fully implemented and production-ready.</p>
+<p><strong>Production Example:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>@RestController
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">UserController</span> {
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    @GetMapping(<span style="color:#f1fa8c">&#34;/users/{id}/profile&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> ResponseEntity<span style="color:#ff79c6">&lt;</span>UserProfile<span style="color:#ff79c6">&gt;</span> <span style="color:#50fa7b">getUserProfile</span>(@PathVariable String id) {
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">// Each request runs on a virtual thread</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">// No need to worry about thread pool exhaustion</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> ResponseEntity.<span style="color:#50fa7b">ok</span>(
+</span></span><span style="display:flex;"><span>            userProfileService.<span style="color:#50fa7b">fetchUserProfile</span>(id)
+</span></span><span style="display:flex;"><span>        );
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    @GetMapping(<span style="color:#f1fa8c">&#34;/users/batch&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> ResponseEntity<span style="color:#ff79c6">&lt;</span>List<span style="color:#ff79c6">&lt;</span>UserProfile<span style="color:#ff79c6">&gt;&gt;</span> <span style="color:#50fa7b">getUsers</span>(
+</span></span><span style="display:flex;"><span>            @RequestParam List<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span> userIds) {
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">// Process each user profile request concurrently with virtual threads</span>
+</span></span><span style="display:flex;"><span>        List<span style="color:#ff79c6">&lt;</span>UserProfile<span style="color:#ff79c6">&gt;</span> profiles <span style="color:#ff79c6">=</span> userIds.<span style="color:#50fa7b">parallelStream</span>()
+</span></span><span style="display:flex;"><span>            .<span style="color:#50fa7b">map</span>(userId <span style="color:#ff79c6">-&gt;</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">try</span> {
+</span></span><span style="display:flex;"><span>                    <span style="color:#6272a4">// Virtual threads handle blocking I/O efficiently</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff79c6">return</span> userProfileService.<span style="color:#50fa7b">fetchUserProfile</span>(userId);
+</span></span><span style="display:flex;"><span>                } <span style="color:#ff79c6">catch</span> (Exception e) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff79c6">return</span> UserProfile.<span style="color:#50fa7b">error</span>(userId, e.<span style="color:#50fa7b">getMessage</span>());
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            })
+</span></span><span style="display:flex;"><span>            .<span style="color:#50fa7b">collect</span>(Collectors.<span style="color:#50fa7b">toList</span>());
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> ResponseEntity.<span style="color:#50fa7b">ok</span>(profiles);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="sequenced-collections-jep-431">Sequenced Collections (JEP 431)</h3>
+<p>Provides a common interface for collections with a defined encounter order.</p>
+<p><strong>Before Java 21:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// Different methods for different collection types</span>
+</span></span><span style="display:flex;"><span>List<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span> list <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> ArrayList<span style="color:#ff79c6">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>list.<span style="color:#50fa7b">add</span>(<span style="color:#f1fa8c">&#34;first&#34;</span>);
+</span></span><span style="display:flex;"><span>list.<span style="color:#50fa7b">add</span>(<span style="color:#f1fa8c">&#34;last&#34;</span>);
+</span></span><span style="display:flex;"><span>String first <span style="color:#ff79c6">=</span> list.<span style="color:#50fa7b">get</span>(0);  <span style="color:#6272a4">// For List</span>
+</span></span><span style="display:flex;"><span>String last <span style="color:#ff79c6">=</span> list.<span style="color:#50fa7b">get</span>(list.<span style="color:#50fa7b">size</span>() <span style="color:#ff79c6">-</span> 1);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Deque<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span> deque <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> ArrayDeque<span style="color:#ff79c6">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>deque.<span style="color:#50fa7b">addFirst</span>(<span style="color:#f1fa8c">&#34;first&#34;</span>);
+</span></span><span style="display:flex;"><span>deque.<span style="color:#50fa7b">addLast</span>(<span style="color:#f1fa8c">&#34;last&#34;</span>);
+</span></span><span style="display:flex;"><span>String firstFromDeque <span style="color:#ff79c6">=</span> deque.<span style="color:#50fa7b">peekFirst</span>();  <span style="color:#6272a4">// For Deque</span>
+</span></span><span style="display:flex;"><span>String lastFromDeque <span style="color:#ff79c6">=</span> deque.<span style="color:#50fa7b">peekLast</span>();
+</span></span></code></pre></div><p><strong>Java 21+ Approach:</strong></p>
+<pre tabindex="0"><code>// Unified interface for ordered collections
+SequencedCollection&lt;String&gt; sequencedList = new ArrayList&lt;&gt;();
+sequencedList.add(&#34;first&#34;);
+sequencedList.add(&#34;last&#34;);
+String first = sequencedList.getFirst();  // Available for all sequenced collections
+String last = sequencedList.getLast();
+
+SequencedCollection&lt;String&gt; sequencedDeque = new ArrayDeque&lt;&gt;();
+sequencedDeque.addFirst(&#34;first&#34;);
+sequencedDeque.addLast(&#34;last&#34;);
+String firstFromDeque = sequencedDeque.getFirst();
+String lastFromDeque = sequencedDeque.getLast();
+
+// Reverse iteration is now easy
+for (String item : sequencedList.reversed()) {
+    System.out.println(item);
+}
+</code></pre><p><strong>Architectural Insight:</strong> Sequenced Collections provide a unified API for ordered collections, reducing the need to know specific implementation details and making code more generic and reusable.</p>
+<hr>
+<h2 id="java-22-features">Java 22 Features</h2>
+<p><strong>Release Date:</strong> March 2024</p>
+<h3 id="feature-summary-table-9">Feature Summary Table</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">JEP</th>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Impact</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Unnamed Variables &amp; Patterns</td>
+          <td style="text-align: left">JEP 554</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Low</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Foreign Function &amp; Memory API (Standard)</td>
+          <td style="text-align: left">JEP 454</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Class File API (Preview)</td>
+          <td style="text-align: left">JEP 455</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Stream Gatherers (Preview)</td>
+          <td style="text-align: left">JEP 462</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="unnamed-variables--patterns-jep-554">Unnamed Variables &amp; Patterns (JEP 554)</h3>
+<p>The underscore character allows declaration of variables that are not used.</p>
+<p><strong>Before Java 22:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// Had to use named variables even when not needed</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">try</span> {
+</span></span><span style="display:flex;"><span>    Integer.<span style="color:#50fa7b">parseInt</span>(<span style="color:#f1fa8c">&#34;abc&#34;</span>);
+</span></span><span style="display:flex;"><span>} <span style="color:#ff79c6">catch</span> (NumberFormatException e) {
+</span></span><span style="display:flex;"><span>    System.<span style="color:#50fa7b">out</span>.<span style="color:#50fa7b">println</span>(<span style="color:#f1fa8c">&#34;Invalid format&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// &#39;e&#39; was unused but had to be named</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// In lambda expressions</span>
+</span></span><span style="display:flex;"><span>list.<span style="color:#50fa7b">forEach</span>((item) <span style="color:#ff79c6">-&gt;</span> System.<span style="color:#50fa7b">out</span>.<span style="color:#50fa7b">println</span>(<span style="color:#f1fa8c">&#34;Processing...&#34;</span>));
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// item parameter was unused but had to be named</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// In enhanced for loops</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">for</span> (String unused : collection) {
+</span></span><span style="display:flex;"><span>    processSomething();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Java 22+ Approach:</strong></p>
+<pre tabindex="0"><code>// Unnamed variables for unused exceptions
+try {
+    Integer.parseInt(&#34;abc&#34;);
+} catch (NumberFormatException _) {  // Underscore indicates unused
+    System.out.println(&#34;Invalid format&#34;);
+}
+
+// In lambda expressions
+list.forEach((_) -&gt; System.out.println(&#34;Processing...&#34;));
+
+// In enhanced for loops
+for (String _ : collection) {
+    processSomething();
+}
+
+// In pattern matching
+if (obj instanceof String _) {  // String matched but not used
+    System.out.println(&#34;It&#39;s a string&#34;);
+}
+</code></pre><p><strong>Architectural Insight:</strong> Unnamed variables reduce cognitive load by clearly indicating that certain values are intentionally unused, making code intent clearer and reducing IDE warnings about unused variables.</p>
+<h3 id="foreign-function--memory-api-jep-454">Foreign Function &amp; Memory API (JEP 454)</h3>
+<p>Provides a safe, modern replacement for JNI to interoperate with native code.</p>
+<p><strong>Before Java 22:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// JNI approach - complex, unsafe, and platform-specific</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">NativeLibrary</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">static</span> {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#50fa7b">loadLibrary</span>(<span style="color:#f1fa8c">&#34;mylib&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">native</span> <span style="color:#8be9fd">long</span> <span style="color:#50fa7b">nativeCreate</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">native</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">nativeDestroy</span>(<span style="color:#8be9fd">long</span> handle);
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">native</span> <span style="color:#8be9fd">int</span> <span style="color:#50fa7b">nativeProcess</span>(<span style="color:#8be9fd">long</span> handle, <span style="color:#8be9fd">byte</span><span style="color:#ff79c6">[]</span> data);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Java 22+ Approach:</strong></p>
+<pre tabindex="0"><code>import jdk.incubator.foreign.*;
+
+public class ForeignAPIExample {
+    public void callNativeFunction() {
+        try (Arena arena = Arena.ofConfined()) {
+            // Load native library
+            SymbolLookup lookup = SymbolLookup.loaderLookup();
+            FunctionDescriptor funcDesc = FunctionDescriptor.of(
+                ValueLayout.JAVA_INT, 
+                ValueLayout.JAVA_LONG
+            );
+            
+            // Link the native function
+            var handle = lookup.downcallHandle(
+                &#34;myNativeFunction&#34;, 
+                funcDesc
+            );
+            
+            // Call native function safely
+            int result = (int) handle.invoke(12345L);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+</code></pre><p><strong>Architectural Insight:</strong> The Foreign Function &amp; Memory API enables safe and efficient native code integration without the complexity and security risks of JNI. This is crucial for applications that need to interface with system libraries, databases, or other native components.</p>
+<hr>
+<h2 id="java-23-features">Java 23 Features</h2>
+<p><strong>Release Date:</strong> September 2024</p>
+<h3 id="feature-summary-table-10">Feature Summary Table</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">JEP</th>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Impact</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Markdown Documentation Comments</td>
+          <td style="text-align: left">JEP 467</td>
+          <td style="text-align: left">Developer Experience</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">ZGC: Generational Mode by Default</td>
+          <td style="text-align: left">JEP 474</td>
+          <td style="text-align: left">Performance</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Flexible Constructor Bodies (Preview)</td>
+          <td style="text-align: left">JEP 479</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Low</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Class-File API (Second Preview)</td>
+          <td style="text-align: left">JEP 484</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="markdown-documentation-comments-jep-467">Markdown Documentation Comments (JEP 467)</h3>
+<p>Allows using Markdown instead of HTML for JavaDoc.</p>
+<p><strong>Before Java 23:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * This method processes user data.
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * &lt;p&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * Usage example:
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * &lt;pre&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * {@code
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * UserDataProcessor processor = new UserDataProcessor();
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * processor.process(user);
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * }
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * &lt;/pre&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * 
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * &lt;ul&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> *   &lt;li&gt;Step 1: Validate input&lt;/li&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> *   &lt;li&gt;Step 2: Transform data&lt;/li&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> *   &lt;li&gt;Step 3: Save results&lt;/li&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * &lt;/ul&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * 
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * @param user The user to process
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * @return Processed user data
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> * @throws IllegalArgumentException if user is null
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> UserData <span style="color:#50fa7b">process</span>(User user) { ... }
+</span></span></code></pre></div><p><strong>Java 23+ Approach:</strong></p>
+<pre tabindex="0"><code>/**
+ * This method processes user data.
+ *
+ * Usage example:
+ * ```java
+ * UserDataProcessor processor = new UserDataProcessor();
+ * processor.process(user);
+ * ```
+ *
+ * 1. Step 1: Validate input
+ * 2. Step 2: Transform data
+ * 3. Step 3: Save results
+ *
+ * @param user The user to process
+ * @return Processed user data
+ * @throws IllegalArgumentException if user is null
+ */
+public UserData process(User user) { ... }
+</code></pre><p><strong>Architectural Insight:</strong> Markdown documentation improves readability and maintainability of JavaDoc comments, making it easier for developers to write well-documented APIs with proper formatting, code examples, and structured content.</p>
+<hr>
+<h2 id="java-24-features">Java 24 Features</h2>
+<p><strong>Release Date:</strong> March 2025</p>
+<h3 id="feature-summary-table-11">Feature Summary Table</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">JEP</th>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Impact</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Class-File API</td>
+          <td style="text-align: left">JEP 484</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Stream Gatherers</td>
+          <td style="text-align: left">JEP 485</td>
+          <td style="text-align: left">API Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Unnamed Classes and Instance Main Methods (Preview)</td>
+          <td style="text-align: left">JEP 487</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Low</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="class-file-api-jep-484">Class-File API (JEP 484)</h3>
+<p>Introduced a standard API for parsing, generating, and transforming Java class files, replacing third-party libraries like ASM.</p>
+<p><strong>Before Java 24:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// Using ASM library</span>
+</span></span><span style="display:flex;"><span>ClassReader reader <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> ClassReader(<span style="color:#f1fa8c">&#34;com.example.MyClass&#34;</span>);
+</span></span><span style="display:flex;"><span>ClassWriter writer <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> ClassWriter(ClassWriter.<span style="color:#50fa7b">COMPUTE_MAXS</span>);
+</span></span><span style="display:flex;"><span>ClassVisitor visitor <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> MyClassVisitor(writer);
+</span></span><span style="display:flex;"><span>reader.<span style="color:#50fa7b">accept</span>(visitor, 0);
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd">byte</span><span style="color:#ff79c6">[]</span> modifiedClass <span style="color:#ff79c6">=</span> writer.<span style="color:#50fa7b">toByteArray</span>();
+</span></span></code></pre></div><p><strong>Java 24+ Approach:</strong></p>
+<pre tabindex="0"><code>import java.lang.classfile.*;
+import java.lang.constant.*;
+
+// Parse class file
+ClassFile parsedClass = ClassFile.of().parse(Path.of(&#34;MyClass.class&#34;));
+
+// Transform class file
+ClassFile transformed = parsedClass.transform(
+    Transformations.addMethod(
+        MethodBuilder.of(
+            &#34;newMethod&#34;,
+            MethodTypeDesc.of(ClassDesc.of(&#34;void&#34;))
+        )
+        .withCode(code -&gt; {
+            code.return_();
+        })
+    )
+);
+
+// Write transformed class
+ClassFile.of().write(transformed, Path.of(&#34;ModifiedClass.class&#34;));
+</code></pre><p><strong>Architectural Insight:</strong> The Class-File API provides a standard, safe way to manipulate bytecode without external dependencies. This is crucial for frameworks, AOP implementations, code generation tools, and performance optimization libraries.</p>
+<hr>
+<h2 id="java-25-features-lts">Java 25 Features (LTS)</h2>
+<p><strong>Release Date:</strong> September 2025</p>
+<h3 id="feature-summary-table-12">Feature Summary Table</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">JEP</th>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Impact</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Scoped Values</td>
+          <td style="text-align: left">JEP 506</td>
+          <td style="text-align: left">Concurrency</td>
+          <td style="text-align: left">High</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Flexible Constructor Bodies</td>
+          <td style="text-align: left">JEP 513</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Compact Source Files and Instance Main Methods</td>
+          <td style="text-align: left">JEP 512</td>
+          <td style="text-align: left">Language Enhancement</td>
+          <td style="text-align: left">Low</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="scoped-values-jep-506">Scoped Values (JEP 506)</h3>
+<p>An immutable, thread-safe, and efficient alternative to ThreadLocal.</p>
+<p><strong>Before Java 25:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// ThreadLocal approach - potential memory leaks, not inheritable by virtual threads</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">final</span> ThreadLocal<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span> CURRENT_USER <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> ThreadLocal<span style="color:#ff79c6">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">processRequest</span>(String userId) {
+</span></span><span style="display:flex;"><span>    CURRENT_USER.<span style="color:#50fa7b">set</span>(userId);
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">try</span> {
+</span></span><span style="display:flex;"><span>        processUserData();
+</span></span><span style="display:flex;"><span>    } <span style="color:#ff79c6">finally</span> {
+</span></span><span style="display:flex;"><span>        CURRENT_USER.<span style="color:#50fa7b">remove</span>(); <span style="color:#6272a4">// Important cleanup!</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">processUserData</span>() {
+</span></span><span style="display:flex;"><span>    String userId <span style="color:#ff79c6">=</span> CURRENT_USER.<span style="color:#50fa7b">get</span>(); <span style="color:#6272a4">// Access current user</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// Process data for userId</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Java 25+ Approach:</strong></p>
+<pre tabindex="0"><code>// Scoped Values approach - safer, more efficient
+private static final ScopedValue&lt;String&gt; CURRENT_USER = ScopedValue.newInstance();
+
+public void processRequest(String userId) {
+    // Value is automatically scoped to the execution
+    ScopedValue.where(CURRENT_USER, userId)
+        .run(() -&gt; {
+            processUserData();  // Can access scoped value
+        });
+}
+
+private void processUserData() {
+    String userId = CURRENT_USER.get();  // Access scoped value
+    // Process data for userId
+}
+
+// For async operations
+public CompletableFuture&lt;Void&gt; processAsync(String userId) {
+    return ScopedValue.where(CURRENT_USER, userId)
+        .call(() -&gt; CompletableFuture.supplyAsync(this::processUserDataAsync))
+        .thenCompose(future -&gt; future);
+}
+</code></pre><p><strong>Architectural Insight:</strong> Scoped Values provide a safer alternative to ThreadLocal with better performance characteristics and automatic cleanup. They&rsquo;re particularly important in virtual thread environments where ThreadLocal usage can cause memory issues.</p>
+<h3 id="flexible-constructor-bodies-jep-513">Flexible Constructor Bodies (JEP 513)</h3>
+<p>Allows logic to be executed in a constructor before calling super() or this().</p>
+<p><strong>Before Java 25:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">SubClass</span> <span style="color:#8be9fd;font-style:italic">extends</span> SuperClass {
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">int</span> processedValue;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#50fa7b">SubClass</span>(<span style="color:#8be9fd">int</span> value) {
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">// Could not perform any logic before super() call</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">super</span>(value <span style="color:#ff79c6">*</span> 2);  <span style="color:#6272a4">// Had to do all processing inline</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">this</span>.<span style="color:#50fa7b">processedValue</span> <span style="color:#ff79c6">=</span> value <span style="color:#ff79c6">*</span> 2;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Java 25+ Approach:</strong></p>
+<pre tabindex="0"><code>public class SubClass extends SuperClass {
+    private final int processedValue;
+    
+    public SubClass(int value) {
+        // Now we can perform complex logic before super() call
+        if (value &lt; 0) {
+            throw new IllegalArgumentException(&#34;Value must be non-negative&#34;);
+        }
+        int validatedValue = validateAndProcess(value);
+        int processed = transform(validatedValue);
+        
+        super(processed);  // Call parent constructor with processed value
+        this.processedValue = processed;
+    }
+    
+    private int validateAndProcess(int value) {
+        // Complex validation logic
+        if (value &gt; 1000) {
+            throw new IllegalArgumentException(&#34;Value too large: &#34; + value);
+        }
+        return Math.max(0, value);  // Ensure non-negative
+    }
+    
+    private int transform(int value) {
+        // Complex transformation logic
+        return value * 2 + 1;
+    }
+}
+</code></pre><p><strong>Architectural Insight:</strong> Flexible constructor bodies provide more control over object initialization, allowing for complex validation and transformation logic before parent class construction. This improves code organization and reduces duplication.</p>
+<h3 id="compact-source-files-and-instance-main-methods-jep-512">Compact Source Files and Instance Main Methods (JEP 512)</h3>
+<p>Simplifies small Java programs by allowing instance main methods and omitting class headers.</p>
+<p><strong>Before Java 25:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// Traditional approach - required class declaration</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">HelloWorld</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">main</span>(String<span style="color:#ff79c6">[]</span> args) {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#50fa7b">out</span>.<span style="color:#50fa7b">println</span>(<span style="color:#f1fa8c">&#34;Hello World!&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Java 25+ Approach:</strong></p>
+<pre tabindex="0"><code>// Compact approach - no class declaration needed
+void main() {
+    System.out.println(&#34;Hello World!&#34;);
+}
+
+// Or with parameters
+void main(String... args) {
+    System.out.println(&#34;Arguments: &#34; + Arrays.toString(args));
+}
+</code></pre><p><strong>Architectural Insight:</strong> Compact source files make Java more approachable for scripting and small utilities, reducing boilerplate code while maintaining Java&rsquo;s performance and ecosystem benefits.</p>
+<hr>
+<h2 id="architectural-evolution-summary">Architectural Evolution Summary</h2>
+<p>The evolution from Java 8 to Java 25 represents a fundamental shift in Java&rsquo;s design philosophy:</p>
+<ol>
+<li>
+<p><strong>From Object-Oriented to Multi-Paradigm:</strong> Starting with functional programming concepts in Java 8, Java has embraced multiple programming paradigms.</p>
+</li>
+<li>
+<p><strong>From Monolithic to Modular:</strong> The introduction of the module system in Java 9 provided platform-level modularity.</p>
+</li>
+<li>
+<p><strong>From Heavyweight to Lightweight Concurrency:</strong> Virtual threads in Java 19-21 revolutionized concurrent programming.</p>
+</li>
+<li>
+<p><strong>From Verbose to Concise:</strong> Features like records, pattern matching, and text blocks have significantly reduced boilerplate.</p>
+</li>
+<li>
+<p><strong>From Platform-Dependent to Cross-Platform Integration:</strong> The Foreign Function &amp; Memory API bridges Java with native code safely.</p>
+</li>
+<li>
+<p><strong>From Static to Dynamic Development:</strong> Enhanced documentation, improved tooling, and scripting capabilities make Java more developer-friendly.</p>
+</li>
+</ol>
+<h2 id="impact-on-enterprise-architecture">Impact on Enterprise Architecture</h2>
+<p>These evolutionary changes have profound implications for enterprise architecture:</p>
+<ul>
+<li><strong>Microservices:</strong> Virtual threads and HTTP client improvements make Java ideal for microservices</li>
+<li><strong>Functional Programming:</strong> Stream API and lambda expressions enable reactive programming patterns</li>
+<li><strong>Domain-Driven Design:</strong> Records and sealed classes support modeling domain concepts effectively</li>
+<li><strong>Performance:</strong> Virtual threads and memory improvements enable high-throughput applications</li>
+<li><strong>Maintainability:</strong> Pattern matching and sealed classes make code more robust and maintainable</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>Java&rsquo;s evolution from version 8 to 25 demonstrates a commitment to balancing backward compatibility with innovation. The platform has successfully incorporated modern programming paradigms while maintaining its core strengths of performance, reliability, and extensive ecosystem. For solution architects and senior engineers, understanding these features enables better design decisions and more effective use of the Java platform&rsquo;s capabilities.</p>
+<p>The progression shows a clear trend toward making Java more expressive, concurrent, and maintainable while preserving its &ldquo;write once, run anywhere&rdquo; philosophy. This evolution positions Java as a competitive choice for modern application development, from small utilities to large-scale enterprise systems.</p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2025-12-11-build-agentic-ai/" data-toggle="tooltip" data-placement="top" title="The Complete Guide to Building Agentic AI Systems: From Basics to Production">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+</body>
+</html>
