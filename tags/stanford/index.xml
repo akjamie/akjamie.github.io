@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Stanford on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/stanford/</link>
+    <description>Recent content in Stanford on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 23 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/stanford/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Stanford CS146S: The Modern Software Developer — A Complete Course Summary</title>
+      <link>http://akjamie.github.io/post/2026-02-23-stanford-cs146s-summary/</link>
+      <pubDate>Mon, 23 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-02-23-stanford-cs146s-summary/</guid>
+      <description>&lt;h1 id=&#34;stanford-cs146s-the-modern-software-developer--a-complete-course-summary&#34;&gt;Stanford CS146S: The Modern Software Developer — A Complete Course Summary&lt;/h1&gt;&#xA;&lt;p&gt;&lt;em&gt;Stanford&amp;rsquo;s first course on AI-driven software development, taught by Mihail Eric (former Amazon Alexa technical lead, YC founder, Stanford AI PhD). Fall 2025. Here is everything it covers, week by week.&lt;/em&gt;&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;executive-summary-the-shift-to-ai-native-engineering&#34;&gt;Executive Summary: The Shift to AI-Native Engineering&lt;/h2&gt;&#xA;&lt;p&gt;CS146S is not an introductory programming course; it is a manifesto for a new era of software engineering. The central premise is that &lt;strong&gt;programming is not dead, but it has fundamentally changed&lt;/strong&gt;. The &amp;ldquo;Modern Software Developer&amp;rdquo; is no longer just a writer of syntax but an architect of systems, a verifier of AI outputs, and a manager of autonomous agents.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

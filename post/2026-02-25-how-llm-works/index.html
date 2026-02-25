@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="How LLMs Work: An End-to-End Guide from Pre-training to Prediction" />
+    <meta property="og:title" content="How LLMs Work: An End-to-End Guide from Pre-training to Prediction" />
+    <meta property="twitter:title" content="How LLMs Work: An End-to-End Guide from Pre-training to Prediction" />
+    
+
+    
+    <meta name="description" content="A deep dive into the complete lifecycle of a Large Language Model, from pre-training and fine-tuning to the inner workings of the decoder-only transformer architecture during inference.">
+    <meta property="og:description" content="A deep dive into the complete lifecycle of a Large Language Model, from pre-training and fine-tuning to the inner workings of the decoder-only transformer architecture during inference." />
+    <meta property="twitter:description" content="A deep dive into the complete lifecycle of a Large Language Model, from pre-training and fine-tuning to the inner workings of the decoder-only transformer architecture during inference." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-02-25-how-llm-works/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>How LLMs Work: An End-to-End Guide from Pre-training to Prediction | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-02-25-how-llm-works/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/technology/">technology</a>
+                        </li>
+                        
+                    
+                    
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/llm" title="LLM">
+                            LLM
+                        </a>
+                        
+                        <a class="tag" href="/tags/transformer" title="Transformer">
+                            Transformer
+                        </a>
+                        
+                        <a class="tag" href="/tags/ai" title="AI">
+                            AI
+                        </a>
+                        
+                        <a class="tag" href="/tags/deep-learning" title="Deep Learning">
+                            Deep Learning
+                        </a>
+                        
+                        <a class="tag" href="/tags/architecture" title="Architecture">
+                            Architecture
+                        </a>
+                        
+                        <a class="tag" href="/tags/agi" title="AGI">
+                            AGI
+                        </a>
+                        
+                    </div>
+                    <h1>How LLMs Work: An End-to-End Guide from Pre-training to Prediction</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Wednesday, February 25, 2026
+                            
+                                <span id="/post/2026-02-25-how-llm-works/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h2 id="introduction-from-raw-data-to-reasoning">Introduction: From Raw Data to Reasoning</h2>
+<p>Large Language Models (LLMs) like Sonnet 4.6, GPT-4, and Llama 3 appear to &ldquo;understand&rdquo; and &ldquo;reason&rdquo; about our prompts. But how do they actually work? How does a model go from a simple user query like <strong>&ldquo;Where is the capital of China?&rdquo;</strong> to generating the correct answer, &ldquo;Beijing&rdquo;?</p>
+<p>This guide will walk you through the entire end-to-end process, from the three-stage training that creates the model to the intricate mechanics of the decoder-only transformer architecture that generates the answer, token by token.</p>
+<h2 id="the-three-stage-training-process-building-and-aligning-the-model">The Three-Stage Training Process: Building and Aligning the Model</h2>
+<p>An LLM isn&rsquo;t built in a single step. It undergoes a rigorous, multi-stage training process to acquire knowledge and learn to interact with humans.</p>
+<pre class="mermaid">
+  graph TD
+    subgraph &#34;Phase 1: Pre-training (Months)&#34;
+        A[Vast Internet Text &amp; Code] --&gt; B{Next-Token Prediction};
+        B --&gt; C[Base Model&lt;br/&gt;&lt;em&gt;Knows grammar, facts, reasoning patterns&lt;/em&gt;];
+    end
+
+    subgraph &#34;Phase 2: Supervised Fine-Tuning (SFT) (Weeks)&#34;
+        D[Curated Prompt-Response Pairs&lt;br/&gt;&lt;em&gt;Written by Humans&lt;/em&gt;] --&gt; E{Mimic Human Responses};
+        C --&gt; E;
+        E --&gt; F[SFT Model&lt;br/&gt;&lt;em&gt;Knows how to follow instructions&lt;/em&gt;];
+    end
+
+    subgraph &#34;Phase 3: Reinforcement Learning (RLHF) (Weeks)&#34;
+        G[Human-Ranked Responses] --&gt; H{Train a Reward Model};
+        F --&gt; I{Generate Multiple Responses};
+        I --&gt; J{Use Reward Model to Score Responses};
+        J --&gt; K{Fine-tune SFT Model with Reinforcement Learning};
+        K --&gt; L[Final Aligned Model&lt;br/&gt;&lt;em&gt;e.g., Sonnet 4.6 - Helpful &amp; Harmless&lt;/em&gt;];
+    end
+
+    style A fill:#e3f2fd
+    style D fill:#e8f5e8
+    style G fill:#f3e5f5
+</pre>
+
+<h3 id="phase-1-pre-training-building-the-foundation">Phase 1: Pre-training (Building the Foundation)</h3>
+<p>The goal of pre-training is to build a <strong>base model</strong> that understands the fundamental patterns of human language and knowledge.</p>
+<ul>
+<li><strong>What it is:</strong> The model is trained on a massive, diverse dataset comprising a significant portion of the public internet—text, books, code, and more. This huge dataset is broken down into smaller, manageable <strong>batches</strong> that are fed to the model iteratively.</li>
+<li><strong>The Task:</strong> The training objective is deceptively simple: <strong>next-token prediction</strong>. The model is given a sequence of text and asked to predict the very next word (or sub-word, called a token). For example, given &ldquo;The quick brown fox jumps over the lazy&hellip;&rdquo;, it must learn to predict &ldquo;dog&rdquo;.</li>
+<li><strong>The Outcome:</strong> By doing this billions of times, the model develops a deep, implicit understanding of grammar, syntax, facts about the world (like the capital of China), and even reasoning abilities. However, at this stage, it&rsquo;s not a helpful assistant. It&rsquo;s a powerful text completion engine.</li>
+</ul>
+<h3 id="phase-2-supervised-fine-tuning-sft-teaching-the-chat-format">Phase 2: Supervised Fine-Tuning (SFT) (Teaching the &ldquo;Chat&rdquo; Format)</h3>
+<p>The base model knows a lot, but it doesn&rsquo;t know how to be a chatbot. SFT teaches it to follow instructions and respond in a conversational format.</p>
+<ul>
+<li><strong>What it is:</strong> Human labelers create a high-quality dataset of thousands of prompt-and-response pairs.</li>
+<li><strong>The Task:</strong> The base model is trained on this dataset to mimic the ideal responses.</li>
+<li><strong>The Outcome:</strong> The model learns the instruction-following and conversational format we expect from an assistant.</li>
+</ul>
+<h3 id="phase-3-reinforcement-learning-from-human-feedback-rlhf-aligning-with-human-preferences">Phase 3: Reinforcement Learning from Human Feedback (RLHF) (Aligning with Human Preferences)</h3>
+<p>The SFT model is helpful, but its responses might be verbose or unnatural. RLHF fine-tunes the model to better align with what humans find valuable.</p>
+<ul>
+<li><strong>The Process:</strong> A separate &ldquo;reward model&rdquo; is trained to predict human preferences. The SFT model is then &ldquo;rewarded&rdquo; for generating answers that the reward model scores highly.</li>
+<li><strong>The Outcome:</strong> This process makes the final model more helpful, harmless, and honest. This is the model, like <strong>Sonnet 4.6</strong>, that you interact with.</li>
+</ul>
+<hr>
+<h2 id="next-token-prediction-the-dual-role-of-a-single-task">Next-Token Prediction: The Dual Role of a Single Task</h2>
+<p>A crucial point to understand is that <strong>&ldquo;next-token prediction&rdquo; is the core task used in <em>both</em> pre-training and inference, but for very different purposes.</strong> The core mechanism is the same, but the application and data flow are completely different.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Feature</th>
+          <th style="text-align: left">🏋️ Pre-training Stage (Learning)</th>
+          <th style="text-align: left">🤖 Inference Stage (Generating)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Goal</strong></td>
+          <td style="text-align: left"><strong>To Learn &amp; Adjust Weights.</strong></td>
+          <td style="text-align: left"><strong>To Generate an Answer.</strong> The model&rsquo;s weights are <strong>frozen</strong>.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Input</strong></td>
+          <td style="text-align: left">A chunk of text from the massive dataset (e.g., a paragraph from Wikipedia).</td>
+          <td style="text-align: left">A user&rsquo;s prompt (e.g., &ldquo;Where is the capital of&hellip;&rdquo;).</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>What happens after prediction?</strong></td>
+          <td style="text-align: left"><strong>Compare to Ground Truth &amp; Learn.</strong> The model checks the <em>actual</em> next token in the text. It calculates a <strong>loss</strong> (error signal) and uses <strong>backpropagation</strong> to adjust its weights.</td>
+          <td style="text-align: left"><strong>Select &amp; Append.</strong> There is no &ldquo;ground truth.&rdquo; The model <strong>selects</strong> a token and <strong>appends it to the input sequence</strong> to generate the next token in a loop.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Final Output</strong></td>
+          <td style="text-align: left">The &ldquo;output&rdquo; is not text. The output is <strong>updated model weights</strong>.</td>
+          <td style="text-align: left">The output is a <strong>sequence of generated tokens</strong> that form a complete answer.</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="analogy-the-student-and-the-exam">Analogy: The Student and the Exam</h3>
+<p>Think of the LLM as a student.</p>
+<ul>
+<li>
+<p><strong>Pre-training is Studying:</strong> The student reads thousands of textbooks (the huge dataset). For each sentence, they try to guess the next word (<strong>prediction</strong>). They then look at the actual next word in the book (<strong>ground truth</strong>). If they were wrong, they mentally correct themselves and adjust their understanding (<strong>learning/weight update</strong>). They are not writing a new book; they are just learning from existing ones.</p>
+</li>
+<li>
+<p><strong>Inference is Taking an Exam:</strong> The professor gives them the start of a question (&ldquo;The capital of France is&hellip;&rdquo;). The student uses all their learned knowledge to write down the answer (<strong>generation</strong>). They write &ldquo;Paris,&rdquo; then a period. They are not learning from the exam question; they are demonstrating what they already know.</p>
+</li>
+</ul>
+<hr>
+<h2 id="core-architecture-the-decoder-only-transformer">Core Architecture: The Decoder-Only Transformer</h2>
+<p>Now, let&rsquo;s dive into the inference process. When you send the prompt &ldquo;Where is the capital of China?&rdquo; to Sonnet 4.6, what happens inside the model&rsquo;s architecture?</p>
+<p>LLMs like Sonnet 4.6 are based on a <strong>decoder-only transformer architecture</strong>. This architecture is designed specifically for next-token prediction.</p>
+<pre class="mermaid">
+  graph TD
+    A[Input: &amp;quot;Where is the...&amp;quot;] --&gt; B(1. Tokenization &amp; Embedding);
+    
+    subgraph Decoder_Block [Decoder Block Stack]
+        direction TB
+        C(Masked Multi-Head Self-Attention)
+        D(Feed-Forward Network)
+        C --&gt; D
+    end
+
+    B --&gt; C
+    D --&gt; E(2. Logits &amp; Softmax);
+    E --&gt; F[Output: &amp;quot;capital&amp;quot;];
+
+    style Decoder_Block fill:#fff3e0,stroke:#333,stroke-width:2px
+</pre>
+
+<h3 id="step-1-tokenization-and-embedding">Step 1: Tokenization and Embedding</h3>
+<p>The model doesn&rsquo;t see words; it sees numbers.</p>
+<ol>
+<li><strong>Tokenization:</strong> The input string is broken down into <strong>tokens</strong> based on the model&rsquo;s built-in vocabulary.
+<ul>
+<li><code>&quot;Where is the capital of China?&quot;</code> -&gt; <code>[&quot;Where&quot;, &quot; is&quot;, &quot; the&quot;, &quot; capital&quot;, &quot; of&quot;, &quot; China&quot;, &quot;?&quot;]</code></li>
+</ul>
+</li>
+<li><strong>Embedding:</strong> Each token is converted into a dense vector of numbers, called an <strong>embedding</strong>.</li>
+<li><strong>Positional Encoding:</strong> A <strong>positional encoding</strong> vector is added to each token&rsquo;s embedding to give the model information about word order.</li>
+</ol>
+<h3 id="step-2-the-decoder-block-the-thinking-engine">Step 2: The Decoder Block (The Thinking Engine)</h3>
+<p>The sequence of embedded vectors is now processed through a stack of identical decoder blocks. Each block has two main components:</p>
+<h4 id="a-masked-multi-head-self-attention">A. Masked Multi-Head Self-Attention</h4>
+<p>This is the heart of the transformer, where the model understands context.</p>
+<ul>
+<li><strong>Self-Attention:</strong> For each token, it calculates &ldquo;attention scores&rdquo; to determine how much importance it should pay to every <em>other</em> token in the sequence. For the token &ldquo;capital&rdquo;, it will learn to pay high attention to &ldquo;China&rdquo;.</li>
+<li><strong>Multi-Head:</strong> The attention mechanism is run multiple times in parallel (e.g., 12+ &ldquo;heads&rdquo;), allowing the model to capture different types of relationships simultaneously.</li>
+</ul>
+<h4 id="b-feed-forward-network-ffn">B. Feed-Forward Network (FFN)</h4>
+<p>This is a simpler neural network that processes each token&rsquo;s vector independently, acting as the &ldquo;thinking&rdquo; step to synthesize the contextual information from the attention layer.</p>
+<h3 id="step-3-the-final-prediction-logits-and-softmax">Step 3: The Final Prediction (Logits and Softmax)</h3>
+<p>After passing through the decoder stack, the final output vector is fed into two final layers:</p>
+<ol>
+<li><strong>Logit Head:</strong> A linear layer that produces a raw score (a <strong>logit</strong>) for every single token in the model&rsquo;s vocabulary.</li>
+<li><strong>Softmax Function:</strong> Converts the logits into probabilities that sum to 1. The token with the highest probability is selected as the output.</li>
+</ol>
+<hr>
+<h2 id="putting-it-all-together-an-end-to-end-example">Putting It All Together: An End-to-End Example</h2>
+<p>Let&rsquo;s trace the generation of the answer for <strong>&ldquo;Where is the capital of China?&rdquo;</strong> by Sonnet 4.6. This is an <strong>autoregressive</strong> process, meaning the model&rsquo;s output is fed back into its input in a loop.</p>
+<pre class="mermaid">
+  sequenceDiagram
+    participant User
+    participant Sonnet4_6 as &#34;Sonnet 4.6&#34;
+
+    User-&gt;&gt;Sonnet4_6: &#34;Where is the capital of China?&#34;
+
+    loop Autoregressive Generation
+        Note over Sonnet4_6: Processes current sequence...
+        Sonnet4_6--&gt;&gt;Sonnet4_6: Predicts next token: &#34;The&#34;
+        Note over Sonnet4_6: Appends &#34;The&#34; to sequence. New input:&lt;br/&gt;&#34;Where is the capital of China? The&#34;
+
+        Note over Sonnet4_6: Processes current sequence...
+        Sonnet4_6--&gt;&gt;Sonnet4_6: Predicts next token: &#34; capital&#34;
+        Note over Sonnet4_6: ...and so on...
+
+        Note over Sonnet4_6: Processes &#34;... of China is&#34;
+        Sonnet4_6--&gt;&gt;Sonnet4_6: Predicts next token: &#34; Beijing&#34;
+        Note over Sonnet4_6: Appends &#34; Beijing&#34;.
+
+        Note over Sonnet4_6: Processes &#34;... is Beijing&#34;
+        Sonnet4_6--&gt;&gt;Sonnet4_6: Predicts next token: &#34;.&#34; or &#34;&lt;|endoftext|&gt;&#34;
+    end
+
+    Sonnet4_6-&gt;&gt;User: &#34;The capital of China is Beijing.&#34;
+</pre>
+
+<ol>
+<li><strong>Initial Prompt:</strong> The model takes the tokenized embeddings for <code>&quot;Where is the capital of China?&quot;</code>.</li>
+<li><strong>First Prediction:</strong> It processes this sequence. The self-attention mechanism identifies the strong link between &ldquo;capital&rdquo; and &ldquo;China&rdquo;. The model outputs a probability distribution, and the token <strong>&ldquo;The&rdquo;</strong> has the highest probability.</li>
+<li><strong>Second Prediction:</strong> The model now takes the original prompt <em>plus</em> the newly generated token as its new input: <code>&quot;Where is the capital of China? The&quot;</code>. It runs the entire process again. This time, the most likely next token is <strong>&ldquo;capital&rdquo;</strong>.</li>
+<li><strong>Continuing the Loop:</strong> This autoregressive loop continues, generating one token at a time until it predicts a special <strong>end-of-sequence</strong> token.</li>
+</ol>
+<h2 id="conclusion">Conclusion</h2>
+<p>The journey from a simple prompt to a coherent answer is a remarkable interplay between massive-scale pattern recognition and careful human alignment.</p>
+<ul>
+<li><strong>Pre-training</strong> gives the model a vast library of world knowledge by using next-token prediction as a <strong>learning objective</strong>.</li>
+<li><strong>Fine-tuning (SFT &amp; RLHF)</strong> teaches it to access that knowledge in a helpful, conversational, and safe manner.</li>
+<li>The <strong>decoder-only transformer architecture</strong> uses next-token prediction as a <strong>generation mechanism</strong> to autoregressively build an answer, one token at a time.</li>
+</ul>
+<p>So, when you ask Sonnet 4.6 a question, you are initiating a sophisticated, high-speed sequence of predictions, where each new word is chosen based on the rich contextual understanding the model has built from processing trillions of words before.</p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2026-02-23-stanford-cs146s-summary/" data-toggle="tooltip" data-placement="top" title="Stanford CS146S: The Modern Software Developer — A Complete Course Summary">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ai" title="ai">
+                            ai
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/deep-learning" title="deep learning">
+                            deep learning
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"
+          data-cfasync="false" defer></script>
+  <script data-cfasync="false" defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
+    });
+  </script>
+
+</body>
+</html>
