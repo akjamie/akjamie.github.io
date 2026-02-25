@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://localhost:1313//img/header-03.png">
+    <meta property="twitter:image" content="http://localhost:1313//img/header-03.png" />
+    
+
+    
+    <meta name="title" content="An Example Post" />
+    <meta property="og:title" content="An Example Post" />
+    <meta property="twitter:title" content="An Example Post" />
+    
+
+    
+    <meta name="description" content="Jamie, Senior Software Engineer, Open source enthusiast, PMP, Scrum master">
+    <meta property="og:description" content="Jamie, Senior Software Engineer, Open source enthusiast, PMP, Scrum master" />
+    <meta property="twitter:description" content="Jamie, Senior Software Engineer, Open source enthusiast, PMP, Scrum master" />
+    
+
+    <meta property="og:url" content="http://localhost:1313/post/2026-02-26-staff-engineer-growth/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>An Example Post | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-02-26-staff-engineer-growth/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/tech/">tech</a>
+                        </li>
+                        
+                    
+
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
+</script>
+
+
+
+<header class="intro-header" style="background-image: url('/img/header-03.png')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>Jamie&#39;s Blog </h1>
+                    
+		    <span class="subheading">The curious developer&#39;s ODYSSEY, Exploring the Universe of TECH, CODE &amp; AI.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+            
+            <div class="
+            col-lg-8 col-lg-offset-1
+            col-md-8 col-md-offset-1
+            col-sm-12
+            col-xs-12
+            post-container">
+            
+                <h1 id="surviving-the-shift-what-stanfords-cs146s-taught-me-about-staying-relevant-as-a-staff-engineer">Surviving the Shift: What Stanford&rsquo;s CS146S Taught Me About Staying Relevant as a Staff Engineer</h1>
+<p><em>AI agents are not coming. They&rsquo;re here. This is not a post about tools — it&rsquo;s about what kind of engineer you need to become.</em></p>
+<hr>
+<p>There&rsquo;s a particular kind of anxiety that doesn&rsquo;t get talked about much in staff engineering circles. It&rsquo;s not the anxiety of being a junior developer wondering if you&rsquo;ll ever understand distributed systems. It&rsquo;s quieter and more unsettling: the feeling that skills you spent a decade building — skills that made you the person people come to — might be getting slowly, methodically commoditized.</p>
+<p>I felt it the first time I watched a coding agent produce a working implementation of something that would have taken me an afternoon. Not because the code was perfect. It wasn&rsquo;t. But because the <em>gap</em> between what the agent produced and what I would have produced was small enough to matter.</p>
+<p>Stanford&rsquo;s CS146S — &ldquo;The Modern Software Developer,&rdquo; taught by Mihail Eric — is the first university course that takes this moment seriously as an engineering education problem. Not &ldquo;how do we teach students to use AI tools,&rdquo; but &ldquo;what does it mean to be a great software engineer when agents can write, test, and deploy code autonomously?&rdquo; The course is technically rigorous, built on top of real LLM internals, real agent failure research, real security exploit chains. But underneath all of it is a question every staff engineer is quietly asking: <em>where do I fit in this?</em></p>
+<p>This post is my attempt to answer that question honestly, using the course as a lens.</p>
+<hr>
+<h2 id="the-uncomfortable-truth-about-whats-actually-getting-automated">The Uncomfortable Truth About What&rsquo;s Actually Getting Automated</h2>
+<p>Let&rsquo;s be precise about what AI is actually good at, because the popular framings are mostly wrong.</p>
+<p>The common framing: &ldquo;AI handles the boring stuff, humans do the interesting stuff.&rdquo; This is comforting and mostly false. What AI handles is not distinguished by how interesting it is. What it handles is <strong>well-specified execution</strong> — tasks where the desired output is clear, the constraints are known, and the steps to get there are definable. A lot of genuinely interesting engineering work falls into that category. Implementing a complex algorithm you&rsquo;ve already designed. Refactoring code to a pattern you&rsquo;ve already chosen. Writing tests for interfaces you&rsquo;ve already defined. These things are interesting. They&rsquo;re also increasingly automatable.</p>
+<p>What AI handles poorly — and what the course makes very clear from the failure research — is <strong>judgment under ambiguity</strong>: deciding what to build before building it, recognizing when a technically correct solution is architecturally wrong, understanding the business context that isn&rsquo;t written down anywhere, knowing which constraints are real and which ones are inherited assumptions nobody has questioned in three years.</p>
+<pre class="mermaid">
+  quadrantChart
+    title Where Your Skills Stand in the AI Era
+    x-axis &#34;AI Struggles Here&#34; --&gt; &#34;AI Excels Here&#34;
+    y-axis &#34;Lower Career Leverage&#34; --&gt; &#34;Higher Career Leverage&#34;
+    quadrant-1 Double Down — Your Moat
+    quadrant-2 Stay Sharp — Still Needed
+    quadrant-3 Automate Away
+    quadrant-4 Transitioning Out
+    Architectural tradeoff decisions: [0.1, 0.95]
+    Recognising the wrong problem: [0.1, 0.9]
+    Business context interpretation: [0.15, 0.85]
+    Questioning inherited constraints: [0.2, 0.8]
+    Breaking ambiguous goals into tasks: [0.35, 0.78]
+    Code review for correctness: [0.5, 0.75]
+    Complex debugging with context: [0.45, 0.65]
+    Implementing designed algorithms: [0.75, 0.55]
+    Writing tests for known interfaces: [0.85, 0.35]
+    Refactoring to known patterns: [0.88, 0.3]
+    Generating boilerplate: [0.92, 0.15]
+    Updating downstream docs: [0.9, 0.1]
+</pre>
+
+<p>This distinction matters for how you invest in yourself. The skills that appreciate in the AI era are the skills that sit <em>upstream</em> of execution: decomposing ambiguous problems into clear tasks, communicating architectural intent with enough precision that an agent (or a junior engineer) can execute it reliably, evaluating whether implementation matches design intent, and — perhaps most importantly — asking the right question in the first place.</p>
+<p>The course puts it directly: the most valuable programmer is no longer the fastest typist. It&rsquo;s the one who communicates most effectively. Planning, scoping, architecture, delegation, and code reading — not code writing — are the skills that compound from here.</p>
+<p>That&rsquo;s either threatening or liberating, depending on which side of that line you&rsquo;re on.</p>
+<hr>
+<h2 id="you-are-already-a-manager-you-just-dont-have-the-mental-model-yet">You Are Already a Manager. You Just Don&rsquo;t Have the Mental Model Yet.</h2>
+<p>The course frames what&rsquo;s happening with a specific analogy: the engineer is becoming an engineering manager of AI agents. Not just &ldquo;using AI tools&rdquo; — <em>managing</em> AI. And the analogy is load-bearing, because the skills that make someone a good engineering manager are exactly the skills that make someone effective with AI agents.</p>
+<pre class="mermaid">
+  flowchart LR
+    subgraph EM[&#34;👤 Engineering Manager Skills&#34;]
+        direction TB
+        E1[&#34;Break ambiguous goals\ninto clear tasks&#34;]
+        E2[&#34;Provide enough context\nto execute without check-ins&#34;]
+        E3[&#34;Anticipate where someone\nwill get confused — pre-empt it&#34;]
+        E4[&#34;Course-correct early,\nnot after a week of wrong work&#34;]
+        E5[&#34;Review output critically\nand own what ships&#34;]
+    end
+
+    subgraph AM[&#34;🤖 Managing AI Agents&#34;]
+        direction TB
+        A1[&#34;Precise specs with explicit\nacceptance criteria&#34;]
+        A2[&#34;CLAUDE.md — project context,\narchitecture, conventions&#34;]
+        A3[&#34;Defensive prompting — name\nthe gotchas before they happen&#34;]
+        A4[&#34;Explicit human checkpoints\nbefore agent proceeds&#34;]
+        A5[&#34;Verify all output;\nnever assume correctness&#34;]
+    end
+
+    E1 -- transfers directly --&gt; A1
+    E2 -- transfers directly --&gt; A2
+    E3 -- transfers directly --&gt; A3
+    E4 -- transfers directly --&gt; A4
+    E5 -- transfers directly --&gt; A5
+</pre>
+
+<p>Think about what good engineering management actually requires. Breaking a large ambiguous goal into a set of tasks with clear acceptance criteria. Giving enough context that someone can execute without constant check-ins. Anticipating where a less experienced person would get confused and pre-empting that confusion. Knowing when to course-correct early rather than letting a wrong direction run long. Reviewing output critically and owning the quality of what ships.</p>
+<p>Every one of those things is directly transferable to working with coding agents. The course is specific about the mechanics: don&rsquo;t say <em>what</em> you want — say <em>how</em> you want it done. Not &ldquo;add unit tests&rdquo; but &ldquo;add unit tests for these four specific edge cases: zero input, negative values, concurrent access, and null state. Use MockServiceV2 for all database mocking.&rdquo; Anticipate the non-obvious dependency upfront: &ldquo;You&rsquo;ll need to recompile the C++ bindings before each test run.&rdquo; Build explicit checkpoints into multi-hour tasks where human judgment is required before the agent proceeds.</p>
+<p>The reason this framing is useful is that it gives you a direction. If you&rsquo;ve been developing good engineering management instincts — if you&rsquo;ve been learning how to delegate clearly, how to set up people for success, how to review critically — those instincts transfer directly. The medium changed. The skill didn&rsquo;t.</p>
+<p>But there&rsquo;s a sharper edge to this analogy. The course makes an observation that I think is worth sitting with: agents fail in roughly the same ways that new engineers fail. Context poisoning is when an early mistake gets cemented and the agent fixates on it rather than self-correcting — exactly what you see when a junior engineer anchors too hard on their first interpretation of a problem. Context distraction is when the agent starts repeating patterns from its own history instead of reasoning fresh — exactly what you see when someone has been in a codebase long enough to stop questioning the patterns they&rsquo;ve absorbed. Context confusion is when too many options degrade performance — exactly what you see when someone is overwhelmed by choices and starts making arbitrary ones.</p>
+<p>If you&rsquo;ve ever managed people, you recognize these failure modes. You already know how to navigate around them. The work is applying that intuition to a new type of collaborator.</p>
+<hr>
+<h2 id="the-thing-that-made-you-good-is-also-your-biggest-blind-spot">The Thing That Made You Good Is Also Your Biggest Blind Spot</h2>
+<p>Here&rsquo;s the part that&rsquo;s harder to say. The skills that got most of us to staff level are heavily weighted toward execution. We became valuable by being the person who could sit down with a hard problem and produce a working solution. We built our credibility through output, through code reviews where we caught the subtle bugs, through the moments where we understood the system deeply enough to know why the obvious solution wouldn&rsquo;t work.</p>
+<p>That&rsquo;s real. It doesn&rsquo;t disappear. But it&rsquo;s worth being honest about what happens to that comparative advantage when execution becomes faster and cheaper across the board.</p>
+<p>The course surfaces this through the <strong>bottleneck inversion</strong>. When agents execute well-specified tasks 6–12x faster, the rate-limiting factor stops being building and becomes <em>defining what to build</em>.</p>
+<pre class="mermaid">
+  flowchart TB
+    subgraph BEFORE[&#34;⏮ Before AI Agents — Where the bottleneck lived&#34;]
+        direction LR
+        B1[&#34;📋 Spec &amp;\nRequirements&#34;]
+        B2[&#34;🔨 Build &amp;\nImplementation&#34;]
+        B3[&#34;🧪 Test &amp;\nReview&#34;]
+        B4[&#34;🚀 Ship&#34;]
+        B1 --&gt;|&#34;fast&#34;| B2
+        B2 --&gt;|&#34;🐢 SLOW — weeks&#34;| B3
+        B3 --&gt; B4
+        style B2 fill:#ef4444,color:#fff,stroke:#dc2626
+    end
+
+    subgraph AFTER[&#34;⏭ With AI Agents — Where the bottleneck now lives&#34;]
+        direction LR
+        A1[&#34;📋 Spec &amp;\nRequirements&#34;]
+        A2[&#34;🤖 Agent\nImplementation&#34;]
+        A3[&#34;🧠 Human\nVerification&#34;]
+        A4[&#34;🚀 Ship&#34;]
+        A1 --&gt;|&#34;🐢 SLOW — the new gap&#34;| A2
+        A2 --&gt;|&#34;⚡ 6–12× faster&#34;| A3
+        A3 --&gt;|&#34;🐢 Judgment takes time&#34;| A4
+        style A1 fill:#ef4444,color:#fff,stroke:#dc2626
+        style A3 fill:#f59e0b,color:#fff,stroke:#d97706
+    end
+
+    BEFORE --&gt; AFTER
+</pre>
+
+<p>The codebase is no longer the bottleneck. The specification is. The organizations that move fastest are the ones with the clearest requirements, the tightest feedback loops between idea and implementation, the ability to validate ideas against reality before investing heavily in them.</p>
+<p>If your primary leverage point for the last decade has been &ldquo;I can implement this faster and better than anyone on the team,&rdquo; that leverage is compressing. Not disappearing — implementation judgment still matters enormously, especially for reviewing what agents produce. But the ratio is shifting.</p>
+<p>The honest question to ask yourself: when you look at how you spend your time, what fraction of your value-add is specification and judgment, versus execution? If the execution fraction is high, that&rsquo;s the place to invest. Not by abandoning execution skill — you need that to review effectively — but by deliberately developing the upstream skills that are now the rate-limiting factor.</p>
+<p>This is uncomfortable because specification and judgment don&rsquo;t feel like &ldquo;real work&rdquo; in the same way that shipping code does. They&rsquo;re harder to measure, harder to point to, less immediately satisfying. But the course is consistent across all nine weeks: the engineers who compound in this environment are the ones who can think clearly about what to build, communicate it precisely, and evaluate whether what was built matches the intent. Those skills are worth cultivating deliberately.</p>
+<hr>
+<h2 id="context-is-the-new-code-what-this-means-for-how-you-work">Context Is the New Code: What This Means for How You Work</h2>
+<p>The course introduces a concept called &ldquo;the prompt is the new source code,&rdquo; and it&rsquo;s worth taking seriously as a personal practice, not just a philosophical claim.</p>
+<p>The argument: normally, you write source code (Python, TypeScript) and keep it — it&rsquo;s the thing you version control, the thing that captures your intent. With AI-assisted development, teams craft detailed prompts and specifications, generate code from them, commit the code, and throw the prompt away. This is structurally equivalent to shredding your source and version-controlling the binary. The generated code is a lossy projection of the specification. The specification contains the intent, the business context, the constraints, the things that were explicitly decided — and all of that gets thrown away.</p>
+<pre class="mermaid">
+  flowchart LR
+    subgraph OLD[&#34;Traditional Development&#34;]
+        direction TB
+        S1[&#34;✍️ Write Source Code&#34;]
+        S2[&#34;⚙️ Compile / Build&#34;]
+        S3[&#34;📦 Version Control\nSource ✅ Keep&#34;]
+        S4[&#34;🗑️ Discard Binary&#34;]
+        S1 --&gt; S2
+        S2 --&gt; S3
+        S2 --&gt; S4
+    end
+
+    subgraph NEW[&#34;AI-Assisted Development (Current Practice)&#34;]
+        direction TB
+        T1[&#34;📋 Write Prompt\n&amp; Specification&#34;]
+        T2[&#34;🤖 Agent Generates\nCode&#34;]
+        T3[&#34;📦 Version Control\nGenerated Code ✅&#34;]
+        T4[&#34;🗑️ Discard Prompt ❌\nIntent is LOST&#34;]
+        T1 --&gt; T2
+        T2 --&gt; T3
+        T1 --&gt; T4
+    end
+
+    subgraph RIGHT[&#34;What You Should Do Instead&#34;]
+        direction TB
+        R1[&#34;📋 Write Prompt\n&amp; Specification&#34;]
+        R2[&#34;🤖 Agent Generates\nCode&#34;]
+        R3[&#34;📦 Version Control\nBoth ✅&#34;]
+        R1 --&gt; R2
+        R1 --&gt; R3
+        R2 --&gt; R3
+    end
+
+    OLD -- &#34;analogy&#34; --&gt; NEW
+    NEW -- &#34;fix it&#34; --&gt; RIGHT
+
+    style T4 fill:#ef4444,color:#fff,stroke:#dc2626
+    style S3 fill:#22c55e,color:#fff,stroke:#16a34a
+    style T3 fill:#f59e0b,color:#fff,stroke:#d97706
+    style R3 fill:#22c55e,color:#fff,stroke:#16a34a
+    style R1 fill:#22c55e,color:#fff,stroke:#16a34a
+</pre>
+
+<p>The practical implication: prompts, specifications, architecture decisions, and context files should be treated as first-class artifacts, versioned and maintained with the same discipline as code. Not because this is philosophically elegant, but because it&rsquo;s what separates teams that can recover context from teams that can&rsquo;t. When an agent fails on your codebase and you need to restart, the quality of your context file determines how fast you recover. When a new engineer joins your team, the quality of your written context determines how quickly they&rsquo;re productive. When you revisit a decision six months later, the quality of your decision log determines whether you can reconstruct the reasoning.</p>
+<p>This is actually an investment in yourself as much as in the team. The act of writing clear, precise context — documentation that an agent can use, a specification that&rsquo;s unambiguous enough to drive implementation — is the act of making your own thinking legible. It&rsquo;s a forcing function for clarity. Engineers who develop this practice produce better work even without agents, because they&rsquo;ve done the thinking before the building rather than during it.</p>
+<p>The course makes a related point about codebase legibility: &ldquo;If AI doesn&rsquo;t work on your codebase, it typically means a human entering that codebase for the first time would also be confused.&rdquo; This is uncomfortable in a useful way. The messy monolith that &ldquo;only I really understand&rdquo; is not an asset in this environment. It&rsquo;s a liability that compounds. The part of the codebase that requires tribal knowledge to navigate is the part that both new engineers and AI agents will consistently fail on. Making your system legible — clear module boundaries, explicit contracts, self-documenting interfaces — is now directly connected to your team&rsquo;s ability to use any of these tools effectively.</p>
+<hr>
+<h2 id="the-four-agent-failure-modes--and-why-theyre-already-familiar">The Four Agent Failure Modes — and Why They&rsquo;re Already Familiar</h2>
+<p>The course names four specific ways agents fail as their context grows. These are predictable and designable-against — and if you&rsquo;ve managed engineers, you&rsquo;ve already navigated every one of them in human form.</p>
+<pre class="mermaid">
+  flowchart TD
+    START([&#34;🤖 Agent Running a Task&#34;])
+
+    START --&gt; CP
+    START --&gt; CD
+    START --&gt; CC
+    START --&gt; CL
+
+    CP[&#34;❌ Context Poisoning\nAn early wrong assumption gets locked\ninto history. Agent fixates, never recovers.\n\nHuman parallel: junior engineer anchoring\ntoo hard on their first interpretation.&#34;]
+    CD[&#34;❌ Context Distraction\nPast ~100K tokens, agent repeats its own\npast patterns instead of thinking fresh.\n\nHuman parallel: tenured engineer who\nstops questioning absorbed patterns.&#34;]
+    CC[&#34;❌ Context Confusion\nToo many tools exposed.\nAgent calls irrelevant APIs, performance drops.\n\nHuman parallel: anyone overwhelmed\nby too many options making arbitrary calls.&#34;]
+    CL[&#34;❌ Context Clash\nContradictory info in context.\nEarlier wrong attempt vs. correct instruction.\n39% accuracy drop observed in research.\n\nHuman parallel: conflicting direction\nfrom two managers — paralysis.&#34;]
+
+    CP --&gt; R1[&#34;✅ Start fresh.\nAbandon the conversation entirely.\nA clean prompt beats fixing a poisoned one.&#34;]
+    CD --&gt; R2[&#34;✅ Summarise and reset.\nKeep context lean from the start.\nScope tasks to avoid accumulation.&#34;]
+    CC --&gt; R3[&#34;✅ Expose minimal tools.\nConsolidate related ops into single calls.\nFewer choices = sharper focus.&#34;]
+    CL --&gt; R4[&#34;✅ Never correct in-thread.\nNew session with only the correct\ninstruction — remove the contradiction.&#34;]
+
+    style CP fill:#fef2f2,stroke:#ef4444,color:#7f1d1d
+    style CD fill:#fef2f2,stroke:#ef4444,color:#7f1d1d
+    style CC fill:#fef2f2,stroke:#ef4444,color:#7f1d1d
+    style CL fill:#fef2f2,stroke:#ef4444,color:#7f1d1d
+    style R1 fill:#f0fdf4,stroke:#22c55e,color:#14532d
+    style R2 fill:#f0fdf4,stroke:#22c55e,color:#14532d
+    style R3 fill:#f0fdf4,stroke:#22c55e,color:#14532d
+    style R4 fill:#f0fdf4,stroke:#22c55e,color:#14532d
+</pre>
+
+<p>The recovery pattern is the same across all four: don&rsquo;t try to fix a derailed agent by adding more instructions to the same conversation. Reset. Clarify. Restart from a clean state. If you&rsquo;ve ever managed someone who was deep in a wrong mental model, you know this instinct already — sometimes the most effective thing is to sit them down fresh with a whiteboard rather than attempting to correct the accumulation. Same dynamic.</p>
+<hr>
+<h2 id="the-career-level-shift-from-execution-to-taste">The Career-Level Shift: From Execution to Taste</h2>
+<p>There&rsquo;s a concept the course introduces in passing, in the context of AI-generated code quality, that I keep coming back to: <em>taste</em>.</p>
+<p>The argument is that as AI commoditizes code generation, the most valuable human skill is not technical knowledge per se — it&rsquo;s the aesthetic and architectural judgment to look at something and see whether it&rsquo;s right. Not just whether it compiles, not just whether the tests pass, but whether it&rsquo;s elegant, whether it fits the system, whether it&rsquo;ll be maintainable, whether it&rsquo;s solving the actual problem or a simpler proxy for it.</p>
+<p>Taste is not something you can acquire quickly. It&rsquo;s the accumulated sediment of years of reading code, shipping things, watching them break in production, noticing which architectural decisions aged well and which ones caused problems three years later. Every staff engineer has some version of this. The question is whether you&rsquo;re developing it deliberately.</p>
+<p>In the AI era, taste is the one thing that doesn&rsquo;t compress. An agent can generate a thousand lines of code in five minutes. You need to be able to look at those thousand lines and know whether they&rsquo;re right — not just functionally, but structurally, in the context of your system, in the context of what you&rsquo;re trying to build. That&rsquo;s not a skill you can outsource. It&rsquo;s the skill that justifies your presence in the loop.</p>
+<p>The course frames the engineer&rsquo;s evolving role as reading more than writing: &ldquo;When an agent produces a thousand lines of code in five minutes, your job is to read it, understand it, and own that complexity.&rdquo; This is a significant shift. For most of our careers, we&rsquo;ve been optimized for output — for the thing we produce. The new optimization is for <em>judgment</em> — for the quality of what we let through, what we catch, what we redirect. Deep code reading is the core skill of this role, and most staff engineers have never invested in it deliberately because they&rsquo;ve been too busy writing.</p>
+<hr>
+<h2 id="on-security-the-lesson-most-engineers-are-not-internalizing">On Security: The Lesson Most Engineers Are Not Internalizing</h2>
+<p>The course&rsquo;s week 6 content on security is the most alarming material in the curriculum, and the implications for how staff engineers should think about their own systems are not subtle.</p>
+<p>Three specific, documented exploits against production agentic systems, all working today. What they share: they&rsquo;re not model failures. They&rsquo;re system design failures — agents with legitimate access that was redirected maliciously.</p>
+<pre class="mermaid">
+  flowchart TD
+    subgraph ATK[&#34;⚠️ Three Documented Attacks on Agentic Systems&#34;]
+        A1[&#34;🌐 SSRF via Web Tool\nAttacker instructs news agent\nto fetch an internal IP address.\nAgent has legitimate web access —\nno constraint prevents the pivot.&#34;]
+        A2[&#34;🔑 Credential Theft via Code Interpreter\nScript searches for high-entropy strings,\nbase64-encodes results before returning.\nLLM content filters see random strings,\nnot secrets. Bypassed entirely.&#34;]
+        A3[&#34;💀 CVE-2025-3773 — YOLO Mode\nPrompt injection writes chat.tools.approve\nto settings.json. All safety confirmations\ndisabled. Full RCE on developer machine.\nAI modifying its own config = propagating virus.&#34;]
+    end
+
+    ROOT[&#34;🔍 Shared Root Cause\nAgent had legitimate privileged access.\nSecurity model assumed trusted caller.\nNo external constraint prevented misuse.\nThe attack surface = capability × instruction susceptibility.&#34;]
+
+    subgraph DEF[&#34;🛡️ Defense in Depth — All Layers Required&#34;]
+        D1[&#34;Prompt Hardening\nXML/JSON tags separate system\ninstructions from user input.\nSecondary monitor checks primary agent.&#34;]
+        D2[&#34;Runtime Content Filtering\nBlock injection attempts and\nexfiltration before execution —\nincluding encoded payloads.&#34;]
+        D3[&#34;Tool Input Sanitization\nEvery tool validates its own inputs\nregardless of what the LLM claims.\nTrusted execution, not trusted intent.&#34;]
+        D4[&#34;Sandbox + Block Metadata Endpoint\nLeast privilege container isolation.\nExplicitly block 169.254.169.254 —\ncloud service token theft vector.&#34;]
+    end
+
+    A1 --&gt; ROOT
+    A2 --&gt; ROOT
+    A3 --&gt; ROOT
+    ROOT --&gt; D1
+    ROOT --&gt; D2
+    ROOT --&gt; D3
+    ROOT --&gt; D4
+
+    style A1 fill:#fef2f2,stroke:#ef4444,color:#7f1d1d
+    style A2 fill:#fef2f2,stroke:#ef4444,color:#7f1d1d
+    style A3 fill:#fef2f2,stroke:#ef4444,color:#7f1d1d
+    style ROOT fill:#fefce8,stroke:#ca8a04,color:#713f12
+    style D1 fill:#eff6ff,stroke:#3b82f6,color:#1e3a8a
+    style D2 fill:#eff6ff,stroke:#3b82f6,color:#1e3a8a
+    style D3 fill:#eff6ff,stroke:#3b82f6,color:#1e3a8a
+    style D4 fill:#eff6ff,stroke:#3b82f6,color:#1e3a8a
+</pre>
+
+<p>The lesson for staff engineers: every agent you introduce into your system has a security surface that didn&rsquo;t exist before. That surface is defined by what the agent can access and what it can be instructed to do. The overlap between those two things — capability and instruction susceptibility — is where the attacks live. You need to reason about this surface explicitly, the same way you reason about authentication or authorization in any other system.</p>
+<p>This is not a reason to avoid building with agents. It&rsquo;s a reason to build with the same intentionality about security that you&rsquo;d apply to any component with privileged access to internal systems.</p>
+<hr>
+<h2 id="what-to-actually-do-a-personal-roadmap">What to Actually Do: A Personal Roadmap</h2>
+<p>The course doesn&rsquo;t provide a career roadmap explicitly, but the curriculum implies one. Here&rsquo;s how I&rsquo;d synthesize it for a staff engineer navigating this transition right now.</p>
+<pre class="mermaid">
+  timeline
+    title Staff Engineer Growth Path in the AI Agent Era
+    section Now — Build Awareness
+        Understand LLM mechanics         : Know why chain-of-thought works
+                                         : Grasp the four context failure modes
+                                         : Treat AI output as stochastic — always verify
+    section 0–3 months — Shift Practice
+        Specification as craft           : Write PRDs and ADRs as engineering artifacts
+                                         : Task decomposition with explicit acceptance criteria
+                                         : Version your prompts and context files like code
+        System legibility                : Create CLAUDE.md / project context files
+                                         : Clear module boundaries and explicit contracts
+                                         : Remove tribal knowledge dependencies
+    section 3–9 months — Build Intuition
+        Code reading as a discipline     : Review AI-generated code critically
+                                         : Develop taste — what ages well vs. what rots
+                                         : Own everything that ships regardless of origin
+        Agent management fluency         : Recognise failure modes in real sessions
+                                         : Design tool surfaces ergonomically for agents
+                                         : Set team-level agent profiles and guardrails
+    section 9 months+ — Compound
+        Judgment at scale                : Architecture that holds under AI-assisted teams
+                                         : Security reasoning for agentic system surfaces
+                                         : Taste and clarity — the things that don&#39;t compress
+</pre>
+
+<p><strong>Invest in specification skills.</strong> The ability to take an ambiguous problem and produce a clear, unambiguous description of what needs to be built — complete enough that an agent or junior engineer can execute it without constant check-ins — is now one of the most valuable skills in engineering. If you don&rsquo;t write PRDs, architecture decision records, or detailed task breakdowns today, start. Not because process is good, but because clarity compounds.</p>
+<p><strong>Develop your code reading practice deliberately.</strong> Most staff engineers read code constantly but rarely do it as a focused practice. Start reviewing AI-generated code critically — not just &ldquo;does it work&rdquo; but &ldquo;is this the right structure, would this be maintainable, what did the agent miss or simplify incorrectly.&rdquo; Treat this as a skill with a learning curve, because it is.</p>
+<p><strong>Build your intuition for agent failure modes.</strong> The four context failure modes — poisoning, distraction, confusion, clash — are patterns you can learn to recognize. The more you work with agents and watch them fail, the faster you&rsquo;ll identify which failure mode you&rsquo;re seeing and what to do about it. This intuition is genuinely learnable and genuinely valuable.</p>
+<p><strong>Make your systems legible.</strong> The codebase that only you understand is a liability now, not a moat. Invest in clear boundaries, documented contracts, and context files that give agents and new engineers a real chance at understanding what the system does and why. The side effect is that you&rsquo;ll understand your own systems more clearly too.</p>
+<p><strong>Think explicitly about taste.</strong> Ask yourself: what architectural decisions have aged well in codebases you&rsquo;ve worked on, and why? What decisions looked right and didn&rsquo;t hold up? What patterns do you keep seeing cause problems? The answers are your taste — the judgment you&rsquo;ve accumulated. Make it explicit, at least to yourself. It&rsquo;s the differentiating capability you&rsquo;re most likely to undersell.</p>
+<p><strong>Accept the management analogy.</strong> You are becoming a manager of AI agents, whether you want to think of it that way or not. The skills of good technical management — clarity, delegation, critical review, early course correction — are now engineering skills. Developing them isn&rsquo;t a detour from your technical career. It is your technical career, at the staff level, in this era.</p>
+<hr>
+<h2 id="the-part-nobody-says-out-loud">The Part Nobody Says Out Loud</h2>
+<p>There&rsquo;s something the course gestures at but doesn&rsquo;t quite name directly, and I want to name it.</p>
+<p>The engineers who are going to thrive in this environment are not necessarily the ones who are best at using AI tools. They&rsquo;re the ones who are most secure in their own judgment. Because the risk in a world of fast, fluent, confident AI output is not that you&rsquo;ll fail to use the tools — it&rsquo;s that you&rsquo;ll use them in a way that substitutes their judgment for yours.</p>
+<p>The course describes LLMs as stochastic tools with a &ldquo;Swiss cheese model of capability&rdquo; — unpredictable gaps, confident-sounding errors, the ability to solve olympiad-level math and then confidently claim that 9.9 is less than 9.1. In that environment, your own clear thinking and your capacity for genuine skepticism are not just useful — they&rsquo;re the whole game. The agent is fast. Your job is to be right.</p>
+<p>That requires a kind of intellectual confidence that is genuinely hard to maintain when the tool you&rsquo;re working with produces output that looks authoritative and mostly works. It requires the willingness to say &ldquo;this is wrong&rdquo; when the code compiles and the tests pass. It requires the taste to recognize architectural mediocrity even when nothing is broken yet.</p>
+<p>The engineers who build that capacity — who develop the judgment to know when AI output is right, when it&rsquo;s subtly wrong, and when it&rsquo;s confidently wrong in ways that will matter later — those are the engineers whose value increases in this environment rather than compressing. Not because they&rsquo;re anti-AI, but because they&rsquo;re the ones who can actually use AI effectively at scale.</p>
+<p>That&rsquo;s the direction worth orienting toward. Not faster execution. Clearer thinking.</p>
+<hr>
+<p><em>Stanford CS146S: The Modern Software Developer was taught in Fall 2025 by Mihail Eric. Course materials are publicly available at <a href="https://themodernsoftware.dev">themodernsoftware.dev</a>. Assignments at <a href="https://github.com/mihail911/modern-software-dev-assignments">github.com/mihail911/modern-software-dev-assignments</a>.</em></p>
+
+            
+             
+            
+
+
+
+
+            
+            </div>
+            
+            
+
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
+    
+	
+    <section class="visible-md visible-lg">
+	
+        <div class="short-about">
+            
+            <a href="/about">
+               <img src="/img/20190713213835-3.jpg" alt="avatar" style="cursor: pointer" />
+            </a>
+            
+            
+                <p>Senior Software Engineer, Open source enthusiast, PMP, Scrum master</p>
+            
+           
+           <ul class="list-inline">
+               
+               <li>
+                   <a href="mailto:akjamie.zhang@outlook.com">
+                      <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                      </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               
+               
+               <li>
+                   <a target="_blank" href="/img/wechat-qrcode.png">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               <li>
+                   <a target="_blank" href="https://github.com/akjamie">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               
+               
+               <li>
+                   <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                       <span class="fa-stack fa-lg">
+                           <i class="fas fa-circle fa-stack-2x"></i>
+                           <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                       </span>
+                   </a>
+               </li>
+               
+               
+               
+            
+            
+               
+               
+               
+               
+                </ul>
+            </div>
+    </section>
+	
+    
+    
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FEATURED TAGS</h5>
+        <div class="tags">
+            
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/ai" title="ai">
+                        ai
+                    </a>
+               
+            
+               
+            
+               
+                    <a href="/tags/architecture" title="architecture">
+                        architecture
+                    </a>
+               
+            
+               
+            
+               
+                    <a href="/tags/aws" title="aws">
+                        aws
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/deep-learning" title="deep learning">
+                        deep learning
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/docker" title="docker">
+                        docker
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/k8s" title="k8s">
+                        k8s
+                    </a>
+               
+            
+               
+                    <a href="/tags/kubernetes" title="kubernetes">
+                        kubernetes
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/llm" title="llm">
+                        llm
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/nosql" title="nosql">
+                        nosql
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/python" title="python">
+                        python
+                    </a>
+               
+            
+               
+                    <a href="/tags/redis" title="redis">
+                        redis
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/spring" title="spring">
+                        spring
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/spring-cloud" title="spring cloud">
+                        spring cloud
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/transaction-management" title="transaction management">
+                        transaction management
+                    </a>
+               
+            
+               
+                    <a href="/tags/transformer" title="transformer">
+                        transformer
+                    </a>
+               
+            
+               
+            
+               
+                    <a href="/tags/vault" title="vault">
+                        vault
+                    </a>
+               
+            
+               
+            
+        </div>
+    </section>
+    
+
+    
+    
+    <section>
+        <hr class="hidden-sm hidden-xs">
+        <h5>FRIENDS</h5>
+        <ul class="list-inline">
+            
+        </ul>
+    </section>
+    
+    
+    
+</div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<script src="/js/theme-toggle.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"
+          data-cfasync="false" defer></script>
+  <script data-cfasync="false" defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
+    });
+  </script>
+
+</body>
+</html>

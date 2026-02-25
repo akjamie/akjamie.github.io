@@ -2,6 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://akjamie.github.io/</loc>
+    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/</loc>
+    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://akjamie.github.io/tags/agi/</loc>
     <lastmod>2026-02-25T00:00:00+00:00</lastmod>
   </url><url>
@@ -23,13 +29,7 @@
     <loc>http://akjamie.github.io/post/2026-02-25-how-llm-works/</loc>
     <lastmod>2026-02-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/</loc>
-    <lastmod>2026-02-25T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://akjamie.github.io/tags/llm/</loc>
-    <lastmod>2026-02-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/post/</loc>
     <lastmod>2026-02-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/</loc>
