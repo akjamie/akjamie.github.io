@@ -6,6 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
     <meta property="og:site_name" content="Jamie&#39;s Blog">
     <meta property="og:type" content="article">
 
@@ -47,7 +63,10 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
     
-    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
 
     
     <link rel="stylesheet" href="/css/zanshang.min.css">
@@ -134,11 +153,47 @@
                         </li>
                         
                     
-                    
+
 		    
 		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
 		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
                 </ul>
             </div>
         </div>
@@ -173,6 +228,24 @@
             $navbar.className += " in";
         }
     }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
 </script>
 
 
@@ -197,84 +270,20 @@
 <article>
     <div class="container">
         <div class="row">
-
             
             <div class="
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
                 post-container">
 
-                
-                
-
-                
-                
-<div class="entry-shang text-center">
-    
-	    <p>「真诚赞赏，手留余香」</p>
-	
-	<button class="zs show-zs btn btn-bred">赞赏支持</button>
-</div>
-<div class="zs-modal-bg"></div>
-<div class="zs-modal-box">
-	<div class="zs-modal-head">
-		<button type="button" class="close">×</button>
-		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
-        
-	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
-		
- 
-	</div>
-	<div class="zs-modal-body">
-		<div class="zs-modal-btns">
-			<button class="btn btn-blink" data-num="2">2元</button>
-			<button class="btn btn-blink" data-num="5">5元</button>
-			<button class="btn btn-blink" data-num="10">10元</button>
-			<button class="btn btn-blink" data-num="50">50元</button>
-			<button class="btn btn-blink" data-num="100">100元</button>
-			<button class="btn btn-blink" data-num="1">任意金额</button>
-		</div>
-		<div class="zs-modal-pay">
-			<button class="btn btn-bred" id="pay-text">2元</button>
-			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
-			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
-		</div>
-	</div>
-	<div class="zs-modal-footer">
-		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
-		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
-	</div>
-</div>
-<script type="text/javascript" src="/js/reward.js"></script>
-
+         	
                 
 
-                
-
-                
 
 
 
 
             </div>
-
-            
-            
-            <div class="
-                col-lg-2 col-lg-offset-0
-                visible-lg-block
-                sidebar-container
-                catalog-container">
-                <div class="side-catalog">
-                    <hr class="hidden-sm hidden-xs">
-                    <h5>
-                        <a class="catalog-toggle" href="#">CATALOG</a>
-                    </h5>
-                    <ul class="catalog-body"></ul>
-                </div>
-            </div>
-            
-
             
             <div class="
                 col-lg-8 col-lg-offset-2
@@ -299,7 +308,7 @@
                         
                         
                         <a href="/tags/ai" title="ai">
-                            ai
+                        ai
                         </a>
                         
                         
@@ -307,7 +316,7 @@
                         
                         
                         <a href="/tags/architecture" title="architecture">
-                            architecture
+                        architecture
                         </a>
                         
                         
@@ -315,7 +324,7 @@
                         
                         
                         <a href="/tags/aws" title="aws">
-                            aws
+                        aws
                         </a>
                         
                         
@@ -327,7 +336,7 @@
                         
                         
                         <a href="/tags/deep-learning" title="deep learning">
-                            deep learning
+                        deep learning
                         </a>
                         
                         
@@ -339,7 +348,7 @@
                         
                         
                         <a href="/tags/docker" title="docker">
-                            docker
+                        docker
                         </a>
                         
                         
@@ -363,13 +372,13 @@
                         
                         
                         <a href="/tags/k8s" title="k8s">
-                            k8s
+                        k8s
                         </a>
                         
                         
                         
                         <a href="/tags/kubernetes" title="kubernetes">
-                            kubernetes
+                        kubernetes
                         </a>
                         
                         
@@ -379,7 +388,7 @@
                         
                         
                         <a href="/tags/llm" title="llm">
-                            llm
+                        llm
                         </a>
                         
                         
@@ -395,7 +404,7 @@
                         
                         
                         <a href="/tags/nosql" title="nosql">
-                            nosql
+                        nosql
                         </a>
                         
                         
@@ -405,13 +414,13 @@
                         
                         
                         <a href="/tags/python" title="python">
-                            python
+                        python
                         </a>
                         
                         
                         
                         <a href="/tags/redis" title="redis">
-                            redis
+                        redis
                         </a>
                         
                         
@@ -423,7 +432,7 @@
                         
                         
                         <a href="/tags/spring" title="spring">
-                            spring
+                        spring
                         </a>
                         
                         
@@ -433,7 +442,7 @@
                         
                         
                         <a href="/tags/spring-cloud" title="spring cloud">
-                            spring cloud
+                        spring cloud
                         </a>
                         
                         
@@ -447,13 +456,13 @@
                         
                         
                         <a href="/tags/transaction-management" title="transaction management">
-                            transaction management
+                        transaction management
                         </a>
                         
                         
                         
                         <a href="/tags/transformer" title="transformer">
-                            transformer
+                        transformer
                         </a>
                         
                         
@@ -461,7 +470,7 @@
                         
                         
                         <a href="/tags/vault" title="vault">
-                            vault
+                        vault
                         </a>
                         
                         
@@ -605,11 +614,49 @@
 
 
 <script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
     loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
         var $nav = document.querySelector("nav");
         if($nav) FastClick.attach($nav);
     })
 </script>
+
+
+<script src="/js/theme-toggle.js"></script>
 
 
 
