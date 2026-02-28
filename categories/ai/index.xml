@@ -6,8 +6,15 @@
     <description>Recent content in AI on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 25 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 26 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/categories/ai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Surviving the Shift: What Stanford&#39;s CS146S Taught Me About Staying Relevant as a Staff Engineer</title>
+      <link>http://akjamie.github.io/post/2026-02-26-staff-engineer-growth/</link>
+      <pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-02-26-staff-engineer-growth/</guid>
+      <description>&lt;h1 id=&#34;surviving-the-shift-what-stanfords-cs146s-taught-me-about-staying-relevant-as-a-staff-engineer&#34;&gt;Surviving the Shift: What Stanford&amp;rsquo;s CS146S Taught Me About Staying Relevant as a Staff Engineer&lt;/h1&gt;&#xA;&lt;p&gt;&lt;em&gt;AI agents are not coming. They&amp;rsquo;re here. This is not a post about tools — it&amp;rsquo;s about what kind of engineer you need to become.&lt;/em&gt;&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;There&amp;rsquo;s a particular kind of anxiety that doesn&amp;rsquo;t get talked about much in staff engineering circles. It&amp;rsquo;s not the anxiety of being a junior developer wondering if you&amp;rsquo;ll ever understand distributed systems. It&amp;rsquo;s quieter and more unsettling: the feeling that skills you spent a decade building — skills that made you the person people come to — might be getting slowly, methodically commoditized.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>How LLMs Work: An End-to-End Guide from Pre-training to Prediction</title>
       <link>http://akjamie.github.io/post/2026-02-25-how-llm-works/</link>
