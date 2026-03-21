@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="Agent Skills: The Infrastructure Layer Your AI Stack Is Missing" />
+    <meta property="og:title" content="Agent Skills: The Infrastructure Layer Your AI Stack Is Missing" />
+    <meta property="twitter:title" content="Agent Skills: The Infrastructure Layer Your AI Stack Is Missing" />
+    
+
+    
+    <meta name="description" content="A deep dive into Anthropic&#39;s new Agent Skills open standard, explaining progressive disclosure, MCP integration, and why encoding organizational knowledge into skills is the next architectural frontier for enterprise AI.">
+    <meta property="og:description" content="A deep dive into Anthropic&#39;s new Agent Skills open standard, explaining progressive disclosure, MCP integration, and why encoding organizational knowledge into skills is the next architectural frontier for enterprise AI." />
+    <meta property="twitter:description" content="A deep dive into Anthropic&#39;s new Agent Skills open standard, explaining progressive disclosure, MCP integration, and why encoding organizational knowledge into skills is the next architectural frontier for enterprise AI." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-03-21-agent-skills/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Agent Skills: The Infrastructure Layer Your AI Stack Is Missing | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-03-21-agent-skills/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/agent-engineering" title="Agent Engineering">
+                            Agent Engineering
+                        </a>
+                        
+                        <a class="tag" href="/tags/claude-sdk" title="Claude SDK">
+                            Claude SDK
+                        </a>
+                        
+                        <a class="tag" href="/tags/fintech-ai" title="Fintech AI">
+                            Fintech AI
+                        </a>
+                        
+                        <a class="tag" href="/tags/open-standard" title="Open Standard">
+                            Open Standard
+                        </a>
+                        
+                        <a class="tag" href="/tags/staff-engineer" title="Staff Engineer">
+                            Staff Engineer
+                        </a>
+                        
+                        <a class="tag" href="/tags/mcp" title="MCP">
+                            MCP
+                        </a>
+                        
+                    </div>
+                    <h1>Agent Skills: The Infrastructure Layer Your AI Stack Is Missing</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Saturday, March 21, 2026
+                            
+                                <span id="/post/2026-03-21-agent-skills/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="agent-skills-the-infrastructure-layer-your-ai-stack-is-missing">Agent Skills: The Infrastructure Layer Your AI Stack Is Missing</h1>
+<hr>
+<h2 id="preface">Preface</h2>
+<p>There is a moment in every mature engineering discipline when the conversation shifts from <em>&ldquo;how do we make it work&rdquo;</em> to <em>&ldquo;how do we make it work reliably, at scale, across teams.&rdquo;</em> For agentic AI systems, that moment has arrived — and the answer being proposed by Anthropic, in partnership with the broader agent tooling ecosystem, is a deceptively simple but architecturally profound abstraction: the <strong>Agent Skill</strong>.</p>
+<p>This is not about prompts. Prompts are atoms — necessary, but they don&rsquo;t scale. Skills are molecules: self-describing, composable, progressively disclosed bundles of domain knowledge, workflow logic, and executable code that any compliant agent can load on demand. If you&rsquo;ve been in the agentic AI space for more than a year, you know the pain they&rsquo;re solving. You&rsquo;ve written the same workflow prompt seventeen times across seventeen conversations. You&rsquo;ve watched junior engineers reinvent analytical frameworks that already exist. You&rsquo;ve shipped agents that are brilliant in demos and brittle in production because there was no systematic way to encode <em>how your organization does things</em>.</p>
+<p>Skills address all three of those failures simultaneously. And given that the specification is now an <strong>open standard</strong> — adopted across Claude, Codex, Gemini CLI, OpenCode, and more — the window for building Skills-native tooling is now, not later.</p>
+<hr>
+<h2 id="section-i--from-concept-to-anatomy-what-a-skill-actually-is">Section I — From Concept to Anatomy: What a Skill Actually Is</h2>
+<p>The first thing to understand about Agent Skills is their deliberate structural simplicity. A skill is a <strong>folder</strong>. That&rsquo;s the whole physical reality of it. Inside that folder lives a mandatory <code>SKILL.md</code> file, and optionally three subdirectories: <code>references/</code> for additional markdown documentation, <code>scripts/</code> for executable code, and <code>assets/</code> for templates, images, schemas, and data files.</p>
+<h3 id="skill-folder-structure">Skill Folder Structure</h3>
+<pre tabindex="0"><code>my-skill/                          ← root folder
+├── SKILL.md                       ← required
+├── references/                    ← optional
+│   └── domain-rules.md
+├── scripts/                       ← optional
+│   ├── analyze.py
+│   └── visualize.py
+└── assets/                        ← optional
+    ├── output-template.md
+    └── schema.json
+</code></pre><p>The <code>SKILL.md</code> begins with YAML front matter containing two required fields: <code>name</code> and <code>description</code>. The name follows lowercase-with-hyphens convention (e.g., <code>analyzing-marketing-campaign</code>), and the description is the agent&rsquo;s primary decision signal — it must explain both <em>what</em> the skill does and <em>when</em> to invoke it. Everything else in the file is free-form markdown: step-by-step instructions, edge case handling, acceptable inputs, expected outputs, and references to external files.</p>
+<h3 id="minimal-valid-skillmd">Minimal Valid SKILL.md</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">name</span>: analyzing-marketing-campaign
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">description</span>: &gt;<span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  Performs weekly campaign performance analysis from marketing data.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  Use when analyzing campaign metrics, funnel performance, efficiency
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">  KPIs, or budget reallocation decisions.</span>
+</span></span><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">## Input Requirements</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">Accept data from</span>: CSV upload OR BigQuery (mcp__bigquery__query)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">Required columns</span>: date, campaign_name, impressions, clicks, conversions, cost
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">## Workflow</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">1</span>. Data Quality Check — validate schema, flag anomalies
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">2</span>. Funnel Analysis — CTR, CVR vs. benchmark targets
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">3</span>. Efficiency Metrics — ROAS, CPA, net profit
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">4</span>. Budget Reallocation — ONLY if user asks;
+</span></span><span style="display:flex;"><span>   read references/budget_reallocation_rules.md
+</span></span></code></pre></div><p>What makes this deceptively powerful is the conditional loading in step 4. The budget rules file might be 5,000 tokens. They never enter the context window unless the user asks about reallocation. That discipline, multiplied across hundreds of skills in an enterprise deployment, is the difference between an agent that stays sharp across a 20-turn conversation and one that degrades into hallucination by turn 8.</p>
+<blockquote>
+<p><strong>&ldquo;If you find yourself typing the same prompt across conversations, you should consider transforming that into a skill. The context window is a public good — treat it like one.&rdquo;</strong></p>
+</blockquote>
+<hr>
+<h2 id="section-ii--progressive-disclosure-the-architectural-insight-that-changes-everything">Section II — Progressive Disclosure: The Architectural Insight That Changes Everything</h2>
+<p>The concept of progressive disclosure deserves its own section because it&rsquo;s the insight that separates Skill design from naive prompt engineering. Most practitioners building agent systems eventually discover that loading everything into context upfront is self-defeating. Context windows have hard limits, and — more critically — there&rsquo;s a well-documented phenomenon of <strong>context degradation</strong>: as the window fills, models begin to lose coherence on earlier material.</p>
+<p>The Skill architecture addresses this with a three-tier loading model:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Tier</th>
+          <th style="text-align: left">What Loads</th>
+          <th style="text-align: left">When</th>
+          <th style="text-align: left">Cost</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>1 — Always</strong></td>
+          <td style="text-align: left">Name + Description only</td>
+          <td style="text-align: left">Every conversation</td>
+          <td style="text-align: left">~20–40 tokens per skill</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>2 — On Trigger</strong></td>
+          <td style="text-align: left">Full <code>SKILL.md</code></td>
+          <td style="text-align: left">When a user request matches the skill&rsquo;s description</td>
+          <td style="text-align: left">~500–2,000 tokens</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>3 — On Demand</strong></td>
+          <td style="text-align: left">References, scripts, assets</td>
+          <td style="text-align: left">Only when the skill&rsquo;s instructions call for them</td>
+          <td style="text-align: left">Variable, loaded once</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Execution</strong></td>
+          <td style="text-align: left">Script outputs (not source)</td>
+          <td style="text-align: left">When scripts run via bash/code execution</td>
+          <td style="text-align: left">Results only, not source code</td>
+      </tr>
+  </tbody>
+</table>
+<p>This architecture enables something previously impossible to guarantee: you can have a library of <strong>100+ specialized skills</strong> available to an agent without meaningfully degrading its context budget for any given conversation. The agent carries a lightweight routing index, not the encyclopedia itself.</p>
+<p>For 100 skills with 2,000-token average detailed instructions, loading everything upfront costs ~200,000 tokens per conversation. With progressive disclosure, any given conversation uses perhaps 3–5 active skills — a cost of 6,000–10,000 tokens. <strong>The savings are real, and they compound.</strong></p>
+<blockquote>
+<p><strong>Editor&rsquo;s Insight:</strong> Progressive disclosure is not just a performance optimization — it&rsquo;s an architectural forcing function. It makes you think carefully about what belongs in <code>SKILL.md</code> versus a reference file versus a script. That discipline produces better-organized skills and better-behaved agents.</p>
+</blockquote>
+<hr>
+<h2 id="section-iii--ecosystem-position-skills-mcp-tools-and-subagents">Section III — Ecosystem Position: Skills, MCP, Tools, and Subagents</h2>
+<p>Understanding where Skills fit in the broader agent architecture is essential for designing systems that compose correctly.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Component</th>
+          <th style="text-align: left">Primary Role</th>
+          <th style="text-align: left">Lives In</th>
+          <th style="text-align: left">Best For</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Tools</strong></td>
+          <td style="text-align: left">Low-level capability primitives</td>
+          <td style="text-align: left">Always in context</td>
+          <td style="text-align: left">File I/O, bash, web search, function calls</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>MCP Servers</strong></td>
+          <td style="text-align: left">External data &amp; system access</td>
+          <td style="text-align: left">Connected at runtime</td>
+          <td style="text-align: left">BigQuery, Notion, Salesforce, Google Drive</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Skills</strong></td>
+          <td style="text-align: left">Domain expertise &amp; workflow encoding</td>
+          <td style="text-align: left">Progressively loaded</td>
+          <td style="text-align: left">Repeatable, organization-specific processes</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Subagents</strong></td>
+          <td style="text-align: left">Isolated execution &amp; parallelism</td>
+          <td style="text-align: left">Spawned on demand</td>
+          <td style="text-align: left">Parallel tasks, context isolation, fine-grained permissions</td>
+      </tr>
+  </tbody>
+</table>
+<p>The analogy from the course is apt: tools are a hammer and a saw; a skill is knowledge of how to build a bookshelf. MCP brings the lumber yard&rsquo;s inventory system. Subagents are the specialized apprentices who can each work independently on different shelves simultaneously. None of these components competes with the others — they&rsquo;re layers in a stack, each solving a distinct problem.</p>
+<h3 id="the-subagent--skill-pattern">The Subagent × Skill Pattern</h3>
+<p>A critical implementation detail: <strong>subagents do not inherit skills from parent agents.</strong> This is intentional isolation. When you dispatch a code-reviewer subagent, you must explicitly declare which skills it has access to in its agent definition. This forces you to think carefully about what each agent actually needs — a forcing function against the lazy pattern of loading everything everywhere.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#6272a4"># .claude/agents/code-reviewer.md (agent definition)</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">name</span>: code-reviewer
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">description</span>: Reviews code for quality, security, and conventions
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">tools</span>: [Bash, Glob, Grep, Read]
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">skills</span>:
+</span></span><span style="display:flex;"><span>  - reviewing-cli-command   <span style="color:#6272a4"># ← explicitly declared, not inherited</span>
+</span></span></code></pre></div><blockquote>
+<p><strong>Editor&rsquo;s Insight:</strong> The subagent × skill pattern is where I expect the most competitive differentiation to emerge in enterprise AI tooling. Teams that build well-curated, well-evaluated skill libraries — and deliberately assign them to specialized subagents — will achieve consistency and auditability that prompt-only architectures simply cannot match.</p>
+</blockquote>
+<hr>
+<h2 id="section-iv--best-practices-writing-skills-that-work-in-production">Section IV — Best Practices: Writing Skills That Work in Production</h2>
+<h3 id="1-names-and-descriptions-are-your-routing-logic">1. Names and Descriptions Are Your Routing Logic</h3>
+<p>The description field is, functionally, a <strong>semantic router</strong>. It must answer two questions simultaneously: what does this skill do, and when should an agent trigger it? Include domain keywords, trigger phrases, and explicit conditions.</p>
+<ul>
+<li>❌ <strong>Weak:</strong> <code>&quot;analyzes data&quot;</code></li>
+<li>✅ <strong>Strong:</strong> <code>&quot;performs weekly campaign performance analysis; use when analyzing marketing metrics, funnel performance, ROAS, CPA, or budget reallocation decisions&quot;</code></li>
+</ul>
+<h3 id="2-keep-skillmd-under-500-lines">2. Keep SKILL.md Under 500 Lines</h3>
+<p>This constraint forces decomposition. If your skill grows past 500 lines, you&rsquo;re encoding too much in one place. Extract detailed specifications into <code>references/</code>, move executable logic into <code>scripts/</code>, and move output templates into <code>assets/</code>. The <code>SKILL.md</code> should read like a well-structured runbook, not a novel.</p>
+<h3 id="3-be-explicit-about-step-order-and-skip-conditions">3. Be Explicit About Step Order and Skip Conditions</h3>
+<p>Non-determinism is the enemy of production agents. Every workflow step should be numbered, and any step that might be skipped should explicitly state the skip condition.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="font-weight:bold">## Workflow
+</span></span></span><span style="display:flex;"><span><span style="font-weight:bold"></span><span style="color:#ff79c6">1.</span> Validate input schema — fail fast with clear error if invalid
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">2.</span> Run diagnostic script: <span style="color:#f1fa8c">`python scripts/diagnose.py {input_file}`</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">3.</span> Generate visualizations — ONLY if user requests plots
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">4.</span> Read summary.txt output and present findings
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">5.</span> Create Word document — use docx skill; reference assets/report-template.md
+</span></span></code></pre></div><h3 id="4-use-positive-and-negative-examples-for-code-patterns">4. Use Positive and Negative Examples for Code Patterns</h3>
+<p>When encoding coding conventions, include both the pattern you want and the anti-pattern you&rsquo;re rejecting:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="font-weight:bold">## Type Annotation Convention
+</span></span></span><span style="display:flex;"><span><span style="font-weight:bold"></span>✅ USE this (modern Annotated syntax):
+</span></span><span style="display:flex;"><span>    def add(name: Annotated[str, typer.Argument(help=&#34;Task name&#34;)]) -&gt; None:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>❌ NOT this (older decorator pattern):
+</span></span><span style="display:flex;"><span>    @app.command()
+</span></span><span style="display:flex;"><span>    def add(name: str = typer.Argument(..., help=&#34;Task name&#34;)) -&gt; None:
+</span></span></code></pre></div><h3 id="5-validate-with-the-skill-creator">5. Validate with the Skill Creator</h3>
+<p>Anthropic ships a meta-skill — <code>skill-creator</code> — that evaluates your custom skills against best practices. Running new skills through this evaluator before deployment is the equivalent of linting your code before committing.</p>
+<h3 id="6-write-evaluation-tests">6. Write Evaluation Tests</h3>
+<p>Treat skills like software. Define expected behaviors and test them:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="font-weight:bold">## Test Matrix: generating-practice-questions skill
+</span></span></span><span style="display:flex;"><span><span style="font-weight:bold"></span>
+</span></span><span style="display:flex;"><span>Query: &#34;Generate questions and save to markdown&#34;
+</span></span><span style="display:flex;"><span>Expected:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">-</span> Reads SKILL.md first (progressive disclosure)
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">-</span> Loads markdown_template.md from assets/ (not LaTeX template)
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">-</span> Generates questions in order: True/False → Explanatory → Coding → Application
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">-</span> Saves to specified filename with correct markdown formatting
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">-</span> Does NOT load LaTeX template (wrong format for this query)
+</span></span></code></pre></div><h3 id="production-deployment-checklist">Production Deployment Checklist</h3>
+<ul>
+<li><input disabled="" type="checkbox"> YAML front matter validates (name, description present; lowercase-hyphen format)</li>
+<li><input disabled="" type="checkbox"> Description answers both &ldquo;what&rdquo; and &ldquo;when&rdquo; — readable as a routing rule</li>
+<li><input disabled="" type="checkbox"> <code>SKILL.md</code> under 500 lines; large content externalized to <code>references/</code></li>
+<li><input disabled="" type="checkbox"> Workflow steps are numbered; skip conditions explicit</li>
+<li><input disabled="" type="checkbox"> Scripts have error handling and documented dependencies</li>
+<li><input disabled="" type="checkbox"> File paths use forward slashes (cross-platform requirement)</li>
+<li><input disabled="" type="checkbox"> Evaluated against <code>skill-creator</code> best practices checklist</li>
+<li><input disabled="" type="checkbox"> Unit tests written for representative query × expected behavior pairs</li>
+<li><input disabled="" type="checkbox"> Human-reviewed output for at least 5 representative inputs</li>
+<li><input disabled="" type="checkbox"> Tested across all target model versions (Sonnet, Opus as applicable)</li>
+</ul>
+<hr>
+<h2 id="section-v--the-real-benefits-why-skills-are-strategic-assets">Section V — The Real Benefits: Why Skills Are Strategic Assets</h2>
+<h3 id="1-organizational-knowledge-becomes-infrastructure">1. Organizational Knowledge Becomes Infrastructure</h3>
+<p>The most underappreciated benefit of Skills is that they turn tacit organizational knowledge into <strong>explicit, versioned, auditable infrastructure</strong>. Your best senior analyst&rsquo;s mental model for evaluating marketing campaign efficiency can be encoded in a skill, reviewed, iterated on, and deployed consistently across every analyst using the platform — including the junior one who started last month.</p>
+<p>This is knowledge transfer at scale, with none of the fidelity loss that normally attends it. When the senior analyst leaves, the skill remains.</p>
+<h3 id="2-portability-across-the-entire-agent-ecosystem">2. Portability Across the Entire Agent Ecosystem</h3>
+<p>Because Agent Skills are an open standard, a skill you author today for Claude AI is directly usable in Claude Code, the Claude Agent SDK, Codex, Gemini CLI, and more. Your investment in skill authorship isn&rsquo;t vendor-locked — it&rsquo;s <strong>portable capital</strong>.</p>
+<h3 id="3-predictability-in-a-non-deterministic-system">3. Predictability in a Non-Deterministic System</h3>
+<p>Agents without skills are inherently variable — the same prompt produces meaningfully different outputs across sessions, models, and context lengths. Skills introduce the functional equivalent of unit tests for agent behavior: defined inputs, defined workflows, inspectable outputs.</p>
+<p>You can still get variability in <em>how</em> the output is expressed, but the <em>structure</em> of the analysis, the steps performed, the metrics computed — these become <strong>reproducible</strong>.</p>
+<h3 id="4-context-efficiency-compounds">4. Context Efficiency Compounds</h3>
+<p>In enterprise deployments where token costs matter, the efficiency gains from progressive disclosure compound quickly:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Scenario</th>
+          <th style="text-align: left">Tokens per Conversation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">100 skills, all loaded upfront</td>
+          <td style="text-align: left">~200,000 tokens</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">100 skills, progressive disclosure (3–5 active)</td>
+          <td style="text-align: left">~6,000–10,000 tokens</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Efficiency gain</strong></td>
+          <td style="text-align: left"><strong>~95% reduction</strong></td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="5-the-composability-multiplier">5. The Composability Multiplier</h3>
+<p>Individual skills combine into compound workflows. A well-designed skill library lets you build new capabilities by composing existing ones:</p>
+<pre tabindex="0"><code>analyzing-marketing-campaign
+    + brand-guidelines
+    + pptx (built-in)
+= Automated weekly marketing deck with brand-consistent styling, 
+  data-driven insights, and budget reallocation recommendations
+</code></pre><p>Each skill does one thing well. Together, they do something neither could do alone.</p>
+<hr>
+<h2 id="section-vii--impact-on-the-ai-staff-engineers-career-arc">Section VII — Impact on the AI Staff Engineer&rsquo;s Career Arc</h2>
+<p>For AI Staff Engineers — and those on the path to that role — the emergence of Agent Skills represents both an opportunity and a clarifying signal. Let me be direct.</p>
+<h3 id="skills-elevate-what-engineering-means-in-agent-systems">Skills Elevate What &ldquo;Engineering&rdquo; Means in Agent Systems</h3>
+<p>The early phase of agentic AI was dominated by prompt engineering — a craft that, while real, had a relatively low ceiling and a short half-life. Skills shift the locus of value toward <strong>systems thinking, organizational knowledge architecture, and software engineering discipline</strong>.</p>
+<p>Designing a skill library for a financial institution requires the same intellectual muscles as designing a microservice architecture: thinking about interface boundaries, separation of concerns, composability, versioning, and failure modes. These are Staff Engineer problems, not junior developer problems.</p>
+<h3 id="the-competency-stack-for-ai-staff-engineers">The Competency Stack for AI Staff Engineers</h3>
+<pre tabindex="0"><code>Level 5 — Organizational Change
+  Translating domain expert knowledge into skill specifications
+  Managing human workflows around skill authorship and review
+
+Level 4 — Cross-Ecosystem Architecture
+  Authoring portable skills across Claude, Codex, Gemini CLI
+  Designing skills-as-organizational-assets strategy
+
+Level 3 — Evaluation Engineering  ← Wide open gap
+  Writing behavioral unit tests for agent workflows
+  Human feedback integration, regression detection across model versions
+  Building evaluation harnesses with quantitative metrics
+
+Level 2 — Agent System Design
+  Main agent / subagent topology design
+  Permission modeling and context budget management
+  Failure isolation and graceful degradation patterns
+
+Level 1 — Skill Architecture  ← Entry requirement
+  Skill library design, naming conventions, progressive disclosure
+  Composability across multi-skill workflows
+  MCP integration for enterprise data access
+</code></pre><h3 id="the-evaluation-engineering-gap-is-wide-open">The Evaluation Engineering Gap Is Wide Open</h3>
+<p>Running skills through <code>skill-creator</code> checks structural best practices, but it doesn&rsquo;t tell you whether the skill&rsquo;s analytical output is correct for your domain. Writing evaluation harnesses that test skills against expected behaviors — across model versions, across edge cases, with human feedback in the loop — is currently a problem with <strong>no standardized solution</strong>.</p>
+<p>Staff Engineers who build credible capability here will be extremely valuable. This is the 2026 equivalent of being the person who figured out how to write good integration tests before the rest of the industry caught up.</p>
+<h3 id="the-domain-expert-translation-role">The Domain Expert Translation Role</h3>
+<p>The best skills are not written by engineers alone. They require deep collaboration with domain experts: the senior compliance officer who knows exactly how KYC decisions should be made, the head of treasury who understands the firm&rsquo;s hedging philosophy, the lead data scientist with a decade of time series experience.</p>
+<p>Staff Engineers who can <strong>bridge the gap between domain expertise and precise skill specification</strong> are rare and disproportionately valuable. This is a genuinely new competency that doesn&rsquo;t map cleanly onto any prior engineering role.</p>
+<h3 id="a-note-on-career-risk">A Note on Career Risk</h3>
+<p>AI Staff Engineers who do not develop fluency in agentic system design — skills, subagents, MCP, evaluation — risk finding their expertise in standalone LLM integration become commoditized. The trajectory is clear:</p>
+<ul>
+<li><strong>Commoditizing:</strong> Calling an LLM API, basic prompt engineering, single-turn chat integrations</li>
+<li><strong>Appreciating:</strong> Composable agent system design, skill library architecture, evaluation engineering, cross-ecosystem portability</li>
+</ul>
+<p>The economic value is shifting from &ldquo;knowing how to call an API&rdquo; to &ldquo;knowing how to build reliable, auditable, composable agent systems.&rdquo; Engage with that shift now, not when it has become table stakes.</p>
+<hr>
+<h2 id="closing--the-open-standard-bet-why-now-is-the-right-time">Closing — The Open Standard Bet: Why Now Is the Right Time</h2>
+<p>The decision to make Agent Skills an open standard is strategically significant beyond the technical architecture. It signals that the industry is converging on a shared abstraction layer for agent capabilities — analogous to how REST became the lingua franca for service APIs and containers became the deployment primitive for cloud-native applications.</p>
+<p>The teams and organizations that invest in skill library development now are not just solving today&rsquo;s problems. They&rsquo;re building <strong>assets that appreciate in value as the ecosystem grows</strong> — because any skill you write today will be usable in agent runtimes that don&rsquo;t yet exist. The portability is structural, not incidental.</p>
+<p>For agentic AI professionals, the message is clear:</p>
+<ol>
+<li>Understand the skill architecture deeply</li>
+<li>Develop a point of view on how your organization should structure its skill library</li>
+<li>Start building — and start evaluating</li>
+<li>Own the evaluation problem; it&rsquo;s the unsolved piece</li>
+</ol>
+<p>The organizations that figure out evaluation will be the ones that can trust their agents at scale.</p>
+<p><strong>That trust is the whole game.</strong></p>
+<hr>
+<h2 id="references">References</h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Resource</th>
+          <th style="text-align: left">Location</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Course: &ldquo;Agent Skills&rdquo;</td>
+          <td style="text-align: left">Anthropic &amp; DeepLearning.AI, taught by Elie Schoppik</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Open Skills Standard</td>
+          <td style="text-align: left">github.com/anthropic/skills</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Claude Agent SDK</td>
+          <td style="text-align: left"><code>pip install claude-agent-sdk</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Model Context Protocol</td>
+          <td style="text-align: left">anthropic.com/mcp</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Anthropic Messages API</td>
+          <td style="text-align: left">docs.anthropic.com — Code Execution Tool, Files API</td>
+      </tr>
+  </tbody>
+</table>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2026-02-26-staff-engineer-growth/" data-toggle="tooltip" data-placement="top" title="Surviving the Shift: What Stanford&#39;s CS146S Taught Me About Staying Relevant as a Staff Engineer">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ai" title="ai">
+                            ai
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/deep-learning" title="deep learning">
+                            deep learning
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/staff-engineer" title="staff engineer">
+                            staff engineer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<script src="/js/theme-toggle.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+</body>
+</html>
