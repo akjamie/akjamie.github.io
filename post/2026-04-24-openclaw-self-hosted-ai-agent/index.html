@@ -129,10 +129,6 @@
                         </li>
                         
                         <li>
-                            <a href="/categories/ai-infrastructure/">ai infrastructure</a>
-                        </li>
-                        
-                        <li>
                             <a href="/categories/cloud/">cloud</a>
                         </li>
                         
@@ -693,7 +689,7 @@ $(function() {
     INET([Internet / External APIs])
 
     subgraph HOST[&#34;Windows Host — 192.168.179.1 (VMnet8)&#34;]
-        CLASH[&#34;Clash Proxy\n:7890 HTTP proxy\nRule-based outbound routing&#34;]
+        CLASH[&#34;Clash Proxy\n:7892 HTTP proxy\nRule-based outbound routing&#34;]
     end
 
     NAT[&#34;VMware NAT Gateway\n192.168.179.2\nDefault route for guest VM&#34;]
@@ -727,12 +723,15 @@ $(function() {
 <h3 id="the-proxy-solution-routing-through-clash">The Proxy Solution: Routing Through Clash</h3>
 <p>The host machine runs <strong>Clash</strong>, a rule-based proxy client, which provides outbound internet routing including routing to Google APIs. Since the host is reachable from the guest VM at <code>192.168.179.1</code>, the correct solution is to route the guest&rsquo;s traffic through the Clash proxy on the host.</p>
 <p><strong>OpenClaw proxy configuration</strong> (in <code>~/.openclaw/.env</code>):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">HTTP_PROXY</span><span style="color:#ff79c6">=</span>http://192.168.179.1:7890
-</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">HTTPS_PROXY</span><span style="color:#ff79c6">=</span>http://192.168.179.1:7890
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">HTTP_PROXY</span><span style="color:#ff79c6">=</span>http://192.168.179.1:7892
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">HTTPS_PROXY</span><span style="color:#ff79c6">=</span>http://192.168.179.1:7892
 </span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">NO_PROXY</span><span style="color:#ff79c6">=</span>api.minimaxi.com,api.minimax.chat,localhost,127.0.0.1
-</span></span></code></pre></div><p>Port <code>7890</code> is Clash&rsquo;s default HTTP proxy port. Setting <code>NO_PROXY</code> for MiniMax&rsquo;s domains ensures that traffic already accessible without the proxy does not get unnecessarily routed through it — important both for latency and to avoid Clash routing rules interfering with providers that don&rsquo;t need them.</p>
-<p><strong>But there are two critical constraints to understand:</strong></p>
+</span></span></code></pre></div><p>Port <code>7892</code> is the configured HTTP proxy port in this environment. Setting <code>NO_PROXY</code> for MiniMax&rsquo;s domains ensures that traffic already accessible without the proxy does not get unnecessarily routed through it — important both for latency and to avoid Clash routing rules interfering with providers that don&rsquo;t need them.</p>
+<p><strong>But there are three critical constraints to understand:</strong></p>
 <ol>
+<li>
+<p><strong>Clash must have &ldquo;Allow LAN&rdquo; enabled.</strong> By default, many proxy clients only listen on <code>127.0.0.1</code>. For the guest VM to reach the proxy on the host (<code>192.168.179.1</code>), the proxy must be configured to accept connections from the local network. Without this, the VM&rsquo;s connection attempts will be met with &ldquo;Connection Refused.&rdquo;</p>
+</li>
 <li>
 <p><strong>Clash must have a rule for the target domain.</strong> If Clash&rsquo;s routing rules don&rsquo;t cover <code>generativelanguage.googleapis.com</code> (i.e., no policy routes it through a working upstream), the proxy will fail or produce a different error. Verify in Clash&rsquo;s UI or logs that Google API traffic is being forwarded through an upstream that can reach it.</p>
 </li>
@@ -743,8 +742,8 @@ $(function() {
 <h3 id="operational-lessons">Operational Lessons</h3>
 <p><strong>1. Diagnose at the transport layer first.</strong><br>
 Before assuming an application misconfiguration, verify connectivity with <code>curl</code>. Exit code 6 (couldn&rsquo;t resolve host) is DNS. Exit code 7 (connection refused) is a firewall blocking the port. Exit code 56 (recv failure) after a TCP connection means something upstream is intercepting and dropping the stream — almost always a transparent proxy or DPI appliance.</p>
-<p><strong>2. Map your network topology before you configure proxies.</strong><br>
-In a VMware NAT environment, the default gateway (<code>192.168.179.2</code>) is not the proxy — it is the NAT device. The proxy lives on the host (<code>192.168.179.1</code>). Confusing these two addresses is a common source of proxy misconfigurations that are difficult to diagnose because the connection attempt reaches a real host but is rejected or silently dropped.</p>
+<p><strong>2. Map your network topology and verify listener permissions.</strong><br>
+In a VMware NAT environment, the default gateway (<code>192.168.179.2</code>) is not the proxy — it is the NAT device. The proxy lives on the host (<code>192.168.179.1</code>). Ensure the proxy has <strong>&ldquo;Allow LAN&rdquo;</strong> enabled to accept traffic from the VM&rsquo;s subnet. Confusing these two addresses or omitting the LAN permission are common sources of proxy misconfigurations that result in &ldquo;Connection Refused&rdquo; errors.</p>
 <p><strong>3. <code>NO_PROXY</code> is not optional.</strong><br>
 If you route all traffic through a proxy, providers that are already accessible directly will now have their traffic routed through your proxy&rsquo;s upstream — which may have different routing, higher latency, or different TLS behavior. Define <code>NO_PROXY</code> explicitly for every provider domain you don&rsquo;t want proxied.</p>
 <p><strong>4. Proxy configuration is a system-wide change.</strong><br>
@@ -755,41 +754,41 @@ A proxy that cannot reach its target is worse than no proxy — it introduces a 
 <table>
   <thead>
       <tr>
-          <th>Component</th>
-          <th>Status</th>
-          <th>Notes</th>
+          <th style="text-align: left">Component</th>
+          <th style="text-align: left">Status</th>
+          <th style="text-align: left">Notes</th>
       </tr>
   </thead>
   <tbody>
       <tr>
-          <td>MiniMax M2.7</td>
-          <td>✅ Working</td>
-          <td>Primary model; direct access, no proxy needed</td>
+          <td style="text-align: left">MiniMax M2.7</td>
+          <td style="text-align: left">✅ Working</td>
+          <td style="text-align: left">Primary model; direct access, no proxy needed</td>
       </tr>
       <tr>
-          <td>MiniMax M2.5-highspeed</td>
-          <td>✅ Working</td>
-          <td>First fallback; lower latency, lower cost</td>
+          <td style="text-align: left">MiniMax M2.5-highspeed</td>
+          <td style="text-align: left">✅ Working</td>
+          <td style="text-align: left">First fallback; lower latency, lower cost</td>
       </tr>
       <tr>
-          <td>Google Gemini 2.5 Flash</td>
-          <td>✅ Working (via Clash)</td>
-          <td>Second fallback; routes through <code>192.168.179.1:7890</code></td>
+          <td style="text-align: left">Google Gemini 3 Flash</td>
+          <td style="text-align: left">✅ Working (via Clash)</td>
+          <td style="text-align: left">Second fallback; routes through <code>192.168.179.1:7892</code></td>
       </tr>
       <tr>
-          <td>NVIDIA / GLM-5.1</td>
-          <td>✅ Working</td>
-          <td>Third fallback; accessed via NVIDIA NIM endpoint</td>
+          <td style="text-align: left">NVIDIA / GLM-5.1</td>
+          <td style="text-align: left">✅ Working</td>
+          <td style="text-align: left">Third fallback; accessed via NVIDIA NIM endpoint</td>
       </tr>
       <tr>
-          <td>WeChat</td>
-          <td>✅ Working</td>
-          <td>Added to <code>NO_PROXY</code>; direct DM channel in production</td>
+          <td style="text-align: left">WeChat</td>
+          <td style="text-align: left">✅ Working</td>
+          <td style="text-align: left">Added to <code>NO_PROXY</code>; direct DM channel in production</td>
       </tr>
       <tr>
-          <td>Tailscale</td>
-          <td>⚪ Off</td>
-          <td>Not needed for current use case</td>
+          <td style="text-align: left">Tailscale</td>
+          <td style="text-align: left">⚪ Off</td>
+          <td style="text-align: left">Not needed for current use case</td>
       </tr>
   </tbody>
 </table>
@@ -906,7 +905,7 @@ A proxy that cannot reach its target is worse than no proxy — it introduces a 
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/openclaw-blog-2026-04-24/" data-toggle="tooltip" data-placement="top" title="Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture">&larr;
+                        <a href="/post/2026-02-25-how-llm-works/" data-toggle="tooltip" data-placement="top" title="How LLMs Work: An End-to-End Guide from Pre-training to Prediction">&larr;
                             Previous Post</a>
                     </li>
                     
@@ -1055,10 +1054,6 @@ A proxy that cannot reach its target is worse than no proxy — it introduces a 
                         
                         
                         
-                        <a href="/tags/minimax" title="minimax">
-                            minimax
-                        </a>
-                        
                         
                         
                         
@@ -1072,10 +1067,6 @@ A proxy that cannot reach its target is worse than no proxy — it introduces a 
                         </a>
                         
                         
-                        
-                        <a href="/tags/open-source" title="open source">
-                            open source
-                        </a>
                         
                         
                         
@@ -1094,10 +1085,6 @@ A proxy that cannot reach its target is worse than no proxy — it introduces a 
                         </a>
                         
                         
-                        
-                        <a href="/tags/self-hosted-llm" title="self-hosted llm">
-                            self-hosted llm
-                        </a>
                         
                         
                         
@@ -1152,10 +1139,6 @@ A proxy that cannot reach its target is worse than no proxy — it introduces a 
                         
                         
                         
-                        
-                        <a href="/tags/wechat-integration" title="wechat integration">
-                            wechat integration
-                        </a>
                         
                         
                     </div>
