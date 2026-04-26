@@ -2,61 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://akjamie.github.io/tags/agent-engineering/</loc>
-    <lastmod>2026-03-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/post/2026-03-21-agent-skills/</loc>
-    <lastmod>2026-03-21T00:00:00+00:00</lastmod>
+    <loc>http://akjamie.github.io/tags/agentic-ai/</loc>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/categories/ai/</loc>
-    <lastmod>2026-03-21T00:00:00+00:00</lastmod>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/categories/</loc>
-    <lastmod>2026-03-21T00:00:00+00:00</lastmod>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/tags/claude-sdk/</loc>
-    <lastmod>2026-03-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/fintech-ai/</loc>
-    <lastmod>2026-03-21T00:00:00+00:00</lastmod>
+    <loc>http://akjamie.github.io/tags/devops/</loc>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/</loc>
-    <lastmod>2026-03-21T00:00:00+00:00</lastmod>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/tags/mcp/</loc>
-    <lastmod>2026-03-21T00:00:00+00:00</lastmod>
+    <loc>http://akjamie.github.io/tags/open-source/</loc>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/tags/open-standard/</loc>
-    <lastmod>2026-03-21T00:00:00+00:00</lastmod>
+    <loc>http://akjamie.github.io/tags/openclaw/</loc>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/2026-04-24-openclaw-self-hosted-ai-agent/</loc>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/post/</loc>
-    <lastmod>2026-03-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/staff-engineer/</loc>
-    <lastmod>2026-03-21T00:00:00+00:00</lastmod>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/</loc>
-    <lastmod>2026-03-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/ai/</loc>
-    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/career-growth/</loc>
-    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/engineering-management/</loc>
-    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/leadership/</loc>
-    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/llm/</loc>
-    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/post/2026-02-26-staff-engineer-growth/</loc>
-    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/agi/</loc>
+    <lastmod>2026-02-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/ai/</loc>
     <lastmod>2026-02-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/architecture/</loc>
@@ -66,6 +45,9 @@
     <lastmod>2026-02-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/post/2026-02-25-how-llm-works/</loc>
+    <lastmod>2026-02-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/llm/</loc>
     <lastmod>2026-02-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/transformer/</loc>
@@ -100,9 +82,6 @@
   </url><url>
     <loc>http://akjamie.github.io/post/2026-01-04-java-feature-envolve-from-21-to-25/</loc>
     <lastmod>2026-01-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/agentic-ai/</loc>
-    <lastmod>2025-12-11T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/ai-agents/</loc>
     <lastmod>2025-12-11T00:00:00+00:00</lastmod>
@@ -217,9 +196,6 @@
   </url><url>
     <loc>http://akjamie.github.io/post/2022-05-31-redis-basic-1/</loc>
     <lastmod>2022-05-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/devops/</loc>
-    <lastmod>2022-04-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</loc>
     <lastmod>2022-04-12T00:00:00+00:00</lastmod>

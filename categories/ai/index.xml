@@ -6,21 +6,14 @@
     <description>Recent content in AI on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 24 Apr 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/categories/ai/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Agent Skills: The Infrastructure Layer Your AI Stack Is Missing</title>
-      <link>http://akjamie.github.io/post/2026-03-21-agent-skills/</link>
-      <pubDate>Sat, 21 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/post/2026-03-21-agent-skills/</guid>
-      <description>&lt;h1 id=&#34;agent-skills-the-infrastructure-layer-your-ai-stack-is-missing&#34;&gt;Agent Skills: The Infrastructure Layer Your AI Stack Is Missing&lt;/h1&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;preface&#34;&gt;Preface&lt;/h2&gt;&#xA;&lt;p&gt;There is a moment in every mature engineering discipline when the conversation shifts from &lt;em&gt;&amp;ldquo;how do we make it work&amp;rdquo;&lt;/em&gt; to &lt;em&gt;&amp;ldquo;how do we make it work reliably, at scale, across teams.&amp;rdquo;&lt;/em&gt; For agentic AI systems, that moment has arrived — and the answer being proposed by Anthropic, in partnership with the broader agent tooling ecosystem, is a deceptively simple but architecturally profound abstraction: the &lt;strong&gt;Agent Skill&lt;/strong&gt;.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Surviving the Shift: What Stanford&#39;s CS146S Taught Me About Staying Relevant as a Staff Engineer</title>
-      <link>http://akjamie.github.io/post/2026-02-26-staff-engineer-growth/</link>
-      <pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/post/2026-02-26-staff-engineer-growth/</guid>
-      <description>&lt;h1 id=&#34;surviving-the-shift-what-stanfords-cs146s-taught-me-about-staying-relevant-as-a-staff-engineer&#34;&gt;Surviving the Shift: What Stanford&amp;rsquo;s CS146S Taught Me About Staying Relevant as a Staff Engineer&lt;/h1&gt;&#xA;&lt;p&gt;&lt;em&gt;AI agents are not coming. They&amp;rsquo;re here. This is not a post about tools — it&amp;rsquo;s about what kind of engineer you need to become.&lt;/em&gt;&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;There&amp;rsquo;s a particular kind of anxiety that doesn&amp;rsquo;t get talked about much in staff engineering circles. It&amp;rsquo;s not the anxiety of being a junior developer wondering if you&amp;rsquo;ll ever understand distributed systems. It&amp;rsquo;s quieter and more unsettling: the feeling that skills you spent a decade building — skills that made you the person people come to — might be getting slowly, methodically commoditized.&lt;/p&gt;</description>
+      <title>OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware</title>
+      <link>http://akjamie.github.io/post/2026-04-24-openclaw-self-hosted-ai-agent/</link>
+      <pubDate>Fri, 24 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-04-24-openclaw-self-hosted-ai-agent/</guid>
+      <description>&lt;h1 id=&#34;openclaw-a-self-hosted-ai-agent-that-runs-on-your-own-hardware&#34;&gt;OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware&lt;/h1&gt;&#xA;&lt;h2 id=&#34;the-problem-with-cloud-ai-in-corporate-environments&#34;&gt;The Problem with Cloud AI in Corporate Environments&lt;/h2&gt;&#xA;&lt;p&gt;If you&amp;rsquo;ve tried to use ChatGPT, Claude, or any cloud-based AI assistant at work, you know the friction: your company blocks external AI services, the legal team flags data privacy concerns, IT won&amp;rsquo;t approve another SaaS tool, and even if they did, sending code and documents to a third-party API feels like handing over the keys to your intellectual property.&lt;/p&gt;</description>
     </item>
     <item>
       <title>How LLMs Work: An End-to-End Guide from Pre-training to Prediction</title>

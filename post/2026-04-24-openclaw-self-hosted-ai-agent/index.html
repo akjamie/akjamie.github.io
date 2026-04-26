@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware" />
+    <meta property="og:title" content="OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware" />
+    <meta property="twitter:title" content="OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware" />
+    
+
+    
+    <meta name="description" content="A deep dive into OpenClaw: its hub-and-spoke architecture, setup experience with MiniMax models, Feishu integration, and how to handle network restrictions when corporate firewalls block external AI services.">
+    <meta property="og:description" content="A deep dive into OpenClaw: its hub-and-spoke architecture, setup experience with MiniMax models, Feishu integration, and how to handle network restrictions when corporate firewalls block external AI services." />
+    <meta property="twitter:description" content="A deep dive into OpenClaw: its hub-and-spoke architecture, setup experience with MiniMax models, Feishu integration, and how to handle network restrictions when corporate firewalls block external AI services." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-04-24-openclaw-self-hosted-ai-agent/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-04-24-openclaw-self-hosted-ai-agent/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/agentic-ai" title="Agentic AI">
+                            Agentic AI
+                        </a>
+                        
+                        <a class="tag" href="/tags/devops" title="DevOps">
+                            DevOps
+                        </a>
+                        
+                        <a class="tag" href="/tags/open-source" title="Open Source">
+                            Open Source
+                        </a>
+                        
+                        <a class="tag" href="/tags/openclaw" title="OpenClaw">
+                            OpenClaw
+                        </a>
+                        
+                    </div>
+                    <h1>OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Friday, April 24, 2026
+                            
+                                <span id="/post/2026-04-24-openclaw-self-hosted-ai-agent/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="openclaw-a-self-hosted-ai-agent-that-runs-on-your-own-hardware">OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware</h1>
+<h2 id="the-problem-with-cloud-ai-in-corporate-environments">The Problem with Cloud AI in Corporate Environments</h2>
+<p>If you&rsquo;ve tried to use ChatGPT, Claude, or any cloud-based AI assistant at work, you know the friction: your company blocks external AI services, the legal team flags data privacy concerns, IT won&rsquo;t approve another SaaS tool, and even if they did, sending code and documents to a third-party API feels like handing over the keys to your intellectual property.</p>
+<p>This isn&rsquo;t unique to AI. Every time a new category of developer tool emerges, enterprise IT moves slowly, and the people who could benefit most — the engineers on the ground — are left waiting.</p>
+<p><strong>OpenClaw</strong> is the answer to that gap. It lets you run a capable AI agent entirely on your own hardware, connecting to whatever LLM you choose (cloud or local), and it works with messaging platforms you already use. Nothing leaves your machine unless you explicitly configure it to.</p>
+<h2 id="what-openclaw-actually-is">What OpenClaw Actually Is</h2>
+<p>OpenClaw is not a chatbot wrapper around an API. It&rsquo;s an <strong>operating system for AI agents</strong> — a persistent, long-running service that treats AI as infrastructure: sessions, memory, tool sandboxing, access control, and orchestration are all first-class concerns.</p>
+<p>The project was started by Peter Steinberger (founder of PSPDFKit) as a weekend project in late 2025 called &ldquo;Warelay&rdquo; — a WhatsApp relay that passes your message to an AI and sends the reply back. It went viral in January 2026 after trademark issues forced two rebrands in four days, generating fresh waves of tech press coverage each time. The project is MIT-licensed and completely open source.</p>
+<p>At its core, OpenClaw connects LLMs (Anthropic, OpenAI, local models via Ollama, MiniMax, Google Gemini, and others) to your local machine and messaging platforms. The key architectural pieces are the <strong>Gateway</strong> and the <strong>Agent Runtime</strong>.</p>
+<h2 id="architecture-hub-and-spoke-around-a-gateway">Architecture: Hub-and-Spoke Around a Gateway</h2>
+<p>OpenClaw follows a hub-and-spoke architecture centered on a single long-running Node.js process called the <strong>Gateway</strong>:</p>
+<pre tabindex="0"><code>[WhatsApp] [Telegram] [Slack] [Discord] [Feishu] [CLI] [Web UI]
+                        ↓
+                    Gateway (:18789)
+                        ↓
+                 Agent Runtime
+                        ↓
+             LLM Adapter (Anthropic/OpenAI/Ollama/MiniMax/etc.)
+                        ↓
+                  Tools + Memory
+</code></pre><p>The <strong>Gateway</strong> is the control plane. It:</p>
+<ul>
+<li>Receives and normalizes input from any channel (WhatsApp, Telegram, Slack, Discord, iMessage, Feishu, web UI, CLI)</li>
+<li>Manages session state and context</li>
+<li>Routes everything to the <strong>Agent Runtime</strong></li>
+</ul>
+<p>The <strong>Agent Runtime</strong> executes the core agentic loop: assemble context from session history and memory → invoke the LLM → execute tool calls → loop until complete → return response.</p>
+<p>This separation between interface layer (where messages come from) and intelligence layer (where execution lives) is the key design insight. You get one persistent assistant accessible through any messaging app, with conversation state and tool access managed centrally on your hardware.</p>
+<h2 id="key-components">Key Components</h2>
+<h3 id="gateway-control-plane">Gateway (Control Plane)</h3>
+<p>A WebSocket server that runs as a system service. It handles:</p>
+<ul>
+<li>Channel adapters (WhatsApp via Baileys, Telegram via grammY, Slack, Discord, Feishu via WebSocket, etc.)</li>
+<li>The Control UI for web-based interaction</li>
+<li>RPC interface for CLI tools</li>
+<li>Outbound delivery queue (disk-backed)</li>
+</ul>
+<p>Default port is <code>18789</code>. By default it binds to <code>loopback</code> only — meaning it won&rsquo;t accept connections from other machines. For remote access, you use SSH tunnels or Tailscale Serve.</p>
+<h3 id="agent-runtime">Agent Runtime</h3>
+<p>Owns the LLM tool-use loop: call LLM → execute tool → repeat until done. It:</p>
+<ul>
+<li>Streams events back via an in-process pub/sub (<code>AgentEventStream</code>)</li>
+<li>Manages session transcript and context compaction</li>
+<li>Supports Anthropic, OpenAI, Ollama, MiniMax, Google Gemini, and any provider with a standard API</li>
+</ul>
+<h3 id="skills-system">Skills System</h3>
+<p>Skills extend what the agent can do. They package:</p>
+<ul>
+<li>A <code>SKILL.md</code> prompt file that gets injected into the agent&rsquo;s system prompt</li>
+<li>Optional scripts, references, and assets</li>
+</ul>
+<p>Skills live under <code>~/.openclaw/workspace/skills/&lt;skill-name&gt;/</code>. OpenClaw ships some built-in skills (GitHub, Notion, Tavily, etc.) and you can install more from ClawHub or build your own.</p>
+<h3 id="memory">Memory</h3>
+<p>OpenClaw maintains memory across sessions:</p>
+<ul>
+<li><strong>Daily notes</strong> (<code>memory/YYYY-MM-DD.md</code>) — raw logs of what happened</li>
+<li><strong>Long-term memory</strong> (<code>MEMORY.md</code>) — curated by the agent after reviewing daily notes</li>
+<li><strong>Workspace files</strong> — AGENTS.md, SOUL.md, USER.md define the agent&rsquo;s persona and context</li>
+</ul>
+<h2 id="setup-experience-what-i-learned">Setup Experience: What I Learned</h2>
+<h3 id="installation">Installation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>npm install -g openclaw
+</span></span><span style="display:flex;"><span>openclaw gateway start
+</span></span><span style="display:flex;"><span>openclaw status
+</span></span></code></pre></div><p>Node.js 22+ is required. On macOS, the installer sets up a LaunchDaemon for auto-start on boot. On Linux, you manage the service yourself via systemd.</p>
+<h3 id="connecting-to-minimax-m27">Connecting to MiniMax M2.7</h3>
+<p>The primary model I chose is <strong>MiniMax M2.7</strong>, a reasoning-focused model from Chinese AI startup MiniMax with a 204,800 token context window and competitive pricing.</p>
+<p><strong>Configuration in <code>openclaw.json</code>:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;models&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;providers&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;minimax&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;baseUrl&#34;</span>: <span style="color:#f1fa8c">&#34;https://api.minimaxi.com/anthropic&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;api&#34;</span>: <span style="color:#f1fa8c">&#34;anthropic-messages&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;authHeader&#34;</span>: <span style="color:#ff79c6">true</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;agents&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;defaults&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;model&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;primary&#34;</span>: <span style="color:#f1fa8c">&#34;minimax/MiniMax-M2.7&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;fallbacks&#34;</span>: [<span style="color:#f1fa8c">&#34;minimax/MiniMax-M2.5-highspeed&#34;</span>]
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="minimax-token-plans">MiniMax Token Plans</h3>
+<p>MiniMax offers a <strong>Token Plan</strong> subscription model that bundles requests and model access:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Plan</th>
+          <th>Price</th>
+          <th>M2.7-highspeed</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Basic</td>
+          <td>$10/month</td>
+          <td>4,500 requests/5hrs</td>
+      </tr>
+      <tr>
+          <td>Pro</td>
+          <td>$20/month</td>
+          <td>15,000 requests/5hrs</td>
+      </tr>
+      <tr>
+          <td>Enterprise</td>
+          <td>$50/month</td>
+          <td>30,000 requests/5hrs</td>
+      </tr>
+  </tbody>
+</table>
+<p>On the open pricing model (not subscribed), M2.7 costs:</p>
+<ul>
+<li><strong>$0.30/M input tokens</strong></li>
+<li><strong>$1.20/M output tokens</strong></li>
+<li>Cache read: $0.06/M</li>
+</ul>
+<p>The Token Plan is worth it if you&rsquo;re a heavy user of coding agents like Claude Code, Cline, or Roo Code that integrate with MiniMax&rsquo;s plan. For occasional use, pay-per-token is more economical.</p>
+<h3 id="models-available">Models Available</h3>
+<p>The setup I run includes:</p>
+<ul>
+<li><strong>MiniMax M2.7</strong> — primary reasoning model (context: 204K, max output: 131K)</li>
+<li><strong>MiniMax M2.5-highspeed</strong> — faster, cheaper fallback</li>
+<li><strong>MiniMax Image-01</strong> — image generation model</li>
+<li><strong>MiniMax Music-2.6</strong> — music generation</li>
+<li><strong>Ollama (local)</strong> — running qwen3.5:4b and ministral-3:3b on a local machine for completely offline inference</li>
+</ul>
+<h3 id="tts-setup">TTS Setup</h3>
+<p>OpenClaw supports TTS via MiniMax&rsquo;s <code>speech-2.8-hd</code> model with voice <code>English_expressive_narrator</code>. Configuration:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;messages&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;tts&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;provider&#34;</span>: <span style="color:#f1fa8c">&#34;minimax&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;providers&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;minimax&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">&#34;model&#34;</span>: <span style="color:#f1fa8c">&#34;speech-2.8-hd&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#ff79c6">&#34;voiceId&#34;</span>: <span style="color:#f1fa8c">&#34;English_expressive_narrator&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="image--music-generation">Image &amp; Music Generation</h3>
+<p>Built-in support via the model config:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;agents&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;defaults&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;imageModel&#34;</span>: { <span style="color:#ff79c6">&#34;primary&#34;</span>: <span style="color:#f1fa8c">&#34;minimax/image-01&#34;</span> },
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;musicGenerationModel&#34;</span>: { <span style="color:#ff79c6">&#34;primary&#34;</span>: <span style="color:#f1fa8c">&#34;minimax/music-2.6&#34;</span> }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Both work through the standard tool interface — ask for an image or music generation and the agent dispatches to the appropriate model.</p>
+<h3 id="feishu-lark-integration">Feishu (Lark) Integration</h3>
+<p>OpenClaw supports Feishu (also known as Lark), which is popular in China. The configuration:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;channels&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;feishu&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;enabled&#34;</span>: <span style="color:#ff79c6">true</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;appId&#34;</span>: <span style="color:#f1fa8c">&#34;your-app-id&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;appSecret&#34;</span>: <span style="color:#f1fa8c">&#34;your-app-secret&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;connectionMode&#34;</span>: <span style="color:#f1fa8c">&#34;websocket&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;domain&#34;</span>: <span style="color:#f1fa8c">&#34;feishu&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;dmPolicy&#34;</span>: <span style="color:#f1fa8c">&#34;pairing&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;allowFrom&#34;</span>: [<span style="color:#f1fa8c">&#34;ou_xxxxxx&#34;</span>],
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;groupPolicy&#34;</span>: <span style="color:#f1fa8c">&#34;open&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;requireMention&#34;</span>: <span style="color:#ff79c6">true</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The Feishu integration uses a WebSocket connection mode, which is more efficient than polling. You&rsquo;ll need to create a Feishu app in the <a href="https://open.feishu.cn/">Feishu Open Platform</a> and configure the bot permissions.</p>
+<h3 id="ollama-local-models">Ollama Local Models</h3>
+<p>For completely offline inference, OpenClaw integrates with Ollama:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;models&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;providers&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;ollama&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;baseUrl&#34;</span>: <span style="color:#f1fa8c">&#34;http://192.168.179.1:11434&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;api&#34;</span>: <span style="color:#f1fa8c">&#34;ollama&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;apiKey&#34;</span>: <span style="color:#f1fa8c">&#34;OLLAMA_API_KEY&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;auth&#34;</span>: <span style="color:#f1fa8c">&#34;token&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;authHeader&#34;</span>: <span style="color:#ff79c6">true</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;models&#34;</span>: [
+</span></span><span style="display:flex;"><span>          {
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;id&#34;</span>: <span style="color:#f1fa8c">&#34;qwen3.5:4b&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;name&#34;</span>: <span style="color:#f1fa8c">&#34;qwen3.5:4b&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;input&#34;</span>: [<span style="color:#f1fa8c">&#34;text&#34;</span>, <span style="color:#f1fa8c">&#34;image&#34;</span>],
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;contextWindow&#34;</span>: <span style="color:#bd93f9">262144</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;maxTokens&#34;</span>: <span style="color:#bd93f9">8192</span>
+</span></span><span style="display:flex;"><span>          },
+</span></span><span style="display:flex;"><span>          {
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;id&#34;</span>: <span style="color:#f1fa8c">&#34;ministral-3:3b&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;name&#34;</span>: <span style="color:#f1fa8c">&#34;ministral-3:3b&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;input&#34;</span>: [<span style="color:#f1fa8c">&#34;text&#34;</span>, <span style="color:#f1fa8c">&#34;image&#34;</span>],
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;contextWindow&#34;</span>: <span style="color:#bd93f9">32768</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;maxTokens&#34;</span>: <span style="color:#bd93f9">8192</span>
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        ]
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The Ollama models run locally on your network (in this case at <code>192.168.179.1:11434</code>), providing full privacy for whatever you send to them.</p>
+<h2 id="handling-network-restrictions">Handling Network Restrictions</h2>
+<h3 id="the-corporate-firewall-problem">The Corporate Firewall Problem</h3>
+<p>One of the key lessons learned from my setup: <strong>not all LLM providers are accessible from all networks</strong>.</p>
+<p>During setup, I attempted to configure Google Gemini as a fallback model. Testing revealed that <code>generativelanguage.googleapis.com</code> is unreachable from my network — curl returns exit code 56 (&ldquo;failure in receiving network data&rdquo;), indicating the connection is blocked at the network or ISP level.</p>
+<p>This is a common scenario in corporate environments:</p>
+<ul>
+<li>Google domains may be blocked by enterprise firewalls</li>
+<li>Some AI APIs may be restricted by IT policy</li>
+<li>Your proxy (if you have one) may not route certain domains correctly</li>
+</ul>
+<h3 id="what-i-tried-proxy-configuration">What I Tried: Proxy Configuration</h3>
+<p>OpenClaw supports HTTP proxy configuration via environment variables. I attempted to route Gemini traffic through a proxy at <code>192.168.179.1:7890</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#6272a4"># In ~/.openclaw/.env</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">HTTP_PROXY</span><span style="color:#ff79c6">=</span>http://192.168.179.1:7890
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">HTTPS_PROXY</span><span style="color:#ff79c6">=</span>http://192.168.179.1:7890
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">NO_PROXY</span><span style="color:#ff79c6">=</span>api.minimaxi.com,api.minimax.chat
+</span></span></code></pre></div><p>However, this approach had two problems:</p>
+<ol>
+<li><strong>The proxy itself couldn&rsquo;t reach Google</strong> — if your proxy&rsquo;s configuration doesn&rsquo;t include Google domains in its routing rules, the connection still fails</li>
+<li><strong>Collateral damage</strong> — other channels like WeChat (Weixin) can be impacted by the proxy, causing connection failures</li>
+</ol>
+<h3 id="lessons-learned">Lessons Learned</h3>
+<ul>
+<li><strong>Always test connectivity before blaming the application</strong> — use <code>curl</code> to verify if a domain is reachable at all</li>
+<li><strong>Proxy configuration is global</strong> — OpenClaw doesn&rsquo;t yet support per-provider proxy settings; all traffic goes through the same proxy</li>
+<li><strong>Monitor for collateral damage</strong> — changing proxy settings can affect channels you didn&rsquo;t intend to modify</li>
+<li><strong>Fallback to local models</strong> — when cloud APIs are blocked, Ollama models running on your local network provide a working alternative</li>
+</ul>
+<h3 id="current-status">Current Status</h3>
+<p>My current working setup:</p>
+<ul>
+<li>✅ <strong>MiniMax</strong> — primary model, working (API accessible)</li>
+<li>✅ <strong>Ollama local models</strong> — fallback, working (completely offline)</li>
+<li>✅ <strong>Feishu</strong> — channel integration, working</li>
+<li>✅ <strong>WeChat</strong> — channel integration, working</li>
+<li>❌ <strong>Google Gemini</strong> — blocked at network level (Google APIs unreachable)</li>
+<li>⚠️ <strong>Tailscale</strong> — set to <code>off</code> mode (not needed for my use case)</li>
+</ul>
+<h2 id="security-considerations">Security Considerations</h2>
+<h3 id="gateway-bind-configuration">Gateway Bind Configuration</h3>
+<p>Out of the box, OpenClaw defaults to <code>bind: &quot;0.0.0.0:18789&quot;</code> which exposes the API to all network interfaces. This is fine on a home machine but a real security concern on a shared corporate laptop.</p>
+<p><strong>Always set <code>gateway.bind: &quot;loopback&quot;</code> and access remotely via SSH tunnels</strong> unless you&rsquo;re on a trusted network:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;gateway&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;bind&#34;</span>: <span style="color:#f1fa8c">&#34;loopback&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;port&#34;</span>: <span style="color:#bd93f9">18789</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="credential-storage">Credential Storage</h3>
+<p>Credentials are stored in plaintext files under <code>~/.openclaw/</code>. This is a known concern — if your machine is compromised, everything is readable. Keep your OpenClaw config directory protected with appropriate file permissions.</p>
+<h3 id="config-auditing">Config Auditing</h3>
+<p>OpenClaw keeps an audit log of config changes at <code>~/.openclaw/logs/config-audit.jsonl</code>. Review this periodically to track what changed and when.</p>
+<h2 id="what-you-can-actually-do-with-it">What You Can Actually Do With It</h2>
+<p>OpenClaw&rsquo;s real value shows up in the workflows people have built:</p>
+<ul>
+<li><strong>Morning briefings</strong> — agent checks email, calendar, notifications, summarizes into a single message</li>
+<li><strong>Automated triage</strong> — email or Slack messages get categorized and routed</li>
+<li><strong>Coding sessions from a phone</strong> — start a code review or debugging session via WhatsApp</li>
+<li><strong>Heartbeat monitoring</strong> — scheduled checks that alert you when something needs attention</li>
+<li><strong>Fully offline</strong> — if you run Ollama locally, the entire stack works without internet</li>
+<li><strong>Cross-platform access</strong> — Feishu, WeChat, Telegram, Discord — use whatever your team already uses</li>
+</ul>
+<h2 id="the-corporate-network-problem-why-this-matters">The Corporate Network Problem: Why This Matters</h2>
+<p>Here&rsquo;s the scenario I keep hitting: I&rsquo;m at work, on a machine that can&rsquo;t reach external AI services. Corporate proxy, firewall, data classification — the usual. I want to use AI to help me review code, write documentation, or debug an issue, but I can&rsquo;t ship our proprietary code to a third-party API, and I can&rsquo;t get a cloud AI tool approved in the time I have.</p>
+<p>Before OpenClaw, I&rsquo;d either:</p>
+<ol>
+<li>Do without AI assistance (slow, frustrating)</li>
+<li>Use a local model that barely works for complex tasks (waste of time)</li>
+<li>Screenshot code and use my phone for AI (ridiculous workaround)</li>
+</ol>
+<p><strong>With OpenClaw running locally on my machine:</strong></p>
+<ol>
+<li>I can connect to an LLM that IT <em>has</em> approved (or a local Ollama instance)</li>
+<li>Nothing leaves my machine unless I explicitly push it</li>
+<li>The agent runs 24/7 in the background, proactively checking things without me prompting</li>
+<li>It&rsquo;s accessible from any channel I configure — Slack, WhatsApp, Feishu, Telegram, or just a web UI</li>
+</ol>
+<p>The key insight: <strong>OpenClaw is infrastructure, not just a chatbot</strong>. The fact that it&rsquo;s a persistent background service means it can be proactive. It can check your email every 30 minutes, monitor a CI pipeline, alert you when something breaks — all without you opening a separate app and asking.</p>
+<p>Even in a restricted corporate environment, you can:</p>
+<ul>
+<li>Run Ollama locally for completely offline AI</li>
+<li>Configure the Gateway to bind to loopback only (security-safe)</li>
+<li>Access it via SSH tunnel from your work machine to your home machine running OpenClaw</li>
+<li>Use it as a secure bridge to a cloud LLM you trust for sensitive work</li>
+<li>Use Feishu or WeChat if your team is already on those platforms</li>
+</ul>
+<h2 id="practical-takeaways">Practical Takeaways</h2>
+<p>If you&rsquo;re an engineer evaluating OpenClaw, here&rsquo;s what I&rsquo;d tell you:</p>
+<ol>
+<li><strong>Start with the CLI</strong> — <code>openclaw help</code> and <code>openclaw status</code> give you a clear picture of what&rsquo;s running</li>
+<li><strong>Pick your model budget</strong> — MiniMax&rsquo;s Token Plan is excellent value for heavy coding workloads; for occasional use, pay-per-token works fine</li>
+<li><strong>Lock down the Gateway config</strong> — set <code>bind: &quot;loopback&quot;</code> and use SSH tunnels for remote access; this isn&rsquo;t optional in any multi-user environment</li>
+<li><strong>Think in workflows, not chat</strong> — the power comes from heartbeat-driven proactive automation, not from typing questions</li>
+<li><strong>Skills are how it grows</strong> — the built-in skills are just the start; when you need something specific to your stack, write a skill for it</li>
+<li><strong>Test your network first</strong> — verify that your LLM provider domains are reachable before assuming it&rsquo;s an application problem</li>
+<li><strong>Keep a local fallback</strong> — Ollama models ensure you always have <em>something</em> working, even when cloud APIs are blocked</li>
+</ol>
+<h2 id="whats-missing">What&rsquo;s Missing</h2>
+<p>OpenClaw is young (late 2025 start) and moves fast. Rough edges:</p>
+<ul>
+<li><strong>Documentation is still catching up</strong> — some features aren&rsquo;t well documented, you end up reading source or Discord threads</li>
+<li><strong>Security model needs care</strong> — plaintext credentials, permissive defaults, no built-in audit logging; treat it like any other privileged service</li>
+<li><strong>No multi-user support by default</strong> — it&rsquo;s designed as a personal assistant; multi-tenant requires explicit workspace separation</li>
+<li><strong>Updates can be breaking</strong> — the project is still in rapid evolution; lock versions if you need stability</li>
+<li><strong>No per-provider proxy configuration</strong> — proxy settings are global; this can be limiting in complex network environments</li>
+</ul>
+<h2 id="the-insight-that-matters">The Insight That Matters</h2>
+<p>OpenClaw&rsquo;s real value proposition isn&rsquo;t &ldquo;another AI chatbot.&rdquo; It&rsquo;s <strong>local-first AI infrastructure</strong> — the idea that AI can run persistently on your hardware, connected to the tools and channels you already use, without your data leaving your control.</p>
+<p>For engineers in corporate environments, this is a genuine unlock. You&rsquo;re not waiting for IT to approve a SaaS tool. You&rsquo;re running AI on hardware you already have, connected to LLMs that may already be approved for your use case.</p>
+<p>The tool is not a toy. It&rsquo;s infrastructure. Treat it that way, understand what it can do, and you&rsquo;ll get real value from it.</p>
+<hr>
+<p><em>OpenClaw is MIT-licensed and available on GitHub. It&rsquo;s built in TypeScript (Node.js) and the codebase is a good reference for understanding how to build agentic systems with tool use, session management, and channel adapters.</em></p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2026-02-25-how-llm-works/" data-toggle="tooltip" data-placement="top" title="How LLMs Work: An End-to-End Guide from Pre-training to Prediction">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/agentic-ai" title="agentic ai">
+                            agentic ai
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ai" title="ai">
+                            ai
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/deep-learning" title="deep learning">
+                            deep learning
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/devops" title="devops">
+                            devops
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<script src="/js/theme-toggle.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+</body>
+</html>
