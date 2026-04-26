@@ -16,10 +16,10 @@
       <description></description>
     </item>
     <item>
-      <title>DevOps</title>
-      <link>http://akjamie.github.io/tags/devops/</link>
+      <title>MiniMax</title>
+      <link>http://akjamie.github.io/tags/minimax/</link>
       <pubDate>Fri, 24 Apr 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/devops/</guid>
+      <guid>http://akjamie.github.io/tags/minimax/</guid>
       <description></description>
     </item>
     <item>
@@ -30,10 +30,17 @@
       <description></description>
     </item>
     <item>
-      <title>OpenClaw</title>
-      <link>http://akjamie.github.io/tags/openclaw/</link>
+      <title>Self-Hosted LLM</title>
+      <link>http://akjamie.github.io/tags/self-hosted-llm/</link>
       <pubDate>Fri, 24 Apr 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/openclaw/</guid>
+      <guid>http://akjamie.github.io/tags/self-hosted-llm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>WeChat Integration</title>
+      <link>http://akjamie.github.io/tags/wechat-integration/</link>
+      <pubDate>Fri, 24 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/wechat-integration/</guid>
       <description></description>
     </item>
     <item>
@@ -258,6 +265,13 @@
       <link>http://akjamie.github.io/tags/websocket/</link>
       <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/websocket/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>DevOps</title>
+      <link>http://akjamie.github.io/tags/devops/</link>
+      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/devops/</guid>
       <description></description>
     </item>
     <item>

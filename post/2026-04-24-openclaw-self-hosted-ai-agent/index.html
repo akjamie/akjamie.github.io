@@ -31,15 +31,15 @@
     
 
     
-    <meta name="title" content="OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware" />
-    <meta property="og:title" content="OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware" />
-    <meta property="twitter:title" content="OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware" />
+    <meta name="title" content="Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture" />
+    <meta property="og:title" content="Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture" />
+    <meta property="twitter:title" content="Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture" />
     
 
     
-    <meta name="description" content="A deep dive into OpenClaw: its hub-and-spoke architecture, setup experience with MiniMax models, Feishu integration, and how to handle network restrictions when corporate firewalls block external AI services.">
-    <meta property="og:description" content="A deep dive into OpenClaw: its hub-and-spoke architecture, setup experience with MiniMax models, Feishu integration, and how to handle network restrictions when corporate firewalls block external AI services." />
-    <meta property="twitter:description" content="A deep dive into OpenClaw: its hub-and-spoke architecture, setup experience with MiniMax models, Feishu integration, and how to handle network restrictions when corporate firewalls block external AI services." />
+    <meta name="description" content="An in-depth technical exploration of OpenClaw, an open-source agent runtime. We examine its hub-and-spoke architecture, gateway control plane, and the networking challenges of deploying agentic systems within enterprise VM environments.">
+    <meta property="og:description" content="An in-depth technical exploration of OpenClaw, an open-source agent runtime. We examine its hub-and-spoke architecture, gateway control plane, and the networking challenges of deploying agentic systems within enterprise VM environments." />
+    <meta property="twitter:description" content="An in-depth technical exploration of OpenClaw, an open-source agent runtime. We examine its hub-and-spoke architecture, gateway control plane, and the networking challenges of deploying agentic systems within enterprise VM environments." />
     
 
     <meta property="og:url" content="http://akjamie.github.io/post/2026-04-24-openclaw-self-hosted-ai-agent/" />
@@ -53,7 +53,7 @@
 &#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware | The curious developer&#39;s ODYSSEY</title>
+    <title>Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture | The curious developer&#39;s ODYSSEY</title>
 
     <link rel="canonical" href="/post/2026-04-24-openclaw-self-hosted-ai-agent/">
 
@@ -126,6 +126,10 @@
                         
                         <li>
                             <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/ai-infrastructure/">ai infrastructure</a>
                         </li>
                         
                         <li>
@@ -265,20 +269,24 @@
                             Agentic AI
                         </a>
                         
-                        <a class="tag" href="/tags/devops" title="DevOps">
-                            DevOps
-                        </a>
-                        
                         <a class="tag" href="/tags/open-source" title="Open Source">
                             Open Source
                         </a>
                         
-                        <a class="tag" href="/tags/openclaw" title="OpenClaw">
-                            OpenClaw
+                        <a class="tag" href="/tags/self-hosted-llm" title="Self-Hosted LLM">
+                            Self-Hosted LLM
+                        </a>
+                        
+                        <a class="tag" href="/tags/minimax" title="MiniMax">
+                            MiniMax
+                        </a>
+                        
+                        <a class="tag" href="/tags/wechat-integration" title="WeChat Integration">
+                            WeChat Integration
                         </a>
                         
                     </div>
-                    <h1>OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware</h1>
+                    <h1>Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         
@@ -447,81 +455,166 @@ $(function() {
                 post-container">
 
                 
-                <h1 id="openclaw-a-self-hosted-ai-agent-that-runs-on-your-own-hardware">OpenClaw: A Self-Hosted AI Agent That Runs on Your Own Hardware</h1>
-<h2 id="the-problem-with-cloud-ai-in-corporate-environments">The Problem with Cloud AI in Corporate Environments</h2>
-<p>If you&rsquo;ve tried to use ChatGPT, Claude, or any cloud-based AI assistant at work, you know the friction: your company blocks external AI services, the legal team flags data privacy concerns, IT won&rsquo;t approve another SaaS tool, and even if they did, sending code and documents to a third-party API feels like handing over the keys to your intellectual property.</p>
-<p>This isn&rsquo;t unique to AI. Every time a new category of developer tool emerges, enterprise IT moves slowly, and the people who could benefit most — the engineers on the ground — are left waiting.</p>
-<p><strong>OpenClaw</strong> is the answer to that gap. It lets you run a capable AI agent entirely on your own hardware, connecting to whatever LLM you choose (cloud or local), and it works with messaging platforms you already use. Nothing leaves your machine unless you explicitly configure it to.</p>
-<h2 id="what-openclaw-actually-is">What OpenClaw Actually Is</h2>
-<p>OpenClaw is not a chatbot wrapper around an API. It&rsquo;s an <strong>operating system for AI agents</strong> — a persistent, long-running service that treats AI as infrastructure: sessions, memory, tool sandboxing, access control, and orchestration are all first-class concerns.</p>
-<p>The project was started by Peter Steinberger (founder of PSPDFKit) as a weekend project in late 2025 called &ldquo;Warelay&rdquo; — a WhatsApp relay that passes your message to an AI and sends the reply back. It went viral in January 2026 after trademark issues forced two rebrands in four days, generating fresh waves of tech press coverage each time. The project is MIT-licensed and completely open source.</p>
-<p>At its core, OpenClaw connects LLMs (Anthropic, OpenAI, local models via Ollama, MiniMax, Google Gemini, and others) to your local machine and messaging platforms. The key architectural pieces are the <strong>Gateway</strong> and the <strong>Agent Runtime</strong>.</p>
+                <h1 id="self-hosting-agentic-ai-a-deep-dive-into-the-openclaw-architecture">Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture</h1>
+<h2 id="what-is-openclaw">What Is OpenClaw?</h2>
+<p><strong>OpenClaw</strong> is a self-hosted, open-source AI agent runtime built in TypeScript. It is not a chatbot wrapper. It is an <strong>operating system for AI agents</strong> — a persistent, long-running service that treats AI as infrastructure: session management, long-term memory, tool sandboxing, access control, multi-channel delivery, and orchestration are all first-class architectural concerns.</p>
+<p>The project was started by Peter Steinberger (founder of PSPDFKit) in late 2025 as a small weekend experiment called &ldquo;Warelay&rdquo; — a WhatsApp relay that forwarded messages to an LLM and returned the response. It went viral in January 2026, generating successive waves of tech press coverage (and two forced rebrands in four days due to trademark conflicts). It is MIT-licensed and the codebase is publicly available on GitHub.</p>
+<p>What makes OpenClaw distinctly different from managed AI services is its operational model: the agent runs as a background system service on hardware you own, connects to whichever LLM provider you configure (cloud or local), and is accessible through whichever messaging platform your team already uses — Feishu, WeChat, Telegram, WhatsApp, Slack, Discord, or a web UI. Nothing leaves your machine unless you explicitly route it out.</p>
+<h2 id="the-problem-it-solves">The Problem It Solves</h2>
+<p>Corporate environments create a fundamental tension for engineers who want to leverage AI. Sending proprietary source code, internal documents, or customer data to a third-party cloud API is legally and contractually fraught — often prohibited. Waiting for IT to procure and approve an enterprise AI SaaS agreement takes months. And even where external AI is permitted, the tooling rarely integrates with internal workflows.</p>
+<p>OpenClaw sidesteps this entirely. You run it on hardware you already have — a developer workstation, a home server, a lab VM. You point it at an LLM that is either already approved for your environment, or one that runs entirely locally. The agent sits persistently in the background, available from your existing messaging channels, operating proactively without requiring you to open a new tool or prompt manually.</p>
+<p>This is the architectural insight that separates OpenClaw from a chatbot: <strong>persistence and proactivity</strong>. It can check your email every 30 minutes, monitor a CI pipeline, alert you to drift in a monitored system — all without a human-initiated prompt. That is AI as infrastructure, not AI as a chat window.</p>
 <h2 id="architecture-hub-and-spoke-around-a-gateway">Architecture: Hub-and-Spoke Around a Gateway</h2>
-<p>OpenClaw follows a hub-and-spoke architecture centered on a single long-running Node.js process called the <strong>Gateway</strong>:</p>
-<pre tabindex="0"><code>[WhatsApp] [Telegram] [Slack] [Discord] [Feishu] [CLI] [Web UI]
-                        ↓
-                    Gateway (:18789)
-                        ↓
-                 Agent Runtime
-                        ↓
-             LLM Adapter (Anthropic/OpenAI/Ollama/MiniMax/etc.)
-                        ↓
-                  Tools + Memory
-</code></pre><p>The <strong>Gateway</strong> is the control plane. It:</p>
+<p>OpenClaw follows a hub-and-spoke architecture. All external channels — messaging platforms, web UI, CLI — converge on a single control plane process called the <strong>Gateway</strong>. The Gateway routes everything to a single <strong>Agent Runtime</strong>, which executes the agentic loop and calls out to LLM providers and tools.</p>
+<pre class="mermaid">
+  flowchart TD
+    A1([WhatsApp]) --&gt; GW
+    A2([Telegram]) --&gt; GW
+    A3([Slack]) --&gt; GW
+    A4([Discord]) --&gt; GW
+    A5([WeChat]) --&gt; GW
+    A6([Web UI / CLI]) --&gt; GW
+
+    subgraph GW[&#34;Gateway — Control Plane (:18789)&#34;]
+        GA[Channel Adapters]
+        GB[Session &amp; Context Mgmt]
+        GC[Auth &amp; ACL]
+        GD[Disk-backed Delivery Queue]
+    end
+
+    GW --&gt; RT
+
+    subgraph RT[&#34;Agent Runtime — Intelligence Layer&#34;]
+        RA[Agentic Loop]
+        RB[LLM Dispatch]
+        RC[Tool Execution]
+        RD[AgentEventStream]
+    end
+
+    RT --&gt; LLM1([MiniMax M2.7])
+    RT --&gt; LLM2([Google Gemini])
+    RT --&gt; LLM3([OpenAI / Other])
+
+    RT --&gt; MEM
+
+    subgraph MEM[&#34;Tools &amp; Memory&#34;]
+        MA[Skills / SKILL.md]
+        MC[MEMORY.md — Long-term]
+    end
+</pre>
+
+<p>This separation between the <strong>interface layer</strong> (where messages originate) and the <strong>intelligence layer</strong> (where execution and LLM calls happen) is the central design decision in OpenClaw. It means you get one persistent assistant, with unified session state and tool access, reachable through any channel you configure — all managed centrally on your own hardware.</p>
+<h3 id="the-gateway-deep-dive">The Gateway: Deep Dive</h3>
+<p>The Gateway is the most architecturally significant component. It is a WebSocket server that runs as a system service — a <code>LaunchDaemon</code> on macOS, a <code>systemd</code> unit on Linux — and it is the single ingress point for all agent interactions.</p>
+<p><strong>Responsibilities of the Gateway:</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Responsibility</th>
+          <th>Detail</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Channel adapters</td>
+          <td>Normalizes input from WhatsApp (Baileys library), Telegram (grammY), Slack, Discord, Feishu (WebSocket), iMessage, web UI, and CLI into a unified message envelope</td>
+      </tr>
+      <tr>
+          <td>Session management</td>
+          <td>Maintains conversation state, context windows, and participant identity across channels</td>
+      </tr>
+      <tr>
+          <td>Access control</td>
+          <td><code>allowFrom</code>, <code>dmPolicy</code>, <code>groupPolicy</code>, and <code>requireMention</code> settings per channel</td>
+      </tr>
+      <tr>
+          <td>Outbound delivery queue</td>
+          <td>Disk-backed queue to buffer outbound messages during transient failures</td>
+      </tr>
+      <tr>
+          <td>Control UI</td>
+          <td>Serves a web-based interface at the same port (<code>:18789</code>) for browser-based interaction</td>
+      </tr>
+      <tr>
+          <td>RPC interface</td>
+          <td>Exposes a local CLI surface for <code>openclaw status</code>, <code>openclaw chat</code>, and other operational commands</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Bind configuration</strong> is operationally important. The default is <code>bind: &quot;0.0.0.0&quot;</code>, which exposes the API on all network interfaces — a misconfiguration risk on shared machines or corporate networks. In any environment you don&rsquo;t fully control, the correct default is <code>loopback</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;gateway&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;bind&#34;</span>: <span style="color:#f1fa8c">&#34;loopback&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;port&#34;</span>: <span style="color:#bd93f9">18789</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Remote access from another machine then goes through an SSH tunnel or Tailscale Serve — both of which are cryptographically authenticated and do not expose the port to the broader network.</p>
+<p>The Gateway&rsquo;s port is also significant in a VMware-hosted setup. When OpenClaw runs inside a guest VM, the Gateway binds to the guest&rsquo;s IP (e.g., <code>192.168.179.x</code>), and any host-side tooling that wants to talk to it — or any agent that needs to talk to an API on the host — must traverse the VM&rsquo;s NAT boundary. This has concrete consequences for proxy and LLM provider configuration, covered in the Lessons Learned section.</p>
+<h3 id="the-agent-runtime">The Agent Runtime</h3>
+<p>The Agent Runtime owns the core agentic loop. Each iteration is deterministic: assemble context, invoke the model, execute whatever tools it requests, and repeat until the model signals it is done.</p>
+<pre class="mermaid">
+  sequenceDiagram
+    participant GW as Gateway
+    participant RT as Agent Runtime
+    participant LLM as LLM Provider
+    participant TL as Tool Sandbox
+    
+    GW-&gt;&gt;RT: Deliver message + session context
+    RT-&gt;&gt;RT: Assemble context (transcript + MEMORY.md + skills)
+    RT-&gt;&gt;LLM: Invoke model
+    LLM--&gt;&gt;RT: Response + tool_call requests
+    loop Until no tool calls remain
+        RT-&gt;&gt;TL: Execute tool(s)
+        TL--&gt;&gt;RT: Tool results
+        RT-&gt;&gt;LLM: Continue with tool results
+        LLM--&gt;&gt;RT: Next response
+    end
+    RT-&gt;&gt;GW: Stream final response via AgentEventStream
+    RT-&gt;&gt;RT: Compact context if transcript length exceeds threshold
+</pre>
+
+<p>Context compaction runs automatically as the transcript grows, summarizing older turns to keep the context window within the model&rsquo;s limit without losing conversational continuity.</p>
+<h3 id="the-skills-system">The Skills System</h3>
+<p>Skills are the extensibility mechanism. Each skill is a directory at <code>~/.openclaw/workspace/skills/&lt;skill-name&gt;/</code> containing:</p>
 <ul>
-<li>Receives and normalizes input from any channel (WhatsApp, Telegram, Slack, Discord, iMessage, Feishu, web UI, CLI)</li>
-<li>Manages session state and context</li>
-<li>Routes everything to the <strong>Agent Runtime</strong></li>
+<li><strong><code>SKILL.md</code></strong> — a Markdown file injected verbatim into the agent&rsquo;s system prompt; this is how you define what the agent knows and how it behaves</li>
+<li><strong>Optional scripts</strong> — executable files the agent can call as tools</li>
+<li><strong>Optional assets and references</strong> — additional files the agent can read from memory</li>
 </ul>
-<p>The <strong>Agent Runtime</strong> executes the core agentic loop: assemble context from session history and memory → invoke the LLM → execute tool calls → loop until complete → return response.</p>
-<p>This separation between interface layer (where messages come from) and intelligence layer (where execution lives) is the key design insight. You get one persistent assistant accessible through any messaging app, with conversation state and tool access managed centrally on your hardware.</p>
-<h2 id="key-components">Key Components</h2>
-<h3 id="gateway-control-plane">Gateway (Control Plane)</h3>
-<p>A WebSocket server that runs as a system service. It handles:</p>
+<p>OpenClaw ships built-in skills (GitHub, Notion, Tavily search, etc.) and supports community skills via ClawHub. Writing your own skill is straightforward: define what the agent should know, what tools it should use, and what behaviors it should exhibit — then place the <code>SKILL.md</code> file in the appropriate directory.</p>
+<h3 id="memory-architecture">Memory Architecture</h3>
+<p>OpenClaw maintains a persistent memory model anchored around two layers:</p>
 <ul>
-<li>Channel adapters (WhatsApp via Baileys, Telegram via grammY, Slack, Discord, Feishu via WebSocket, etc.)</li>
-<li>The Control UI for web-based interaction</li>
-<li>RPC interface for CLI tools</li>
-<li>Outbound delivery queue (disk-backed)</li>
+<li><strong>Long-term memory</strong> (<code>MEMORY.md</code>) — a curated summary that the agent maintains itself, distilling what it has learned about the user, preferences, and recurring contexts across sessions</li>
+<li><strong>Workspace identity files</strong> — <code>AGENTS.md</code> (agent persona and capabilities), <code>SOUL.md</code> (communication values and style), <code>USER.md</code> (persistent facts about the user the agent should always remember)</li>
 </ul>
-<p>Default port is <code>18789</code>. By default it binds to <code>loopback</code> only — meaning it won&rsquo;t accept connections from other machines. For remote access, you use SSH tunnels or Tailscale Serve.</p>
-<h3 id="agent-runtime">Agent Runtime</h3>
-<p>Owns the LLM tool-use loop: call LLM → execute tool → repeat until done. It:</p>
-<ul>
-<li>Streams events back via an in-process pub/sub (<code>AgentEventStream</code>)</li>
-<li>Manages session transcript and context compaction</li>
-<li>Supports Anthropic, OpenAI, Ollama, MiniMax, Google Gemini, and any provider with a standard API</li>
-</ul>
-<h3 id="skills-system">Skills System</h3>
-<p>Skills extend what the agent can do. They package:</p>
-<ul>
-<li>A <code>SKILL.md</code> prompt file that gets injected into the agent&rsquo;s system prompt</li>
-<li>Optional scripts, references, and assets</li>
-</ul>
-<p>Skills live under <code>~/.openclaw/workspace/skills/&lt;skill-name&gt;/</code>. OpenClaw ships some built-in skills (GitHub, Notion, Tavily, etc.) and you can install more from ClawHub or build your own.</p>
-<h3 id="memory">Memory</h3>
-<p>OpenClaw maintains memory across sessions:</p>
-<ul>
-<li><strong>Daily notes</strong> (<code>memory/YYYY-MM-DD.md</code>) — raw logs of what happened</li>
-<li><strong>Long-term memory</strong> (<code>MEMORY.md</code>) — curated by the agent after reviewing daily notes</li>
-<li><strong>Workspace files</strong> — AGENTS.md, SOUL.md, USER.md define the agent&rsquo;s persona and context</li>
-</ul>
-<h2 id="setup-experience-what-i-learned">Setup Experience: What I Learned</h2>
+<p>The design puts the agent in charge of its own retention decisions. Rather than logging every turn and retrieving at query time, the agent periodically reviews what it knows and condenses it into <code>MEMORY.md</code>. This keeps memory inspectable and portable — you can read, audit, or edit it directly — at the cost of not supporting semantic search or high-volume knowledge retrieval.</p>
+<h2 id="setup-minimax-integration">Setup: MiniMax Integration</h2>
 <h3 id="installation">Installation</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>npm install -g openclaw
 </span></span><span style="display:flex;"><span>openclaw gateway start
 </span></span><span style="display:flex;"><span>openclaw status
-</span></span></code></pre></div><p>Node.js 22+ is required. On macOS, the installer sets up a LaunchDaemon for auto-start on boot. On Linux, you manage the service yourself via systemd.</p>
+</span></span></code></pre></div><p>Node.js 22+ is required. On macOS, the install process registers a LaunchDaemon. On Linux, service management is via <code>systemd</code>.</p>
 <h3 id="connecting-to-minimax-m27">Connecting to MiniMax M2.7</h3>
-<p>The primary model I chose is <strong>MiniMax M2.7</strong>, a reasoning-focused model from Chinese AI startup MiniMax with a 204,800 token context window and competitive pricing.</p>
-<p><strong>Configuration in <code>openclaw.json</code>:</strong></p>
+<p>The primary model is <strong>MiniMax M2.7</strong>, a reasoning-capable model with a 204,800 token context window and a 131,072 token max output. MiniMax exposes an Anthropic-compatible messages API, which OpenClaw supports natively via the <code>anthropic-messages</code> adapter.</p>
+<p>The model configuration defines both the provider endpoint and the full agent model chain — primary plus a ranked fallback list:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;models&#34;</span>: {
 </span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;providers&#34;</span>: {
 </span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;minimax&#34;</span>: {
 </span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;baseUrl&#34;</span>: <span style="color:#f1fa8c">&#34;https://api.minimaxi.com/anthropic&#34;</span>,
 </span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;api&#34;</span>: <span style="color:#f1fa8c">&#34;anthropic-messages&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;authHeader&#34;</span>: <span style="color:#ff79c6">true</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;authHeader&#34;</span>: <span style="color:#ff79c6">true</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;models&#34;</span>: [
+</span></span><span style="display:flex;"><span>          {
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;id&#34;</span>: <span style="color:#f1fa8c">&#34;MiniMax-M2.7&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;name&#34;</span>: <span style="color:#f1fa8c">&#34;MiniMax M2.7&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;reasoning&#34;</span>: <span style="color:#ff79c6">true</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;input&#34;</span>: [<span style="color:#f1fa8c">&#34;text&#34;</span>, <span style="color:#f1fa8c">&#34;image&#34;</span>],
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;contextWindow&#34;</span>: <span style="color:#bd93f9">204800</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;maxTokens&#34;</span>: <span style="color:#bd93f9">131072</span>
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        ]
 </span></span><span style="display:flex;"><span>      }
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  },
@@ -529,57 +622,28 @@ $(function() {
 </span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;defaults&#34;</span>: {
 </span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;model&#34;</span>: {
 </span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;primary&#34;</span>: <span style="color:#f1fa8c">&#34;minimax/MiniMax-M2.7&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;fallbacks&#34;</span>: [<span style="color:#f1fa8c">&#34;minimax/MiniMax-M2.5-highspeed&#34;</span>]
-</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;fallbacks&#34;</span>: [
+</span></span><span style="display:flex;"><span>          <span style="color:#f1fa8c">&#34;minimax/MiniMax-M2.5-highspeed&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f1fa8c">&#34;gemini/gemini-2.5-flash-preview&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f1fa8c">&#34;nvidia/z-ai/glm-5.1&#34;</span>
+</span></span><span style="display:flex;"><span>        ]
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;imageModel&#34;</span>: { <span style="color:#ff79c6">&#34;primary&#34;</span>: <span style="color:#f1fa8c">&#34;minimax/image-01&#34;</span> },
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;musicGenerationModel&#34;</span>: { <span style="color:#ff79c6">&#34;primary&#34;</span>: <span style="color:#f1fa8c">&#34;minimax/music-2.6&#34;</span> }
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h3 id="minimax-token-plans">MiniMax Token Plans</h3>
-<p>MiniMax offers a <strong>Token Plan</strong> subscription model that bundles requests and model access:</p>
-<table>
-  <thead>
-      <tr>
-          <th>Plan</th>
-          <th>Price</th>
-          <th>M2.7-highspeed</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Basic</td>
-          <td>$10/month</td>
-          <td>4,500 requests/5hrs</td>
-      </tr>
-      <tr>
-          <td>Pro</td>
-          <td>$20/month</td>
-          <td>15,000 requests/5hrs</td>
-      </tr>
-      <tr>
-          <td>Enterprise</td>
-          <td>$50/month</td>
-          <td>30,000 requests/5hrs</td>
-      </tr>
-  </tbody>
-</table>
-<p>On the open pricing model (not subscribed), M2.7 costs:</p>
+</span></span></code></pre></div><p>Several design decisions here are worth calling out:</p>
 <ul>
-<li><strong>$0.30/M input tokens</strong></li>
-<li><strong>$1.20/M output tokens</strong></li>
-<li>Cache read: $0.06/M</li>
+<li><strong><code>authHeader: true</code></strong> instructs OpenClaw to pass the API key as an <code>Authorization: Bearer</code> header, which MiniMax requires for its Anthropic-compatible endpoint</li>
+<li><strong><code>reasoning: true</code></strong> enables chain-of-thought mode on M2.7, which affects both response quality and token consumption; understand the cost trade-off before enabling it for all sessions</li>
+<li><strong>The fallback chain spans providers</strong> — M2.5-highspeed (MiniMax, lower latency), Gemini 2.5 Flash (Google, via Clash proxy), and GLM-5.1 (NVIDIA NIM / Zhipu AI). OpenClaw tries each in order on provider failure or timeout, providing genuine multi-provider resilience without application-layer retry logic</li>
 </ul>
-<p>The Token Plan is worth it if you&rsquo;re a heavy user of coding agents like Claude Code, Cline, or Roo Code that integrate with MiniMax&rsquo;s plan. For occasional use, pay-per-token is more economical.</p>
-<h3 id="models-available">Models Available</h3>
-<p>The setup I run includes:</p>
-<ul>
-<li><strong>MiniMax M2.7</strong> — primary reasoning model (context: 204K, max output: 131K)</li>
-<li><strong>MiniMax M2.5-highspeed</strong> — faster, cheaper fallback</li>
-<li><strong>MiniMax Image-01</strong> — image generation model</li>
-<li><strong>MiniMax Music-2.6</strong> — music generation</li>
-<li><strong>Ollama (local)</strong> — running qwen3.5:4b and ministral-3:3b on a local machine for completely offline inference</li>
-</ul>
-<h3 id="tts-setup">TTS Setup</h3>
-<p>OpenClaw supports TTS via MiniMax&rsquo;s <code>speech-2.8-hd</code> model with voice <code>English_expressive_narrator</code>. Configuration:</p>
+<h3 id="minimax-pricing-model">MiniMax Pricing Model</h3>
+<p>MiniMax offers two consumption models: a <strong>Token Plan</strong> (subscription-based, bundles monthly request allocations) and <strong>pay-per-token</strong> (on-demand, priced per million input/output tokens). Pricing evolves frequently — always check the <a href="https://www.minimaxi.com/en/pricing">MiniMax pricing page</a> for current rates before making a commitment.</p>
+<p>The Token Plan is worth evaluating if you are running heavy coding workloads, particularly where you&rsquo;re also using MiniMax-compatible IDE integrations such as Claude Code, Cline, or Roo Code, and those workloads share the same monthly allocation. For lighter or intermittent use, pay-per-token avoids a fixed monthly commitment.</p>
+<h3 id="tts-image-and-music-generation">TTS, Image, and Music Generation</h3>
+<p>OpenClaw supports multimodal output via MiniMax&rsquo;s extended model suite:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;messages&#34;</span>: {
 </span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;tts&#34;</span>: {
@@ -591,11 +655,7 @@ $(function() {
 </span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>      }
 </span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h3 id="image--music-generation">Image &amp; Music Generation</h3>
-<p>Built-in support via the model config:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  },
 </span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;agents&#34;</span>: {
 </span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;defaults&#34;</span>: {
 </span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;imageModel&#34;</span>: { <span style="color:#ff79c6">&#34;primary&#34;</span>: <span style="color:#f1fa8c">&#34;minimax/image-01&#34;</span> },
@@ -603,169 +663,200 @@ $(function() {
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Both work through the standard tool interface — ask for an image or music generation and the agent dispatches to the appropriate model.</p>
-<h3 id="feishu-lark-integration">Feishu (Lark) Integration</h3>
-<p>OpenClaw supports Feishu (also known as Lark), which is popular in China. The configuration:</p>
+</span></span></code></pre></div><p>All three modalities are dispatched through the standard tool interface — the agent handles routing to the correct model based on the request type.</p>
+<h3 id="wechat-integration">WeChat Integration</h3>
+<p>WeChat is the channel I run in production. OpenClaw connects to WeChat via <a href="https://github.com/openclaw/openclaw-wechat">openclaw-wechat</a>, a community-maintained plugin that bridges the OpenClaw Gateway with WeChat&rsquo;s personal account interface using a local WebSocket relay.</p>
+<p>The channel configuration in <code>openclaw.json</code>:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;channels&#34;</span>: {
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;feishu&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;wechat&#34;</span>: {
 </span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;enabled&#34;</span>: <span style="color:#ff79c6">true</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;appId&#34;</span>: <span style="color:#f1fa8c">&#34;your-app-id&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;appSecret&#34;</span>: <span style="color:#f1fa8c">&#34;your-app-secret&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;connectionMode&#34;</span>: <span style="color:#f1fa8c">&#34;websocket&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;domain&#34;</span>: <span style="color:#f1fa8c">&#34;feishu&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;dmPolicy&#34;</span>: <span style="color:#f1fa8c">&#34;pairing&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;allowFrom&#34;</span>: [<span style="color:#f1fa8c">&#34;ou_xxxxxx&#34;</span>],
-</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;groupPolicy&#34;</span>: <span style="color:#f1fa8c">&#34;open&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;requireMention&#34;</span>: <span style="color:#ff79c6">true</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;dmPolicy&#34;</span>: <span style="color:#f1fa8c">&#34;open&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;groupPolicy&#34;</span>: <span style="color:#f1fa8c">&#34;disabled&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;requireMention&#34;</span>: <span style="color:#ff79c6">false</span>
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>The Feishu integration uses a WebSocket connection mode, which is more efficient than polling. You&rsquo;ll need to create a Feishu app in the <a href="https://open.feishu.cn/">Feishu Open Platform</a> and configure the bot permissions.</p>
-<h3 id="ollama-local-models">Ollama Local Models</h3>
-<p>For completely offline inference, OpenClaw integrates with Ollama:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;models&#34;</span>: {
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;providers&#34;</span>: {
-</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;ollama&#34;</span>: {
-</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;baseUrl&#34;</span>: <span style="color:#f1fa8c">&#34;http://192.168.179.1:11434&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;api&#34;</span>: <span style="color:#f1fa8c">&#34;ollama&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;apiKey&#34;</span>: <span style="color:#f1fa8c">&#34;OLLAMA_API_KEY&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;auth&#34;</span>: <span style="color:#f1fa8c">&#34;token&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;authHeader&#34;</span>: <span style="color:#ff79c6">true</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;models&#34;</span>: [
-</span></span><span style="display:flex;"><span>          {
-</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;id&#34;</span>: <span style="color:#f1fa8c">&#34;qwen3.5:4b&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;name&#34;</span>: <span style="color:#f1fa8c">&#34;qwen3.5:4b&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;input&#34;</span>: [<span style="color:#f1fa8c">&#34;text&#34;</span>, <span style="color:#f1fa8c">&#34;image&#34;</span>],
-</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;contextWindow&#34;</span>: <span style="color:#bd93f9">262144</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;maxTokens&#34;</span>: <span style="color:#bd93f9">8192</span>
-</span></span><span style="display:flex;"><span>          },
-</span></span><span style="display:flex;"><span>          {
-</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;id&#34;</span>: <span style="color:#f1fa8c">&#34;ministral-3:3b&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;name&#34;</span>: <span style="color:#f1fa8c">&#34;ministral-3:3b&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;input&#34;</span>: [<span style="color:#f1fa8c">&#34;text&#34;</span>, <span style="color:#f1fa8c">&#34;image&#34;</span>],
-</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;contextWindow&#34;</span>: <span style="color:#bd93f9">32768</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">&#34;maxTokens&#34;</span>: <span style="color:#bd93f9">8192</span>
-</span></span><span style="display:flex;"><span>          }
-</span></span><span style="display:flex;"><span>        ]
-</span></span><span style="display:flex;"><span>      }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>The Ollama models run locally on your network (in this case at <code>192.168.179.1:11434</code>), providing full privacy for whatever you send to them.</p>
-<h2 id="handling-network-restrictions">Handling Network Restrictions</h2>
-<h3 id="the-corporate-firewall-problem">The Corporate Firewall Problem</h3>
-<p>One of the key lessons learned from my setup: <strong>not all LLM providers are accessible from all networks</strong>.</p>
-<p>During setup, I attempted to configure Google Gemini as a fallback model. Testing revealed that <code>generativelanguage.googleapis.com</code> is unreachable from my network — curl returns exit code 56 (&ldquo;failure in receiving network data&rdquo;), indicating the connection is blocked at the network or ISP level.</p>
-<p>This is a common scenario in corporate environments:</p>
+</span></span></code></pre></div><p>A few operational notes:</p>
 <ul>
-<li>Google domains may be blocked by enterprise firewalls</li>
-<li>Some AI APIs may be restricted by IT policy</li>
-<li>Your proxy (if you have one) may not route certain domains correctly</li>
+<li><strong><code>groupPolicy: &quot;disabled&quot;</code></strong> keeps the agent out of group chats; it only responds in direct messages, which is the right default for a personal assistant</li>
+<li><strong><code>requireMention: false</code></strong> works here because DM context is unambiguous — every message in a DM is addressed to the agent</li>
+<li>WeChat&rsquo;s personal account API is unofficial; the relay depends on maintaining a logged-in WeChat session on the host machine. Treat this as a best-effort integration, not a production-grade channel with stability guarantees</li>
+<li><strong>Add WeChat&rsquo;s domains to <code>NO_PROXY</code></strong> if you have a proxy configured — routing WeChat traffic through a proxy can cause session disruption, particularly for the local relay WebSocket connection</li>
 </ul>
-<h3 id="what-i-tried-proxy-configuration">What I Tried: Proxy Configuration</h3>
-<p>OpenClaw supports HTTP proxy configuration via environment variables. I attempted to route Gemini traffic through a proxy at <code>192.168.179.1:7890</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#6272a4"># In ~/.openclaw/.env</span>
-</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">HTTP_PROXY</span><span style="color:#ff79c6">=</span>http://192.168.179.1:7890
+<h2 id="lessons-learned-network-topology-matters">Lessons Learned: Network Topology Matters</h2>
+<h3 id="understanding-the-vmware-environment">Understanding the VMware Environment</h3>
+<p>My OpenClaw instance runs inside a VMware guest VM. Understanding the network topology is essential for diagnosing connectivity issues — and it is different from what you&rsquo;d encounter on a bare-metal machine or a cloud VM.</p>
+<p>The VMware NAT network in my environment is configured as follows:</p>
+<pre class="mermaid">
+  flowchart TD
+    INET([Internet / External APIs])
+
+    subgraph HOST[&#34;Windows Host — 192.168.179.1 (VMnet8)&#34;]
+        CLASH[&#34;Clash Proxy\n:7890 HTTP proxy\nRule-based outbound routing&#34;]
+    end
+
+    NAT[&#34;VMware NAT Gateway\n192.168.179.2\nDefault route for guest VM&#34;]
+
+    subgraph VM[&#34;Guest VM — Linux (DHCP, 192.168.179.x)&#34;]
+        OC[&#34;OpenClaw Gateway\n:18789&#34;]
+        API[&#34;Outbound LLM API calls\n(MiniMax, Gemini, etc.)&#34;]
+    end
+
+    OC --&gt; API
+    API --&gt;|blocked domains via proxy| CLASH
+    API --&gt;|direct domains e.g. MiniMax| NAT
+    NAT --&gt; INET
+    CLASH --&gt; INET
+    HOST -.-&gt;|VMnet8 bridge| VM
+</pre>
+
+<p>Key addresses:</p>
+<ul>
+<li><strong><code>192.168.179.1</code></strong> — the Windows host, reachable from inside the VM; this is where the Clash proxy runs</li>
+<li><strong><code>192.168.179.2</code></strong> — the VMware NAT gateway, the VM&rsquo;s default route for internet traffic</li>
+<li><strong><code>192.168.179.x</code></strong> — the guest VM&rsquo;s own IP (DHCP-assigned within the VMnet8 subnet)</li>
+</ul>
+<p>Traffic from the guest VM to the internet flows through the NAT gateway (<code>192.168.179.2</code>), which translates it to the host&rsquo;s external IP. The guest VM cannot reach external internet directly — it always goes through the host.</p>
+<h3 id="the-gemini-connectivity-problem">The Gemini Connectivity Problem</h3>
+<p>When I attempted to add Google Gemini as a fallback model, connectivity tests immediately failed:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -v https://generativelanguage.googleapis.com/
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># exit code 56: Failure in receiving network data</span>
+</span></span></code></pre></div><p>Exit code 56 from curl indicates that TCP established but data transfer failed — a pattern consistent with a transparent proxy or firewall dropping traffic after connection. The domain <code>generativelanguage.googleapis.com</code> was unreachable from the VM&rsquo;s network path.</p>
+<p>This is not an OpenClaw issue. It is a network-level block — common in environments where Google API domains are filtered at the ISP or enterprise perimeter level.</p>
+<h3 id="the-proxy-solution-routing-through-clash">The Proxy Solution: Routing Through Clash</h3>
+<p>The host machine runs <strong>Clash</strong>, a rule-based proxy client, which provides outbound internet routing including routing to Google APIs. Since the host is reachable from the guest VM at <code>192.168.179.1</code>, the correct solution is to route the guest&rsquo;s traffic through the Clash proxy on the host.</p>
+<p><strong>OpenClaw proxy configuration</strong> (in <code>~/.openclaw/.env</code>):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">HTTP_PROXY</span><span style="color:#ff79c6">=</span>http://192.168.179.1:7890
 </span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">HTTPS_PROXY</span><span style="color:#ff79c6">=</span>http://192.168.179.1:7890
-</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">NO_PROXY</span><span style="color:#ff79c6">=</span>api.minimaxi.com,api.minimax.chat
-</span></span></code></pre></div><p>However, this approach had two problems:</p>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">NO_PROXY</span><span style="color:#ff79c6">=</span>api.minimaxi.com,api.minimax.chat,localhost,127.0.0.1
+</span></span></code></pre></div><p>Port <code>7890</code> is Clash&rsquo;s default HTTP proxy port. Setting <code>NO_PROXY</code> for MiniMax&rsquo;s domains ensures that traffic already accessible without the proxy does not get unnecessarily routed through it — important both for latency and to avoid Clash routing rules interfering with providers that don&rsquo;t need them.</p>
+<p><strong>But there are two critical constraints to understand:</strong></p>
 <ol>
-<li><strong>The proxy itself couldn&rsquo;t reach Google</strong> — if your proxy&rsquo;s configuration doesn&rsquo;t include Google domains in its routing rules, the connection still fails</li>
-<li><strong>Collateral damage</strong> — other channels like WeChat (Weixin) can be impacted by the proxy, causing connection failures</li>
+<li>
+<p><strong>Clash must have a rule for the target domain.</strong> If Clash&rsquo;s routing rules don&rsquo;t cover <code>generativelanguage.googleapis.com</code> (i.e., no policy routes it through a working upstream), the proxy will fail or produce a different error. Verify in Clash&rsquo;s UI or logs that Google API traffic is being forwarded through an upstream that can reach it.</p>
+</li>
+<li>
+<p><strong>Proxy settings in OpenClaw are global.</strong> OpenClaw does not yet support per-provider proxy configuration. All outbound traffic goes through the same proxy. This creates potential collateral damage: channels like WeChat or Feishu that connect to Chinese-operated services may be inadvertently routed through the proxy, causing unexpected failures. Add all provider domains that do not need proxying to <code>NO_PROXY</code>.</p>
+</li>
 </ol>
-<h3 id="lessons-learned">Lessons Learned</h3>
-<ul>
-<li><strong>Always test connectivity before blaming the application</strong> — use <code>curl</code> to verify if a domain is reachable at all</li>
-<li><strong>Proxy configuration is global</strong> — OpenClaw doesn&rsquo;t yet support per-provider proxy settings; all traffic goes through the same proxy</li>
-<li><strong>Monitor for collateral damage</strong> — changing proxy settings can affect channels you didn&rsquo;t intend to modify</li>
-<li><strong>Fallback to local models</strong> — when cloud APIs are blocked, Ollama models running on your local network provide a working alternative</li>
-</ul>
-<h3 id="current-status">Current Status</h3>
-<p>My current working setup:</p>
-<ul>
-<li>✅ <strong>MiniMax</strong> — primary model, working (API accessible)</li>
-<li>✅ <strong>Ollama local models</strong> — fallback, working (completely offline)</li>
-<li>✅ <strong>Feishu</strong> — channel integration, working</li>
-<li>✅ <strong>WeChat</strong> — channel integration, working</li>
-<li>❌ <strong>Google Gemini</strong> — blocked at network level (Google APIs unreachable)</li>
-<li>⚠️ <strong>Tailscale</strong> — set to <code>off</code> mode (not needed for my use case)</li>
-</ul>
+<h3 id="operational-lessons">Operational Lessons</h3>
+<p><strong>1. Diagnose at the transport layer first.</strong><br>
+Before assuming an application misconfiguration, verify connectivity with <code>curl</code>. Exit code 6 (couldn&rsquo;t resolve host) is DNS. Exit code 7 (connection refused) is a firewall blocking the port. Exit code 56 (recv failure) after a TCP connection means something upstream is intercepting and dropping the stream — almost always a transparent proxy or DPI appliance.</p>
+<p><strong>2. Map your network topology before you configure proxies.</strong><br>
+In a VMware NAT environment, the default gateway (<code>192.168.179.2</code>) is not the proxy — it is the NAT device. The proxy lives on the host (<code>192.168.179.1</code>). Confusing these two addresses is a common source of proxy misconfigurations that are difficult to diagnose because the connection attempt reaches a real host but is rejected or silently dropped.</p>
+<p><strong>3. <code>NO_PROXY</code> is not optional.</strong><br>
+If you route all traffic through a proxy, providers that are already accessible directly will now have their traffic routed through your proxy&rsquo;s upstream — which may have different routing, higher latency, or different TLS behavior. Define <code>NO_PROXY</code> explicitly for every provider domain you don&rsquo;t want proxied.</p>
+<p><strong>4. Proxy configuration is a system-wide change.</strong><br>
+When you set <code>HTTP_PROXY</code> in OpenClaw&rsquo;s environment, every outbound HTTP/HTTPS request from the OpenClaw process is affected — including all channel connections (Feishu, WeChat, Telegram) and all LLM provider calls. Changes here have wide blast radius. Test each channel explicitly after making proxy changes.</p>
+<p><strong>5. Validate Clash&rsquo;s upstream routing.</strong><br>
+A proxy that cannot reach its target is worse than no proxy — it introduces a delay (connect timeout to the proxy, then proxy connection to upstream) before failing. Use Clash&rsquo;s dashboard or logs to confirm that traffic for your target domain is being handled by a working upstream rule, not a fallback that routes it to a dead endpoint.</p>
+<h3 id="current-working-state">Current Working State</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Component</th>
+          <th>Status</th>
+          <th>Notes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>MiniMax M2.7</td>
+          <td>✅ Working</td>
+          <td>Primary model; direct access, no proxy needed</td>
+      </tr>
+      <tr>
+          <td>MiniMax M2.5-highspeed</td>
+          <td>✅ Working</td>
+          <td>First fallback; lower latency, lower cost</td>
+      </tr>
+      <tr>
+          <td>Google Gemini 2.5 Flash</td>
+          <td>✅ Working (via Clash)</td>
+          <td>Second fallback; routes through <code>192.168.179.1:7890</code></td>
+      </tr>
+      <tr>
+          <td>NVIDIA / GLM-5.1</td>
+          <td>✅ Working</td>
+          <td>Third fallback; accessed via NVIDIA NIM endpoint</td>
+      </tr>
+      <tr>
+          <td>WeChat</td>
+          <td>✅ Working</td>
+          <td>Added to <code>NO_PROXY</code>; direct DM channel in production</td>
+      </tr>
+      <tr>
+          <td>Tailscale</td>
+          <td>⚪ Off</td>
+          <td>Not needed for current use case</td>
+      </tr>
+  </tbody>
+</table>
 <h2 id="security-considerations">Security Considerations</h2>
-<h3 id="gateway-bind-configuration">Gateway Bind Configuration</h3>
-<p>Out of the box, OpenClaw defaults to <code>bind: &quot;0.0.0.0:18789&quot;</code> which exposes the API to all network interfaces. This is fine on a home machine but a real security concern on a shared corporate laptop.</p>
-<p><strong>Always set <code>gateway.bind: &quot;loopback&quot;</code> and access remotely via SSH tunnels</strong> unless you&rsquo;re on a trusted network:</p>
+<h3 id="gateway-bind-surface">Gateway Bind Surface</h3>
+<p>The default <code>bind: &quot;0.0.0.0&quot;</code> exposes the Gateway on all network interfaces. On a developer workstation, this means the agent is reachable from any machine on the same network segment. On a corporate network, this is a real exposure: any machine on the VLAN can interact with your agent.</p>
+<p><strong>Always set <code>gateway.bind: &quot;loopback&quot;</code> in any environment you don&rsquo;t fully control:</strong></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
 </span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;gateway&#34;</span>: {
 </span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;bind&#34;</span>: <span style="color:#f1fa8c">&#34;loopback&#34;</span>,
 </span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;port&#34;</span>: <span style="color:#bd93f9">18789</span>
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h3 id="credential-storage">Credential Storage</h3>
-<p>Credentials are stored in plaintext files under <code>~/.openclaw/</code>. This is a known concern — if your machine is compromised, everything is readable. Keep your OpenClaw config directory protected with appropriate file permissions.</p>
-<h3 id="config-auditing">Config Auditing</h3>
-<p>OpenClaw keeps an audit log of config changes at <code>~/.openclaw/logs/config-audit.jsonl</code>. Review this periodically to track what changed and when.</p>
-<h2 id="what-you-can-actually-do-with-it">What You Can Actually Do With It</h2>
-<p>OpenClaw&rsquo;s real value shows up in the workflows people have built:</p>
+</span></span></code></pre></div><p>Remote access should go through SSH tunnel or Tailscale Serve — both provide authenticated, encrypted transport without exposing the port to the broader network. This is not optional hardening; it is the baseline configuration for any non-isolated deployment.</p>
+<h3 id="credential-storage">Credential Storage</h3>
+<p>OpenClaw splits credentials across two files with distinct roles:</p>
 <ul>
-<li><strong>Morning briefings</strong> — agent checks email, calendar, notifications, summarizes into a single message</li>
-<li><strong>Automated triage</strong> — email or Slack messages get categorized and routed</li>
-<li><strong>Coding sessions from a phone</strong> — start a code review or debugging session via WhatsApp</li>
-<li><strong>Heartbeat monitoring</strong> — scheduled checks that alert you when something needs attention</li>
-<li><strong>Fully offline</strong> — if you run Ollama locally, the entire stack works without internet</li>
-<li><strong>Cross-platform access</strong> — Feishu, WeChat, Telegram, Discord — use whatever your team already uses</li>
+<li><strong><code>~/.openclaw/.env</code></strong> — stores actual secret values (API keys, tokens, channel secrets) as environment variables, e.g. <code>MINIMAX_API_KEY=...</code>, <code>WECHAT_TOKEN=...</code></li>
+<li><strong><code>~/.openclaw/openclaw.json</code></strong> — references those variables by name (e.g. <code>&quot;apiKey&quot;: &quot;$MINIMAX_API_KEY&quot;</code>), keeping the config file free of raw secrets and safe to inspect or version-control</li>
 </ul>
-<h2 id="the-corporate-network-problem-why-this-matters">The Corporate Network Problem: Why This Matters</h2>
-<p>Here&rsquo;s the scenario I keep hitting: I&rsquo;m at work, on a machine that can&rsquo;t reach external AI services. Corporate proxy, firewall, data classification — the usual. I want to use AI to help me review code, write documentation, or debug an issue, but I can&rsquo;t ship our proprietary code to a third-party API, and I can&rsquo;t get a cloud AI tool approved in the time I have.</p>
-<p>Before OpenClaw, I&rsquo;d either:</p>
-<ol>
-<li>Do without AI assistance (slow, frustrating)</li>
-<li>Use a local model that barely works for complex tasks (waste of time)</li>
-<li>Screenshot code and use my phone for AI (ridiculous workaround)</li>
-</ol>
-<p><strong>With OpenClaw running locally on my machine:</strong></p>
-<ol>
-<li>I can connect to an LLM that IT <em>has</em> approved (or a local Ollama instance)</li>
-<li>Nothing leaves my machine unless I explicitly push it</li>
-<li>The agent runs 24/7 in the background, proactively checking things without me prompting</li>
-<li>It&rsquo;s accessible from any channel I configure — Slack, WhatsApp, Feishu, Telegram, or just a web UI</li>
-</ol>
-<p>The key insight: <strong>OpenClaw is infrastructure, not just a chatbot</strong>. The fact that it&rsquo;s a persistent background service means it can be proactive. It can check your email every 30 minutes, monitor a CI pipeline, alert you when something breaks — all without you opening a separate app and asking.</p>
-<p>Even in a restricted corporate environment, you can:</p>
-<ul>
-<li>Run Ollama locally for completely offline AI</li>
-<li>Configure the Gateway to bind to loopback only (security-safe)</li>
-<li>Access it via SSH tunnel from your work machine to your home machine running OpenClaw</li>
-<li>Use it as a secure bridge to a cloud LLM you trust for sensitive work</li>
-<li>Use Feishu or WeChat if your team is already on those platforms</li>
-</ul>
+<p>This separation is a sensible operational pattern: <code>.env</code> is the secrets store, <code>openclaw.json</code> is the configuration surface. The practical security posture is still plaintext-on-disk, however — there is no native keychain integration or secrets manager backing either file. Apply filesystem permissions (<code>chmod 600 ~/.openclaw/.env</code>, <code>chmod 700 ~/.openclaw</code>) and treat both files with the same care you&rsquo;d give an SSH private key.</p>
+<h3 id="audit-logging">Audit Logging</h3>
+<p>OpenClaw maintains a config change audit log at <code>~/.openclaw/logs/config-audit.jsonl</code>. Review this file periodically — particularly after system updates or when debugging unexpected behavior — to track configuration drift.</p>
+<h2 id="what-you-can-build-with-it">What You Can Build With It</h2>
+<p>OpenClaw&rsquo;s value comes from combining persistence with proactivity. Below is a mix of verified integrations and high-value patterns currently in the design phase.</p>
+<h3 id="news-digest-auto-push-to-wechat--integration-verified">News Digest Auto-Push to WeChat ✅ Integration Verified</h3>
+<p>This workflow represents the &quot;hello world&quot; of autonomous agents: scheduled retrieval, synthesis, and delivery.</p>
+<p>The agent executes on a 7:00 AM weekday schedule. It leverages the Tavily search skill to aggregate top stories from curated technical sources—engineering blogs, Hacker News, and AI research repositories. It then distills these into a structured digest, providing a high-signal, one-line summary for each item. Finally, it pushes the payload to a designated WeChat account via the <code>openclaw-wechat</code> channel.</p>
+<p>The result is a high-bandwidth, low-noise briefing delivered to the primary messaging app I use, running entirely on local infrastructure. This ensures that personal reading interests and high-value source lists remain private.</p>
+<p>Operationally, the latency is negligible—typically under 30 seconds from trigger to delivery. The implementation requires only a single <code>SKILL.md</code> definition and a standard cron-style heartbeat configuration; no custom code was written to achieve this.</p>
+<h3 id="emerging-patterns-proof-of-concept">Emerging Patterns (Proof-of-Concept)</h3>
+<p>The following scenarios leverage the same architectural primitives and are currently in the design or prototyping phase:</p>
+<p><strong>Automated Incident Response with RCA Drafts.</strong> A heartbeat skill monitors service health. Upon failure, the agent assembles context from runbooks and recent GitHub deployment history to draft a root-cause hypothesis. This is delivered to an engineering group before the primary on-call alert even fires, significantly reducing Mean Time to Repair (MTTR).</p>
+<p><strong>Context-Aware Mobile Code Review.</strong> By querying the agent via WeChat for a specific branch diff, you can receive a structured review based on organizational engineering standards while away from your workstation. This effectively turns your mobile device into a secure bridge to your development environment.</p>
+<p><strong>Release Note Automation.</strong> Triggered by a new Git tag, the agent summarizes the delta between releases, categorizing features and fixes into a formatted changelog for Confluence or internal documentation hubs.</p>
+<h3 id="the-common-pattern">The Common Pattern</h3>
+<p>Every workflow here — whether verified or planned — shares the same structural pattern: a <strong>trigger</strong> (schedule, message, or event), a <strong>context assembly</strong> step (skills + memory), an <strong>LLM reasoning</strong> step, and a <strong>delivery</strong> step to a channel. Once you internalize that pattern, the set of automatable workflows becomes obvious.</p>
+<h2 id="architectural-observations">Architectural Observations</h2>
+<p>Deploying OpenClaw in a production-adjacent environment surfaces several design decisions that warrant closer scrutiny from an infrastructure perspective.</p>
+<p><strong>The Gateway as a normalized control plane is an elegant abstraction.</strong> By decoupling channel-specific transport protocols — whether the Baileys library for WhatsApp, grammY for Telegram, or the community-driven WeChat relay — from the agentic runtime, OpenClaw maintains a strict separation of concerns. This is a classic implementation of the adapter pattern at the infrastructure layer, allowing the core intelligence to remain platform-agnostic while supporting an expansive range of egress points.</p>
+<p><strong>Disk-backed delivery queues provide a necessary reliability primitive.</strong> Messaging platforms are notoriously prone to transient failures, rate limiting, and session expirations. By persisting outbound messages to disk before delivery, OpenClaw ensures that agent responses are not lost during network volatility. This decoupling of message generation from delivery is a hallmark of resilient distributed systems design.</p>
+<p><strong>The Markdown-centric memory model is a high-utility trade-off.</strong> While the absence of a vector database might seem like a limitation, the use of curated, human-readable Markdown files (<code>MEMORY.md</code>) prioritizes auditability and portability. For personal or small-team context, this provides a low-friction &quot;long-term memory&quot; that can be version-controlled and manually corrected—capabilities often lost in opaque embedding-based systems.</p>
+<p><strong>Prompt-injected skills introduce powerful, yet silent, composition challenges.</strong> The <code>SKILL.md</code> mechanism allows for rapid behavior modification by injecting instructions directly into the system prompt. However, as the skill library expands, the risk of &quot;prompt collision&quot;—where instructions from disparate skills contradict or degrade one another—increases. Managing this composition will likely become a primary operational concern as the ecosystem matures.</p>
 <h2 id="practical-takeaways">Practical Takeaways</h2>
-<p>If you&rsquo;re an engineer evaluating OpenClaw, here&rsquo;s what I&rsquo;d tell you:</p>
+<p>For engineers evaluating OpenClaw for internal or professional deployment:</p>
 <ol>
-<li><strong>Start with the CLI</strong> — <code>openclaw help</code> and <code>openclaw status</code> give you a clear picture of what&rsquo;s running</li>
-<li><strong>Pick your model budget</strong> — MiniMax&rsquo;s Token Plan is excellent value for heavy coding workloads; for occasional use, pay-per-token works fine</li>
-<li><strong>Lock down the Gateway config</strong> — set <code>bind: &quot;loopback&quot;</code> and use SSH tunnels for remote access; this isn&rsquo;t optional in any multi-user environment</li>
-<li><strong>Think in workflows, not chat</strong> — the power comes from heartbeat-driven proactive automation, not from typing questions</li>
-<li><strong>Skills are how it grows</strong> — the built-in skills are just the start; when you need something specific to your stack, write a skill for it</li>
-<li><strong>Test your network first</strong> — verify that your LLM provider domains are reachable before assuming it&rsquo;s an application problem</li>
-<li><strong>Keep a local fallback</strong> — Ollama models ensure you always have <em>something</em> working, even when cloud APIs are blocked</li>
+<li><strong>Model selection is the primary architectural driver.</strong> Your choice of provider (and its API compatibility layer) dictates your network topology, latency profile, and cost structure. Always validate the provider&rsquo;s <code>anthropic-messages</code> or <code>openai-compatible</code> compliance before finalizing your <code>openclaw.json</code>.</li>
+<li><strong>Network topology precedes configuration.</strong> In complex environments (e.g., VMware NAT or firewalled corporate subnets), map your traffic flow before troubleshooting application errors. Understanding the relationship between your runtime, your proxy, and your upstream gateway is non-negotiable.</li>
+<li><strong>Enforce <code>loopback</code> binding by default.</strong> Exposing the Gateway on <code>0.0.0.0</code> is an unnecessary security risk in shared environments. Rely on authenticated transport layers—SSH tunnels or Tailscale—for remote management.</li>
+<li><strong>Shift from &quot;Chat&quot; to &quot;Workflow&quot; thinking.</strong> The true utility of a persistent agent lies in proactive, event-driven automation. Design your skills around scheduled heartbeats, webhook triggers, and automated synthesis rather than reactive conversational turns.</li>
+<li><strong>Establish a per-channel testing baseline.</strong> Given the wide blast radius of global proxy settings, verify every active channel (WeChat, CLI, Web UI) independently after any environment variable modification.</li>
 </ol>
-<h2 id="whats-missing">What&rsquo;s Missing</h2>
-<p>OpenClaw is young (late 2025 start) and moves fast. Rough edges:</p>
+<h2 id="observed-gaps">Observed Gaps</h2>
+<p>These are gaps I encountered directly during setup and operation — not speculative concerns.</p>
 <ul>
-<li><strong>Documentation is still catching up</strong> — some features aren&rsquo;t well documented, you end up reading source or Discord threads</li>
-<li><strong>Security model needs care</strong> — plaintext credentials, permissive defaults, no built-in audit logging; treat it like any other privileged service</li>
-<li><strong>No multi-user support by default</strong> — it&rsquo;s designed as a personal assistant; multi-tenant requires explicit workspace separation</li>
-<li><strong>Updates can be breaking</strong> — the project is still in rapid evolution; lock versions if you need stability</li>
-<li><strong>No per-provider proxy configuration</strong> — proxy settings are global; this can be limiting in complex network environments</li>
+<li>
+<p><strong>No per-provider proxy configuration.</strong> All outbound traffic in OpenClaw goes through a single proxy setting. There is no way to route traffic for provider A through a proxy while sending provider B direct. The <code>NO_PROXY</code> workaround covers the immediate need but requires ongoing maintenance as providers change.</p>
+</li>
+<li>
+<p><strong>Credential storage is plaintext.</strong> Despite the <code>.env</code> / <code>openclaw.json</code> split — which is a clean operational pattern — both files store secrets as readable text on disk. There is no integration with system keychains or external secrets managers. File permission discipline (<code>chmod 600 ~/.openclaw/.env</code>) is the only available mitigation.</p>
+</li>
+<li>
+<p><strong>Documentation lags the codebase.</strong> The project moves fast. Several configuration options I encountered during setup were undocumented or documented incorrectly. The Discord community and the TypeScript source were more reliable than the official docs for resolving ambiguities.</p>
+</li>
 </ul>
-<h2 id="the-insight-that-matters">The Insight That Matters</h2>
-<p>OpenClaw&rsquo;s real value proposition isn&rsquo;t &ldquo;another AI chatbot.&rdquo; It&rsquo;s <strong>local-first AI infrastructure</strong> — the idea that AI can run persistently on your hardware, connected to the tools and channels you already use, without your data leaving your control.</p>
-<p>For engineers in corporate environments, this is a genuine unlock. You&rsquo;re not waiting for IT to approve a SaaS tool. You&rsquo;re running AI on hardware you already have, connected to LLMs that may already be approved for your use case.</p>
-<p>The tool is not a toy. It&rsquo;s infrastructure. Treat it that way, understand what it can do, and you&rsquo;ll get real value from it.</p>
 <hr>
-<p><em>OpenClaw is MIT-licensed and available on GitHub. It&rsquo;s built in TypeScript (Node.js) and the codebase is a good reference for understanding how to build agentic systems with tool use, session management, and channel adapters.</em></p>
+<p><em>OpenClaw is MIT-licensed and available on GitHub. It is built in TypeScript on Node.js and the codebase is a well-structured reference for how to build agentic systems with tool use, session management, and multi-channel delivery. The project moves fast — watch the changelog.</em></p>
 
 
                 
@@ -815,7 +906,7 @@ $(function() {
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/post/2026-02-25-how-llm-works/" data-toggle="tooltip" data-placement="top" title="How LLMs Work: An End-to-End Guide from Pre-training to Prediction">&larr;
+                        <a href="/post/openclaw-blog-2026-04-24/" data-toggle="tooltip" data-placement="top" title="Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture">&larr;
                             Previous Post</a>
                     </li>
                     
@@ -910,10 +1001,6 @@ $(function() {
                         
                         
                         
-                        <a href="/tags/devops" title="devops">
-                            devops
-                        </a>
-                        
                         
                         
                         
@@ -968,6 +1055,12 @@ $(function() {
                         
                         
                         
+                        <a href="/tags/minimax" title="minimax">
+                            minimax
+                        </a>
+                        
+                        
+                        
                         
                         
                         
@@ -980,7 +1073,9 @@ $(function() {
                         
                         
                         
-                        
+                        <a href="/tags/open-source" title="open source">
+                            open source
+                        </a>
                         
                         
                         
@@ -996,6 +1091,12 @@ $(function() {
                         
                         <a href="/tags/redis" title="redis">
                             redis
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/self-hosted-llm" title="self-hosted llm">
+                            self-hosted llm
                         </a>
                         
                         
@@ -1049,6 +1150,12 @@ $(function() {
                         </a>
                         
                         
+                        
+                        
+                        
+                        <a href="/tags/wechat-integration" title="wechat integration">
+                            wechat integration
+                        </a>
                         
                         
                     </div>
@@ -1300,6 +1407,15 @@ $(function() {
 
 
 
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"
+          data-cfasync="false" defer></script>
+  <script data-cfasync="false" defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
+    });
+  </script>
 
 </body>
 </html>

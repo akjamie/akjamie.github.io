@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>WeChat Integration on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/wechat-integration/</link>
+    <description>Recent content in WeChat Integration on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 24 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/wechat-integration/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture</title>
+      <link>http://akjamie.github.io/post/2026-04-24-openclaw-self-hosted-ai-agent/</link>
+      <pubDate>Fri, 24 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-04-24-openclaw-self-hosted-ai-agent/</guid>
+      <description>&lt;h1 id=&#34;self-hosting-agentic-ai-a-deep-dive-into-the-openclaw-architecture&#34;&gt;Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture&lt;/h1&gt;&#xA;&lt;h2 id=&#34;what-is-openclaw&#34;&gt;What Is OpenClaw?&lt;/h2&gt;&#xA;&lt;p&gt;&lt;strong&gt;OpenClaw&lt;/strong&gt; is a self-hosted, open-source AI agent runtime built in TypeScript. It is not a chatbot wrapper. It is an &lt;strong&gt;operating system for AI agents&lt;/strong&gt; — a persistent, long-running service that treats AI as infrastructure: session management, long-term memory, tool sandboxing, access control, multi-channel delivery, and orchestration are all first-class architectural concerns.&lt;/p&gt;&#xA;&lt;p&gt;The project was started by Peter Steinberger (founder of PSPDFKit) in late 2025 as a small weekend experiment called &amp;ldquo;Warelay&amp;rdquo; — a WhatsApp relay that forwarded messages to an LLM and returned the response. It went viral in January 2026, generating successive waves of tech press coverage (and two forced rebrands in four days due to trademark conflicts). It is MIT-licensed and the codebase is publicly available on GitHub.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture</title>
+      <link>http://akjamie.github.io/post/openclaw-blog-2026-04-24/</link>
+      <pubDate>Fri, 24 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/openclaw-blog-2026-04-24/</guid>
+      <description>&lt;h1 id=&#34;self-hosting-agentic-ai-a-deep-dive-into-the-openclaw-architecture&#34;&gt;Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture&lt;/h1&gt;&#xA;&lt;h2 id=&#34;what-is-openclaw&#34;&gt;What Is OpenClaw?&lt;/h2&gt;&#xA;&lt;p&gt;&lt;strong&gt;OpenClaw&lt;/strong&gt; is a self-hosted, open-source AI agent runtime built in TypeScript. It is not a chatbot wrapper. It is an &lt;strong&gt;operating system for AI agents&lt;/strong&gt; — a persistent, long-running service that treats AI as infrastructure: session management, long-term memory, tool sandboxing, access control, multi-channel delivery, and orchestration are all first-class architectural concerns.&lt;/p&gt;&#xA;&lt;p&gt;The project was started by Peter Steinberger (founder of PSPDFKit) in late 2025 as a small weekend experiment called &amp;ldquo;Warelay&amp;rdquo; — a WhatsApp relay that forwarded messages to an LLM and returned the response. It went viral in January 2026, generating successive waves of tech press coverage (and two forced rebrands in four days due to trademark conflicts). It is MIT-licensed and the codebase is publicly available on GitHub.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

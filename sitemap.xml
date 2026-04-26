@@ -8,28 +8,37 @@
     <loc>http://akjamie.github.io/categories/ai/</loc>
     <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/categories/</loc>
+    <loc>http://akjamie.github.io/categories/ai-infrastructure/</loc>
     <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/tags/devops/</loc>
+    <loc>http://akjamie.github.io/categories/</loc>
     <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/</loc>
     <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://akjamie.github.io/tags/minimax/</loc>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://akjamie.github.io/tags/open-source/</loc>
-    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/openclaw/</loc>
-    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/post/2026-04-24-openclaw-self-hosted-ai-agent/</loc>
     <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/post/</loc>
     <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://akjamie.github.io/tags/self-hosted-llm/</loc>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/2026-04-24-openclaw-self-hosted-ai-agent/</loc>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/openclaw-blog-2026-04-24/</loc>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://akjamie.github.io/tags/</loc>
+    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/wechat-integration/</loc>
     <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/agi/</loc>
@@ -196,6 +205,9 @@
   </url><url>
     <loc>http://akjamie.github.io/post/2022-05-31-redis-basic-1/</loc>
     <lastmod>2022-05-30T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/devops/</loc>
+    <lastmod>2022-04-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</loc>
     <lastmod>2022-04-12T00:00:00+00:00</lastmod>
