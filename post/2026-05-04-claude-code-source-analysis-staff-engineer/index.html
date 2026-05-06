@@ -481,34 +481,34 @@ $(function() {
 <table>
   <thead>
       <tr>
-          <th>Actor</th>
+          <th style="text-align: left">Actor</th>
           <th>Responsibility</th>
           <th>Implementation</th>
       </tr>
   </thead>
   <tbody>
       <tr>
-          <td><strong>The Brain</strong></td>
+          <td style="text-align: left"><strong>The Brain</strong></td>
           <td>Reasoning, planning, tool selection</td>
           <td>External LLM (Claude API)</td>
       </tr>
       <tr>
-          <td><strong>The Engine</strong></td>
+          <td style="text-align: left"><strong>The Engine</strong></td>
           <td>Run loop, state machine, turn management</td>
           <td><code>src/query.ts</code></td>
       </tr>
       <tr>
-          <td><strong>The Harness</strong></td>
+          <td style="text-align: left"><strong>The Harness</strong></td>
           <td>Tool registry, execution, security boundary</td>
           <td><code>src/tools/</code>, <code>src/Tool.ts</code></td>
       </tr>
       <tr>
-          <td><strong>The Trust Boundary</strong></td>
+          <td style="text-align: left"><strong>The Trust Boundary</strong></td>
           <td>Per-invocation permission verification</td>
           <td><code>bashPermissions.ts</code>, <code>bashSecurity.ts</code></td>
       </tr>
       <tr>
-          <td><strong>The Context</strong></td>
+          <td style="text-align: left"><strong>The Context</strong></td>
           <td>Session state, file caches, abort signals</td>
           <td><code>ToolUseContext</code></td>
       </tr>
