@@ -669,41 +669,41 @@ $(function() {
 <table>
   <thead>
       <tr>
-          <th>Failure Mode</th>
-          <th>Detection</th>
-          <th>Recovery Strategy</th>
+          <th style="text-align: left">Failure Mode</th>
+          <th style="text-align: left">Detection</th>
+          <th style="text-align: left">Recovery Strategy</th>
       </tr>
   </thead>
   <tbody>
       <tr>
-          <td><strong>Prompt too long</strong></td>
-          <td>Token count exceeds model limit</td>
-          <td>Emergency context compaction — summarise oldest messages</td>
+          <td style="text-align: left"><strong>Prompt too long</strong></td>
+          <td style="text-align: left">Token count exceeds model limit</td>
+          <td style="text-align: left">Emergency context compaction — summarise oldest messages</td>
       </tr>
       <tr>
-          <td><strong>Max output tokens</strong></td>
-          <td><code>stop_reason === &quot;max_tokens&quot;</code></td>
-          <td>Retry up to 3× with extended <code>max_tokens</code> budget</td>
+          <td style="text-align: left"><strong>Max output tokens</strong></td>
+          <td style="text-align: left"><code>stop_reason === &quot;max_tokens&quot;</code></td>
+          <td style="text-align: left">Retry up to 3× with extended <code>max_tokens</code> budget</td>
       </tr>
       <tr>
-          <td><strong>Streaming failure</strong></td>
-          <td>Mid-stream network error</td>
-          <td>Tombstone orphaned partial response, reset state, retry with fallback model</td>
+          <td style="text-align: left"><strong>Streaming failure</strong></td>
+          <td style="text-align: left">Mid-stream network error</td>
+          <td style="text-align: left">Tombstone orphaned partial response, reset state, retry with fallback model</td>
       </tr>
       <tr>
-          <td><strong>Tool validation error</strong></td>
-          <td>Zod parse failure</td>
-          <td>Return validation error string — LLM fixes its call format</td>
+          <td style="text-align: left"><strong>Tool validation error</strong></td>
+          <td style="text-align: left">Zod parse failure</td>
+          <td style="text-align: left">Return validation error string — LLM fixes its call format</td>
       </tr>
       <tr>
-          <td><strong>Permission denied</strong></td>
-          <td><code>checkPermissions</code> returns deny</td>
-          <td>Return denial reason string — LLM adapts strategy</td>
+          <td style="text-align: left"><strong>Permission denied</strong></td>
+          <td style="text-align: left"><code>checkPermissions</code> returns deny</td>
+          <td style="text-align: left">Return denial reason string — LLM adapts strategy</td>
       </tr>
       <tr>
-          <td><strong>Tool timeout</strong></td>
-          <td>Command exceeds wall time</td>
-          <td>Auto-background, return background job ID to LLM</td>
+          <td style="text-align: left"><strong>Tool timeout</strong></td>
+          <td style="text-align: left">Command exceeds wall time</td>
+          <td style="text-align: left">Auto-background, return background job ID to LLM</td>
       </tr>
   </tbody>
 </table>
@@ -941,46 +941,46 @@ Partition result:
 <table>
   <thead>
       <tr>
-          <th>Dimension</th>
-          <th>Built-in Tool</th>
-          <th>MCP Tool</th>
+          <th style="text-align: left">Dimension</th>
+          <th style="text-align: left">Built-in Tool</th>
+          <th style="text-align: left">MCP Tool</th>
       </tr>
   </thead>
   <tbody>
       <tr>
-          <td>Registration</td>
-          <td>Compiled into agent</td>
-          <td>Discovered at runtime</td>
+          <td style="text-align: left">Registration</td>
+          <td style="text-align: left">Compiled into agent</td>
+          <td style="text-align: left">Discovered at runtime</td>
       </tr>
       <tr>
-          <td>Schema format</td>
-          <td>Zod (TypeScript-native)</td>
-          <td>JSON Schema (language-agnostic)</td>
+          <td style="text-align: left">Schema format</td>
+          <td style="text-align: left">Zod (TypeScript-native)</td>
+          <td style="text-align: left">JSON Schema (language-agnostic)</td>
       </tr>
       <tr>
-          <td>Execution model</td>
-          <td>In-process function call</td>
-          <td>Cross-process JSON-RPC</td>
+          <td style="text-align: left">Execution model</td>
+          <td style="text-align: left">In-process function call</td>
+          <td style="text-align: left">Cross-process JSON-RPC</td>
       </tr>
       <tr>
-          <td>Language requirement</td>
-          <td>TypeScript</td>
-          <td>Any (Python, Go, Rust, etc.)</td>
+          <td style="text-align: left">Language requirement</td>
+          <td style="text-align: left">TypeScript</td>
+          <td style="text-align: left">Any (Python, Go, Rust, etc.)</td>
       </tr>
       <tr>
-          <td>Latency</td>
-          <td>Microseconds</td>
-          <td>Milliseconds (IPC overhead)</td>
+          <td style="text-align: left">Latency</td>
+          <td style="text-align: left">Microseconds</td>
+          <td style="text-align: left">Milliseconds (IPC overhead)</td>
       </tr>
       <tr>
-          <td>Fault isolation</td>
-          <td>Failure crashes the agent</td>
-          <td>Failure is isolated to the MCP process</td>
+          <td style="text-align: left">Fault isolation</td>
+          <td style="text-align: left">Failure crashes the agent</td>
+          <td style="text-align: left">Failure is isolated to the MCP process</td>
       </tr>
       <tr>
-          <td>When to use</td>
-          <td>Core, security-critical capabilities</td>
-          <td>Domain-specific extensions, third-party integrations</td>
+          <td style="text-align: left">When to use</td>
+          <td style="text-align: left">Core, security-critical capabilities</td>
+          <td style="text-align: left">Domain-specific extensions, third-party integrations</td>
       </tr>
   </tbody>
 </table>
