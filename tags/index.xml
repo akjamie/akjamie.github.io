@@ -6,13 +6,34 @@
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 24 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 04 May 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Agentic AI</title>
       <link>http://akjamie.github.io/tags/agentic-ai/</link>
-      <pubDate>Fri, 24 Apr 2026 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/agentic-ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Agents</title>
+      <link>http://akjamie.github.io/tags/ai-agents/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/ai-agents/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>LLM</title>
+      <link>http://akjamie.github.io/tags/llm/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/llm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Tool Use</title>
+      <link>http://akjamie.github.io/tags/tool-use/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/tool-use/</guid>
       <description></description>
     </item>
     <item>
@@ -72,13 +93,6 @@
       <description></description>
     </item>
     <item>
-      <title>LLM</title>
-      <link>http://akjamie.github.io/tags/llm/</link>
-      <pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/llm/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Transformer</title>
       <link>http://akjamie.github.io/tags/transformer/</link>
       <pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate>
@@ -135,13 +149,6 @@
       <description></description>
     </item>
     <item>
-      <title>AI Agents</title>
-      <link>http://akjamie.github.io/tags/ai-agents/</link>
-      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/ai-agents/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Multi-Agent Systems</title>
       <link>http://akjamie.github.io/tags/multi-agent-systems/</link>
       <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
@@ -153,13 +160,6 @@
       <link>http://akjamie.github.io/tags/prompt-engineering/</link>
       <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/prompt-engineering/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Tool Use</title>
-      <link>http://akjamie.github.io/tags/tool-use/</link>
-      <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/tool-use/</guid>
       <description></description>
     </item>
     <item>

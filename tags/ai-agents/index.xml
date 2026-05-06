@@ -6,8 +6,15 @@
     <description>Recent content in AI Agents on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 11 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 04 May 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/tags/ai-agents/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What Claude Code&#39;s Source Code Taught Me About Building Production AI Agents</title>
+      <link>http://akjamie.github.io/post/2026-05-04-claude-code-source-analysis-staff-engineer/</link>
+      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-05-04-claude-code-source-analysis-staff-engineer/</guid>
+      <description>&lt;h2 id=&#34;why-read-source-code&#34;&gt;Why Read Source Code?&lt;/h2&gt;&#xA;&lt;p&gt;Most writing about AI agents describes patterns in the abstract. Clean Mermaid diagrams, idealised loops, production-sounding words. None of it tells you how the system behaves when the LLM hallucinates a field name, or what happens when a Bash command runs for 20 seconds, or how you prevent a child agent from bankrupting your token budget.&lt;/p&gt;&#xA;&lt;p&gt;I read the source code of Anthropic&amp;rsquo;s &lt;strong&gt;Claude Code&lt;/strong&gt; — a production CLI agent shipped to real engineers daily — and traced every architectural decision back to its implementation. What follows are the patterns worth understanding before you design your next agentic system.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>The Complete Guide to Building Agentic AI Systems: From Basics to Production</title>
       <link>http://akjamie.github.io/post/2025-12-11-build-agentic-ai/</link>

@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="What Claude Code&#39;s Source Code Taught Me About Building Production AI Agents" />
+    <meta property="og:title" content="What Claude Code&#39;s Source Code Taught Me About Building Production AI Agents" />
+    <meta property="twitter:title" content="What Claude Code&#39;s Source Code Taught Me About Building Production AI Agents" />
+    
+
+    
+    <meta name="description" content="A Staff Engineer&#39;s deep-dive into Claude Code&#39;s source code — the architectural patterns, trust boundaries, and self-healing mechanisms that make a production CLI agent work.">
+    <meta property="og:description" content="A Staff Engineer&#39;s deep-dive into Claude Code&#39;s source code — the architectural patterns, trust boundaries, and self-healing mechanisms that make a production CLI agent work." />
+    <meta property="twitter:description" content="A Staff Engineer&#39;s deep-dive into Claude Code&#39;s source code — the architectural patterns, trust boundaries, and self-healing mechanisms that make a production CLI agent work." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-05-04-claude-code-source-analysis-staff-engineer/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>What Claude Code&#39;s Source Code Taught Me About Building Production AI Agents | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-05-04-claude-code-source-analysis-staff-engineer/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/agentic-ai" title="Agentic AI">
+                            Agentic AI
+                        </a>
+                        
+                        <a class="tag" href="/tags/llm" title="LLM">
+                            LLM
+                        </a>
+                        
+                        <a class="tag" href="/tags/ai-agents" title="AI Agents">
+                            AI Agents
+                        </a>
+                        
+                        <a class="tag" href="/tags/tool-use" title="Tool Use">
+                            Tool Use
+                        </a>
+                        
+                    </div>
+                    <h1>What Claude Code&#39;s Source Code Taught Me About Building Production AI Agents</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Monday, May 4, 2026
+                            
+                                <span id="/post/2026-05-04-claude-code-source-analysis-staff-engineer/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h2 id="why-read-source-code">Why Read Source Code?</h2>
+<p>Most writing about AI agents describes patterns in the abstract. Clean Mermaid diagrams, idealised loops, production-sounding words. None of it tells you how the system behaves when the LLM hallucinates a field name, or what happens when a Bash command runs for 20 seconds, or how you prevent a child agent from bankrupting your token budget.</p>
+<p>I read the source code of Anthropic&rsquo;s <strong>Claude Code</strong> — a production CLI agent shipped to real engineers daily — and traced every architectural decision back to its implementation. What follows are the patterns worth understanding before you design your next agentic system.</p>
+<p>This is not a tutorial. This is a design review.</p>
+<hr>
+<h2 id="the-fundamental-inversion-llm-as-control-flow">The Fundamental Inversion: LLM as Control Flow</h2>
+<p>The first mental model shift: <strong>stop thinking of the LLM as a library call</strong>. In a conventional system, your code controls the sequence — you call <code>readFile()</code>, branch on the result, write output. You own the graph.</p>
+<p>In an agentic system, the LLM owns the graph. Your job is to build a safe, observable <strong>harness</strong> that lets the LLM drive execution within bounded constraints.</p>
+<pre class="mermaid">
+  flowchart LR
+    subgraph Conventional[&#34;Conventional Application&#34;]
+        direction LR
+        C1[You] --&gt;|&#34;write code&#34;| C2[Define Steps] --&gt; C3[Execute]
+    end
+
+    subgraph Agentic[&#34;Agentic Application&#34;]
+        direction LR
+        A1[You] --&gt;|&#34;define goal + tools&#34;| A2[LLM&lt;br/&gt;Decides Steps] --&gt;|&#34;tool calls&#34;| A3[Harness&lt;br/&gt;Executes] --&gt;|&#34;tool results&#34;| A2
+        A2 --&gt;|&#34;end_turn&#34;| A4[Done]
+    end
+</pre>
+
+<p>The harness does four things:</p>
+<ol>
+<li>Serialises available tools as JSON schemas for the LLM</li>
+<li>Provides a security boundary between LLM intent and OS execution</li>
+<li>Feeds LLM decisions to the OS and OS results back to the LLM</li>
+<li>Loops until the LLM emits <code>end_turn</code> — or a circuit breaker fires</li>
+</ol>
+<p>The key insight is that <strong>the harness is richer than most frameworks admit</strong>. It includes tool registration, runtime input validation, permission verification, concurrency control, context management, and budget accounting. Everything between the LLM&rsquo;s intent and your machine&rsquo;s reality flows through it.</p>
+<h3 id="the-architectural-actors">The Architectural Actors</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Actor</th>
+          <th>Responsibility</th>
+          <th>Implementation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>The Brain</strong></td>
+          <td>Reasoning, planning, tool selection</td>
+          <td>External LLM (Claude API)</td>
+      </tr>
+      <tr>
+          <td><strong>The Engine</strong></td>
+          <td>Run loop, state machine, turn management</td>
+          <td><code>src/query.ts</code></td>
+      </tr>
+      <tr>
+          <td><strong>The Harness</strong></td>
+          <td>Tool registry, execution, security boundary</td>
+          <td><code>src/tools/</code>, <code>src/Tool.ts</code></td>
+      </tr>
+      <tr>
+          <td><strong>The Trust Boundary</strong></td>
+          <td>Per-invocation permission verification</td>
+          <td><code>bashPermissions.ts</code>, <code>bashSecurity.ts</code></td>
+      </tr>
+      <tr>
+          <td><strong>The Context</strong></td>
+          <td>Session state, file caches, abort signals</td>
+          <td><code>ToolUseContext</code></td>
+      </tr>
+  </tbody>
+</table>
+<pre class="mermaid">
+  graph TB
+    LLM[&#34;🧠 The Brain&lt;br/&gt;(Claude API)&#34;]
+    Engine[&#34;⚙️ The Engine&lt;br/&gt;src/query.ts&lt;br/&gt;Run loop · State machine · Turn mgmt&#34;]
+    Harness[&#34;🔧 The Harness&lt;br/&gt;src/tools/ · src/Tool.ts&lt;br/&gt;Registry · Execution · Security boundary&#34;]
+    Trust[&#34;🛡️ Trust Boundary&lt;br/&gt;bashPermissions.ts · bashSecurity.ts&lt;br/&gt;Per-invocation permission check&#34;]
+    Context[&#34;📦 ToolUseContext&lt;br/&gt;Session state · File caches · Abort signals&#34;]
+    OS[&#34;💻 OS / Environment&#34;]
+
+    LLM --&gt;|&#34;tool_use blocks&#34;| Engine
+    Engine --&gt;|&#34;tool calls&#34;| Harness
+    Harness --&gt;|&#34;validateInput + checkPermissions&#34;| Trust
+    Trust --&gt;|&#34;approved execution&#34;| OS
+    OS --&gt;|&#34;tool results&#34;| Harness
+    Harness --&gt;|&#34;tool_result messages&#34;| Engine
+    Engine --&gt;|&#34;next prompt&#34;| LLM
+    Context -.-&gt;|&#34;injected into every call()&#34;| Harness
+</pre>
+
+<h2 id="the-tool-contract-one-interface-mandatory-compliance">The Tool Contract: One Interface, Mandatory Compliance</h2>
+<p><code>src/Tool.ts</code> is the architectural keystone. Every tool — built-in, MCP-bridged, or sub-agent — implements the same interface:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#ff79c6">export</span> <span style="color:#ff79c6">type</span> Tool&lt;<span style="color:#ff79c6">Input</span> <span style="color:#50fa7b">extends</span> <span style="color:#50fa7b">ZodType</span>, <span style="color:#50fa7b">Output</span>, <span style="color:#50fa7b">P</span> <span style="color:#50fa7b">extends</span> <span style="color:#50fa7b">ToolPermissions</span>&gt; <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">readonly</span> name: <span style="color:#8be9fd">string</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">readonly</span> description: <span style="color:#8be9fd">string</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">readonly</span> inputSchema: <span style="color:#8be9fd">Input</span>                          <span style="color:#6272a4">// Zod schema
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>  call(
+</span></span><span style="display:flex;"><span>    args: <span style="color:#8be9fd">z.infer</span>&lt;<span style="color:#ff79c6">Input</span>&gt;,
+</span></span><span style="display:flex;"><span>    context: <span style="color:#8be9fd">ToolUseContext</span>,
+</span></span><span style="display:flex;"><span>    canUseTool: <span style="color:#8be9fd">CanUseToolFn</span>,
+</span></span><span style="display:flex;"><span>    parentMessage: <span style="color:#8be9fd">AssistantMessage</span>
+</span></span><span style="display:flex;"><span>  )<span style="color:#ff79c6">:</span> Promise&lt;<span style="color:#ff79c6">ToolResult</span>&lt;<span style="color:#ff79c6">Output</span>&gt;&gt;
+</span></span><span style="display:flex;"><span>  checkPermissions(input: <span style="color:#8be9fd">z.infer</span>&lt;<span style="color:#ff79c6">Input</span>&gt;, context: <span style="color:#8be9fd">ToolUseContext</span>)<span style="color:#ff79c6">:</span> Promise&lt;<span style="color:#ff79c6">PermissionResult</span>&gt;
+</span></span><span style="display:flex;"><span>  validateInput<span style="color:#ff79c6">?</span>(input: <span style="color:#8be9fd">z.infer</span>&lt;<span style="color:#ff79c6">Input</span>&gt;, context: <span style="color:#8be9fd">ToolUseContext</span>)<span style="color:#ff79c6">:</span> Promise&lt;<span style="color:#ff79c6">ValidationResult</span>&gt;
+</span></span><span style="display:flex;"><span>  isReadOnly(input: <span style="color:#8be9fd">z.infer</span>&lt;<span style="color:#ff79c6">Input</span>&gt;)<span style="color:#ff79c6">:</span> <span style="color:#ff79c6">boolean</span>
+</span></span><span style="display:flex;"><span>  isConcurrencySafe(input: <span style="color:#8be9fd">z.infer</span>&lt;<span style="color:#ff79c6">Input</span>&gt;)<span style="color:#ff79c6">:</span> <span style="color:#ff79c6">boolean</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Two design decisions here are worth discussing individually.</p>
+<h3 id="zod-schema-as-both-validation-and-documentation">Zod: Schema as Both Validation and Documentation</h3>
+<p>In most systems, validation logic and API documentation are separate artifacts that drift apart. The <code>inputSchema</code> field eliminates that drift by doing double duty:</p>
+<ol>
+<li><strong>Runtime validation</strong> — Zod validates the LLM&rsquo;s JSON before any business logic runs</li>
+<li><strong>LLM documentation</strong> — Zod schemas are serialised to JSON Schema and sent in the system prompt as the tool&rsquo;s &ldquo;instruction manual&rdquo;</li>
+</ol>
+<p>The <code>.describe()</code> strings on individual fields are not comments for humans. They are <strong>prompts for the LLM</strong>. When you write:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#ff79c6">const</span> BashInput <span style="color:#ff79c6">=</span> z.strictObject({
+</span></span><span style="display:flex;"><span>  command: <span style="color:#8be9fd">z.string</span>()
+</span></span><span style="display:flex;"><span>    .describe(<span style="color:#f1fa8c">&#39;The bash command to execute. Avoid interactive commands.&#39;</span>),
+</span></span><span style="display:flex;"><span>  timeout: <span style="color:#8be9fd">z.number</span>().optional()
+</span></span><span style="display:flex;"><span>    .describe(<span style="color:#f1fa8c">`Timeout in milliseconds. Max: </span><span style="color:#f1fa8c">${</span>getMaxTimeoutMs()<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">. Default: 30000.`</span>),
+</span></span><span style="display:flex;"><span>  description: <span style="color:#8be9fd">z.string</span>()
+</span></span><span style="display:flex;"><span>    .describe(<span style="color:#f1fa8c">&#39;One-sentence explanation of what this command does, shown to the user.&#39;</span>),
+</span></span><span style="display:flex;"><span>})
+</span></span></code></pre></div><p>&hellip;the LLM reads those descriptions when deciding how to call the tool. <code>z.strictObject()</code> rejects any extra field the LLM hallucinates — so if the LLM sends <code>{ command: &quot;ls&quot;, workdir: &quot;/tmp&quot; }</code>, validation fails before any permission check or execution attempt.</p>
+<p><strong>Practical implication:</strong> When building tools, treat <code>.describe()</code> as a micro-prompt. Be precise about types, ranges, and failure modes. Ambiguous descriptions produce ambiguous LLM calls.</p>
+<pre class="mermaid">
+  flowchart LR
+    ZodSchema[&#34;Zod Schema&lt;br/&gt;inputSchema&#34;]
+
+    ZodSchema --&gt;|&#34;serialised to JSON Schema&#34;| LLMDoc[&#34;LLM Documentation&lt;br/&gt;(sent in system prompt)&lt;br/&gt;Tells LLM how to call the tool&#34;]
+    ZodSchema --&gt;|&#34;z.infer + parse()&#34;| RuntimeVal[&#34;Runtime Validation&lt;br/&gt;Rejects hallucinated fields&lt;br/&gt;Wrong types caught before execution&#34;]
+
+    LLMDoc --&gt; LLM[&#34;LLM generates&lt;br/&gt;correct tool call&#34;]
+    RuntimeVal --&gt;|&#34;parse failure → error string&#34;| LLM
+</pre>
+
+<h3 id="fail-closed-defaults-via-buildtool">Fail-Closed Defaults via <code>buildTool()</code></h3>
+<p><code>buildTool()</code> is a factory function that enforces safe defaults:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#ff79c6">const</span> TOOL_DEFAULTS <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>  isConcurrencySafe<span style="color:#ff79c6">:</span> () <span style="color:#ff79c6">=&gt;</span> <span style="color:#ff79c6">false</span>,  <span style="color:#6272a4">// Assume NOT parallelisable — conservative
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>  isReadOnly<span style="color:#ff79c6">:</span>        () <span style="color:#ff79c6">=&gt;</span> <span style="color:#ff79c6">false</span>,  <span style="color:#6272a4">// Assume writes data — triggers stricter perms
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>  isDestructive<span style="color:#ff79c6">:</span>     () <span style="color:#ff79c6">=&gt;</span> <span style="color:#ff79c6">false</span>,
+</span></span><span style="display:flex;"><span>  checkPermissions<span style="color:#ff79c6">:</span>  (input) <span style="color:#ff79c6">=&gt;</span> Promise.resolve({ behavior<span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#39;allow&#39;</span>, updatedInput: <span style="color:#8be9fd">input</span> }),
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>isReadOnly</code> defaults to <code>false</code>. If a developer writes a tool that&rsquo;s actually read-only but forgets to set this, the system treats it as a write operation and may prompt the user for confirmation. The failure mode is <strong>friction, not a security hole</strong>. Design your permission systems with the same asymmetry: the cost of a false positive (unnecessary prompt) is always lower than the cost of a false negative (unintended destructive action).</p>
+<hr>
+<h2 id="dependency-injection-without-a-framework">Dependency Injection Without a Framework</h2>
+<p>No DI container. Instead, a single <code>ToolUseContext</code> object is threaded through every <code>call()</code> invocation:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#ff79c6">export</span> <span style="color:#ff79c6">type</span> ToolUseContext <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>  options<span style="color:#ff79c6">:</span> {
+</span></span><span style="display:flex;"><span>    tools: <span style="color:#8be9fd">Tools</span>
+</span></span><span style="display:flex;"><span>    mcpClients: <span style="color:#8be9fd">MCPServerConnection</span>[]
+</span></span><span style="display:flex;"><span>    mainLoopModel: <span style="color:#8be9fd">string</span>
+</span></span><span style="display:flex;"><span>    thinkingConfig: <span style="color:#8be9fd">ThinkingConfig</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  abortController: <span style="color:#8be9fd">AbortController</span>
+</span></span><span style="display:flex;"><span>  getAppState()<span style="color:#ff79c6">:</span> AppState
+</span></span><span style="display:flex;"><span>  setAppState(f<span style="color:#ff79c6">:</span> (prev: <span style="color:#8be9fd">AppState</span>) <span style="color:#ff79c6">=&gt;</span> AppState)<span style="color:#ff79c6">:</span> <span style="color:#ff79c6">void</span>
+</span></span><span style="display:flex;"><span>  readFileState: <span style="color:#8be9fd">FileStateCache</span>
+</span></span><span style="display:flex;"><span>  messages: <span style="color:#8be9fd">Message</span>[]
+</span></span><span style="display:flex;"><span>  agentId: <span style="color:#8be9fd">AgentId</span> <span style="color:#ff79c6">|</span> <span style="color:#ff79c6">null</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>When a child agent is spawned, <code>runAgent.ts</code> creates a new context with:</p>
+<ul>
+<li>An <strong>isolated <code>AbortController</code></strong> — aborting the child doesn&rsquo;t propagate to the parent</li>
+<li>A <strong>cloned <code>readFileState</code></strong> — the child&rsquo;s file-read cache is independent</li>
+<li>A <strong>no-op <code>setAppState</code></strong> — the child cannot mutate the parent&rsquo;s global UI state</li>
+<li>An <strong>empty <code>messages</code> array</strong> — fresh history, no inherited conversation</li>
+</ul>
+<p>This achieves process-level isolation semantics without actually forking a process. When evaluating agent frameworks, ask: &ldquo;How does this framework isolate child agent state?&rdquo; The answer tells you a lot about how the system will behave under failures.</p>
+<hr>
+<h2 id="the-run-loop-self-healing-by-design">The Run Loop: Self-Healing by Design</h2>
+<p><code>src/query.ts</code> (~1,700 lines) contains the core <code>while(true)</code> loop. Each iteration follows this sequence:</p>
+<pre class="mermaid">
+  sequenceDiagram
+    participant Engine as Run Loop (query.ts)
+    participant API as Claude API
+    participant TP as Tool Partitioner
+    participant TE as Tool Executor
+    participant CB as Circuit Breaker
+
+    loop Each Turn
+        Engine-&gt;&gt;Engine: Pre-process messages&lt;br/&gt;(compact context, truncate oversized results)
+        Engine-&gt;&gt;API: callModel() — stream request
+        API--&gt;&gt;Engine: Stream response (tool_use blocks)
+        Engine-&gt;&gt;TP: partitionToolCalls(blocks)
+        TP--&gt;&gt;Engine: Batches [parallel] [serial] [parallel]
+        Engine-&gt;&gt;TE: Execute batches
+        TE--&gt;&gt;Engine: tool_results (incl. errors as strings)
+        Engine-&gt;&gt;CB: Check turnCount, token budget
+        CB--&gt;&gt;Engine: Continue / Exit
+        alt stop_reason == end_turn
+            Engine--&gt;&gt;Engine: Exit — return final answer
+        else budget exceeded
+            Engine--&gt;&gt;Engine: Exit — budget error
+        else tool_results present
+            Engine--&gt;&gt;Engine: Re-enter loop
+        end
+    end
+</pre>
+
+<h3 id="the-critical-pattern-errors-as-llm-input">The Critical Pattern: Errors as LLM Input</h3>
+<p>In a conventional application, exceptions propagate up the call stack to a global error handler. In an agent loop, this is wrong. If <code>FileReadTool</code> throws because the path doesn&rsquo;t exist, catching the exception and returning HTTP 500 terminates the agent&rsquo;s ability to recover.</p>
+<p>The correct model: <strong>catch every tool error and return it as a string in the <code>tool_result</code></strong>. The LLM reads the error and decides its next action — try a different path, ask the user, or give up gracefully.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#6272a4">// Wrong: exception terminates the loop
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#ff79c6">async</span> call(args, context)<span style="color:#ff79c6">:</span> Promise&lt;<span style="color:#ff79c6">ToolResult</span>&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">const</span> content <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> fs.readFile(args.path)  <span style="color:#6272a4">// throws if not found → agent dies
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>  <span style="color:#ff79c6">return</span> { data: <span style="color:#8be9fd">content</span> }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Right: error becomes LLM input
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#ff79c6">async</span> call(args, context)<span style="color:#ff79c6">:</span> Promise&lt;<span style="color:#ff79c6">ToolResult</span>&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">try</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">const</span> content <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> fs.readFile(args.path)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> { data: <span style="color:#8be9fd">content</span> }
+</span></span><span style="display:flex;"><span>  } <span style="color:#ff79c6">catch</span> (err) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> {
+</span></span><span style="display:flex;"><span>      data<span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">`Error reading file: </span><span style="color:#f1fa8c">${</span>err.message<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">. Check that the path exists and is accessible.`</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The loop then sees a <code>tool_result</code> with error content, and the LLM&rsquo;s next turn can self-correct. This is what &ldquo;self-healing&rdquo; actually means in practice — not magic, just structured error feedback.</p>
+<h3 id="failure-recovery-patterns">Failure Recovery Patterns</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Failure Mode</th>
+          <th>Detection</th>
+          <th>Recovery Strategy</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Prompt too long</strong></td>
+          <td>Token count exceeds model limit</td>
+          <td>Emergency context compaction — summarise oldest messages</td>
+      </tr>
+      <tr>
+          <td><strong>Max output tokens</strong></td>
+          <td><code>stop_reason === &quot;max_tokens&quot;</code></td>
+          <td>Retry up to 3× with extended <code>max_tokens</code> budget</td>
+      </tr>
+      <tr>
+          <td><strong>Streaming failure</strong></td>
+          <td>Mid-stream network error</td>
+          <td>Tombstone orphaned partial response, reset state, retry with fallback model</td>
+      </tr>
+      <tr>
+          <td><strong>Tool validation error</strong></td>
+          <td>Zod parse failure</td>
+          <td>Return validation error string — LLM fixes its call format</td>
+      </tr>
+      <tr>
+          <td><strong>Permission denied</strong></td>
+          <td><code>checkPermissions</code> returns deny</td>
+          <td>Return denial reason string — LLM adapts strategy</td>
+      </tr>
+      <tr>
+          <td><strong>Tool timeout</strong></td>
+          <td>Command exceeds wall time</td>
+          <td>Auto-background, return background job ID to LLM</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="circuit-breakers">Circuit Breakers</h3>
+<p><code>turnCount</code> is incremented on every loop iteration. When <code>turnCount &gt;= maxTurns</code>, the loop exits with a budget-exceeded error. Token cost is tracked cumulatively; when projected cost exceeds the session budget, the loop exits. These are non-negotiable termination conditions — <strong>no agent should run to infinity</strong>.</p>
+<p>When designing your own agent, set <code>maxTurns</code> conservatively in development and raise it only after observing real completion distributions. An agent that reliably completes in 15 turns doesn&rsquo;t need a 200-turn budget — and an unbounded budget is an unbounded cost exposure.</p>
+<hr>
+<h2 id="tool-orchestration-concurrency-as-a-per-invocation-property">Tool Orchestration: Concurrency as a Per-Invocation Property</h2>
+<p>When the LLM returns multiple <code>tool_use</code> blocks in a single response, <code>partitionToolCalls()</code> splits them into execution batches. The critical insight: <strong>concurrency safety is a property of a specific invocation, not of a tool type</strong>.</p>
+<p><code>BashTool.isConcurrencySafe(input)</code> receives the actual arguments and analyses the shell command. <code>ls /tmp</code> is concurrent-safe. <code>rm -rf /tmp/build</code> is not. The same <code>BashTool</code> instance produces different answers depending on what command it&rsquo;s been asked to run.</p>
+<pre tabindex="0"><code>LLM response:  [FileRead(&#34;a.ts&#34;), FileRead(&#34;b.ts&#34;), Bash(&#34;mkdir dist&#34;), FileRead(&#34;c.ts&#34;)]
+
+Partition result:
+  Batch 1 (parallel):  FileRead(&#34;a.ts&#34;), FileRead(&#34;b.ts&#34;)   → isConcurrencySafe = true
+  Batch 2 (serial):    Bash(&#34;mkdir dist&#34;)                    → isConcurrencySafe = false
+  Batch 3 (parallel):  FileRead(&#34;c.ts&#34;)                      → isConcurrencySafe = true
+</code></pre><pre class="mermaid">
+  flowchart TD
+    LLM[&#34;LLM Response&lt;br/&gt;[FileRead(a.ts), FileRead(b.ts), Bash(mkdir dist), FileRead(c.ts)]&#34;]
+    Part[&#34;partitionToolCalls()&lt;br/&gt;isConcurrencySafe(input) per block&#34;]
+
+    LLM --&gt; Part
+
+    Part --&gt; B1[&#34;Batch 1 — Parallel ✅&lt;br/&gt;FileRead(a.ts)&lt;br/&gt;FileRead(b.ts)&#34;]
+    B1 --&gt; B2[&#34;Batch 2 — Serial 🔒&lt;br/&gt;Bash(mkdir dist)&lt;br/&gt;isConcurrencySafe = false&#34;]
+    B2 --&gt; B3[&#34;Batch 3 — Parallel ✅&lt;br/&gt;FileRead(c.ts)&#34;]
+
+    B1 -.-&gt;|&#34;same tool type,&lt;br/&gt;different safety&#34;| Note[&#34;⚠️ Safety is per-invocation,&lt;br/&gt;not per-tool-type&#34;]
+    B2 -.-&gt; Note
+</pre>
+
+<p>This means your tool interface must accept <code>input</code> as a parameter to <code>isConcurrencySafe()</code>. A simple <code>isReadOnly: boolean</code> field on the tool definition is insufficient — it loses the information needed to make correct concurrency decisions.</p>
+<h3 id="streamingtoolexecutor-latency-hiding">StreamingToolExecutor: Latency Hiding</h3>
+<p>A more sophisticated executor starts tool execution <strong>while the LLM is still streaming</strong>. When the LLM emits a complete <code>tool_use</code> block early in its stream, the file read or API call begins immediately. By the time the stream ends and subsequent tool blocks are decoded, earlier results are often already available.</p>
+<pre class="mermaid">
+  gantt
+    title StreamingToolExecutor — Latency Hiding
+    dateFormat  s
+    axisFormat %Ss
+
+    section LLM Stream
+    Stream tool_use block 1   :stream1, 0, 1s
+    Stream tool_use block 2   :stream2, after stream1, 1s
+    Stream tool_use block 3   :stream3, after stream2, 1s
+    Stream end_turn           :done, after stream3, 0.5s
+
+    section Tool Execution
+    FileRead(a.ts) — starts on decode  :crit, exec1, 0, 1.5s
+    FileRead(b.ts) — starts on decode  :exec2, 1, 1.5s
+    Bash(mkdir dist) — starts after stream ends :exec3, after done, 1s
+</pre>
+
+<p>When a Bash tool errors during parallel execution, the executor <strong>cancels all sibling Bash tools</strong>. Shell commands frequently have implicit dependencies (<code>mkdir dir &amp;&amp; cd dir</code>). If <code>mkdir</code> fails, sibling commands that assumed the directory exists should not proceed. Other tool types (FileRead, FileWrite) are not cancelled — their failures are isolated.</p>
+<hr>
+<h2 id="bashtool-1100-lines-of-defensive-engineering">BashTool: 1,100 Lines of Defensive Engineering</h2>
+<p><code>BashTool</code> is the most complex built-in tool in the codebase. The complexity is not accidental — shell execution is the highest-risk surface in the system.</p>
+<h3 id="why-regex-validation-fails">Why Regex Validation Fails</h3>
+<p>Naive implementations validate shell commands with regular expressions: block if the string contains <code>rm -rf</code>, allow otherwise. This fails against trivial obfuscation:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>r<span style="color:#f1fa8c">\m</span> -rf /          <span style="color:#6272a4"># Backslash in command name</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;rm&#34;</span> -rf /         <span style="color:#6272a4"># Quoted command name</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">$(</span><span style="color:#8be9fd;font-style:italic">echo</span> rm<span style="color:#ff79c6">)</span> -rf /   <span style="color:#6272a4"># Command substitution</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">eval</span> <span style="color:#ff79c6">$(</span><span style="color:#8be9fd;font-style:italic">echo</span> <span style="color:#f1fa8c">&#34;rm -rf /&#34;</span><span style="color:#ff79c6">)</span>  <span style="color:#6272a4"># eval bypass</span>
+</span></span></code></pre></div><p>Claude Code uses <strong>Tree-sitter</strong> (<code>tree-sitter-bash</code>) to parse commands into a full AST. The security engine then:</p>
+<ol>
+<li>Walks the AST to identify <code>CommandSubstitution</code> and <code>ProcessSubstitution</code> nodes (dynamic execution)</li>
+<li>Strips wrapper commands (<code>timeout</code>, <code>nice</code>, <code>nohup</code>, <code>env</code>) to reveal the underlying command</li>
+<li>Decomposes compound commands (<code>cmd1 &amp;&amp; cmd2 | cmd3</code>) into individually-validated leaf nodes</li>
+<li>Validates each leaf independently against the allow/deny policy</li>
+</ol>
+<pre class="mermaid">
+  flowchart TD
+    Input[&#34;Shell Command String&lt;br/&gt;e.g. eval $(echo &#39;rm -rf /&#39;)&#34;]
+    TS[&#34;Tree-sitter Parser&lt;br/&gt;tree-sitter-bash&#34;]
+    AST[&#34;Abstract Syntax Tree&lt;br/&gt;CommandSubstitution&lt;br/&gt;└── ProcessSubstitution&lt;br/&gt;    └── rm -rf /&#34;]
+
+    Input --&gt; TS --&gt; AST
+
+    AST --&gt; Strip[&#34;Strip Wrapper Commands&lt;br/&gt;timeout / nice / nohup / env&#34;]
+    Strip --&gt; Decomp[&#34;Decompose Compound Commands&lt;br/&gt;cmd1 &amp;&amp; cmd2 | cmd3 → leaf nodes&#34;]
+    Decomp --&gt; Validate[&#34;Validate Each Leaf&lt;br/&gt;against allow / deny policy&#34;]
+
+    Validate --&gt; Allow[&#34;✅ ALLOW&lt;br/&gt;matches safe pattern&#34;]
+    Validate --&gt; Deny[&#34;❌ DENY&lt;br/&gt;destructive node detected&#34;]
+    Validate --&gt; Prompt[&#34;⚠️ PROMPT USER&lt;br/&gt;novel command, no match&#34;]
+
+    Regex[&#34;❌ Regex approach:&lt;br/&gt;r\\m / $(echo rm)&lt;br/&gt;easily bypasses string match&#34;] -.-&gt;|&#34;fails against&#34;| Input
+</pre>
+
+<p><strong>Design lesson:</strong> Any security control built on regex pattern matching for shell commands will eventually be bypassed. AST-level analysis is the correct abstraction for this problem. If you&rsquo;re building an agent that executes shell commands, Tree-sitter integration is not optional.</p>
+<h3 id="output-truncation-with-graceful-degradation">Output Truncation with Graceful Degradation</h3>
+<p>A command that emits 2MB of output would fill the LLM&rsquo;s context window and make the token budget unusable. <code>BashTool</code> enforces <code>maxResultSizeChars</code> (30,000 characters). When output exceeds this limit:</p>
+<ol>
+<li>Output is truncated at the limit</li>
+<li>The full output is persisted to <code>/tool-results/{uuid}.txt</code></li>
+<li>The LLM receives the truncated output plus: <em>&ldquo;Output truncated. Full output saved to /tool-results/{uuid}.txt. Use grep or head to inspect specific sections.&rdquo;</em></li>
+</ol>
+<p>This design is worth noting: the LLM is not simply told &ldquo;output was truncated.&rdquo; It&rsquo;s given a recoverable path — the full file path and a suggested approach. The agent can continue working without losing access to the complete output.</p>
+<h3 id="auto-backgrounding-long-running-commands">Auto-Backgrounding Long-Running Commands</h3>
+<p>Commands that block for more than 15 seconds are automatically detached to prevent UI freeze. The LLM receives:</p>
+<blockquote>
+<p><em>&ldquo;Command exceeded the blocking budget (15s) and was moved to the background. Background job ID: bg-{uuid}. Use <code>bg_result(bg-{uuid})</code> to retrieve output when ready.&rdquo;</em></p>
+</blockquote>
+<p>The LLM can then either poll for the result or continue with other tasks. This is essentially cooperative async scheduling imposed on a synchronous command execution model.</p>
+<hr>
+<h2 id="the-permission-system-trust-boundaries-that-compose">The Permission System: Trust Boundaries That Compose</h2>
+<p>Every tool invocation passes through two distinct phases before execution:</p>
+<p><strong>Phase 1 — <code>validateInput()</code></strong>: Logical validation. Is the path syntactically valid? Is the timeout within range? Does the target directory exist? Returns a string error the LLM can correct.</p>
+<p><strong>Phase 2 — <code>checkPermissions()</code></strong>: Trust validation. Has the user consented to this action? Does this command match an allow-list rule? Is this a destructive operation in a protected path? Returns allow/deny with a reason string.</p>
+<p>These phases are deliberately separate. A validation error means the LLM made a formatting mistake it can fix. A permission denial means the user hasn&rsquo;t consented to this class of action — the LLM needs a different strategy, not a reformatted call.</p>
+<pre class="mermaid">
+  flowchart TD
+    Invoke[&#34;Tool Invocation&lt;br/&gt;LLM emits tool_use block&#34;]
+
+    Invoke --&gt; V[&#34;Phase 1 — validateInput()&lt;br/&gt;Logical correctness&lt;br/&gt;Path valid? Timeout in range?&lt;br/&gt;Target exists?&#34;]
+
+    V --&gt;|&#34;❌ Validation error&#34;| VErr[&#34;Return error string to LLM&lt;br/&gt;LLM fixes formatting&lt;br/&gt;and retries&#34;]
+
+    V --&gt;|&#34;✅ Valid&#34;| P[&#34;Phase 2 — checkPermissions()&lt;br/&gt;Trust verification&lt;br/&gt;User consented? Allow-list match?&lt;br/&gt;Destructive op in protected path?&#34;]
+
+    P --&gt;|&#34;❌ Denied&#34;| PErr[&#34;Return denial reason to LLM&lt;br/&gt;LLM changes strategy&lt;br/&gt;(not reformatting — rethinking)&#34;]
+
+    P --&gt;|&#34;✅ Approved&#34;| Exec[&#34;Execute Tool&lt;br/&gt;call(args, context)&#34;]
+
+    Exec --&gt;|&#34;✅ Success&#34;| Result[&#34;tool_result → LLM&#34;]
+    Exec --&gt;|&#34;❌ Runtime error&#34;| ErrStr[&#34;Caught → error string → LLM&lt;br/&gt;Self-correction preserved&#34;]
+
+    style VErr fill:#fde8e8,stroke:#e53e3e
+    style PErr fill:#fde8e8,stroke:#e53e3e
+    style ErrStr fill:#fef3cd,stroke:#d69e2e
+    style Result fill:#e6f4ea,stroke:#38a169
+</pre>
+
+<h3 id="the-hybrid-permission-model">The Hybrid Permission Model</h3>
+<p>Naive permission systems use exact-match allow/deny lists. This creates two failure modes: overly restrictive (every new command prompts the user) or overly permissive (allow-all with a few denies). Claude Code uses a three-tier hybrid:</p>
+<ol>
+<li>
+<p><strong>Fast path — explicit allow/deny lists</strong>: Known-safe commands (e.g., <code>git:status</code>, <code>npm:install</code>) are auto-allowed. Known-dangerous patterns are auto-denied. This handles ~70% of commands with no latency.</p>
+</li>
+<li>
+<p><strong>Heuristic classifier</strong>: For commands that don&rsquo;t match explicit rules, the AST is normalised and checked against learned patterns. This handles common-but-not-whitelisted commands without prompting the user.</p>
+</li>
+<li>
+<p><strong>User prompt</strong>: Only for genuinely novel commands that don&rsquo;t match any heuristic. The user sees the parsed intent, not the raw command string.</p>
+</li>
+</ol>
+<p>Without tier 2, every unfamiliar command would reach tier 3 — and <strong>permission fatigue is a real security risk</strong>. Users who are prompted too frequently begin approving requests without reading them.</p>
+<pre class="mermaid">
+  flowchart TD
+    Cmd[&#34;Incoming Command&lt;br/&gt;(AST-parsed)&#34;]
+
+    Cmd --&gt; T1{&#34;Tier 1&lt;br/&gt;Explicit Allow / Deny List&lt;br/&gt;~70% of commands&#34;}
+    T1 --&gt;|&#34;Known safe&lt;br/&gt;git:status, npm:install&#34;| Allow1[&#34;✅ Auto-ALLOW&lt;br/&gt;Zero latency&#34;]
+    T1 --&gt;|&#34;Known dangerous&lt;br/&gt;rm -rf /, dd if=...&#34;| Deny1[&#34;❌ Auto-DENY&lt;br/&gt;Zero latency&#34;]
+    T1 --&gt;|&#34;No match&#34;| T2{&#34;Tier 2&lt;br/&gt;Heuristic Classifier&lt;br/&gt;AST normalised + learned patterns&#34;}
+
+    T2 --&gt;|&#34;Matches common-but-not-whitelisted&lt;br/&gt;patterns&#34;| Allow2[&#34;✅ Heuristic ALLOW&lt;br/&gt;No user prompt&#34;]
+    T2 --&gt;|&#34;No match&#34;| T3{&#34;Tier 3&lt;br/&gt;User Prompt&lt;br/&gt;Parsed intent, not raw string&#34;}
+
+    T3 --&gt;|&#34;User approves&#34;| Allow3[&#34;✅ User-ALLOW&lt;br/&gt;+ optionally add to allow-list&#34;]
+    T3 --&gt;|&#34;User denies&#34;| Deny3[&#34;❌ User-DENY&lt;br/&gt;Reason returned to LLM&#34;]
+
+    style Allow1 fill:#e6f4ea,stroke:#38a169
+    style Allow2 fill:#e6f4ea,stroke:#38a169
+    style Allow3 fill:#e6f4ea,stroke:#38a169
+    style Deny1 fill:#fde8e8,stroke:#e53e3e
+    style Deny3 fill:#fde8e8,stroke:#e53e3e
+
+    Note[&#34;⚠️ Without Tier 2:&lt;br/&gt;every novel command hits Tier 3&lt;br/&gt;→ Permission fatigue&lt;br/&gt;→ Users approve without reading&#34;] -.-&gt; T2
+</pre>
+
+<h3 id="environment-variable-safety">Environment Variable Safety</h3>
+<p><code>PATH</code> and <code>LD_PRELOAD</code> are excluded from the safe environment variable allowlist. The reasoning: if <code>PATH</code> were injectable, an LLM could run <code>PATH=/attacker/bin npm install</code> and match an <code>npm:*</code> allow-rule while executing a malicious binary named <code>npm</code>. The exclusion is not accidental — it&rsquo;s the result of thinking through the full attack surface of the permission model.</p>
+<p>When building permission systems, don&rsquo;t just think about what the operation does. Think about what environment the operation runs in, and which environmental parameters an adversarial actor (or a confused LLM) could manipulate.</p>
+<hr>
+<h2 id="mcp-runtime-tool-extensibility-without-recompilation">MCP: Runtime Tool Extensibility Without Recompilation</h2>
+<p>The Model Context Protocol answers a critical architectural question: <strong>how do you add capabilities to a running agent without modifying its source?</strong></p>
+<p>MCP servers are separate processes that expose a <code>tools/list</code> endpoint. The agent connects at startup, discovers available tools, and registers them into the tool registry — at runtime, from any process written in any language.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#6272a4">// MCP tool wrapping — conforming to the standard Tool interface
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#ff79c6">const</span> wrappedMcpTool: <span style="color:#8be9fd">Tool</span> <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>  name<span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">`mcp__</span><span style="color:#f1fa8c">${</span>serverName<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">__</span><span style="color:#f1fa8c">${</span>tool.name<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">`</span>,   <span style="color:#6272a4">// Namespace prevents collision
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>  description: <span style="color:#8be9fd">tool.description</span>,
+</span></span><span style="display:flex;"><span>  inputSchema: <span style="color:#8be9fd">convertJsonSchemaToZod</span>(tool.inputSchema),  <span style="color:#6272a4">// JSON Schema → Zod
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>  <span style="color:#ff79c6">async</span> call(args, context) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">const</span> result <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> mcpClient.callTool(tool.name, args)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> { data: <span style="color:#8be9fd">result.content</span> }
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  isReadOnly<span style="color:#ff79c6">:</span> () <span style="color:#ff79c6">=&gt;</span> <span style="color:#ff79c6">false</span>,          <span style="color:#6272a4">// Conservative default for external tools
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>  isConcurrencySafe<span style="color:#ff79c6">:</span> () <span style="color:#ff79c6">=&gt;</span> <span style="color:#ff79c6">true</span>,    <span style="color:#6272a4">// MCP calls are typically stateless
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>}
+</span></span></code></pre></div><p>The namespace convention (<code>mcp__serverName__toolName</code>) is a deliberate collision-prevention mechanism. Without it, an MCP server that exports a tool named <code>bash</code> would shadow the built-in <code>BashTool</code> in the registry.</p>
+<p>Configuration lives in <code>.mcp.json</code> with environment variable expansion for secrets:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;mcpServers&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;github&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;command&#34;</span>: <span style="color:#f1fa8c">&#34;npx&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;args&#34;</span>: [<span style="color:#f1fa8c">&#34;-y&#34;</span>, <span style="color:#f1fa8c">&#34;@modelcontextprotocol/server-github&#34;</span>],
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;env&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">&#34;GITHUB_TOKEN&#34;</span>: <span style="color:#f1fa8c">&#34;${GITHUB_TOKEN}&#34;</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The agent watches <code>.mcp.json</code> and hot-reloads connections on save — no restart required. For teams building platform agents, this means domain teams can extend the agent&rsquo;s capabilities by deploying a new MCP server, without touching the core agent codebase.</p>
+<pre class="mermaid">
+  flowchart TB
+    subgraph Agent[&#34;Claude Code Agent Process (TypeScript)&#34;]
+        Registry[&#34;Tool Registry&lt;br/&gt;mcp__github__search&lt;br/&gt;mcp__db__query&lt;br/&gt;bash, fileRead, fileWrite...&#34;]
+        Engine[&#34;Run Loop&lt;br/&gt;query.ts&#34;]
+        Engine &lt;--&gt;|&#34;tool_use / tool_result&#34;| Registry
+    end
+
+    subgraph MCP1[&#34;MCP Server: GitHub (Node.js)&#34;]
+        GH[&#34;tools/list → [search, create_pr, ...]&lt;br/&gt;tools/call → JSON-RPC&#34;]
+    end
+
+    subgraph MCP2[&#34;MCP Server: DB Query (Python)&#34;]
+        DB[&#34;tools/list → [query, schema, ...]&lt;br/&gt;tools/call → JSON-RPC&#34;]
+    end
+
+    subgraph MCP3[&#34;MCP Server: Custom (Go / Rust / any)&#34;]
+        Custom[&#34;Domain-specific tools&lt;br/&gt;Any language, any process&#34;]
+    end
+
+    Config[&#34;.mcp.json&lt;br/&gt;(hot-reload on save)&#34;]
+
+    Config --&gt;|&#34;startup + watch&#34;| Agent
+    Registry &lt;--&gt;|&#34;JSON-RPC over stdio/HTTP&#34;| GH
+    Registry &lt;--&gt;|&#34;JSON-RPC over stdio/HTTP&#34;| DB
+    Registry &lt;--&gt;|&#34;JSON-RPC over stdio/HTTP&#34;| Custom
+
+    Note[&#34;Domain teams deploy new MCP servers&lt;br/&gt;without touching core agent source&#34;] -.-&gt; MCP3
+</pre>
+
+<h3 id="mcp-vs-built-in-tools-decision-guide">MCP vs Built-in Tools: Decision Guide</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Dimension</th>
+          <th>Built-in Tool</th>
+          <th>MCP Tool</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Registration</td>
+          <td>Compiled into agent</td>
+          <td>Discovered at runtime</td>
+      </tr>
+      <tr>
+          <td>Schema format</td>
+          <td>Zod (TypeScript-native)</td>
+          <td>JSON Schema (language-agnostic)</td>
+      </tr>
+      <tr>
+          <td>Execution model</td>
+          <td>In-process function call</td>
+          <td>Cross-process JSON-RPC</td>
+      </tr>
+      <tr>
+          <td>Language requirement</td>
+          <td>TypeScript</td>
+          <td>Any (Python, Go, Rust, etc.)</td>
+      </tr>
+      <tr>
+          <td>Latency</td>
+          <td>Microseconds</td>
+          <td>Milliseconds (IPC overhead)</td>
+      </tr>
+      <tr>
+          <td>Fault isolation</td>
+          <td>Failure crashes the agent</td>
+          <td>Failure is isolated to the MCP process</td>
+      </tr>
+      <tr>
+          <td>When to use</td>
+          <td>Core, security-critical capabilities</td>
+          <td>Domain-specific extensions, third-party integrations</td>
+      </tr>
+  </tbody>
+</table>
+<p>For capabilities that touch the filesystem or execute shell commands, built-in tools are appropriate because they need access to the agent&rsquo;s permission system. For capabilities like querying a database, calling a third-party API, or running domain-specific analysis, MCP tools are appropriate — they can be authored by domain teams and deployed independently.</p>
+<hr>
+<h2 id="multi-agent-architecture-sub-agents-as-tools">Multi-Agent Architecture: Sub-Agents as Tools</h2>
+<p>The elegance of the multi-agent design is that <strong>a sub-agent is just another tool</strong> from the parent&rsquo;s perspective. Calling <code>AgentTool</code> is structurally identical to calling <code>BashTool</code> — it takes inputs, returns a <code>tool_result</code> string.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#6272a4">// When the LLM calls AgentTool:
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#ff79c6">async</span> <span style="color:#8be9fd;font-style:italic">function</span> runSubAgent(task: <span style="color:#8be9fd">string</span>, context: <span style="color:#8be9fd">ToolUseContext</span>)<span style="color:#ff79c6">:</span> Promise&lt;<span style="color:#ff79c6">string</span>&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">const</span> childContext: <span style="color:#8be9fd">ToolUseContext</span> <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>    ...context,
+</span></span><span style="display:flex;"><span>    abortController: <span style="color:#8be9fd">new</span> AbortController(),          <span style="color:#6272a4">// Independent abort
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    readFileState: <span style="color:#8be9fd">cloneFileStateCache</span>(context),      <span style="color:#6272a4">// Isolated cache
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    setAppState<span style="color:#ff79c6">:</span> () <span style="color:#ff79c6">=&gt;</span> {},                            <span style="color:#6272a4">// No-op — can&#39;t mutate parent
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    messages<span style="color:#ff79c6">:</span> [],                                     <span style="color:#6272a4">// Fresh history
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    agentId: <span style="color:#8be9fd">generateAgentId</span>(),
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">const</span> childEngine <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> QueryEngine(childContext)
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">const</span> result <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> childEngine.ask(task)          <span style="color:#6272a4">// Full agent loop
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>
+</span></span><span style="display:flex;"><span>  <span style="color:#6272a4">// Parent only sees the final answer — not the child&#39;s internal turns
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>  <span style="color:#ff79c6">return</span> result.finalAnswer
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="budget-isolation">Budget Isolation</h3>
+<p>Without budget controls, a parent agent that spawns five sub-agents could exhaust the session token budget on the first sub-agent&rsquo;s work. Claude Code implements proportional budget splitting:</p>
+<pre tabindex="0"><code>Parent remaining budget: $1.00
+  → Child A allocation: $0.30
+  → Child B allocation: $0.30
+  → Parent reserve: $0.40  (for synthesis and recovery)
+</code></pre><p>Each child&rsquo;s budget is capped, and the parent retains a reserve for its own synthesis work. When a child exhausts its budget, it exits cleanly — the parent receives a budget-exceeded result string and can decide whether to retry, summarise what&rsquo;s available, or escalate.</p>
+<pre class="mermaid">
+  flowchart TB
+    subgraph Parent[&#34;Parent Agent — ToolUseContext A&#34;]
+        PLLM[&#34;🧠 LLM&lt;br/&gt;(planning + synthesis)&#34;]
+        PBudget[&#34;Budget: $1.00&lt;br/&gt;Reserve: $0.40&#34;]
+        PAbort[&#34;AbortController A&#34;]
+        PState[&#34;AppState (mutable)&#34;]
+        PMsg[&#34;messages: [full history]&#34;]
+    end
+
+    PLLM --&gt;|&#34;calls AgentTool(task1)&#34;| ChildA
+    PLLM --&gt;|&#34;calls AgentTool(task2)&#34;| ChildB
+
+    subgraph ChildA[&#34;Child Agent A — ToolUseContext B (isolated)&#34;]
+        ALLM[&#34;🧠 LLM&lt;br/&gt;(specialised task)&#34;]
+        ABudget[&#34;Budget: $0.30 (capped)&#34;]
+        AAbort[&#34;AbortController B&lt;br/&gt;(independent)&#34;]
+        AState[&#34;setAppState → no-op&#34;]
+        AMsg[&#34;messages: [] (fresh)&#34;]
+        ATools[&#34;Tools: no AgentTool&lt;br/&gt;(recursion blocked)&#34;]
+    end
+
+    subgraph ChildB[&#34;Child Agent B — ToolUseContext C (isolated)&#34;]
+        BLLM[&#34;🧠 LLM&lt;br/&gt;(specialised task)&#34;]
+        BBudget[&#34;Budget: $0.30 (capped)&#34;]
+        BAbort[&#34;AbortController C&lt;br/&gt;(independent)&#34;]
+        BLog[&#34;Sidechain log&lt;br/&gt;keyed by agentId&#34;]
+    end
+
+    ChildA --&gt;|&#34;finalAnswer (string only)&lt;br/&gt;no internal turns visible&#34;| PLLM
+    ChildB --&gt;|&#34;finalAnswer (string only)&lt;br/&gt;or budget-exceeded error&#34;| PLLM
+
+    ChildA -.-&gt;|&#34;full transcript&lt;br/&gt;for post-hoc debug&#34;| BLog
+</pre>
+
+<h3 id="the-information-boundary">The Information Boundary</h3>
+<p>The parent never sees a child&rsquo;s internal message history — only the final answer string. This is an intentional design choice with two consequences:</p>
+<ol>
+<li><strong>Context efficiency</strong>: The parent&rsquo;s context window isn&rsquo;t polluted by the child&rsquo;s deliberation, exploration, and dead-ends</li>
+<li><strong>Debugging opacity</strong>: When a child produces a wrong answer, you can&rsquo;t directly inspect its reasoning from the parent&rsquo;s message log</li>
+</ol>
+<p>Full transcripts of child turns are persisted to a sidechain log (keyed by <code>agentId</code>) for post-hoc debugging. If you&rsquo;re building multi-agent systems, implement equivalent logging early — the internal turns of a child agent are often where failures originate, and you&rsquo;ll need them for debugging.</p>
+<h3 id="depth-limits-and-recursion-prevention">Depth Limits and Recursion Prevention</h3>
+<p>By default, sub-agents cannot spawn their own sub-agents. The tool filter applied when building a child&rsquo;s <code>ToolUseContext</code> excludes <code>AgentTool</code> from the available tools set. This prevents unbounded recursion without requiring a global depth counter.</p>
+<p>If your architecture genuinely requires recursive delegation (e.g., a planning agent that spawns specialised sub-agents, which in turn spawn workers), implement explicit depth tracking in <code>ToolUseContext</code> and enforce a hard limit at tool registration time.</p>
+<hr>
+<h2 id="synthesis-design-principles-for-production-agentic-systems">Synthesis: Design Principles for Production Agentic Systems</h2>
+<p>Reading this source code as a corpus, seven design principles emerge that are difficult to discover without examining a production system.</p>
+<pre class="mermaid">
+  mindmap
+  root((Production&lt;br/&gt;Agentic Systems))
+    Tool Contract
+      Zod schema = validation + LLM docs
+      [&#34;describe() strings are micro-prompts&#34;]
+      Gaps → hallucinations
+    Error Handling
+      Catch ALL tool errors
+      Return as tool_result string
+      LLM self-corrects
+    Concurrency Safety
+      Per-invocation not per-tool
+      isConcurrencySafe receives input args
+      Static boolean is insufficient
+    Security Validation
+      AST analysis not regex
+      Tree-sitter for shell commands
+      Regex always bypassed eventually
+    Permission Design
+      3-tier hybrid model
+      Heuristic tier prevents fatigue
+      Fatigue = security risk
+    Fail-Closed Defaults
+      isReadOnly defaults false
+      isConcurrencySafe defaults false
+      Friction beats silent destruction
+    Multi-Agent Isolation
+      AbortController per agent
+      Budget capped per child
+      setAppState no-op in children
+      Sidechain logs for debugging
+</pre>
+
+<p><strong>1. The tool contract is your API surface — treat it as such.</strong>
+Zod schemas serve as runtime validation and LLM documentation simultaneously. Every <code>.describe()</code> string is a prompt. Gaps in description become hallucination opportunities. Invest the same care in tool schema design that you&rsquo;d invest in a public REST API.</p>
+<p><strong>2. Error handling must preserve agent self-correction.</strong>
+Exceptions that propagate out of tool execution terminate the agent&rsquo;s ability to recover. Every tool error must be caught and returned as a structured string the LLM can reason about. Design your error messages to be informative to the LLM, not just to human developers.</p>
+<p><strong>3. Concurrency safety is per-invocation, not per-tool.</strong>
+<code>isConcurrencySafe(input)</code> receives actual arguments. A tool that is safe to parallelise with one set of inputs may be unsafe with another. Design your tool interface to support this — a static boolean field on the tool definition is insufficient.</p>
+<p><strong>4. Security validation must operate on the AST, not on strings.</strong>
+For any tool that executes code or shell commands, regex-based validation is a false sense of security. Tree-sitter or equivalent AST parsing is the correct model. The complexity cost is real; so is the alternative.</p>
+<p><strong>5. Permission systems need a heuristic tier to remain usable.</strong>
+Pure allow/deny lists produce permission fatigue. Users who are prompted on every unfamiliar command begin approving requests without reading them. A heuristic classifier that handles common-but-not-whitelisted cases is not a nice-to-have — it&rsquo;s a safety feature.</p>
+<p><strong>6. Fail-closed defaults are architectural.</strong>
+<code>isReadOnly</code> defaults to <code>false</code>. <code>isConcurrencySafe</code> defaults to <code>false</code>. Newly registered tools are treated conservatively until proven safe. The friction of an unnecessary permission prompt is always preferable to a silent destructive action. Build this asymmetry into your default values, not into your documentation.</p>
+<p><strong>7. Multi-agent isolation must be explicit at every layer.</strong>
+Abort controllers, state mutation paths, file caches, token budgets, and message history — each must be isolated per agent instance, not just at the process boundary. &ldquo;Isolated&rdquo; means: a child agent&rsquo;s failure cannot corrupt the parent&rsquo;s state, and the parent&rsquo;s abort cannot prematurely kill an independent child.</p>
+<hr>
+<h2 id="applying-this-to-your-architecture">Applying This to Your Architecture</h2>
+<p>If you&rsquo;re evaluating agent frameworks or designing agentic systems for your organisation, these are the questions to ask at the implementation level:</p>
+<ul>
+<li><strong>Tool contract</strong>: Does the framework colocate runtime validation with LLM documentation, or are these separate artifacts that can drift?</li>
+<li><strong>Error handling</strong>: Does the framework return errors to the LLM as tool results, or do they propagate as exceptions that kill the loop?</li>
+<li><strong>Concurrency model</strong>: Can the framework determine concurrency safety at invocation time, or only at tool registration time?</li>
+<li><strong>Security model</strong>: For code/command execution, does the framework use AST analysis or string matching?</li>
+<li><strong>Permission UX</strong>: Does the framework implement any heuristic tier between explicit allow-lists and constant user prompting?</li>
+<li><strong>Child agent isolation</strong>: What exactly is isolated per child agent? What can a child&rsquo;s failure affect in the parent?</li>
+<li><strong>Budget controls</strong>: Does the framework have hard limits on turns, tokens, and recursive depth? Are these configurable?</li>
+</ul>
+<p>The answers will tell you whether a framework is designed for experimentation or for production.</p>
+<hr>
+<h2 id="further-reading">Further Reading</h2>
+<ul>
+<li><a href="https://modelcontextprotocol.io">Model Context Protocol Documentation</a> — MCP specification, server SDK, and reference implementations</li>
+<li><a href="https://github.com/anthropics/claude-code">Claude Code Source</a> — The production codebase this post analyses</li>
+<li><a href="https://www.anthropic.com/research/building-effective-agents">Anthropic Research: Building Effective Agents</a> — Anthropic&rsquo;s own patterns for agentic system design</li>
+<li><a href="https://tree-sitter.github.io/tree-sitter/">Tree-sitter</a> — The parser library used for AST-level shell command analysis</li>
+<li><a href="https://zod.dev">Zod Documentation</a> — Schema validation library used throughout Claude Code&rsquo;s tool system</li>
+</ul>
+<hr>
+<p><em>This post is based on a practitioner&rsquo;s deep-dive into Claude Code&rsquo;s source code, covering the tool contract, run loop, concurrency model, permission system, MCP integration, and multi-agent architecture. Code samples are illustrative reconstructions based on the source patterns — not verbatim extracts.</em></p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2026-04-24-openclaw-self-hosted-ai-agent/" data-toggle="tooltip" data-placement="top" title="Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/agentic-ai" title="agentic ai">
+                            agentic ai
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ai" title="ai">
+                            ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/ai-agents" title="ai agents">
+                            ai agents
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/deep-learning" title="deep learning">
+                            deep learning
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/tool-use" title="tool use">
+                            tool use
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<script src="/js/theme-toggle.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"
+          data-cfasync="false" defer></script>
+  <script data-cfasync="false" defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
+    });
+  </script>
+
+</body>
+</html>
