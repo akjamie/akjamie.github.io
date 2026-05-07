@@ -482,35 +482,35 @@ $(function() {
   <thead>
       <tr>
           <th style="text-align: left">Actor</th>
-          <th>Responsibility</th>
-          <th>Implementation</th>
+          <th style="text-align: left">Responsibility</th>
+          <th style="text-align: left">Implementation</th>
       </tr>
   </thead>
   <tbody>
       <tr>
           <td style="text-align: left"><strong>The Brain</strong></td>
-          <td>Reasoning, planning, tool selection</td>
-          <td>External LLM (Claude API)</td>
+          <td style="text-align: left">Reasoning, planning, tool selection</td>
+          <td style="text-align: left">External LLM (Claude API)</td>
       </tr>
       <tr>
           <td style="text-align: left"><strong>The Engine</strong></td>
-          <td>Run loop, state machine, turn management</td>
-          <td><code>src/query.ts</code></td>
+          <td style="text-align: left">Run loop, state machine, turn management</td>
+          <td style="text-align: left"><code>src/query.ts</code></td>
       </tr>
       <tr>
           <td style="text-align: left"><strong>The Harness</strong></td>
-          <td>Tool registry, execution, security boundary</td>
-          <td><code>src/tools/</code>, <code>src/Tool.ts</code></td>
+          <td style="text-align: left">Tool registry, execution, security boundary</td>
+          <td style="text-align: left"><code>src/tools/</code>, <code>src/Tool.ts</code></td>
       </tr>
       <tr>
           <td style="text-align: left"><strong>The Trust Boundary</strong></td>
-          <td>Per-invocation permission verification</td>
-          <td><code>bashPermissions.ts</code>, <code>bashSecurity.ts</code></td>
+          <td style="text-align: left">Per-invocation permission verification</td>
+          <td style="text-align: left"><code>bashPermissions.ts</code>, <code>bashSecurity.ts</code></td>
       </tr>
       <tr>
           <td style="text-align: left"><strong>The Context</strong></td>
-          <td>Session state, file caches, abort signals</td>
-          <td><code>ToolUseContext</code></td>
+          <td style="text-align: left">Session state, file caches, abort signals</td>
+          <td style="text-align: left"><code>ToolUseContext</code></td>
       </tr>
   </tbody>
 </table>
