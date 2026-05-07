@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>LLM Agents on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/llm-agents/</link>
+    <description>Recent content in LLM Agents on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 07 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/llm-agents/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Inside Claude Code: The Architecture of a Production-Grade System Prompt</title>
+      <link>http://akjamie.github.io/post/2026-05-16-mastering-agent-memory-prompt-design/</link>
+      <pubDate>Thu, 07 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-05-16-mastering-agent-memory-prompt-design/</guid>
+      <description>&lt;h1 id=&#34;inside-claude-code-the-architecture-of-a-production-grade-system-prompt&#34;&gt;Inside Claude Code: The Architecture of a Production-Grade System Prompt&lt;/h1&gt;&#xA;&lt;p&gt;When we think of &amp;ldquo;prompt engineering,&amp;rdquo; we often imagine a single, monolithic block of text meticulously tweaked through trial and error. But for production-grade agentic systems like Claude Code, the system prompt is less of a static document and more of a dynamic, highly optimized operating system.&lt;/p&gt;&#xA;&lt;p&gt;By examining the &lt;code&gt;src/constants/prompts.ts&lt;/code&gt; and &lt;code&gt;src/constants/systemPromptSections.ts&lt;/code&gt; files of the Claude Code repository, we can extract concrete patterns in modular prompt design, behavioral alignment, and token efficiency that apply to any agentic system.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
