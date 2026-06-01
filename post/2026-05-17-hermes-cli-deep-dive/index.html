@@ -1,0 +1,2470 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="Building Production Agentic CLIs: A Deep Dive into Hermes" />
+    <meta property="og:title" content="Building Production Agentic CLIs: A Deep Dive into Hermes" />
+    <meta property="twitter:title" content="Building Production Agentic CLIs: A Deep Dive into Hermes" />
+    
+
+    
+    <meta name="description" content="A Staff-Engineer-level study of the Hermes Agent command-line interface — from filesystem layout to REPL internals, model selection to plugin extensibility, and the design patterns that make it production-grade.">
+    <meta property="og:description" content="A Staff-Engineer-level study of the Hermes Agent command-line interface — from filesystem layout to REPL internals, model selection to plugin extensibility, and the design patterns that make it production-grade." />
+    <meta property="twitter:description" content="A Staff-Engineer-level study of the Hermes Agent command-line interface — from filesystem layout to REPL internals, model selection to plugin extensibility, and the design patterns that make it production-grade." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-05-17-hermes-cli-deep-dive/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Building Production Agentic CLIs: A Deep Dive into Hermes | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-05-17-hermes-cli-deep-dive/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/hermes" title="Hermes">
+                            Hermes
+                        </a>
+                        
+                        <a class="tag" href="/tags/cli" title="CLI">
+                            CLI
+                        </a>
+                        
+                        <a class="tag" href="/tags/agentic-ai" title="Agentic AI">
+                            Agentic AI
+                        </a>
+                        
+                        <a class="tag" href="/tags/tui" title="TUI">
+                            TUI
+                        </a>
+                        
+                        <a class="tag" href="/tags/plugin-system" title="Plugin System">
+                            Plugin System
+                        </a>
+                        
+                    </div>
+                    <h1>Building Production Agentic CLIs: A Deep Dive into Hermes</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Sunday, May 17, 2026
+                            
+                                <span id="/post/2026-05-17-hermes-cli-deep-dive/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="building-production-agentic-clis-a-deep-dive-into-hermes">Building Production Agentic CLIs: A Deep Dive into Hermes</h1>
+<blockquote>
+<p><em>A Staff-Engineer-level study of the Hermes Agent command-line interface — from filesystem layout to REPL internals, model selection to plugin extensibility, and the design patterns that make it production-grade.</em></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>[!NOTE]</p>
+<h3 id="-executive-tldr">⚡ Executive TL;DR</h3>
+<p>This document is a comprehensive, Staff-Engineer level deep dive into the architecture, execution pipeline, and design patterns of the <strong>Hermes Agent CLI</strong>. If you are building production-grade agentic command-line interfaces, these are your key takeaways:</p>
+<ul>
+<li><strong>Unified Command Registry:</strong> A single source of truth (<code>CommandDef</code> dataclass) dynamically derives help systems, autocompleters, and platform manifests (Telegram, Slack, Discord) to guarantee consistency across surfaces.</li>
+<li><strong>Pre-Import Bootstrapping:</strong> Intercepting CLI profiles and modifying paths <em>before</em> heavy modules are imported prevents stale module-level cache issues.</li>
+<li><strong>Process Boundary for TUI:</strong> Spawning the TypeScript/Ink TUI as a separate process communicating via JSON-RPC keeps React&rsquo;s rendering reconciler and Python&rsquo;s synchronous loop isolated, scaling cleanly.</li>
+<li><strong>Atomic Configuration Management:</strong> Utilizing temp-file-replace writes ensures file integrity and leverages filesystem <code>mtime/size</code> hooks for zero-overhead, cache-invalidation-free configuration lookups.</li>
+<li><strong>Graceful Offline-First Degradation:</strong> Diagnostic systems and model registries degrade sequentially (e.g., Live API → Local Cache → Manual Input) rather than failing outright.</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="part-i--foundations">Part I — Foundations</h2>
+<h2 id="chapter-1-what-hermes-cli-is-and-what-it-isnt">Chapter 1: What Hermes CLI Is (and What It Isn&rsquo;t)</h2>
+<p>The <strong>Hermes CLI</strong> (<code>hermes_cli/</code>) is the user-facing command-line interface for the Hermes Agent, an open-source agentic AI system built by Nous Research. At its surface it looks like a chat interface. Under the hood it is a multi-modal, multi-platform orchestration layer composed of roughly 80 Python modules and a full React/Ink terminal UI.</p>
+<p>What Hermes provides:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Surface</th>
+          <th style="text-align: left">Implementation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Interactive REPL</td>
+          <td style="text-align: left"><code>prompt_toolkit</code> with autocomplete, history, and Rich formatting</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Full-screen TUI</td>
+          <td style="text-align: left">Ink (React) terminal UI with streaming, tool panels, session management</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Setup &amp; configuration wizard</td>
+          <td style="text-align: left">Modular, section-re-runnable curses prompts</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Gateway management</td>
+          <td style="text-align: left">Long-running asyncio adapters for Telegram, Discord, Slack, WhatsApp, and 15+ other platforms</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Session management</td>
+          <td style="text-align: left">SQLite + FTS5 full-text search; resume by ID, title, or interactive browser</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Skill &amp; tool management</td>
+          <td style="text-align: left">Install, enable, configure, and curate reusable agent capabilities</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Plugin system</td>
+          <td style="text-align: left">Third-party tools, hooks, slash commands, and CLI subcommands — no core changes needed</td>
+      </tr>
+  </tbody>
+</table>
+<p>What Hermes is <strong>not</strong>: it is not a thin wrapper around an LLM API. The interactive chat is a small fraction of the codebase. The majority is infrastructure — configuration, security, session persistence, multi-platform delivery, and extensibility machinery.</p>
+<blockquote>
+<p><strong>Key insight for architects:</strong> The <code>cli.py</code> file alone is ~14,000 lines. <code>hermes_cli/main.py</code> is ~486 KB. This is not unusual for a mature, multi-surface agent harness. The complexity is earned by the breadth of concerns it handles correctly.</p>
+</blockquote>
+<p>The architectural layers are:</p>
+<pre tabindex="0"><code>User Terminal
+    │
+hermes_cli/main.py          ← entry point, bootstrap, dispatch
+    │
+    ├─ cli.py::HermesCLI    ← interactive REPL (~14k LOC)
+    ├─ hermes_cli/setup.py  ← first-run wizard
+    ├─ hermes_cli/main.py   ← subcommand handlers (cmd_model, cmd_status, …)
+    └─ ui-tui/              ← Ink TUI subprocess
+         │
+         └─ tui_gateway/    ← Python JSON-RPC backend for the TUI
+</code></pre><p>The remainder of this book traces each layer in depth, starting with the most fundamental: the filesystem.</p>
+<hr>
+<h2 id="chapter-2-the-hermes-home-your-agents-filesystem">Chapter 2: The <code>~/.hermes/</code> Home: Your Agent&rsquo;s Filesystem</h2>
+<p>Before a single line of Python executes in a user context, Hermes needs a home. The <code>~/.hermes/</code> directory — or whatever path <code>HERMES_HOME</code> resolves to — is the agent&rsquo;s entire persistent state. Understanding it is a prerequisite for understanding everything else.</p>
+<h3 id="21-directory-layout">2.1 Directory Layout</h3>
+<p>The home directory is created by <code>ensure_hermes_home()</code> in <code>hermes_cli/config.py</code> on first run:</p>
+<pre tabindex="0"><code>~/.hermes/
+├── config.yaml           ← All behavioural configuration
+├── .env                  ← API keys and secrets ONLY
+├── SOUL.md               ← Base system prompt (editable)
+├── state.db              ← SQLite: sessions, messages, FTS5 index
+│
+├── sessions/             ← Legacy session JSON (pre-SQLite, still read)
+├── skills/               ← Agent-created and hub-installed skills
+│   ├── .archive/         ← Curator-archived stale skills (recoverable)
+│   └── .curator_backups/ ← Pre-run snapshots (tar.gz)
+├── skins/                ← User YAML skin files
+├── logs/
+│   ├── agent.log         ← INFO+ (all agent activity)
+│   ├── errors.log        ← WARNING+
+│   ├── gateway.log       ← Gateway platform traffic
+│   └── curator/          ← Per-run curator reports
+├── cron/
+│   └── jobs.json         ← Scheduled job definitions
+├── hooks/                ← Shell-script event hooks
+├── memories/             ← Persistent cross-session memory store
+├── pairing/              ← Device-pairing state
+├── image_cache/          ← Downloaded image cache
+├── audio_cache/          ← TTS output cache
+├── checkpoints/          ← Git-backed filesystem snapshots (/rollback)
+├── lsp/bin/              ← Auto-installed LSP server binaries
+├── profiles/             ← Named profiles, each a full clone of this layout
+│   └── &lt;name&gt;/
+└── active_profile        ← Sticky default profile name (single line)
+</code></pre><h3 id="22-security-model">2.2 Security Model</h3>
+<p>On POSIX systems, every file is <code>chmod 600</code> and every directory <code>chmod 700</code>. This is enforced by <code>_secure_file()</code> and <code>_secure_dir()</code> at creation time. Three opt-outs exist:</p>
+<ul>
+<li><code>HERMES_SKIP_CHMOD=1</code> — skip all permission changes (Docker volume mounts)</li>
+<li><code>HERMES_MANAGED=homebrew|nixos</code> — defer to the package manager&rsquo;s own permission model</li>
+<li><code>HERMES_HOME_MODE=0701</code> — custom directory mode (e.g., to allow nginx traversal)</li>
+</ul>
+<blockquote>
+<p><strong>Warning:</strong> Never hardcode <code>~/.hermes</code> in paths. Always call <code>get_hermes_home()</code> from <code>hermes_constants</code>. The profile system re-points <code>HERMES_HOME</code> before any module imports, so a module-level <code>Path.home() / &quot;.hermes&quot;</code> will silently ignore the active profile.</p>
+</blockquote>
+<h3 id="23-the-four-core-files">2.3 The Four Core Files</h3>
+<p>Every other file in <code>~/.hermes/</code> is supplementary. Four files govern everything meaningful:</p>
+<p><strong><code>config.yaml</code></strong> is the agent&rsquo;s brain — 30+ top-level sections controlling model selection, tool behaviour, compression, display, platform-specific settings, and more. Covered in depth in Chapter 13.</p>
+<p><strong><code>.env</code></strong> holds secrets exclusively: API keys, tokens, and passwords. Nothing else. The separation is intentional — config YAML gets committed to dotfiles repos; secrets must not follow. Covered in Chapter 14.</p>
+<p><strong><code>SOUL.md</code></strong> is the base system prompt, seeded from a default template on first run and freely editable by the user. It is the single file that defines the agent&rsquo;s persona and communication style. Covered in Chapter 14.</p>
+<p><strong><code>state.db</code></strong> is the SQLite session store. Every conversation, every message, every tool call is logged here, with a FTS5 full-text index for instant search. Covered in Chapter 14.</p>
+<hr>
+<h2 id="part-ii--the-boot-sequence">Part II — The Boot Sequence</h2>
+<hr>
+<h2 id="chapter-3-six-phases-from-shell-to-repl">Chapter 3: Six Phases from Shell to REPL</h2>
+<p>Typing <code>hermes chat</code> triggers a carefully ordered six-phase initialization. The order is not arbitrary — each phase depends on side-effects established by the previous one. Understanding it prevents a class of subtle bugs where environment setup arrives too late.</p>
+<h3 id="phase-1-pre-import-profile-override">Phase 1: Pre-Import Profile Override</h3>
+<p>The very first code that runs is <code>_apply_profile_override()</code>, called at <strong>module level</strong> in <code>hermes_cli/main.py</code> — not inside any function:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># hermes_cli/main.py — runs at import time, before argparse, before logging</span>
+</span></span><span style="display:flex;"><span>_apply_profile_override()
+</span></span></code></pre></div><p>This function scans <code>sys.argv</code> for <code>--profile</code> / <code>-p</code>, sets <code>os.environ[&quot;HERMES_HOME&quot;]</code> to the matching profile directory, then strips the flag so argparse never sees it. If no <code>--profile</code> flag is present, it falls back to the contents of <code>~/.hermes/active_profile</code>.</p>
+<blockquote>
+<p><strong>Why module level?</strong> Python caches module-level constants at import time. Many modules call <code>get_hermes_home()</code> at the top of their file to compute default paths. If the profile override ran inside <code>main()</code> — after those modules were already imported — <code>HERMES_HOME</code> would be set too late to matter. Moving it to module level ensures the environment variable is in place before any other <code>hermes_cli</code> module is imported.</p>
+</blockquote>
+<h3 id="phase-2-environment-bootstrap">Phase 2: Environment Bootstrap</h3>
+<p>After the profile is resolved, a fixed bootstrap sequence runs:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> hermes_bootstrap          <span style="color:#6272a4"># Force UTF-8 stdio on Windows (replaces sys.stdout)</span>
+</span></span><span style="display:flex;"><span>load_hermes_dotenv(project_env<span style="color:#ff79c6">=</span>PROJECT_ROOT <span style="color:#ff79c6">/</span> <span style="color:#f1fa8c">&#34;.env&#34;</span>)  <span style="color:#6272a4"># Load ~/.hermes/.env</span>
+</span></span><span style="display:flex;"><span>_setup_logging(mode<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;cli&#34;</span>)       <span style="color:#6272a4"># Rotating file handlers: agent.log + errors.log</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> config<span style="color:#ff79c6">.</span>get(<span style="color:#f1fa8c">&#34;network&#34;</span>, {})<span style="color:#ff79c6">.</span>get(<span style="color:#f1fa8c">&#34;force_ipv4&#34;</span>):
+</span></span><span style="display:flex;"><span>    _apply_ipv4(force<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)      <span style="color:#6272a4"># Monkey-patch socket.getaddrinfo to prefer IPv4</span>
+</span></span></code></pre></div><p>The <code>.env</code> load happens before logging so that any env-var-gated log levels take effect immediately. The <code>force_ipv4</code> option addresses a common Linux server problem where Python tries AAAA records first and stalls for the full TCP timeout on broken IPv6 stacks.</p>
+<h3 id="phase-3-argparse-construction">Phase 3: Argparse Construction</h3>
+<p>The argument parser is built by <code>build_top_level_parser()</code> in <code>hermes_cli/_parser.py</code> — a <strong>separate module</strong> from <code>main.py</code>. This separation is deliberate: <code>relaunch.py</code> needs to introspect which flags carry <code>inherit_on_relaunch=True</code> without executing any of <code>main()</code>&rsquo;s side-effects.</p>
+<p>Two constraints worth noting:</p>
+<ul>
+<li><code>--profile</code> / <code>-p</code> is absent from the parser definition — it was consumed pre-argparse</li>
+<li>Flags tagged <code>inherit_on_relaunch=True</code> are forwarded verbatim when the CLI re-execs itself (e.g., after <code>hermes update</code>)</li>
+</ul>
+<h3 id="phase-4-subcommand-dispatch">Phase 4: Subcommand Dispatch</h3>
+<p>After <code>args = parser.parse_args()</code>, <code>main()</code> dispatches to the appropriate <code>cmd_*</code> function:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>dispatch <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;chat&#34;</span>:      cmd_chat,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;setup&#34;</span>:     cmd_setup,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;model&#34;</span>:     cmd_model,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;status&#34;</span>:    cmd_status,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;doctor&#34;</span>:    cmd_doctor,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;gateway&#34;</span>:   cmd_gateway,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;profile&#34;</span>:   cmd_profile,
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># … 14 more</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>fn <span style="color:#ff79c6">=</span> dispatch<span style="color:#ff79c6">.</span>get(args<span style="color:#ff79c6">.</span>command <span style="color:#ff79c6">or</span> <span style="color:#f1fa8c">&#34;chat&#34;</span>)
+</span></span><span style="display:flex;"><span>fn(args)
+</span></span></code></pre></div><p>Each <code>cmd_*</code> function is a thin coordinator. Heavy logic lives in dedicated modules (<code>setup.py</code>, <code>models.py</code>, <code>status.py</code>, etc.) that are imported lazily inside the function — avoiding startup cost for commands that won&rsquo;t be used.</p>
+<h3 id="phase-5-chat-pre-flight">Phase 5: Chat Pre-flight</h3>
+<p><code>cmd_chat()</code> is the most complex dispatcher. Before handing control to the REPL, it runs a mandatory pre-flight sequence:</p>
+<ol>
+<li><strong>Session resolution</strong> — <code>--continue</code> / <code>-c</code> maps to the most recent session ID; <code>--resume &lt;title&gt;</code> fuzzy-matches past sessions by title</li>
+<li><strong>First-run guard</strong> — calls <code>_has_any_provider_configured()</code>; if no provider is set, prints guidance to run <code>hermes setup</code> and exits</li>
+<li><strong>Background update check</strong> — <code>prefetch_update_check()</code> runs in a daemon thread so it doesn&rsquo;t block startup</li>
+<li><strong>Bundled skill sync</strong> — <code>sync_skills(quiet=True)</code> checks for new bundled skills; fast, skips unchanged files</li>
+<li><strong>Environment flags</strong> — <code>--yolo</code>, <code>--ignore-user-config</code>, <code>--ignore-rules</code> are set as env vars <em>before</em> any config imports</li>
+<li><strong>Fork</strong> — <code>--tui</code> → <code>_launch_tui()</code>; default → lazy-import <code>cli.py::main()</code></li>
+</ol>
+<h3 id="phase-6-tui-launch">Phase 6: TUI Launch</h3>
+<p>When <code>--tui</code> is specified, <code>_launch_tui()</code> takes over:</p>
+<ol>
+<li>Verifies Node.js is available (offers auto-install via <code>node-bootstrap.sh</code>)</li>
+<li>Checks whether <code>npm install</code> is needed by comparing <strong>content</strong> of <code>package-lock.json</code> against <code>node_modules/.package-lock.json</code> — not mtimes</li>
+<li>Builds the bundle via esbuild (or uses <code>tsx</code> in <code>--dev</code> mode for watch-rebuild)</li>
+<li>Passes all configuration as <strong>environment variables</strong> to the subprocess — avoiding shell-escaping issues and argument-length limits</li>
+<li>Sets <code>NODE_OPTIONS=--max-old-space-size=8192 --expose-gc</code></li>
+<li>Calls <code>os.execvp()</code> to replace the Python process entirely with the Node.js process</li>
+</ol>
+<p>The <code>os.execvp</code> choice is significant: it means the TUI process is a direct child of the shell, not a grandchild. Signals (Ctrl-C, SIGTERM) reach it directly without a Python intermediary that might swallow them.</p>
+<hr>
+<h2 id="part-iii--the-interactive-layer">Part III — The Interactive Layer</h2>
+<hr>
+<h2 id="chapter-4-hermescli-and-the-repl-loop">Chapter 4: HermesCLI and the REPL Loop</h2>
+<p><code>HermesCLI</code>, defined at <code>cli.py:2502</code>, is the heart of the classic interactive interface. Its constructor (~200 lines) initializes five categories of state:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Key Attributes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Display</td>
+          <td style="text-align: left"><code>compact</code>, <code>streaming_enabled</code>, <code>show_reasoning</code>, <code>show_timestamps</code>, <code>final_response_markdown</code>, <code>inline_diffs</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Model</td>
+          <td style="text-align: left"><code>model</code>, <code>provider</code>, <code>api_mode</code>, <code>base_url</code>, <code>api_key</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Agent</td>
+          <td style="text-align: left"><code>max_turns</code> (90 default), <code>enabled_toolsets</code>, <code>disabled_toolsets</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Session</td>
+          <td style="text-align: left"><code>session_id</code>, <code>checkpoints_enabled</code>, <code>_session_db</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">UI</td>
+          <td style="text-align: left"><code>console</code> (Rich), <code>_app</code> (prompt_toolkit Application), <code>_spinner</code> (KawaiiSpinner)</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="41-the-repl-loop">4.1 The REPL Loop</h3>
+<p><code>HermesCLI.run()</code> is a <code>while True</code> loop around four operations:</p>
+<pre tabindex="0"><code>1. Render prompt (prompt_toolkit Application)
+2. Get user input
+3. Is it a slash command?
+   ├── Yes → process_command(input)
+   └── No  → agent.run_conversation(input)
+4. Display result
+</code></pre><p>While the agent is working, three things happen in parallel:</p>
+<ul>
+<li>The <code>KawaiiSpinner</code> animates in the status bar</li>
+<li>Tool results stream as <code>┊</code>-prefixed activity lines</li>
+<li>Reasoning tokens (if enabled) appear in fenced <code>[thinking]</code> blocks</li>
+</ul>
+<h3 id="42-process_command-dispatcher">4.2 process_command() Dispatcher</h3>
+<p>The slash command handler at <code>cli.py:7634</code> follows a strict pattern:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">process_command</span>(<span style="font-style:italic">self</span>, command: <span style="color:#8be9fd;font-style:italic">str</span>) <span style="color:#ff79c6">-&gt;</span> <span style="color:#8be9fd;font-style:italic">bool</span>:
+</span></span><span style="display:flex;"><span>    cmd_lower <span style="color:#ff79c6">=</span> command<span style="color:#ff79c6">.</span>lower()<span style="color:#ff79c6">.</span>strip()
+</span></span><span style="display:flex;"><span>    base_word <span style="color:#ff79c6">=</span> cmd_lower<span style="color:#ff79c6">.</span>split()[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>lstrip(<span style="color:#f1fa8c">&#34;/&#34;</span>)
+</span></span><span style="display:flex;"><span>    cmd_def <span style="color:#ff79c6">=</span> resolve_command(base_word)           <span style="color:#6272a4"># → CommandDef or None</span>
+</span></span><span style="display:flex;"><span>    canonical <span style="color:#ff79c6">=</span> cmd_def<span style="color:#ff79c6">.</span>name <span style="color:#ff79c6">if</span> cmd_def <span style="color:#ff79c6">else</span> base_word
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> canonical <span style="color:#ff79c6">in</span> {<span style="color:#f1fa8c">&#34;quit&#34;</span>, <span style="color:#f1fa8c">&#34;exit&#34;</span>}:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">False</span>                               <span style="color:#6272a4"># signals REPL to exit</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">elif</span> canonical <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;help&#34;</span>:
+</span></span><span style="display:flex;"><span>        <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>show_help()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">elif</span> canonical <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;model&#34;</span>:
+</span></span><span style="display:flex;"><span>        <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_handle_model_switch(cmd_original)
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># … ~80 more elif branches</span>
+</span></span></code></pre></div><p>Two key points: input is lowercased only for dispatch — the original case is preserved for argument parsing. And all dispatch goes through <code>resolve_command()</code>, which maps aliases to canonical names, meaning the <code>if/elif</code> chain only contains canonical names.</p>
+<h3 id="43-agent-integration">4.3 Agent Integration</h3>
+<p>When the input is not a slash command, it is sent to <code>AIAgent.run_conversation()</code>. The agent loop is fully synchronous (no asyncio in the CLI path), with interrupt detection on each iteration:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">while</span> api_call_count <span style="color:#ff79c6">&lt;</span> max_iterations <span style="color:#ff79c6">and</span> budget<span style="color:#ff79c6">.</span>remaining <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> interrupt_requested:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">break</span>
+</span></span><span style="display:flex;"><span>    response <span style="color:#ff79c6">=</span> client<span style="color:#ff79c6">.</span>chat<span style="color:#ff79c6">.</span>completions<span style="color:#ff79c6">.</span>create(model<span style="color:#ff79c6">=</span>model, messages<span style="color:#ff79c6">=</span>messages, tools<span style="color:#ff79c6">=</span>schemas)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> response<span style="color:#ff79c6">.</span>tool_calls:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">for</span> call <span style="color:#ff79c6">in</span> response<span style="color:#ff79c6">.</span>tool_calls:
+</span></span><span style="display:flex;"><span>            result <span style="color:#ff79c6">=</span> handle_function_call(call<span style="color:#ff79c6">.</span>name, call<span style="color:#ff79c6">.</span>args, task_id)
+</span></span><span style="display:flex;"><span>            messages<span style="color:#ff79c6">.</span>append(tool_result_message(result))
+</span></span><span style="display:flex;"><span>        api_call_count <span style="color:#ff79c6">+=</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> response<span style="color:#ff79c6">.</span>content    <span style="color:#6272a4"># final text response</span>
+</span></span></code></pre></div><p>Messages follow the OpenAI wire format (<code>role: system/user/assistant/tool</code>). Reasoning content is stored in <code>assistant_msg[&quot;reasoning&quot;]</code> and surfaced to the UI separately from the main content.</p>
+<hr>
+<h2 id="chapter-5-the-slash-command-registry">Chapter 5: The Slash Command Registry</h2>
+<p>The command registry in <code>hermes_cli/commands.py</code> is one of the most instructive design choices in the codebase: a single list of <code>CommandDef</code> dataclasses serves as the authoritative definition of every slash command across every platform.</p>
+<h3 id="51-commanddef">5.1 CommandDef</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>@dataclass(frozen<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">CommandDef</span>:
+</span></span><span style="display:flex;"><span>    name: <span style="color:#8be9fd;font-style:italic">str</span>                              <span style="color:#6272a4"># canonical name: &#34;background&#34;</span>
+</span></span><span style="display:flex;"><span>    description: <span style="color:#8be9fd;font-style:italic">str</span>
+</span></span><span style="display:flex;"><span>    category: <span style="color:#8be9fd;font-style:italic">str</span>                          <span style="color:#6272a4"># &#34;Session&#34; | &#34;Configuration&#34; | &#34;Tools &amp; Skills&#34; | &#34;Info&#34; | &#34;Exit&#34;</span>
+</span></span><span style="display:flex;"><span>    aliases: <span style="color:#8be9fd;font-style:italic">tuple</span>[<span style="color:#8be9fd;font-style:italic">str</span>, <span style="color:#ff79c6">...</span>] <span style="color:#ff79c6">=</span> ()          <span style="color:#6272a4"># (&#34;bg&#34;, &#34;btw&#34;)</span>
+</span></span><span style="display:flex;"><span>    args_hint: <span style="color:#8be9fd;font-style:italic">str</span> <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;&#34;</span>                    <span style="color:#6272a4"># &#34;&lt;prompt&gt;&#34;, &#34;[name]&#34;</span>
+</span></span><span style="display:flex;"><span>    subcommands: <span style="color:#8be9fd;font-style:italic">tuple</span>[<span style="color:#8be9fd;font-style:italic">str</span>, <span style="color:#ff79c6">...</span>] <span style="color:#ff79c6">=</span> ()      <span style="color:#6272a4"># tab-completable sub-words</span>
+</span></span><span style="display:flex;"><span>    cli_only: <span style="color:#8be9fd;font-style:italic">bool</span> <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>    gateway_only: <span style="color:#8be9fd;font-style:italic">bool</span> <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>    gateway_config_gate: <span style="color:#8be9fd;font-style:italic">str</span> <span style="color:#ff79c6">|</span> <span style="color:#ff79c6">None</span> <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span> <span style="color:#6272a4"># dotpath into config.yaml</span>
+</span></span></code></pre></div><p>The <code>gateway_config_gate</code> field is worth highlighting. A command like <code>/verbose</code> is <code>cli_only=True</code> but can be exposed in the gateway if <code>display.tool_progress_command</code> is truthy in <code>config.yaml</code>. The command is always present in <code>GATEWAY_KNOWN_COMMANDS</code> (so dispatch never fails), but help text and Telegram/Slack menus only show it when the gate is open.</p>
+<h3 id="52-downstream-derivations">5.2 Downstream Derivations</h3>
+<p>At import time, <code>commands.py</code> rebuilds a set of derived mappings from the single <code>COMMAND_REGISTRY</code> list:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Derived Mapping</th>
+          <th style="text-align: left">Purpose</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><code>_COMMAND_LOOKUP</code></td>
+          <td style="text-align: left"><code>{name/alias → CommandDef}</code> for fast dispatch</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>COMMANDS</code></td>
+          <td style="text-align: left">Flat <code>{&quot;/cmd&quot; → description}</code> for backward compatibility</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>COMMANDS_BY_CATEGORY</code></td>
+          <td style="text-align: left"><code>{category → {&quot;/cmd&quot; → description}}</code> for <code>show_help()</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>GATEWAY_KNOWN_COMMANDS</code></td>
+          <td style="text-align: left"><code>frozenset</code> of gateway-dispatchable names</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>ACTIVE_SESSION_BYPASS_COMMANDS</code></td>
+          <td style="text-align: left">Commands that reach the agent mid-run</td>
+      </tr>
+  </tbody>
+</table>
+<p>And four platform-specific functions derived from the same registry:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Platform</th>
+          <th style="text-align: left">Function</th>
+          <th style="text-align: left">Output</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Telegram</td>
+          <td style="text-align: left"><code>telegram_bot_commands()</code></td>
+          <td style="text-align: left"><code>[(name, desc)]</code> for <code>setMyCommands</code> API</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Slack</td>
+          <td style="text-align: left"><code>slack_native_slashes()</code></td>
+          <td style="text-align: left"><code>[(name, desc, usage)]</code> for app manifest</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Slack subcommands</td>
+          <td style="text-align: left"><code>slack_subcommand_map()</code></td>
+          <td style="text-align: left"><code>{subcommand → &quot;/cmd&quot;}</code> for <code>/hermes</code> dispatch</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Gateway help</td>
+          <td style="text-align: left"><code>gateway_help_lines()</code></td>
+          <td style="text-align: left">Formatted help text for all platforms</td>
+      </tr>
+  </tbody>
+</table>
+<p>Each sanitizes names per platform constraints: Telegram requires lowercase with underscores, max 32 characters; Slack forbids certain reserved words; Discord clamps to 32 characters with collision-aware suffix truncation.</p>
+<blockquote>
+<p><strong>The payoff:</strong> Adding a new slash command requires exactly two steps — one <code>CommandDef</code> in <code>COMMAND_REGISTRY</code>, and one <code>elif</code> branch in <code>process_command()</code>. Help menus, Telegram menus, Slack manifests, autocomplete, and gateway dispatch update automatically. Adding an alias requires only editing the <code>aliases</code> tuple on the existing <code>CommandDef</code>.</p>
+</blockquote>
+<hr>
+<h2 id="chapter-6-the-tui--react-meets-python">Chapter 6: The TUI — React Meets Python</h2>
+<p>The TUI is a full Node.js application using <a href="https://github.com/vadimdemedes/ink">Ink</a> — React for the terminal — running as a subprocess of the Python CLI. This is a process-boundary architecture, not a widget library.</p>
+<h3 id="61-process-model">6.1 Process Model</h3>
+<pre tabindex="0"><code>hermes --tui
+  └─ Node.js (Ink + React)           ← owns the screen
+       │  newline-delimited JSON-RPC over stdio
+       └─ Python (tui_gateway/entry.py)  ← owns state
+            └─ AIAgent + tools + SessionDB
+</code></pre><p>TypeScript handles rendering: the transcript, the composer, tool activity panels, approval prompts, and session pickers. Python handles everything stateful: the agent loop, tool execution, session persistence, and slash command dispatch.</p>
+<h3 id="62-the-gatewayclient">6.2 The GatewayClient</h3>
+<p><code>ui-tui/src/gatewayClient.ts</code> (701 lines) is the bridge. It spawns <code>python -m tui_gateway.entry</code> as a child process, writes JSON-RPC requests to its stdin, and reads responses from its stdout line-by-line:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#6272a4">// GatewayClient.ts (simplified)
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>proc <span style="color:#ff79c6">=</span> spawn(<span style="color:#f1fa8c">&#34;python&#34;</span>, [<span style="color:#f1fa8c">&#34;-m&#34;</span>, <span style="color:#f1fa8c">&#34;tui_gateway.entry&#34;</span>], { env<span style="color:#ff79c6">:</span> { ...process.env } })
+</span></span><span style="display:flex;"><span>proc.stdout.on(<span style="color:#f1fa8c">&#34;data&#34;</span>, chunk <span style="color:#ff79c6">=&gt;</span> {
+</span></span><span style="display:flex;"><span>    buffer <span style="color:#ff79c6">+=</span> chunk.toString()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> (<span style="color:#ff79c6">const</span> line <span style="color:#ff79c6">of</span> buffer.split(<span style="color:#f1fa8c">&#34;\n&#34;</span>)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">const</span> msg <span style="color:#ff79c6">=</span> JSON.parse(line)
+</span></span><span style="display:flex;"><span>        dispatch(msg.method, msg.params)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>send(method: <span style="color:#8be9fd">string</span>, params: <span style="color:#8be9fd">object</span>) {
+</span></span><span style="display:flex;"><span>    proc.stdin.write(JSON.stringify({ method, params }) <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#34;\n&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The client supports an &ldquo;attach mode&rdquo; where instead of spawning a subprocess it connects to an external gateway via WebSocket — this is how the web dashboard embeds the TUI.</p>
+<h3 id="63-key-ui-surfaces">6.3 Key UI Surfaces</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Surface</th>
+          <th style="text-align: left">Ink Component</th>
+          <th style="text-align: left">JSON-RPC Flow</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Chat streaming</td>
+          <td style="text-align: left"><code>app.tsx</code> + <code>messageLine.tsx</code></td>
+          <td style="text-align: left"><code>prompt.submit</code> → <code>message.delta</code> → <code>message.complete</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Tool activity</td>
+          <td style="text-align: left"><code>thinking.tsx</code></td>
+          <td style="text-align: left"><code>tool.start</code> → <code>tool.progress</code> → <code>tool.complete</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Approval prompts</td>
+          <td style="text-align: left"><code>prompts.tsx</code></td>
+          <td style="text-align: left"><code>approval.request</code> ← user → <code>approval.respond</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Clarify / sudo / secret</td>
+          <td style="text-align: left"><code>prompts.tsx</code>, <code>maskedPrompt.tsx</code></td>
+          <td style="text-align: left"><code>clarify.respond</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Session picker</td>
+          <td style="text-align: left"><code>sessionPicker.tsx</code></td>
+          <td style="text-align: left"><code>session.list</code> → <code>session.resume</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Slash commands</td>
+          <td style="text-align: left">Local handler + <code>slash.exec</code> fallthrough</td>
+          <td style="text-align: left"><code>command.dispatch</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Theming</td>
+          <td style="text-align: left"><code>theme.ts</code> + <code>branding.tsx</code></td>
+          <td style="text-align: left"><code>gateway.ready</code> event carries skin data</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="64-the-custom-ink-fork">6.4 The Custom Ink Fork</h3>
+<p>Hermes maintains <code>packages/hermes-ink/</code> — a fork of the upstream Ink library. This provides <code>onFrame</code> hooks for the activity spinner and <code>onHyperlinkClick</code> for clickable terminal links. The fork is a local package referenced in <code>package.json</code> as <code>&quot;@hermes/ink&quot;: &quot;file:./packages/hermes-ink&quot;</code>.</p>
+<h3 id="65-dashboard-integration">6.5 Dashboard Integration</h3>
+<p><code>hermes dashboard</code> serves a web UI that embeds the real <code>hermes --tui</code> — not a reimplementation. The browser loads <code>ChatPage.tsx</code>, which mounts an xterm.js <code>Terminal</code> with the WebGL renderer. The server (<code>hermes_cli/web_server.py</code>) spawns a PTY via <code>ptyprocess</code>, connects it to <code>hermes --tui</code>, and forwards bytes over a WebSocket authenticated with a session token.</p>
+<blockquote>
+<p><strong>Design rule enforced in <code>AGENTS.md</code>:</strong> Never rebuild the primary chat surface in React for the dashboard. Anything new added to Ink shows up in the dashboard automatically. Structured React UI (sidebars, inspectors, model pickers) is allowed when it complements the embedded TUI rather than replacing the transcript or composer.</p>
+</blockquote>
+<hr>
+<h2 id="part-iv--core-subcommands">Part IV — Core Subcommands</h2>
+<hr>
+<h2 id="chapter-7-hermes-setup--the-first-run-wizard">Chapter 7: <code>hermes setup</code> — The First-Run Wizard</h2>
+<p><code>hermes setup</code> is defined in <code>hermes_cli/setup.py</code> (3,559 lines) and is the canonical way to configure Hermes from scratch. Unlike a monolithic wizard that must be run end-to-end, each section can be invoked independently:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hermes setup            <span style="color:#6272a4"># full wizard (all sections)</span>
+</span></span><span style="display:flex;"><span>hermes setup model      <span style="color:#6272a4"># re-run provider and model selection only</span>
+</span></span><span style="display:flex;"><span>hermes setup terminal   <span style="color:#6272a4"># reconfigure execution backend only</span>
+</span></span><span style="display:flex;"><span>hermes setup tools      <span style="color:#6272a4"># add or update tool API keys only</span>
+</span></span></code></pre></div><h3 id="71-wizard-architecture">7.1 Wizard Architecture</h3>
+<p>All interactive prompts funnel through three wrappers — <code>prompt()</code>, <code>prompt_choice()</code>, and <code>prompt_checklist()</code> — each of which delegates to <code>curses_ui.py</code> for arrow-key navigation. When curses is unavailable (CI, piped output, non-TTY), these wrappers fall back to numbered plain-text input. The non-interactive detection is explicit:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> is_interactive_stdin():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Run &#39;hermes config set &lt;key&gt; &lt;value&gt;&#39; to configure headlessly.&#34;</span>)
+</span></span><span style="display:flex;"><span>    sys<span style="color:#ff79c6">.</span>exit(<span style="color:#bd93f9">0</span>)
+</span></span></code></pre></div><p>Two additional input hardening steps are worth noting. API keys pasted from the clipboard often carry terminal bracketed-paste escape sequences (<code>ESC[200~</code> / <code>ESC[201~</code>). The wizard strips these via <code>_BRACKETED_PASTE_PATTERN</code> before saving — a small detail that prevents mysterious authentication failures from invisible control characters.</p>
+<h3 id="72-shared-code-path-with-hermes-model">7.2 Shared Code Path with <code>hermes model</code></h3>
+<p>The setup wizard does not have its own provider selection logic. It calls <code>select_provider_and_model()</code> directly — the same function <code>cmd_model</code> invokes. This means there is exactly one code path for all provider configuration in the system, exercised by both the setup wizard and the standalone <code>hermes model</code> command. Changes to provider handling propagate to both surfaces automatically.</p>
+<h3 id="73-post-setup-health-summary">7.3 Post-Setup Health Summary</h3>
+<p>After the wizard completes, <code>_print_setup_summary()</code> iterates every tool category (vision, web, browser, image generation, TTS, Modal), calls the real runtime resolver for each, and renders a <code>✓ / ✗</code> health matrix. This is not a cosmetic recap — it invokes the same resolution code the CLI uses at startup, so it reflects the actual state the agent will see on next launch.</p>
+<hr>
+<h2 id="chapter-8-hermes-model--provider-and-model-selection">Chapter 8: <code>hermes model</code> — Provider and Model Selection</h2>
+<p>The <code>hermes model</code> command surfaces one of the most interesting design challenges in the codebase: presenting a curated, user-friendly model picker that works offline, handles 15+ providers with different auth flows, and stays correct as the model landscape evolves weekly.</p>
+<h3 id="81-the-full-selection-flow">8.1 The Full Selection Flow</h3>
+<p><code>cmd_model()</code> calls <code>select_provider_and_model()</code>, a 200+ line function that walks the user through six stages:</p>
+<pre tabindex="0"><code>Stage 1: Load config.yaml → read current model.provider
+Stage 2: Resolve effective provider
+          ├── config.yaml model.provider
+          ├── HERMES_INFERENCE_PROVIDER env var (override)
+          └── resolve_provider(&#34;auto&#34;) → scans available API keys
+
+Stage 3: Build provider menu
+          ├── CANONICAL_PROVIDERS (static list from models.py)
+          └── custom_providers from config.yaml (user-defined, env-ref preserved)
+
+Stage 4: _prompt_provider_choice() → curses arrow-key picker
+
+Stage 5: Provider-specific flow dispatch:
+          ├── openrouter     → _model_flow_openrouter()
+          ├── anthropic      → _model_flow_anthropic()
+          ├── copilot        → _model_flow_copilot()         ← OAuth device code flow
+          ├── google-gemini  → _model_flow_google_gemini_cli()
+          ├── bedrock        → _model_flow_bedrock()         ← AWS credential validation
+          ├── custom         → _model_flow_custom()          ← URL entry + test call
+          └── api_key_type   → _model_flow_api_key_provider() ← generic key + list
+
+Stage 6: Inside each flow:
+          a. Prompt for API key if missing → save to ~/.hermes/.env
+          b. Fetch models from provider /v1/models → live, authoritative list
+             └── Falls back to _DEFAULT_PROVIDER_MODELS on timeout or failure
+          c. Present model picker (curses radiolist)
+          d. save_config() → atomic YAML write
+</code></pre><h3 id="82-three-tier-model-list-resolution">8.2 Three-Tier Model List Resolution</h3>
+<p>The model picker never fails completely. It degrades gracefully through three tiers:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Tier</th>
+          <th style="text-align: left">Source</th>
+          <th style="text-align: left">When Used</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">1</td>
+          <td style="text-align: left">Live <code>/v1/models</code> API call</td>
+          <td style="text-align: left">Network available, credentials valid</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">2</td>
+          <td style="text-align: left"><code>_DEFAULT_PROVIDER_MODELS</code> static catalog</td>
+          <td style="text-align: left">API timeout or network failure</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">3</td>
+          <td style="text-align: left">Free-text input field</td>
+          <td style="text-align: left">Provider not in static catalog</td>
+      </tr>
+  </tbody>
+</table>
+<p>This means a user on a plane can still run <code>hermes model</code> and type in a model name they know by heart. The system degrades to functional, not to broken.</p>
+<h3 id="83-auxiliary-model-routing">8.3 Auxiliary Model Routing</h3>
+<p>Below the primary model picker sits a secondary menu — <code>_aux_config_menu()</code> — that routes nine background tasks to separate, independently configured providers:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Task</th>
+          <th style="text-align: left">Config Key</th>
+          <th style="text-align: left">Typical Use</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Vision</td>
+          <td style="text-align: left"><code>auxiliary.vision</code></td>
+          <td style="text-align: left">Screenshot and image analysis</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Compression</td>
+          <td style="text-align: left"><code>auxiliary.compression</code></td>
+          <td style="text-align: left">Context window summarization</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Web extract</td>
+          <td style="text-align: left"><code>auxiliary.web_extract</code></td>
+          <td style="text-align: left">Web page summarization</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Session search</td>
+          <td style="text-align: left"><code>auxiliary.session_search</code></td>
+          <td style="text-align: left">Past conversation recall</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Approval</td>
+          <td style="text-align: left"><code>auxiliary.approval</code></td>
+          <td style="text-align: left">Smart command risk assessment</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">MCP</td>
+          <td style="text-align: left"><code>auxiliary.mcp</code></td>
+          <td style="text-align: left">MCP tool routing and reasoning</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Title generation</td>
+          <td style="text-align: left"><code>auxiliary.title_generation</code></td>
+          <td style="text-align: left">Automatic session naming</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Skills hub</td>
+          <td style="text-align: left"><code>auxiliary.skills_hub</code></td>
+          <td style="text-align: left">Skill search and install</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Curator</td>
+          <td style="text-align: left"><code>auxiliary.curator</code></td>
+          <td style="text-align: left">Background skill maintenance</td>
+      </tr>
+  </tbody>
+</table>
+<p>The pattern enables a split-model architecture: a powerful (expensive) model handles the primary conversation while cheap flash models handle compression, title generation, and session search. A concrete example:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#6272a4"># config.yaml: route compression to a cheap model, use main model for everything else</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">auxiliary</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">compression</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">provider</span>: openrouter
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">model</span>: google/gemini-3-flash-preview
+</span></span></code></pre></div><h3 id="84-stale-endpoint-cleanup">8.4 Stale Endpoint Cleanup</h3>
+<p>After every provider switch, <code>_clear_stale_openai_base_url()</code> removes any <code>OPENAI_BASE_URL</code> entry from <code>~/.hermes/.env</code>. This addresses a real user-facing issue (#5161): users who configure a custom endpoint, then switch to a named provider, were left with a dangling <code>OPENAI_BASE_URL</code> that silently overrode the new provider&rsquo;s URL. The cleanup runs automatically on every <code>hermes model</code> invocation.</p>
+<hr>
+<h2 id="chapter-9-hermes-status-and-hermes-doctor--diagnostics">Chapter 9: <code>hermes status</code> and <code>hermes doctor</code> — Diagnostics</h2>
+<p>Hermes ships two diagnostic commands with deliberately different scopes. <code>hermes status</code> is a fast, read-only health snapshot. <code>hermes doctor</code> is a deep scan with auto-fix capabilities.</p>
+<h3 id="91-hermes-status">9.1 <code>hermes status</code></h3>
+<p>Defined in <code>hermes_cli/status.py</code> (550 lines), <code>status</code> is designed to be lightweight — no LLM calls, no heavy imports. It checks:</p>
+<pre tabindex="0"><code>◆ Environment       — project root, Python version, .env presence, active model
+◆ API Keys          — 18+ providers, displayed redacted via mask_secret()
+◆ Auth Providers    — Nous, Codex, Gemini, MiniMax (OAuth token validity + expiry)
+◆ Terminal Backend  — local / docker / ssh / daytona / vercel_sandbox + backend details
+◆ Messaging         — 15 platforms: Telegram, Discord, Slack, WhatsApp, Signal, …
+◆ Gateway Service   — running PIDs, service manager (systemd / launchd / manual)
+◆ Scheduled Jobs    — count from ~/.hermes/cron/jobs.json
+◆ Sessions          — total session count from SessionDB
+</code></pre><p>The <code>--deep</code> flag adds live network probes: tests the OpenRouter <code>/models</code> endpoint and checks whether the gateway port (18789) is reachable. <code>--all</code> shows unredacted API key values.</p>
+<p>The critical design choice: <code>_effective_provider_label()</code> resolves the provider through <code>resolve_requested_provider()</code> → <code>resolve_provider()</code> — the exact same code path the CLI uses at startup. The status output shows what the agent <em>will</em> use, not just what is configured.</p>
+<h3 id="92-hermes-doctor">9.2 <code>hermes doctor</code></h3>
+<p>Defined in <code>hermes_cli/doctor.py</code> (1,836 lines), doctor runs ordered check categories and collects results into two lists: auto-fixable issues and manual-only issues.</p>
+<p><strong>Check ordering is intentional — security first:</strong></p>
+<pre tabindex="0"><code>1. Security Advisories    ← FIRST: detect compromised packages (litellm worm, etc.)
+2. Python Environment     ← version check, venv detection
+3. Required Packages      ← openai, rich, yaml, httpx
+4. Configuration Files    ← .env existence, config.yaml presence, version migration
+5. Config Structure       ← validate_config_structure() for malformed custom_providers
+6. Auth Providers         ← OAuth token status for each configured provider
+7. Provider Connectivity  ← live HTTP /models checks
+8. System Dependencies    ← Node.js, ripgrep, ffmpeg, browser binaries
+9. Tool Availability      ← per-toolset check_fn() results
+10. Gateway Service       ← systemd linger check on Linux
+</code></pre><blockquote>
+<p><strong>Design principle:</strong> The security advisory check runs first because a compromised package is more urgent than a missing config key. When writing diagnostic pipelines, order checks by user impact, not by implementation convenience.</p>
+</blockquote>
+<p><strong>Auto-fix mode</strong> (<code>hermes doctor --fix</code>) handles three classes of repair: creating a missing <code>~/.hermes/.env</code>, running <code>migrate_config()</code> for outdated schema versions, and promoting stale root-level <code>provider</code>/<code>base_url</code> keys into the correct <code>model:</code> section.</p>
+<p><strong>Plugin-augmented discovery:</strong> <code>_build_apikey_providers_list()</code> starts with a static list, then extends it by iterating <code>list_providers()</code> from the plugin registry. Any provider plugin dropped into <code>~/.hermes/plugins/</code> automatically appears in <code>hermes doctor</code> health checks without touching core files.</p>
+<hr>
+<h2 id="chapter-10-hermes-auth-config-gateway-and-profile">Chapter 10: <code>hermes auth</code>, <code>config</code>, <code>gateway</code>, and <code>profile</code></h2>
+<h3 id="101-hermes-auth--credential-pools">10.1 <code>hermes auth</code> — Credential Pools</h3>
+<p>The auth command manages multi-key pools for rate-limit avoidance. The storage convention is straightforward: numbered environment variables per provider.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#6272a4"># ~/.hermes/.env</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">OPENROUTER_API_KEY</span><span style="color:#ff79c6">=</span>sk-or-primary
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">OPENROUTER_API_KEY_2</span><span style="color:#ff79c6">=</span>sk-or-secondary
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">OPENROUTER_API_KEY_3</span><span style="color:#ff79c6">=</span>sk-or-tertiary
+</span></span></code></pre></div><p><code>AIAgent</code> reads the pool at startup and cycles through keys transparently on <code>429 RateLimitError</code>. The <code>hermes auth</code> subcommands manage this pool:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hermes auth add openrouter --key sk-or-...   <span style="color:#6272a4"># append to pool</span>
+</span></span><span style="display:flex;"><span>hermes auth list                             <span style="color:#6272a4"># show pool (keys masked)</span>
+</span></span><span style="display:flex;"><span>hermes auth remove openrouter <span style="color:#bd93f9">1</span>              <span style="color:#6272a4"># remove by index</span>
+</span></span><span style="display:flex;"><span>hermes auth <span style="color:#8be9fd;font-style:italic">test</span> openrouter                  <span style="color:#6272a4"># verify all keys with a live call</span>
+</span></span></code></pre></div><h3 id="102-hermes-config--configuration-editor">10.2 <code>hermes config</code> — Configuration Editor</h3>
+<p>The config command is a thin delegator to <code>config_command()</code> in <code>hermes_cli/config.py</code>. It supports dotpath-notation access and atomic writes:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hermes config                              <span style="color:#6272a4"># display full config (redacted secrets)</span>
+</span></span><span style="display:flex;"><span>hermes config get model.provider           <span style="color:#6272a4"># read a single key</span>
+</span></span><span style="display:flex;"><span>hermes config <span style="color:#8be9fd;font-style:italic">set</span> agent.max_turns <span style="color:#bd93f9">120</span>      <span style="color:#6272a4"># write a key (atomic YAML replace)</span>
+</span></span><span style="display:flex;"><span>hermes config edit                         <span style="color:#6272a4"># open $EDITOR on config.yaml directly</span>
+</span></span><span style="display:flex;"><span>hermes config reset                        <span style="color:#6272a4"># restore all defaults (with confirmation)</span>
+</span></span></code></pre></div><p>The <code>set</code> operation navigates nested YAML using dotpath notation, then writes through <code>atomic_yaml_write()</code> — a temp-file-then-rename pattern that prevents partial-write corruption and naturally invalidates the in-process config cache by producing a fresh inode.</p>
+<h3 id="103-hermes-gateway--messaging-platform-manager">10.3 <code>hermes gateway</code> — Messaging Platform Manager</h3>
+<p>The gateway is a long-running asyncio process running platform adapters in parallel. <code>hermes_cli/gateway.py</code> provides the OS-level management wrapper:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hermes gateway            <span style="color:#6272a4"># start in foreground</span>
+</span></span><span style="display:flex;"><span>hermes gateway install    <span style="color:#6272a4"># register as systemd unit (Linux) or launchd plist (macOS)</span>
+</span></span><span style="display:flex;"><span>hermes gateway status     <span style="color:#6272a4"># show running PIDs and service state</span>
+</span></span><span style="display:flex;"><span>hermes gateway stop       <span style="color:#6272a4"># graceful shutdown (drains in-flight agent runs)</span>
+</span></span><span style="display:flex;"><span>hermes gateway logs       <span style="color:#6272a4"># tail gateway.log</span>
+</span></span></code></pre></div><p>Platform adapters are discovered via <code>gateway/platform_registry.py</code>. Plugins register new platforms by calling <code>platform_registry.register(...)</code> in their <code>register(ctx)</code> function — no changes to gateway core required.</p>
+<p>The graceful shutdown flow respects <code>agent.restart_drain_timeout</code> (default 180s): the gateway stops accepting new work, waits for in-flight agent runs to complete, then sends SIGTERM to any remaining runs after the timeout. This prevents cutting off a mid-reasoning model call that has been running for two minutes.</p>
+<h3 id="104-hermes-profile--multi-instance-isolation">10.4 <code>hermes profile</code> — Multi-Instance Isolation</h3>
+<p>Each profile is a complete, self-contained <code>~/.hermes/</code>-equivalent directory:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>hermes profile create work    <span style="color:#6272a4"># creates ~/.hermes/profiles/work/</span>
+</span></span><span style="display:flex;"><span>hermes profile list           <span style="color:#6272a4"># shows all profiles + active indicator</span>
+</span></span><span style="display:flex;"><span>hermes profile use work       <span style="color:#6272a4"># writes &#34;work&#34; to ~/.hermes/active_profile (sticky)</span>
+</span></span><span style="display:flex;"><span>hermes profile delete work    <span style="color:#6272a4"># removes profile directory</span>
+</span></span><span style="display:flex;"><span>hermes profile <span style="color:#8be9fd;font-style:italic">export</span> work    <span style="color:#6272a4"># zip profile for backup or transfer</span>
+</span></span></code></pre></div><p>Using a profile for a single invocation without changing the sticky default: <code>hermes -p work chat</code>. The flag is consumed before argparse runs, so all imports inside <code>cmd_chat()</code> see the correct <code>HERMES_HOME</code> from the moment they load.</p>
+<hr>
+<h2 id="part-v--extensibility">Part V — Extensibility</h2>
+<hr>
+<h2 id="chapter-11-the-plugin-system">Chapter 11: The Plugin System</h2>
+<p>The plugin system in <code>hermes_cli/plugins.py</code> (1,561 lines) is the primary extension point for Hermes. It allows third parties to register tools, hooks, slash commands, and CLI subcommands without modifying any core file.</p>
+<h3 id="111-discovery-sources">11.1 Discovery Sources</h3>
+<p>Plugins are discovered from four locations in priority order:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Source</th>
+          <th style="text-align: left">Path</th>
+          <th style="text-align: left">Priority</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Pip-installed</td>
+          <td style="text-align: left">Entry point <code>hermes_agent.plugins</code></td>
+          <td style="text-align: left">Highest (last writer wins)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Project-local</td>
+          <td style="text-align: left"><code>./.hermes/plugins/&lt;name&gt;/</code></td>
+          <td style="text-align: left">Medium (requires <code>HERMES_ENABLE_PROJECT_PLUGINS=1</code>)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">User-installed</td>
+          <td style="text-align: left"><code>~/.hermes/plugins/&lt;name&gt;/</code></td>
+          <td style="text-align: left">Medium</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Bundled</td>
+          <td style="text-align: left"><code>&lt;repo&gt;/plugins/&lt;name&gt;/</code></td>
+          <td style="text-align: left">Lowest</td>
+      </tr>
+  </tbody>
+</table>
+<p>Discovery is triggered as a side-effect of importing <code>model_tools.py</code>. Code paths that need plugin state without going through <code>model_tools</code> must call <code>discover_plugins()</code> explicitly — it is idempotent.</p>
+<h3 id="112-plugin-manifest-and-entry-point">11.2 Plugin Manifest and Entry Point</h3>
+<p>Every plugin requires two files:</p>
+<pre tabindex="0"><code>~/.hermes/plugins/my-plugin/
+├── plugin.yaml     ← manifest
+└── __init__.py     ← must define register(ctx)
+</code></pre><p>Minimal <code>plugin.yaml</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">name</span>: my-plugin
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">description</span>: <span style="color:#f1fa8c">&#34;A custom tool plugin&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">version</span>: <span style="color:#f1fa8c">&#34;1.0&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">kind</span>: tool   <span style="color:#6272a4"># tool | memory | context_engine | model-provider | platform</span>
+</span></span></code></pre></div><p>The <code>register(ctx)</code> function receives a <code>PluginContext</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">register</span>(ctx: PluginContext) <span style="color:#ff79c6">-&gt;</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>    ctx<span style="color:#ff79c6">.</span>register_tool(
+</span></span><span style="display:flex;"><span>        name<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;my_tool&#34;</span>,
+</span></span><span style="display:flex;"><span>        toolset<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;my-plugin&#34;</span>,
+</span></span><span style="display:flex;"><span>        schema<span style="color:#ff79c6">=</span>{<span style="color:#f1fa8c">&#34;name&#34;</span>: <span style="color:#f1fa8c">&#34;my_tool&#34;</span>, <span style="color:#f1fa8c">&#34;description&#34;</span>: <span style="color:#f1fa8c">&#34;…&#34;</span>, <span style="color:#f1fa8c">&#34;parameters&#34;</span>: {…}},
+</span></span><span style="display:flex;"><span>        handler<span style="color:#ff79c6">=</span><span style="color:#ff79c6">lambda</span> args, <span style="color:#ff79c6">**</span>kw: json<span style="color:#ff79c6">.</span>dumps({<span style="color:#f1fa8c">&#34;result&#34;</span>: do_work(args)}),
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    ctx<span style="color:#ff79c6">.</span>register_hook(<span style="color:#f1fa8c">&#34;post_tool_call&#34;</span>, my_audit_hook)
+</span></span><span style="display:flex;"><span>    ctx<span style="color:#ff79c6">.</span>register_command(<span style="color:#f1fa8c">&#34;mycommand&#34;</span>, <span style="color:#f1fa8c">&#34;Does X&#34;</span>, args_hint<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;&lt;arg&gt;&#34;</span>, handler<span style="color:#ff79c6">=</span>my_handler)
+</span></span></code></pre></div><h3 id="113-valid-hook-points">11.3 Valid Hook Points</h3>
+<p>The hook system covers the entire agent lifecycle:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>VALID_HOOKS <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;pre_tool_call&#34;</span>, <span style="color:#f1fa8c">&#34;post_tool_call&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;transform_terminal_output&#34;</span>, <span style="color:#f1fa8c">&#34;transform_tool_result&#34;</span>, <span style="color:#f1fa8c">&#34;transform_llm_output&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;pre_llm_call&#34;</span>, <span style="color:#f1fa8c">&#34;post_llm_call&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;pre_api_request&#34;</span>, <span style="color:#f1fa8c">&#34;post_api_request&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;on_session_start&#34;</span>, <span style="color:#f1fa8c">&#34;on_session_end&#34;</span>, <span style="color:#f1fa8c">&#34;on_session_finalize&#34;</span>, <span style="color:#f1fa8c">&#34;on_session_reset&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;subagent_stop&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;pre_gateway_dispatch&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;pre_approval_request&#34;</span>, <span style="color:#f1fa8c">&#34;post_approval_response&#34;</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><blockquote>
+<p><strong>Non-negotiable rule from <code>AGENTS.md</code>:</strong> Plugins must not modify core files. If a plugin needs a capability the framework does not expose, the correct fix is to expand the generic plugin surface — never add plugin-specific logic to <code>run_agent.py</code>, <code>cli.py</code>, or <code>gateway/run.py</code>.</p>
+</blockquote>
+<h3 id="114-shell-script-hooks">11.4 Shell-Script Hooks</h3>
+<p>For simpler integration needs, <code>config.yaml</code> supports declarative shell-script hooks that do not require a Python plugin:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">hooks</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">post_tool_call</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">matcher</span>: <span style="color:#f1fa8c">&#34;terminal&#34;</span>           <span style="color:#6272a4"># tool name glob pattern</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">command</span>: <span style="color:#f1fa8c">&#34;~/.hermes/hooks/audit.sh&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">timeout</span>: <span style="color:#bd93f9">5</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">pre_llm_call</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ff79c6">matcher</span>: <span style="color:#f1fa8c">&#34;*&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">command</span>: <span style="color:#f1fa8c">&#34;~/.hermes/hooks/log-call.sh&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">timeout</span>: <span style="color:#bd93f9">2</span>
+</span></span></code></pre></div><p>First registration triggers a one-time consent prompt stored in <code>~/.hermes/shell-hooks-allowlist.json</code>. Set <code>hooks_auto_accept: true</code> for headless gateway or cron deployments.</p>
+<hr>
+<h2 id="chapter-12-skins-and-themes">Chapter 12: Skins and Themes</h2>
+<p>The skin engine in <code>hermes_cli/skin_engine.py</code> (921 lines) provides data-driven visual customization. No code changes are required to add a new skin — only data.</p>
+<h3 id="121-what-a-skin-controls">12.1 What a Skin Controls</h3>
+<pre tabindex="0"><code>SkinConfig
+├── colors             ← banner border, title, accent, response box
+├── spinner
+│   ├── waiting_faces  ← idle animation frames
+│   ├── thinking_faces ← active animation frames
+│   ├── thinking_verbs ← &#34;thinking&#34;, &#34;reasoning&#34;, &#34;computing&#34;
+│   └── wings          ← optional left/right wing pairs: [&#34;⟨⚡&#34;, &#34;⚡⟩&#34;]
+├── branding
+│   ├── agent_name     ← displayed in banner
+│   ├── welcome        ← banner subtitle
+│   ├── response_label ← label on the response box
+│   └── prompt_symbol  ← &#34;❯ &#34; or &#34;⚡ &#34; before user input
+├── tool_prefix        ← character before tool output lines (default &#34;┊&#34;)
+└── tool_emojis        ← {tool_name → emoji} mapping
+</code></pre><h3 id="122-built-in-skins">12.2 Built-in Skins</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Skin</th>
+          <th style="text-align: left">Character</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><code>default</code></td>
+          <td style="text-align: left">Classic Hermes gold and kawaii</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>ares</code></td>
+          <td style="text-align: left">War-god — crimson and bronze</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>mono</code></td>
+          <td style="text-align: left">Clean grayscale</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>slate</code></td>
+          <td style="text-align: left">Cool blue, developer-focused</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>daylight</code></td>
+          <td style="text-align: left">Light-background-friendly</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>poseidon</code></td>
+          <td style="text-align: left">Ocean-god — deep blue and seafoam</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>charizard</code></td>
+          <td style="text-align: left">Volcanic — burnt orange and ember</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="123-user-skins">12.3 User Skins</h3>
+<p>Create <code>~/.hermes/skins/&lt;name&gt;.yaml</code> with any subset of the skin schema. Missing fields fall back to the <code>default</code> skin — no error for partial definitions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">name</span>: cyberpunk
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">description</span>: Neon-soaked terminal theme
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">colors</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">banner_border</span>: <span style="color:#f1fa8c">&#34;#FF00FF&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">banner_title</span>: <span style="color:#f1fa8c">&#34;#00FFFF&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">spinner</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">thinking_verbs</span>: [<span style="color:#f1fa8c">&#34;jacking in&#34;</span>, <span style="color:#f1fa8c">&#34;decrypting&#34;</span>, <span style="color:#f1fa8c">&#34;uplink established&#34;</span>]
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">wings</span>:
+</span></span><span style="display:flex;"><span>    - [<span style="color:#f1fa8c">&#34;⟨⚡&#34;</span>, <span style="color:#f1fa8c">&#34;⚡⟩&#34;</span>]
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">branding</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">agent_name</span>: <span style="color:#f1fa8c">&#34;Cyber Agent&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">prompt_symbol</span>: <span style="color:#f1fa8c">&#34;⚡ &#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">tool_prefix</span>: <span style="color:#f1fa8c">&#34;▏&#34;</span>
+</span></span></code></pre></div><p>Activate at runtime with <code>/skin cyberpunk</code> or permanently with <code>hermes config set display.skin cyberpunk</code>.</p>
+<hr>
+<h2 id="part-vi--configuration-reference">Part VI — Configuration Reference</h2>
+<hr>
+<h2 id="chapter-13-configyaml--the-agents-brain">Chapter 13: <code>config.yaml</code> — The Agent&rsquo;s Brain</h2>
+<p><code>~/.hermes/config.yaml</code> is the single most important file in the Hermes ecosystem. Every CLI mode loads it. Every tool reads from it. Every platform adapter interprets it. The file is deep-merged with <code>DEFAULT_CONFIG</code> at load time, so a user&rsquo;s file only needs to contain overrides — a minimal two-line <code>config.yaml</code> is perfectly valid.</p>
+<h3 id="131-version-tracking-and-migration">13.1 Version Tracking and Migration</h3>
+<p>The top-level key <code>_config_version: 23</code> (as of May 2026) enables schema migration. On every startup, <code>migrate_config()</code> compares the user&rsquo;s version to <code>DEFAULT_CONFIG</code>&rsquo;s version and runs any needed migration functions. Bumping the version is only required for structural changes — renaming keys, moving sections, changing value types. Adding a new key to an existing section does not require a version bump; the deep merge handles it transparently.</p>
+<h3 id="132-top-level-sections-reference">13.2 Top-Level Sections Reference</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Section</th>
+          <th style="text-align: left">Key Default</th>
+          <th style="text-align: left">What It Controls</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><code>model</code></td>
+          <td style="text-align: left"><code>&quot;&quot;</code></td>
+          <td style="text-align: left">Active provider slug + model name</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>providers</code></td>
+          <td style="text-align: left"><code>{}</code></td>
+          <td style="text-align: left">Named custom provider endpoints</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>fallback_providers</code></td>
+          <td style="text-align: left"><code>[]</code></td>
+          <td style="text-align: left">Ordered failover chain</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>credential_pool_strategies</code></td>
+          <td style="text-align: left"><code>{}</code></td>
+          <td style="text-align: left">Per-provider key-cycling</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>toolsets</code></td>
+          <td style="text-align: left"><code>[&quot;hermes-cli&quot;]</code></td>
+          <td style="text-align: left">Active toolset bundle names</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>agent</code></td>
+          <td style="text-align: left">(see below)</td>
+          <td style="text-align: left">Core loop parameters</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>terminal</code></td>
+          <td style="text-align: left">(see below)</td>
+          <td style="text-align: left">Execution backend</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>web</code></td>
+          <td style="text-align: left"><code>backend: &quot;&quot;</code></td>
+          <td style="text-align: left">Search + extract routing</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>browser</code></td>
+          <td style="text-align: left"><code>inactivity_timeout: 120</code></td>
+          <td style="text-align: left">Browser engine, CDP, sessions</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>checkpoints</code></td>
+          <td style="text-align: left"><code>enabled: false</code></td>
+          <td style="text-align: left">Git-backed snapshots</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>compression</code></td>
+          <td style="text-align: left"><code>enabled: true, threshold: 0.50</code></td>
+          <td style="text-align: left">Context window compression</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>prompt_caching</code></td>
+          <td style="text-align: left"><code>cache_ttl: &quot;5m&quot;</code></td>
+          <td style="text-align: left">Anthropic prompt cache TTL</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>openrouter</code></td>
+          <td style="text-align: left"><code>response_cache: true</code></td>
+          <td style="text-align: left">OpenRouter response caching</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>bedrock</code></td>
+          <td style="text-align: left"><code>region: &quot;&quot;</code></td>
+          <td style="text-align: left">AWS Bedrock + guardrails</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>auxiliary</code></td>
+          <td style="text-align: left">(9 tasks)</td>
+          <td style="text-align: left">Per-task auxiliary model routing</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>display</code></td>
+          <td style="text-align: left">(see below)</td>
+          <td style="text-align: left">UI/UX appearance</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>dashboard</code></td>
+          <td style="text-align: left"><code>theme: &quot;default&quot;</code></td>
+          <td style="text-align: left">Web dashboard theme</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>privacy</code></td>
+          <td style="text-align: left"><code>redact_pii: false</code></td>
+          <td style="text-align: left">PII redaction in LLM context</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>tts</code></td>
+          <td style="text-align: left"><code>provider: &quot;edge&quot;</code></td>
+          <td style="text-align: left">Text-to-speech</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>stt</code></td>
+          <td style="text-align: left"><code>provider: &quot;local&quot;</code></td>
+          <td style="text-align: left">Speech-to-text</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>voice</code></td>
+          <td style="text-align: left"><code>record_key: &quot;ctrl+b&quot;</code></td>
+          <td style="text-align: left">Push-to-talk settings</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>memory</code></td>
+          <td style="text-align: left"><code>memory_enabled: true</code></td>
+          <td style="text-align: left">Persistent memory injection</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>context</code></td>
+          <td style="text-align: left"><code>engine: &quot;compressor&quot;</code></td>
+          <td style="text-align: left">Context window manager plugin</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>delegation</code></td>
+          <td style="text-align: left"><code>max_iterations: 50</code></td>
+          <td style="text-align: left">Subagent routing + concurrency</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>goals</code></td>
+          <td style="text-align: left"><code>max_turns: 20</code></td>
+          <td style="text-align: left">Persistent goal loop budget</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>skills</code></td>
+          <td style="text-align: left"><code>external_dirs: []</code></td>
+          <td style="text-align: left">Skill directories + template vars</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>curator</code></td>
+          <td style="text-align: left"><code>interval_hours: 168</code></td>
+          <td style="text-align: left">Background skill maintenance</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>approvals</code></td>
+          <td style="text-align: left"><code>mode: &quot;manual&quot;</code></td>
+          <td style="text-align: left">Command approval gate</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>security</code></td>
+          <td style="text-align: left"><code>tirith_enabled: true</code></td>
+          <td style="text-align: left">Pre-exec scanning + advisories</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>slack</code> / <code>discord</code> / <code>telegram</code> / …</td>
+          <td style="text-align: left">platform-specific</td>
+          <td style="text-align: left">Per-platform gateway behaviour</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>cron</code></td>
+          <td style="text-align: left"><code>wrap_response: true</code></td>
+          <td style="text-align: left">Scheduled task delivery</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>kanban</code></td>
+          <td style="text-align: left"><code>dispatch_interval_seconds: 60</code></td>
+          <td style="text-align: left">Multi-agent board</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>lsp</code></td>
+          <td style="text-align: left"><code>enabled: true</code></td>
+          <td style="text-align: left">Language server integration</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>logging</code></td>
+          <td style="text-align: left"><code>level: &quot;INFO&quot;</code></td>
+          <td style="text-align: left">Log rotation + retention</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>sessions</code></td>
+          <td style="text-align: left"><code>auto_prune: false</code></td>
+          <td style="text-align: left">state.db retention + VACUUM</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>model_catalog</code></td>
+          <td style="text-align: left"><code>ttl_hours: 24</code></td>
+          <td style="text-align: left">Remote model list cache</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>_config_version</code></td>
+          <td style="text-align: left"><code>23</code></td>
+          <td style="text-align: left">Migration marker (do not edit)</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="133-critical-sub-sections">13.3 Critical Sub-Sections</h3>
+<p><strong><code>agent</code> — the loop contract:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">agent</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">max_turns</span>: <span style="color:#bd93f9">90</span>                   <span style="color:#6272a4"># Tool-calling iteration cap per conversation</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">gateway_timeout</span>: <span style="color:#bd93f9">1800</span>           <span style="color:#6272a4"># Idle timeout for gateway runs (seconds)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">restart_drain_timeout</span>: <span style="color:#bd93f9">180</span>      <span style="color:#6272a4"># Graceful drain before hard kill on /restart</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">api_max_retries</span>: <span style="color:#bd93f9">3</span>              <span style="color:#6272a4"># App-level retry loop (above the SDK&#39;s own)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">tool_use_enforcement</span>: <span style="color:#f1fa8c">&#34;auto&#34;</span>    <span style="color:#6272a4"># Force tool calls on models that prefer prose</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">clarify_timeout</span>: <span style="color:#bd93f9">600</span>            <span style="color:#6272a4"># Max wait for user response to clarify prompt</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">gateway_notify_interval</span>: <span style="color:#bd93f9">180</span>    <span style="color:#6272a4"># &#34;Still working&#34; keepalive interval</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">image_input_mode</span>: <span style="color:#f1fa8c">&#34;auto&#34;</span>        <span style="color:#6272a4"># native | text — how images reach the model</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">disabled_toolsets</span>: []           <span style="color:#6272a4"># Global toolset disable list</span>
+</span></span></code></pre></div><p><strong><code>terminal</code> — the execution harness:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">terminal</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">backend</span>: <span style="color:#f1fa8c">&#34;local&#34;</span>                <span style="color:#6272a4"># local | docker | ssh | daytona | modal | vercel_sandbox</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">cwd</span>: <span style="color:#f1fa8c">&#34;.&#34;</span>                        <span style="color:#6272a4"># Working directory for gateway mode</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">timeout</span>: <span style="color:#bd93f9">180</span>                    <span style="color:#6272a4"># Per-command execution timeout (seconds)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">docker_image</span>: <span style="color:#f1fa8c">&#34;nikolaik/python-nodejs:python3.11-nodejs20&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">persistent_shell</span>: <span style="color:#ff79c6">true</span>          <span style="color:#6272a4"># Reuse a long-lived bash across execute() calls</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">container_memory</span>: <span style="color:#bd93f9">5120</span>          <span style="color:#6272a4"># MB — container memory limit (5 GB default)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">container_disk</span>: <span style="color:#bd93f9">51200</span>           <span style="color:#6272a4"># MB — container disk limit (50 GB default)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">docker_volumes</span>: []              <span style="color:#6272a4"># [&#34;host_path:container_path&#34;] mount pairs</span>
+</span></span></code></pre></div><p><strong><code>display</code> — the UI contract:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">display</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">skin</span>: <span style="color:#f1fa8c">&#34;default&#34;</span>                 <span style="color:#6272a4"># Skin name (built-in or ~/.hermes/skins/&lt;name&gt;.yaml)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">language</span>: <span style="color:#f1fa8c">&#34;en&#34;</span>                  <span style="color:#6272a4"># UI language for static strings (en/zh/ja/de/…)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">streaming</span>: <span style="color:#ff79c6">false</span>                <span style="color:#6272a4"># Token-by-token streaming in the CLI</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">show_reasoning</span>: <span style="color:#ff79c6">false</span>           <span style="color:#6272a4"># Show model reasoning tokens</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">final_response_markdown</span>: <span style="color:#f1fa8c">&#34;strip&#34;</span> <span style="color:#6272a4"># render | strip | raw</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">inline_diffs</span>: <span style="color:#ff79c6">true</span>              <span style="color:#6272a4"># Show diffs for write_file/patch operations</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">show_cost</span>: <span style="color:#ff79c6">false</span>                <span style="color:#6272a4"># Show $ cost in status bar</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">tool_progress_command</span>: <span style="color:#ff79c6">false</span>    <span style="color:#6272a4"># Enable /verbose command in the gateway</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">tui_status_indicator</span>: <span style="color:#f1fa8c">&#34;kaomoji&#34;</span> <span style="color:#6272a4"># kaomoji | emoji | unicode | ascii</span>
+</span></span></code></pre></div><p><strong><code>tool_output</code> — context budget guardrails:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">tool_output</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">max_bytes</span>: <span style="color:#bd93f9">50000</span>      <span style="color:#6272a4"># Terminal output cap (~12-15K tokens)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">max_lines</span>: <span style="color:#bd93f9">2000</span>       <span style="color:#6272a4"># read_file pagination cap</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">max_line_length</span>: <span style="color:#bd93f9">2000</span> <span style="color:#6272a4"># Per-line character cap in line-numbered view</span>
+</span></span></code></pre></div><p><strong><code>tool_loop_guardrails</code> — preventing runaway loops:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">tool_loop_guardrails</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">warnings_enabled</span>: <span style="color:#ff79c6">true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">hard_stop_enabled: false    # Opt-in</span>: terminates the loop on repeated failure
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">warn_after</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">exact_failure</span>: <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">same_tool_failure</span>: <span style="color:#bd93f9">3</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">idempotent_no_progress</span>: <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">hard_stop_after</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">exact_failure</span>: <span style="color:#bd93f9">5</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">same_tool_failure</span>: <span style="color:#bd93f9">8</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">idempotent_no_progress</span>: <span style="color:#bd93f9">5</span>
+</span></span></code></pre></div><h3 id="134-the-three-config-loaders">13.4 The Three Config Loaders</h3>
+<p>Hermes uses three distinct loading paths depending on the execution context. Mixing them up is a common source of &ldquo;why does the gateway not see my config change?&rdquo; bugs.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Loader</th>
+          <th style="text-align: left">Used By</th>
+          <th style="text-align: left">Behaviour</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><code>load_cli_config()</code></td>
+          <td style="text-align: left"><code>cli.py</code> interactive REPL</td>
+          <td style="text-align: left">Merges CLI defaults + <code>load_config()</code> output</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>load_config()</code></td>
+          <td style="text-align: left">All subcommands</td>
+          <td style="text-align: left">Deep-merges <code>DEFAULT_CONFIG</code> → <code>config.yaml</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Direct YAML</td>
+          <td style="text-align: left"><code>gateway/run.py</code></td>
+          <td style="text-align: left">Reads raw YAML, no <code>DEFAULT_CONFIG</code> merge</td>
+      </tr>
+  </tbody>
+</table>
+<p>All three are protected against concurrent access by <code>_CONFIG_LOCK</code> (an <code>RLock</code>). <code>load_config()</code> additionally caches results keyed by <code>(mtime_ns, file_size)</code> — a cache hit costs ~13µs (a <code>deepcopy</code>); a miss costs ~13ms (YAML parse + deep merge). The <code>atomic_yaml_write()</code> function produces a fresh inode on every write, which naturally invalidates this cache without any explicit invalidation call.</p>
+<blockquote>
+<p><strong>Minimal valid config.yaml:</strong> Because of the deep merge, the user&rsquo;s file only needs to express divergence from defaults. A file containing only the model settings is complete:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">model</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">provider</span>: openrouter
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">default</span>: google/gemini-3-flash-preview
+</span></span></code></pre></div></blockquote>
+<hr>
+<h2 id="chapter-14-env-soulmd-and-statedb">Chapter 14: <code>.env</code>, <code>SOUL.md</code>, and <code>state.db</code></h2>
+<h3 id="141-env--secrets-only">14.1 <code>.env</code> — Secrets Only</h3>
+<p><code>~/.hermes/.env</code> holds API keys, tokens, and passwords. Non-secret settings — timeouts, flags, paths, thresholds — always go in <code>config.yaml</code>. The separation is not aesthetic: the <code>.env</code> file receives an independent <code>chmod 600</code>, and <code>hermes config</code> output redacts it. A <code>config.yaml</code> committed to a dotfiles repository will never expose secrets if this boundary is respected.</p>
+<p><strong>Loading order:</strong> <code>get_env_value(key)</code> checks <code>os.environ</code> first (for runtime overrides via the shell), then falls back to <code>~/.hermes/.env</code>. The loader strips surrounding whitespace and terminal bracketed-paste control sequences automatically.</p>
+<p><strong>Credential pool numbering:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">OPENROUTER_API_KEY</span><span style="color:#ff79c6">=</span>sk-or-v1-primary
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">OPENROUTER_API_KEY_2</span><span style="color:#ff79c6">=</span>sk-or-v1-secondary
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">OPENROUTER_API_KEY_3</span><span style="color:#ff79c6">=</span>sk-or-v1-tertiary
+</span></span></code></pre></div><p><code>AIAgent</code> reads the pool at startup and rotates through keys on <code>429 RateLimitError</code> with no user intervention.</p>
+<p><strong>Key categories:</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Category</th>
+          <th style="text-align: left">Examples</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Primary providers</td>
+          <td style="text-align: left"><code>OPENROUTER_API_KEY</code>, <code>ANTHROPIC_API_KEY</code>, <code>OPENAI_API_KEY</code>, <code>GOOGLE_API_KEY</code>, <code>XAI_API_KEY</code>, <code>NVIDIA_API_KEY</code>, <code>KIMI_API_KEY</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Provider base URLs</td>
+          <td style="text-align: left"><code>LM_BASE_URL</code>, <code>GEMINI_BASE_URL</code>, <code>XAI_BASE_URL</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Tool services</td>
+          <td style="text-align: left"><code>FIRECRAWL_API_KEY</code>, <code>TAVILY_API_KEY</code>, <code>BROWSERBASE_API_KEY</code>, <code>FAL_KEY</code>, <code>ELEVENLABS_API_KEY</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Messaging platforms</td>
+          <td style="text-align: left"><code>TELEGRAM_BOT_TOKEN</code>, <code>DISCORD_BOT_TOKEN</code>, <code>SLACK_BOT_TOKEN</code>, <code>GITHUB_TOKEN</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">System</td>
+          <td style="text-align: left"><code>SUDO_PASSWORD</code>, <code>HERMES_HOME</code>, <code>HERMES_PYTHON</code></td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="142-soulmd--the-agents-identity">14.2 <code>SOUL.md</code> — The Agent&rsquo;s Identity</h3>
+<p>Seeded on first run from <code>hermes_cli/default_soul.py</code>, <code>SOUL.md</code> is the base system prompt — the text that defines who the agent is before any skill, memory, or session context is added. The default content:</p>
+<pre tabindex="0"><code>You are Hermes Agent, an intelligent AI assistant created by Nous Research.
+You are helpful, knowledgeable, and direct. You assist users with a wide
+range of tasks including answering questions, writing and editing code,
+analyzing information, creative work, and executing actions via your tools.
+You communicate clearly, admit uncertainty when appropriate, and prioritize
+being genuinely useful over being verbose unless otherwise directed below.
+Be targeted and efficient in your exploration and investigations.
+</code></pre><p>Users edit this file directly to change persona, tone, domain focus, or output constraints. The system prompt the model sees is assembled in layers:</p>
+<pre tabindex="0"><code>Layer 1: SOUL.md                    ← Identity (always present)
+Layer 2: Active skill SKILL.md      ← Skill-specific instructions (optional)
+Layer 3: Persistent memory          ← From ~/.hermes/memories/ (~800-token budget)
+Layer 4: User profile memory        ← From memory provider (~500-token budget)
+Layer 5: Session context files      ← .context files in the working directory
+</code></pre><h3 id="143-statedb--the-session-store">14.3 <code>state.db</code> — The Session Store</h3>
+<p><code>~/.hermes/state.db</code> is a SQLite database managed by <code>hermes_state.py::SessionDB</code>. It is the permanent record of every conversation Hermes has ever had on this system.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Table</th>
+          <th style="text-align: left">Contents</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><code>sessions</code></td>
+          <td style="text-align: left">Session metadata: id, title, platform, created_at, ended_at</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>messages</code></td>
+          <td style="text-align: left">All conversation messages: role, content, tool_calls, reasoning</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>tool_calls</code></td>
+          <td style="text-align: left">Structured tool log: tool_name, args, result, duration_ms</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>state_meta</code></td>
+          <td style="text-align: left">Key-value store: pruning timestamps, onboarding state</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">FTS5 virtual table</td>
+          <td style="text-align: left">Full-text search index over session titles and message content</td>
+      </tr>
+  </tbody>
+</table>
+<p>The FTS5 virtual table powers <code>hermes sessions search &quot;my query&quot;</code> and the <code>/search</code> slash command — sub-millisecond full-text search across tens of thousands of messages.</p>
+<p>Session pruning is opt-in, governed by <code>sessions.auto_prune</code> and <code>sessions.retention_days</code> in <code>config.yaml</code>. Heavy gateway deployments (continuous messaging across Telegram, Discord, etc.) should enable <code>auto_prune: true</code> with a sensible <code>retention_days</code> — users have reported 384MB+ databases with 68K+ messages when pruning is disabled.</p>
+<h3 id="144-cronjobsjson--scheduled-tasks">14.4 <code>cron/jobs.json</code> — Scheduled Tasks</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;jobs&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;id&#34;</span>: <span style="color:#f1fa8c">&#34;daily-standup&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;enabled&#34;</span>: <span style="color:#ff79c6">true</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;schedule&#34;</span>: <span style="color:#f1fa8c">&#34;0 9 * * 1-5&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;task&#34;</span>: <span style="color:#f1fa8c">&#34;Generate a standup summary and post it to #engineering&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;delivery&#34;</span>: <span style="color:#f1fa8c">&#34;slack&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;model&#34;</span>: <span style="color:#f1fa8c">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;max_turns&#34;</span>: <span style="color:#bd93f9">10</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The gateway reads this file at startup and on <code>SIGHUP</code>. The dispatcher evaluates due jobs on the <code>kanban.dispatch_interval_seconds</code> tick (default 60s) and spawns <code>AIAgent</code> instances in threads, with the <code>task</code> string as the opening user message.</p>
+<h3 id="145-skills--reusable-agent-capabilities">14.5 <code>skills/</code> — Reusable Agent Capabilities</h3>
+<pre tabindex="0"><code>skills/my-skill/
+├── SKILL.md        ← Instructions injected into system prompt when active
+├── plugin.yaml     ← name, description, version, requires
+└── *.py / *.sh     ← Optional implementation files
+</code></pre><p>Minimal <code>plugin.yaml</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#ff79c6">name</span>: my-skill
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">description</span>: Does something useful
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">version</span>: <span style="color:#f1fa8c">&#34;1.0&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">requires</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">executables</span>: [ripgrep]
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">python</span>: [httpx]
+</span></span></code></pre></div><p>The curator — running on the configurable <code>curator.interval_hours</code> schedule — reviews agent-created skills, marks unused ones as stale after <code>stale_after_days</code>, and archives them to <code>skills/.archive/</code> after <code>archive_after_days</code>. Archives are recoverable; nothing is deleted automatically.</p>
+<hr>
+<h2 id="part-vii--staff-engineer-patterns">Part VII — Staff-Engineer Patterns</h2>
+<hr>
+<h2 id="chapter-15-ten-design-patterns-worth-stealing">Chapter 15: Ten Design Patterns Worth Stealing</h2>
+<p>The Hermes codebase is a working example of a production-grade Python CLI under sustained development. Ten patterns appear repeatedly and are worth understanding as design primitives for any similar system.</p>
+<h3 id="pattern-1-data-driven-command-registries">Pattern 1: Data-Driven Command Registries</h3>
+<p><code>COMMAND_REGISTRY</code> in <code>commands.py</code> is a list of <code>CommandDef</code> dataclasses — the sole definition of every slash command in the system. Every downstream consumer derives from it automatically at import time: CLI dispatch, help menus, Telegram bot menus, Slack app manifests, autocomplete, and gateway routing.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>@dataclass(frozen<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">CommandDef</span>:
+</span></span><span style="display:flex;"><span>    name: <span style="color:#8be9fd;font-style:italic">str</span>
+</span></span><span style="display:flex;"><span>    description: <span style="color:#8be9fd;font-style:italic">str</span>
+</span></span><span style="display:flex;"><span>    category: <span style="color:#8be9fd;font-style:italic">str</span>
+</span></span><span style="display:flex;"><span>    aliases: <span style="color:#8be9fd;font-style:italic">tuple</span>[<span style="color:#8be9fd;font-style:italic">str</span>, <span style="color:#ff79c6">...</span>] <span style="color:#ff79c6">=</span> ()
+</span></span><span style="display:flex;"><span>    args_hint: <span style="color:#8be9fd;font-style:italic">str</span> <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    cli_only: <span style="color:#8be9fd;font-style:italic">bool</span> <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>    gateway_config_gate: <span style="color:#8be9fd;font-style:italic">str</span> <span style="color:#ff79c6">|</span> <span style="color:#ff79c6">None</span> <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>
+</span></span></code></pre></div><p>The <code>if/elif</code> dispatch chain in <code>process_command()</code> is the <em>only</em> place containing implementation logic. It stays minimal because the registry handles all metadata. Adding a command requires one <code>CommandDef</code> entry and one <code>elif</code> branch. Adding an alias requires editing only the <code>aliases</code> tuple.</p>
+<p><strong>Applicable when:</strong> you have a command surface that needs to be consistent across multiple delivery channels (CLI, API, messaging bots, help text, autocomplete).</p>
+<h3 id="pattern-2-pre-import-environment-bootstrapping">Pattern 2: Pre-Import Environment Bootstrapping</h3>
+<p>Python caches module-level expressions at import time. Setting <code>os.environ</code> inside <code>main()</code> — after other modules have already been imported — misses any values those modules cached at the module level.</p>
+<p>Hermes solves this by calling <code>_apply_profile_override()</code> at module level in <code>main.py</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># hermes_cli/main.py — module level, NOT inside a function</span>
+</span></span><span style="display:flex;"><span>_apply_profile_override()   <span style="color:#6272a4"># sets HERMES_HOME before any other import</span>
+</span></span></code></pre></div><p>This scans <code>sys.argv</code> for <code>--profile</code>, mutates the environment, and strips the flag before argparse sees it. All subsequent <code>get_hermes_home()</code> calls in any module return the correct value regardless of import order.</p>
+<p><strong>Applicable when:</strong> you have an environment variable that must be set before any module-level code that reads it executes (profile systems, workspace isolation, multi-tenant CLIs).</p>
+<h3 id="pattern-3-tty-guard-on-every-interactive-command">Pattern 3: TTY Guard on Every Interactive Command</h3>
+<p>Every command that calls <code>input()</code> begins with a TTY check:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">_require_tty</span>(cmd: <span style="color:#8be9fd;font-style:italic">str</span>) <span style="color:#ff79c6">-&gt;</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> sys<span style="color:#ff79c6">.</span>stdout<span style="color:#ff79c6">.</span>isatty():
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;Error: &#39;</span><span style="color:#f1fa8c">{</span>cmd<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">&#39; requires an interactive terminal.&#34;</span>, file<span style="color:#ff79c6">=</span>sys<span style="color:#ff79c6">.</span>stderr)
+</span></span><span style="display:flex;"><span>        sys<span style="color:#ff79c6">.</span>exit(<span style="color:#bd93f9">1</span>)
+</span></span></code></pre></div><p>Non-interactive flows expose <code>hermes config set</code> as the programmatic alternative. This prevents wizard prompts from hanging indefinitely in CI pipelines, cron jobs, or piped output.</p>
+<p><strong>Applicable when:</strong> any command that uses interactive prompts. The guard should be the first line of the function, not buried after setup.</p>
+<h3 id="pattern-4-decouple-parser-from-executor">Pattern 4: Decouple Parser from Executor</h3>
+<p><code>build_top_level_parser()</code> lives in <code>hermes_cli/_parser.py</code>, not <code>main.py</code>. This separation allows <code>relaunch.py</code> to introspect flag metadata — specifically which flags carry <code>inherit_on_relaunch=True</code> — without executing any of <code>main()</code>&rsquo;s initialization side-effects.</p>
+<p><strong>Applicable when:</strong> you have code that needs to reflect on the CLI&rsquo;s argument schema (re-exec with inherited flags, documentation generation, shell completion generation) without triggering side-effects.</p>
+<h3 id="pattern-5-atomic-config-writes-with-implicit-cache-invalidation">Pattern 5: Atomic Config Writes with Implicit Cache Invalidation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">atomic_yaml_write</span>(path: Path, data: <span style="color:#8be9fd;font-style:italic">dict</span>) <span style="color:#ff79c6">-&gt;</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>    tmp <span style="color:#ff79c6">=</span> path<span style="color:#ff79c6">.</span>with_suffix(<span style="color:#f1fa8c">&#34;.yaml.tmp&#34;</span>)
+</span></span><span style="display:flex;"><span>    tmp<span style="color:#ff79c6">.</span>write_text(yaml<span style="color:#ff79c6">.</span>dump(data), encoding<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;utf-8&#34;</span>)
+</span></span><span style="display:flex;"><span>    tmp<span style="color:#ff79c6">.</span>replace(path)   <span style="color:#6272a4"># atomic on POSIX; near-atomic on Windows</span>
+</span></span></code></pre></div><p>Two invariants are maintained simultaneously. First, a crash mid-write leaves the old file intact — there is never a moment where <code>path</code> contains partial content. Second, <code>os.replace()</code> produces a new inode with updated <code>mtime</code>, which naturally invalidates the <code>(mtime_ns, file_size)</code> cache key in <code>load_config()</code> without any explicit cache invalidation call.</p>
+<p><strong>Applicable when:</strong> any file that is both written by one code path and cached by another. The temp-rename pattern gives you crash safety and cache invalidation for free.</p>
+<h3 id="pattern-6-three-tier-graceful-degradation-for-external-data">Pattern 6: Three-Tier Graceful Degradation for External Data</h3>
+<p>The model picker degrades through three tiers so it is never completely broken:</p>
+<pre tabindex="0"><code>Tier 1: Live /v1/models API call    → network available, authoritative
+  ↓  (timeout or failure)
+Tier 2: Static offline catalog      → _DEFAULT_PROVIDER_MODELS dict
+  ↓  (provider not in catalog)
+Tier 3: Free-text input             → user types any model name
+</code></pre><p><strong>Applicable when:</strong> any feature that depends on external data (model lists, registry lookups, remote configs). Design for degraded-but-functional rather than all-or-nothing. The user should always be able to proceed, even if the experience is less convenient.</p>
+<h3 id="pattern-7-static-base--plugin-extension">Pattern 7: Static Base + Plugin Extension</h3>
+<p><code>_build_apikey_providers_list()</code> in <code>doctor.py</code> starts with a static list, then extends it by iterating <code>list_providers()</code> from the plugin registry:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">for</span> provider <span style="color:#ff79c6">in</span> list_providers():
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> provider<span style="color:#ff79c6">.</span>auth_type <span style="color:#ff79c6">!=</span> <span style="color:#f1fa8c">&#34;api_key&#34;</span> <span style="color:#ff79c6">or</span> provider<span style="color:#ff79c6">.</span>name <span style="color:#ff79c6">in</span> known_canonical:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">continue</span>
+</span></span><span style="display:flex;"><span>    static_list<span style="color:#ff79c6">.</span>append((provider<span style="color:#ff79c6">.</span>display_name, provider<span style="color:#ff79c6">.</span>env_vars, …))
+</span></span></code></pre></div><p><code>hermes doctor</code> automatically includes any provider added via a plugin. The pattern — <strong>static base + open plugin extension</strong> — is applicable to any registry that needs to work out of the box without configuration but also be extensible without touching core code.</p>
+<h3 id="pattern-8-security-first-diagnostic-ordering">Pattern 8: Security-First Diagnostic Ordering</h3>
+<p><code>hermes doctor</code> runs security advisory checks first, before any other diagnostic category. This is a deliberate editorial choice: ordering communicates priority. A compromised dependency is more urgent than a missing config key, and a user who scrolls past content sees the most important issue first.</p>
+<p><strong>Applicable when:</strong> writing any diagnostic or health-check pipeline. Order checks by user impact, not by implementation convenience or alphabetical name.</p>
+<h3 id="pattern-9-process-boundary-escalation">Pattern 9: Process Boundary Escalation</h3>
+<p>The TUI is a separate Node.js process, not a Python widget library. Configuration crosses the process boundary via environment variables (not CLI args — which have length limits and escaping issues). The Python process becomes a pure JSON-RPC backend.</p>
+<p>This pattern is broadly applicable: when a subsystem has fundamentally different runtime requirements from its host — React&rsquo;s reconciler versus Python&rsquo;s asyncio, for example — a narrow RPC interface over a process boundary is cleaner than forcing both into a single process and managing their event loops.</p>
+<h3 id="pattern-10-content-based-cache-invalidation">Pattern 10: Content-Based Cache Invalidation</h3>
+<p><code>_tui_need_npm_install()</code> compares <code>package-lock.json</code> content against <code>node_modules/.package-lock.json</code>, not file mtimes. Git checkouts update mtimes without changing content, which would trigger spurious <code>npm install</code> runs on every <code>git pull</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">_tui_need_npm_install</span>() <span style="color:#ff79c6">-&gt;</span> <span style="color:#8be9fd;font-style:italic">bool</span>:
+</span></span><span style="display:flex;"><span>    lockfile <span style="color:#ff79c6">=</span> TUI_DIR <span style="color:#ff79c6">/</span> <span style="color:#f1fa8c">&#34;package-lock.json&#34;</span>
+</span></span><span style="display:flex;"><span>    installed <span style="color:#ff79c6">=</span> TUI_DIR <span style="color:#ff79c6">/</span> <span style="color:#f1fa8c">&#34;node_modules&#34;</span> <span style="color:#ff79c6">/</span> <span style="color:#f1fa8c">&#34;.package-lock.json&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> installed<span style="color:#ff79c6">.</span>exists():
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> lockfile<span style="color:#ff79c6">.</span>read_bytes() <span style="color:#ff79c6">!=</span> installed<span style="color:#ff79c6">.</span>read_bytes()
+</span></span></code></pre></div><p><strong>Rule:</strong> use content equality, not timestamps, as the cache key for version-controlled files. Timestamps are an unreliable proxy for content in any system where files can be restored from version control.</p>
+<hr>
+<h2 id="appendix-module-reference">Appendix: Module Reference</h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Module</th>
+          <th style="text-align: left">Location</th>
+          <th style="text-align: left">Primary Responsibility</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Entry point</td>
+          <td style="text-align: left"><code>hermes_cli/main.py</code></td>
+          <td style="text-align: left">Profile override, bootstrap, argparse dispatch, all <code>cmd_*</code> handlers</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Interactive REPL</td>
+          <td style="text-align: left"><code>cli.py</code></td>
+          <td style="text-align: left"><code>HermesCLI</code> class (~14k LOC)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Argument parser</td>
+          <td style="text-align: left"><code>hermes_cli/_parser.py</code></td>
+          <td style="text-align: left"><code>build_top_level_parser()</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Command registry</td>
+          <td style="text-align: left"><code>hermes_cli/commands.py</code></td>
+          <td style="text-align: left"><code>COMMAND_REGISTRY</code>, <code>CommandDef</code>, platform derivations</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Configuration</td>
+          <td style="text-align: left"><code>hermes_cli/config.py</code></td>
+          <td style="text-align: left"><code>DEFAULT_CONFIG</code>, <code>load_config()</code>, <code>atomic_yaml_write()</code>, migration</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Setup wizard</td>
+          <td style="text-align: left"><code>hermes_cli/setup.py</code></td>
+          <td style="text-align: left"><code>run_setup_wizard()</code>, modular sections, curses prompts</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Model selection</td>
+          <td style="text-align: left"><code>hermes_cli/main.py</code></td>
+          <td style="text-align: left"><code>select_provider_and_model()</code>, <code>_model_flow_*()</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Status</td>
+          <td style="text-align: left"><code>hermes_cli/status.py</code></td>
+          <td style="text-align: left"><code>show_status()</code>, component health matrix</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Doctor</td>
+          <td style="text-align: left"><code>hermes_cli/doctor.py</code></td>
+          <td style="text-align: left"><code>run_doctor()</code>, <code>_build_apikey_providers_list()</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Auth</td>
+          <td style="text-align: left"><code>hermes_cli/auth_commands.py</code></td>
+          <td style="text-align: left">Credential pool management</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Gateway wrapper</td>
+          <td style="text-align: left"><code>hermes_cli/gateway.py</code></td>
+          <td style="text-align: left">OS-level service management (systemd/launchd)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Profiles</td>
+          <td style="text-align: left"><code>hermes_cli/profiles.py</code></td>
+          <td style="text-align: left">Profile CRUD, <code>_apply_profile_override()</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Plugin system</td>
+          <td style="text-align: left"><code>hermes_cli/plugins.py</code></td>
+          <td style="text-align: left"><code>PluginManager</code>, <code>PluginContext</code>, discovery</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Skin engine</td>
+          <td style="text-align: left"><code>hermes_cli/skin_engine.py</code></td>
+          <td style="text-align: left"><code>SkinConfig</code>, built-in skins, YAML loader</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Session store</td>
+          <td style="text-align: left"><code>hermes_state.py</code></td>
+          <td style="text-align: left"><code>SessionDB</code>, SQLite + FTS5</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Agent core</td>
+          <td style="text-align: left"><code>run_agent.py</code></td>
+          <td style="text-align: left"><code>AIAgent</code>, conversation loop (~12k LOC)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Tool registry</td>
+          <td style="text-align: left"><code>tools/registry.py</code></td>
+          <td style="text-align: left"><code>registry.register()</code>, schema collection, dispatch</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Tool orchestration</td>
+          <td style="text-align: left"><code>model_tools.py</code></td>
+          <td style="text-align: left"><code>discover_builtin_tools()</code>, <code>handle_function_call()</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">TUI entry</td>
+          <td style="text-align: left"><code>ui-tui/src/entry.tsx</code></td>
+          <td style="text-align: left">Node.js bootstrap, <code>GatewayClient</code> init, <code>ink.render()</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">TUI gateway bridge</td>
+          <td style="text-align: left"><code>ui-tui/src/gatewayClient.ts</code></td>
+          <td style="text-align: left">JSON-RPC client (701 lines)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">TUI Python backend</td>
+          <td style="text-align: left"><code>tui_gateway/entry.py</code></td>
+          <td style="text-align: left">JSON-RPC server, <code>AIAgent</code> + sessions</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Dashboard server</td>
+          <td style="text-align: left"><code>hermes_cli/web_server.py</code></td>
+          <td style="text-align: left">FastAPI + PTY bridge + WebSocket</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<p><em>Hermes Agent — May 2026</em></p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2026-05-16-mastering-agent-memory-prompt-design/" data-toggle="tooltip" data-placement="top" title="Inside Claude Code: The Architecture of a Production-Grade System Prompt">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/2026-05-19-gateway-deep-dive/" data-toggle="tooltip" data-placement="top" title="Building a Multi-Platform Agentic Gateway: A Deep Dive into Hermes Gateway">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/agentic-ai" title="agentic ai">
+                            agentic ai
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ai" title="ai">
+                            ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/ai-agents" title="ai agents">
+                            ai agents
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/deep-learning" title="deep learning">
+                            deep learning
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/hermes" title="hermes">
+                            hermes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/llm-agents" title="llm agents">
+                            llm agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/prompt-engineering" title="prompt engineering">
+                            prompt engineering
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/tool-use" title="tool use">
+                            tool use
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<script src="/js/theme-toggle.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+</body>
+</html>

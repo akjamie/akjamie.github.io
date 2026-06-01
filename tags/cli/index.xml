@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CLI on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/cli/</link>
+    <description>Recent content in CLI on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 17 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/cli/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building Production Agentic CLIs: A Deep Dive into Hermes</title>
+      <link>http://akjamie.github.io/post/2026-05-17-hermes-cli-deep-dive/</link>
+      <pubDate>Sun, 17 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-05-17-hermes-cli-deep-dive/</guid>
+      <description>&lt;h1 id=&#34;building-production-agentic-clis-a-deep-dive-into-hermes&#34;&gt;Building Production Agentic CLIs: A Deep Dive into Hermes&lt;/h1&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;em&gt;A Staff-Engineer-level study of the Hermes Agent command-line interface — from filesystem layout to REPL internals, model selection to plugin extensibility, and the design patterns that make it production-grade.&lt;/em&gt;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;[!NOTE]&lt;/p&gt;&#xA;&lt;h3 id=&#34;-executive-tldr&#34;&gt;⚡ Executive TL;DR&lt;/h3&gt;&#xA;&lt;p&gt;This document is a comprehensive, Staff-Engineer level deep dive into the architecture, execution pipeline, and design patterns of the &lt;strong&gt;Hermes Agent CLI&lt;/strong&gt;. If you are building production-grade agentic command-line interfaces, these are your key takeaways:&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

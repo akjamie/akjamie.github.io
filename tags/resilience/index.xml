@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Resilience on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/resilience/</link>
+    <description>Recent content in Resilience on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 27 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/resilience/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Exception Handling for LLM Calls in Production Agentic Systems</title>
+      <link>http://akjamie.github.io/post/2026-05-27-llm-exception-handling-deep-dive/</link>
+      <pubDate>Wed, 27 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-05-27-llm-exception-handling-deep-dive/</guid>
+      <description>&lt;h1 id=&#34;exception-handling-for-llm-calls-in-production-agentic-systems&#34;&gt;Exception Handling for LLM Calls in Production Agentic Systems&lt;/h1&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;A deep dive into &lt;code&gt;agent/auxiliary_client.py&lt;/code&gt; from Hermes Agent.&#xA;Written for engineers building production agentic applications who need&#xA;to go beyond &amp;ldquo;catch Exception and retry.&amp;rdquo;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;why-llm-exception-handling-is-different&#34;&gt;Why LLM Exception Handling Is Different&lt;/h2&gt;&#xA;&lt;p&gt;Most backend services talk to one upstream. When it fails, you retry or return an error.&lt;/p&gt;&#xA;&lt;p&gt;LLM-backed agents are different in three ways that make naive exception handling dangerous:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;The call is expensive.&lt;/strong&gt; A failed LLM call that retried five times against a dead endpoint burned five API round-trips, five timeouts, and potentially five billing events — before the user saw anything.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

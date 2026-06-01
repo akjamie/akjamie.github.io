@@ -1,17 +1,33 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
 
     
     <meta property="og:site_name" content="Jamie&#39;s Blog">
     <meta property="og:type" content="article">
 
     
-    <meta property="og:image" content="http://localhost:1313//img/header-03.png">
-    <meta property="twitter:image" content="http://localhost:1313//img/header-03.png" />
+    <meta property="og:image" content="http://akjamie.github.io//img/header-03.png">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/header-03.png" />
     
 
     
@@ -26,7 +42,7 @@
     <meta property="twitter:description" content="Jamie, Senior Software Engineer, Open source enthusiast, PMP, Scrum master" />
     
 
-    <meta property="og:url" content="http://localhost:1313/tags/tools/" />
+    <meta property="og:url" content="http://akjamie.github.io/tags/tools/" />
 
     
     <meta property="twitter:card" content="summary" />
@@ -47,7 +63,10 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 
     
-    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
 
     
     <link rel="stylesheet" href="/css/zanshang.min.css">
@@ -114,6 +133,10 @@
                         </li>
                         
                         <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
                             <a href="/categories/microservice/">microservice</a>
                         </li>
                         
@@ -126,11 +149,47 @@
                         </li>
                         
                     
-                    
+
 		    
 		            <li>
                         <a href="/search"><i class="fa fa-search"></i></a>
 		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
                 </ul>
             </div>
         </div>
@@ -165,6 +224,24 @@
             $navbar.className += " in";
         }
     }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
 </script>
 
 
@@ -201,20 +278,20 @@
 <div data-pagefind-ignore="all">
 
 <div class="post-preview">
-    <a href="http://localhost:1313/post/2025-12-11-build-agentic-ai/">
+    <a href="http://akjamie.github.io/post/2026-05-21-hermes-agent-deep-dive/">
         <h2 class="post-title">
-            LangChain 1.x Architecture Guide for Tech Leads and Solution Architects
+            Hermes Agent — Deep Dive Learning Notes
         </h2>
 	
         <div class="post-content-preview">
 	
-            A Production-Ready Blueprint for Building Enterprise AI Agent Solutions.
+            Staff-engineer-level notes for senior AI engineers designing and implementing production agents. Written after reading run_agent.py, model_tools.py, toolsets.py, agent/, and tools/ in full.
         
         </div>
     </a>
     <p class="post-meta">
     
-        Posted by Jamie Zhang on Thursday, December 11, 2025
+        Posted by Jamie Zhang on Thursday, May 21, 2026
         
         
     
@@ -323,8 +400,32 @@
             
             
                
-                    <a href="/tags/agentic" title="agentic">
-                        agentic
+            
+               
+                    <a href="/tags/agentic-ai" title="agentic ai">
+                        agentic ai
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/ai" title="ai">
+                        ai
+                    </a>
+               
+            
+               
+                    <a href="/tags/ai-agents" title="ai agents">
+                        ai agents
+                    </a>
+               
+            
+               
+                    <a href="/tags/architecture" title="architecture">
+                        architecture
                     </a>
                
             
@@ -353,8 +454,40 @@
                
             
                
+                    <a href="/tags/deep-learning" title="deep learning">
+                        deep learning
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
                     <a href="/tags/docker" title="docker">
                         docker
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/hermes" title="hermes">
+                        hermes
                     </a>
                
             
@@ -391,6 +524,20 @@
                
             
                
+                    <a href="/tags/llm-agents" title="llm agents">
+                        llm agents
+                    </a>
+               
+            
+               
+            
+               
+            
+               
+            
+               
+            
+               
             
                
             
@@ -407,6 +554,20 @@
                
             
                
+            
+               
+            
+               
+            
+               
+                    <a href="/tags/prompt-engineering" title="prompt engineering">
+                        prompt engineering
+                    </a>
+               
+            
+               
+            
+               
                     <a href="/tags/python" title="python">
                         python
                     </a>
@@ -416,6 +577,14 @@
                     <a href="/tags/redis" title="redis">
                         redis
                     </a>
+               
+            
+               
+            
+               
+            
+               
+            
                
             
                
@@ -445,6 +614,18 @@
                
             
                
+            
+               
+            
+               
+                    <a href="/tags/tool-use" title="tool use">
+                        tool use
+                    </a>
+               
+            
+               
+            
+               
                     <a href="/tags/transaction-management" title="transaction management">
                         transaction management
                     </a>
@@ -459,9 +640,13 @@
                
             
                
+            
+               
                     <a href="/tags/vault" title="vault">
                         vault
                     </a>
+               
+            
                
             
                
@@ -565,7 +750,7 @@
             
              </ul>
 		<p class="copyright text-muted">
-                    Copyright &copy; Jamie&#39;s Blog 2025
+                    Copyright &copy; Jamie&#39;s Blog 2026
                     
                 </p>
             </div>
@@ -607,11 +792,49 @@
 
 
 <script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
     loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
         var $nav = document.querySelector("nav");
         if($nav) FastClick.attach($nav);
     })
 </script>
+
+
+<script src="/js/theme-toggle.js"></script>
 
 
 

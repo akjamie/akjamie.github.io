@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="Exception Handling for LLM Calls in Production Agentic Systems" />
+    <meta property="og:title" content="Exception Handling for LLM Calls in Production Agentic Systems" />
+    <meta property="twitter:title" content="Exception Handling for LLM Calls in Production Agentic Systems" />
+    
+
+    
+    <meta name="description" content="A deep dive into agent/auxiliary_client.py from Hermes Agent. Written for engineers building production agentic applications who need to go beyond &#39;catch Exception and retry.&#39;">
+    <meta property="og:description" content="A deep dive into agent/auxiliary_client.py from Hermes Agent. Written for engineers building production agentic applications who need to go beyond &#39;catch Exception and retry.&#39;" />
+    <meta property="twitter:description" content="A deep dive into agent/auxiliary_client.py from Hermes Agent. Written for engineers building production agentic applications who need to go beyond &#39;catch Exception and retry.&#39;" />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-05-27-llm-exception-handling-deep-dive/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Exception Handling for LLM Calls in Production Agentic Systems | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-05-27-llm-exception-handling-deep-dive/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/hermes" title="Hermes">
+                            Hermes
+                        </a>
+                        
+                        <a class="tag" href="/tags/exception-handling" title="Exception Handling">
+                            Exception Handling
+                        </a>
+                        
+                        <a class="tag" href="/tags/llm-apis" title="LLM APIs">
+                            LLM APIs
+                        </a>
+                        
+                        <a class="tag" href="/tags/resilience" title="Resilience">
+                            Resilience
+                        </a>
+                        
+                        <a class="tag" href="/tags/agentic-ai" title="Agentic AI">
+                            Agentic AI
+                        </a>
+                        
+                    </div>
+                    <h1>Exception Handling for LLM Calls in Production Agentic Systems</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Wednesday, May 27, 2026
+                            
+                                <span id="/post/2026-05-27-llm-exception-handling-deep-dive/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="exception-handling-for-llm-calls-in-production-agentic-systems">Exception Handling for LLM Calls in Production Agentic Systems</h1>
+<blockquote>
+<p>A deep dive into <code>agent/auxiliary_client.py</code> from Hermes Agent.
+Written for engineers building production agentic applications who need
+to go beyond &ldquo;catch Exception and retry.&rdquo;</p>
+</blockquote>
+<hr>
+<h2 id="why-llm-exception-handling-is-different">Why LLM Exception Handling Is Different</h2>
+<p>Most backend services talk to one upstream. When it fails, you retry or return an error.</p>
+<p>LLM-backed agents are different in three ways that make naive exception handling dangerous:</p>
+<ol>
+<li>
+<p><strong>The call is expensive.</strong> A failed LLM call that retried five times against a dead endpoint burned five API round-trips, five timeouts, and potentially five billing events — before the user saw anything.</p>
+</li>
+<li>
+<p><strong>The failure taxonomy is wide and overlapping.</strong> HTTP 429 can mean &ldquo;slow down for 30 seconds&rdquo; or &ldquo;your account is out of money.&rdquo; HTTP 402 can mean &ldquo;billing exhaustion&rdquo; or &ldquo;transient quota reset.&rdquo; HTTP 400 can mean &ldquo;bad request&rdquo; or &ldquo;context too long&rdquo; or &ldquo;this model doesn&rsquo;t support <code>temperature</code>.&rdquo; Treating them all as <code>Exception</code> and retrying is wrong for most of them.</p>
+</li>
+<li>
+<p><strong>The agent has side tasks running in parallel.</strong> Context compression, session search, title generation, and vision analysis all call LLMs. If any of them fail and block, the main agent loop stalls. If they fail silently, the agent loses state. The exception handling must be both resilient and transparent.</p>
+</li>
+</ol>
+<p>Hermes solves this with a layered exception handling architecture in <code>call_llm()</code> and <code>async_call_llm()</code>. This blog dissects every layer.</p>
+<hr>
+<h2 id="the-architecture-seven-layers-of-recovery">The Architecture: Seven Layers of Recovery</h2>
+<pre tabindex="0"><code>call_llm(task, messages, ...)
+    │
+    ├─ 1. Provider resolution (fail fast if no credentials)
+    │
+    ├─ 2. First attempt: client.chat.completions.create(**kwargs)
+    │       │
+    │       ├─ 3. Temperature rejection → strip &amp; retry once
+    │       │
+    │       ├─ 4. max_tokens rejection → strip &amp; retry once
+    │       │
+    │       ├─ 5. Auth failure (401) → refresh credentials → retry same provider
+    │       │       ├─ Nous: mint fresh agent key via Portal API
+    │       │       └─ Others: rotate credential pool entry
+    │       │
+    │       ├─ 6. Pool recovery (auth/payment/rate-limit) → rotate pool → retry same provider
+    │       │
+    │       └─ 7. Cross-provider fallback (payment/connection/rate-limit on auto)
+    │               → _try_payment_fallback() → next available provider
+    │
+    └─ raise (if all layers exhausted)
+</code></pre><p>Each layer handles a specific failure class. The order matters — a wrong ordering causes either silent data loss or unnecessary fallbacks.</p>
+<hr>
+<h2 id="layer-1-fail-fast-on-missing-credentials">Layer 1: Fail Fast on Missing Credentials</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>client, final_model <span style="color:#ff79c6">=</span> _get_cached_client(resolved_provider, <span style="color:#ff79c6">...</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> client <span style="color:#ff79c6">is</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>    _explicit <span style="color:#ff79c6">=</span> (resolved_provider <span style="color:#ff79c6">or</span> <span style="color:#f1fa8c">&#34;&#34;</span>)<span style="color:#ff79c6">.</span>strip()<span style="color:#ff79c6">.</span>lower()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> _explicit <span style="color:#ff79c6">and</span> _explicit <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">in</span> {<span style="color:#f1fa8c">&#34;auto&#34;</span>, <span style="color:#f1fa8c">&#34;openrouter&#34;</span>, <span style="color:#f1fa8c">&#34;custom&#34;</span>}:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">raise</span> RuntimeError(
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;Provider &#39;</span><span style="color:#f1fa8c">{</span>_explicit<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">&#39; is set in config.yaml but no API key &#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;was found. Set the </span><span style="color:#f1fa8c">{</span>_explicit<span style="color:#ff79c6">.</span>upper()<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">_API_KEY environment &#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;variable, or switch to a different provider with `hermes model`.&#34;</span>
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># For auto/custom: try the full auto chain</span>
+</span></span><span style="display:flex;"><span>    client, final_model <span style="color:#ff79c6">=</span> _get_cached_client(<span style="color:#f1fa8c">&#34;auto&#34;</span>, main_runtime<span style="color:#ff79c6">=</span>main_runtime)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> client <span style="color:#ff79c6">is</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">raise</span> RuntimeError(
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;No LLM provider configured for task=</span><span style="color:#f1fa8c">{</span>task<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">. Run: hermes setup&#34;</span>)
+</span></span></code></pre></div><p><strong>The insight:</strong> Distinguish between &ldquo;user explicitly configured a provider that has no credentials&rdquo; (hard fail with a clear message) and &ldquo;auto-detection found nothing&rdquo; (try the full chain before giving up). Conflating these produces confusing errors — &ldquo;OpenRouter not configured&rdquo; when the user set <code>provider: deepseek</code> and forgot to set <code>DEEPSEEK_API_KEY</code>.</p>
+<p><strong>The pattern:</strong> Fail fast with actionable messages. The error message names the exact env var to set and the exact command to run. This is not a nice-to-have — it is the difference between a 30-second fix and a 30-minute debugging session.</p>
+<hr>
+<h2 id="layer-2-the-error-classifiers">Layer 2: The Error Classifiers</h2>
+<p>Before any retry logic, Hermes classifies every exception into one of four categories. These classifiers are the foundation of the entire recovery system.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">_is_payment_error</span>(exc: Exception) <span style="color:#ff79c6">-&gt;</span> <span style="color:#8be9fd;font-style:italic">bool</span>:
+</span></span><span style="display:flex;"><span>    status <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">getattr</span>(exc, <span style="color:#f1fa8c">&#34;status_code&#34;</span>, <span style="color:#ff79c6">None</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> status <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">402</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    err_lower <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">str</span>(exc)<span style="color:#ff79c6">.</span>lower()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> status <span style="color:#ff79c6">in</span> {<span style="color:#bd93f9">402</span>, <span style="color:#bd93f9">429</span>, <span style="color:#ff79c6">None</span>}:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">any</span>(kw <span style="color:#ff79c6">in</span> err_lower <span style="color:#ff79c6">for</span> kw <span style="color:#ff79c6">in</span> (
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;credits&#34;</span>, <span style="color:#f1fa8c">&#34;insufficient funds&#34;</span>, <span style="color:#f1fa8c">&#34;can only afford&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;billing&#34;</span>, <span style="color:#f1fa8c">&#34;payment required&#34;</span>
+</span></span><span style="display:flex;"><span>        )):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">_is_rate_limit_error</span>(exc: Exception) <span style="color:#ff79c6">-&gt;</span> <span style="color:#8be9fd;font-style:italic">bool</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">type</span>(exc)<span style="color:#ff79c6">.</span><span style="color:#8be9fd;font-style:italic">__name__</span> <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;RateLimitError&#34;</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>   <span style="color:#6272a4"># OpenAI SDK sometimes omits .status_code</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> status <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">429</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">any</span>(kw <span style="color:#ff79c6">in</span> err_lower <span style="color:#ff79c6">for</span> kw <span style="color:#ff79c6">in</span> (
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;rate limit&#34;</span>, <span style="color:#f1fa8c">&#34;too many requests&#34;</span>, <span style="color:#f1fa8c">&#34;try again&#34;</span>, <span style="color:#f1fa8c">&#34;retry after&#34;</span>
+</span></span><span style="display:flex;"><span>        )):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># Generic 429 without billing keywords = rate limit</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> <span style="color:#8be9fd;font-style:italic">any</span>(kw <span style="color:#ff79c6">in</span> err_lower <span style="color:#ff79c6">for</span> kw <span style="color:#ff79c6">in</span> (
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;credits&#34;</span>, <span style="color:#f1fa8c">&#34;insufficient funds&#34;</span>, <span style="color:#f1fa8c">&#34;billing&#34;</span>, <span style="color:#f1fa8c">&#34;payment required&#34;</span>
+</span></span><span style="display:flex;"><span>        )):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">_is_connection_error</span>(exc: Exception) <span style="color:#ff79c6">-&gt;</span> <span style="color:#8be9fd;font-style:italic">bool</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">from</span> openai <span style="color:#ff79c6">import</span> APIConnectionError, APITimeoutError
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">isinstance</span>(exc, (APIConnectionError, APITimeoutError)):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    err_type <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">type</span>(exc)<span style="color:#ff79c6">.</span><span style="color:#8be9fd;font-style:italic">__name__</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">any</span>(kw <span style="color:#ff79c6">in</span> err_type <span style="color:#ff79c6">for</span> kw <span style="color:#ff79c6">in</span> (<span style="color:#f1fa8c">&#34;Connection&#34;</span>, <span style="color:#f1fa8c">&#34;Timeout&#34;</span>, <span style="color:#f1fa8c">&#34;DNS&#34;</span>, <span style="color:#f1fa8c">&#34;SSL&#34;</span>)):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    err_lower <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">str</span>(exc)<span style="color:#ff79c6">.</span>lower()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">any</span>(kw <span style="color:#ff79c6">in</span> err_lower <span style="color:#ff79c6">for</span> kw <span style="color:#ff79c6">in</span> (
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;connection refused&#34;</span>, <span style="color:#f1fa8c">&#34;timed out&#34;</span>, <span style="color:#f1fa8c">&#34;connection reset&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;incomplete chunked read&#34;</span>, <span style="color:#f1fa8c">&#34;peer closed connection&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;response ended prematurely&#34;</span>, <span style="color:#f1fa8c">&#34;unexpected eof&#34;</span>,
+</span></span><span style="display:flex;"><span>    )):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">_is_auth_error</span>(exc: Exception) <span style="color:#ff79c6">-&gt;</span> <span style="color:#8be9fd;font-style:italic">bool</span>:
+</span></span><span style="display:flex;"><span>    status <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">getattr</span>(exc, <span style="color:#f1fa8c">&#34;status_code&#34;</span>, <span style="color:#ff79c6">None</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> status <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">401</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    err_lower <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">str</span>(exc)<span style="color:#ff79c6">.</span>lower()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#f1fa8c">&#34;error code: 401&#34;</span> <span style="color:#ff79c6">in</span> err_lower <span style="color:#ff79c6">or</span> <span style="color:#f1fa8c">&#34;authenticationerror&#34;</span> <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">type</span>(exc)<span style="color:#ff79c6">.</span><span style="color:#8be9fd;font-style:italic">__name__</span><span style="color:#ff79c6">.</span>lower()
+</span></span></code></pre></div><p><strong>The critical insight: HTTP 429 is ambiguous.</strong> It can mean rate limiting (transient, retry in 30s) or billing exhaustion (permanent until you top up). Hermes disambiguates by checking the error message body. If it contains billing keywords (<code>credits</code>, <code>insufficient funds</code>, <code>can only afford</code>), it&rsquo;s a payment error. If it contains rate-limit keywords (<code>rate limit</code>, <code>try again</code>, <code>retry after</code>), it&rsquo;s a rate limit. A generic 429 with no billing keywords defaults to rate limit.</p>
+<p>Getting this wrong is expensive: treating a billing exhaustion as a rate limit causes the agent to retry against a dead provider for minutes. Treating a rate limit as billing causes the agent to fall back to a different (potentially more expensive) provider unnecessarily.</p>
+<p><strong>The <code>RateLimitError</code> class name check</strong> is a real-world fix. The OpenAI SDK&rsquo;s <code>RateLimitError</code> sometimes omits <code>.status_code</code> on the exception object. Without the class name check, these errors fall through all classifiers and get re-raised as unhandled exceptions.</p>
+<hr>
+<h2 id="layer-3-temperature-rejection--strip-and-retry">Layer 3: Temperature Rejection — Strip and Retry</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> _validate_llm_response(
+</span></span><span style="display:flex;"><span>        client<span style="color:#ff79c6">.</span>chat<span style="color:#ff79c6">.</span>completions<span style="color:#ff79c6">.</span>create(<span style="color:#ff79c6">**</span>kwargs), task)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">except</span> Exception <span style="color:#ff79c6">as</span> first_err:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#f1fa8c">&#34;temperature&#34;</span> <span style="color:#ff79c6">in</span> kwargs <span style="color:#ff79c6">and</span> _is_unsupported_temperature_error(first_err):
+</span></span><span style="display:flex;"><span>        retry_kwargs <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">dict</span>(kwargs)
+</span></span><span style="display:flex;"><span>        retry_kwargs<span style="color:#ff79c6">.</span>pop(<span style="color:#f1fa8c">&#34;temperature&#34;</span>, <span style="color:#ff79c6">None</span>)
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff79c6">.</span>info(<span style="color:#f1fa8c">&#34;Auxiliary </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">: provider rejected temperature; retrying once without it&#34;</span>, task)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> _validate_llm_response(
+</span></span><span style="display:flex;"><span>                client<span style="color:#ff79c6">.</span>chat<span style="color:#ff79c6">.</span>completions<span style="color:#ff79c6">.</span>create(<span style="color:#ff79c6">**</span>retry_kwargs), task)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">except</span> Exception <span style="color:#ff79c6">as</span> retry_err:
+</span></span><span style="display:flex;"><span>            <span style="color:#6272a4"># If retry still fails with payment/connection/auth, fall through</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> (_is_payment_error(retry_err) <span style="color:#ff79c6">or</span> _is_connection_error(retry_err)
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff79c6">or</span> _is_auth_error(retry_err) <span style="color:#ff79c6">or</span> <span style="color:#f1fa8c">&#34;max_tokens&#34;</span> <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">str</span>(retry_err)):
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">raise</span>
+</span></span><span style="display:flex;"><span>            first_err <span style="color:#ff79c6">=</span> retry_err
+</span></span><span style="display:flex;"><span>            kwargs <span style="color:#ff79c6">=</span> retry_kwargs  <span style="color:#6272a4"># carry stripped kwargs forward</span>
+</span></span></code></pre></div><p><strong>Why this exists:</strong> Different providers have different opinions about <code>temperature</code>. Some models (Kimi/Moonshot) manage temperature server-side and reject any client-provided value. Some reasoning models (o1, DeepSeek-R1) reject temperature entirely. Some providers accept it but return a 400 with &ldquo;unsupported parameter: temperature.&rdquo;</p>
+<p><strong>The pattern:</strong> Detect parameter rejection errors, strip the offending parameter, retry once. If the retry also fails with a different error class (payment, connection, auth), carry the stripped kwargs forward into the next recovery layer rather than re-raising. This prevents a double failure: &ldquo;temperature rejected, then payment error&rdquo; should fall through to the payment fallback, not surface as a temperature error.</p>
+<p><strong>The <code>_is_unsupported_temperature_error</code> function</strong> checks for provider-specific 400 patterns: <code>&quot;unsupported parameter&quot;</code>, <code>&quot;temperature is not supported&quot;</code>, <code>&quot;unknown parameter: temperature&quot;</code>, and the ZAI-specific error code <code>1210</code>. Each of these is a real provider quirk discovered in production.</p>
+<hr>
+<h2 id="layer-4-max_tokens-rejection--strip-and-retry">Layer 4: <code>max_tokens</code> Rejection — Strip and Retry</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>_is_zai_param_error <span style="color:#ff79c6">=</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;1210&#34;</span> <span style="color:#ff79c6">in</span> err_str
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">and</span> <span style="color:#f1fa8c">&#34;bigmodel&#34;</span> <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">str</span>(<span style="color:#8be9fd;font-style:italic">getattr</span>(client, <span style="color:#f1fa8c">&#34;base_url&#34;</span>, <span style="color:#f1fa8c">&#34;&#34;</span>))
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> max_tokens <span style="color:#ff79c6">is</span> <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">None</span> <span style="color:#ff79c6">and</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;max_tokens&#34;</span> <span style="color:#ff79c6">in</span> err_str
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">or</span> <span style="color:#f1fa8c">&#34;unsupported_parameter&#34;</span> <span style="color:#ff79c6">in</span> err_str
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">or</span> _is_unsupported_parameter_error(first_err, <span style="color:#f1fa8c">&#34;max_tokens&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">or</span> _is_zai_param_error
+</span></span><span style="display:flex;"><span>):
+</span></span><span style="display:flex;"><span>    kwargs<span style="color:#ff79c6">.</span>pop(<span style="color:#f1fa8c">&#34;max_tokens&#34;</span>, <span style="color:#ff79c6">None</span>)
+</span></span><span style="display:flex;"><span>    kwargs<span style="color:#ff79c6">.</span>pop(<span style="color:#f1fa8c">&#34;max_completion_tokens&#34;</span>, <span style="color:#ff79c6">None</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> _validate_llm_response(
+</span></span><span style="display:flex;"><span>            client<span style="color:#ff79c6">.</span>chat<span style="color:#ff79c6">.</span>completions<span style="color:#ff79c6">.</span>create(<span style="color:#ff79c6">**</span>kwargs), task)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">except</span> Exception <span style="color:#ff79c6">as</span> retry_err:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> (_is_payment_error(retry_err) <span style="color:#ff79c6">or</span> _is_connection_error(retry_err)
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">or</span> _is_rate_limit_error(retry_err)):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">raise</span>
+</span></span><span style="display:flex;"><span>        first_err <span style="color:#ff79c6">=</span> retry_err
+</span></span></code></pre></div><p><strong>The ZAI-specific case</strong> is instructive. ZAI&rsquo;s vision models (glm-4v-flash) return error code <code>1210</code> (&ldquo;API 调用参数有误&rdquo;) when <code>max_tokens</code> is passed on multimodal calls. The error message does NOT contain &ldquo;max_tokens&rdquo; — it&rsquo;s a Chinese-language error about invalid parameters. Without the explicit <code>&quot;1210&quot; in err_str and &quot;bigmodel&quot; in base_url</code> check, this error would fall through all classifiers and surface as an unhandled exception.</p>
+<p><strong>The pattern:</strong> Provider-specific error codes require provider-specific detection. A generic &ldquo;bad request&rdquo; classifier is not enough. When you add a new provider, audit its error codes and add them to the appropriate classifier.</p>
+<p><strong>Both <code>max_tokens</code> and <code>max_completion_tokens</code> are stripped</strong> because different providers use different parameter names for the same concept. OpenAI uses <code>max_completion_tokens</code> for newer models; most others use <code>max_tokens</code>. Stripping both ensures the retry doesn&rsquo;t fail on the wrong parameter name.</p>
+<hr>
+<h2 id="layer-5-auth-failure--refresh-and-retry-same-provider">Layer 5: Auth Failure — Refresh and Retry Same Provider</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Nous-specific: mint a fresh agent key via the Portal API</span>
+</span></span><span style="display:flex;"><span>client_is_nous <span style="color:#ff79c6">=</span> (
+</span></span><span style="display:flex;"><span>    resolved_provider <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;nous&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">or</span> base_url_host_matches(_base_info, <span style="color:#f1fa8c">&#34;inference-api.nousresearch.com&#34;</span>)
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> _is_auth_error(first_err) <span style="color:#ff79c6">and</span> client_is_nous:
+</span></span><span style="display:flex;"><span>    refreshed_client, refreshed_model <span style="color:#ff79c6">=</span> _refresh_nous_auxiliary_client(<span style="color:#ff79c6">...</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> refreshed_client <span style="color:#ff79c6">is</span> <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff79c6">.</span>info(<span style="color:#f1fa8c">&#34;Auxiliary </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">: refreshed Nous runtime credentials after 401, retrying&#34;</span>, task)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> _validate_llm_response(
+</span></span><span style="display:flex;"><span>            refreshed_client<span style="color:#ff79c6">.</span>chat<span style="color:#ff79c6">.</span>completions<span style="color:#ff79c6">.</span>create(<span style="color:#ff79c6">**</span>kwargs), task)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Generic: refresh credentials from auth store / pool</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> (_is_auth_error(first_err)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">and</span> resolved_provider <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">in</span> {<span style="color:#f1fa8c">&#34;auto&#34;</span>, <span style="color:#f1fa8c">&#34;&#34;</span>, <span style="color:#ff79c6">None</span>}
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">and</span> <span style="color:#ff79c6">not</span> client_is_nous):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> _refresh_provider_credentials(resolved_provider):
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff79c6">.</span>info(<span style="color:#f1fa8c">&#34;Auxiliary </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">: refreshed </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> credentials after auth error, retrying&#34;</span>,
+</span></span><span style="display:flex;"><span>                    task, resolved_provider)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> _retry_same_provider_sync(<span style="color:#ff79c6">...</span>)
+</span></span></code></pre></div><p><strong>The insight:</strong> A 401 does not always mean &ldquo;wrong credentials.&rdquo; It often means &ldquo;credentials expired.&rdquo; OAuth tokens have TTLs. Agent keys have TTLs. The correct response to a 401 is to refresh the credentials and retry — not to fall back to a different provider.</p>
+<p><strong>Nous gets special treatment</strong> because its auth model is more complex: it uses short-lived agent keys minted from a longer-lived OAuth token. When the agent key expires, <code>_refresh_nous_auxiliary_client</code> calls the Portal API to mint a fresh one. This is the same path the main agent loop uses for 401 recovery, ensuring auxiliary tasks and the main loop stay in sync.</p>
+<p><strong>The <code>resolved_provider not in {&quot;auto&quot;, &quot;&quot;, None}</code> guard</strong> prevents auth refresh from running when the provider was auto-detected. If auto-detection picked OpenRouter and OpenRouter returns 401, refreshing OpenRouter credentials is the right move. But if auto-detection picked a provider the user didn&rsquo;t explicitly configure, refreshing its credentials is wrong — the user may not even know that provider was selected.</p>
+<hr>
+<h2 id="layer-6-credential-pool-recovery--rotate-and-retry">Layer 6: Credential Pool Recovery — Rotate and Retry</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pool_provider <span style="color:#ff79c6">=</span> _recoverable_pool_provider(resolved_provider, client)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> pool_provider <span style="color:#ff79c6">and</span> (_is_auth_error(first_err) <span style="color:#ff79c6">or</span> _is_payment_error(first_err)
+</span></span><span style="display:flex;"><span>                      <span style="color:#ff79c6">or</span> _is_rate_limit_error(first_err)):
+</span></span><span style="display:flex;"><span>    recovery_err <span style="color:#ff79c6">=</span> first_err
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> _is_rate_limit_error(first_err):
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># Rate limits are often transient — try once more before rotating</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> _validate_llm_response(
+</span></span><span style="display:flex;"><span>                client<span style="color:#ff79c6">.</span>chat<span style="color:#ff79c6">.</span>completions<span style="color:#ff79c6">.</span>create(<span style="color:#ff79c6">**</span>kwargs), task)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">except</span> Exception <span style="color:#ff79c6">as</span> retry_err:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> (_is_auth_error(retry_err) <span style="color:#ff79c6">or</span> _is_payment_error(retry_err)
+</span></span><span style="display:flex;"><span>                    <span style="color:#ff79c6">or</span> _is_rate_limit_error(retry_err)):
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">raise</span>
+</span></span><span style="display:flex;"><span>            recovery_err <span style="color:#ff79c6">=</span> retry_err
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> _recover_provider_pool(pool_provider, recovery_err):
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff79c6">.</span>info(<span style="color:#f1fa8c">&#34;Auxiliary </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">: recovered </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> via credential-pool rotation after </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span>,
+</span></span><span style="display:flex;"><span>                    task, pool_provider, <span style="color:#8be9fd;font-style:italic">type</span>(recovery_err)<span style="color:#ff79c6">.</span><span style="color:#8be9fd;font-style:italic">__name__</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> _retry_same_provider_sync(<span style="color:#ff79c6">...</span>)
+</span></span></code></pre></div><p><strong>The credential pool</strong> is a multi-key store for the same provider. When one key is exhausted (rate-limited, billing depleted, or auth-expired), the pool rotates to the next available key. This is the right recovery for multi-key setups before falling back to a different provider entirely.</p>
+<p><strong>Rate limits get one extra retry</strong> before pool rotation. This is because rate limits are often transient — a 429 that fires at the exact moment a rate window resets may succeed on the very next attempt. Rotating the pool on every 429 would exhaust pool entries unnecessarily.</p>
+<p><strong>The <code>_recoverable_pool_provider</code> function</strong> checks whether the current client is backed by a pool that has more than one entry. A single-key pool cannot recover by rotation — it would just retry the same exhausted key. This check prevents the pool recovery path from running when it has nowhere to rotate to.</p>
+<hr>
+<h2 id="layer-7-cross-provider-fallback--the-last-resort">Layer 7: Cross-Provider Fallback — The Last Resort</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>should_fallback <span style="color:#ff79c6">=</span> (
+</span></span><span style="display:flex;"><span>    _is_payment_error(first_err)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">or</span> _is_connection_error(first_err)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">or</span> _is_rate_limit_error(first_err)
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>is_auto <span style="color:#ff79c6">=</span> resolved_provider <span style="color:#ff79c6">in</span> {<span style="color:#f1fa8c">&#34;auto&#34;</span>, <span style="color:#f1fa8c">&#34;&#34;</span>, <span style="color:#ff79c6">None</span>}
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> should_fallback <span style="color:#ff79c6">and</span> is_auto:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> _is_payment_error(first_err):
+</span></span><span style="display:flex;"><span>        reason <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;payment error&#34;</span>
+</span></span><span style="display:flex;"><span>        _mark_provider_unhealthy(
+</span></span><span style="display:flex;"><span>            _recoverable_pool_provider(resolved_provider, client) <span style="color:#ff79c6">or</span> resolved_provider
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">elif</span> _is_rate_limit_error(first_err):
+</span></span><span style="display:flex;"><span>        reason <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;rate limit&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>        reason <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;connection error&#34;</span>
+</span></span><span style="display:flex;"><span>    logger<span style="color:#ff79c6">.</span>info(<span style="color:#f1fa8c">&#34;Auxiliary </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">: </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> on </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> (</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">), trying fallback&#34;</span>,
+</span></span><span style="display:flex;"><span>                task, reason, resolved_provider, first_err)
+</span></span><span style="display:flex;"><span>    fb_client, fb_model, fb_label <span style="color:#ff79c6">=</span> _try_payment_fallback(
+</span></span><span style="display:flex;"><span>        resolved_provider, task, reason<span style="color:#ff79c6">=</span>reason)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> fb_client <span style="color:#ff79c6">is</span> <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>        fb_kwargs <span style="color:#ff79c6">=</span> _build_call_kwargs(fb_label, fb_model, messages, <span style="color:#ff79c6">...</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> _validate_llm_response(
+</span></span><span style="display:flex;"><span>            fb_client<span style="color:#ff79c6">.</span>chat<span style="color:#ff79c6">.</span>completions<span style="color:#ff79c6">.</span>create(<span style="color:#ff79c6">**</span>fb_kwargs), task)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Connection errors poison the cached client — evict it</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> _is_connection_error(first_err):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>        _evict_cached_client_instance(client)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">except</span> Exception:
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff79c6">.</span>debug(<span style="color:#f1fa8c">&#34;Auxiliary: cache eviction after connection error failed&#34;</span>, exc_info<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">raise</span>
+</span></span></code></pre></div><p><strong>The <code>is_auto</code> guard is critical.</strong> Cross-provider fallback only runs when the provider was auto-detected. If the user explicitly configured <code>provider: openrouter</code>, falling back to Nous Portal when OpenRouter is rate-limited would be surprising and potentially expensive. Explicit provider = hard constraint. Auto = best-effort.</p>
+<p><strong>Payment errors mark the provider unhealthy</strong> for 10 minutes. This prevents the next auxiliary call (which may fire 5 seconds later for a different task) from hitting the same depleted provider again. Without this cache, a long session with frequent auxiliary calls would burn dozens of doomed 402 round-trips against an empty OpenRouter balance.</p>
+<p><strong>Connection errors evict the cached client.</strong> A connection error leaves the cached httpx transport in a closed or half-read state. Reusing it on the next call would fail immediately with a &ldquo;connection error&rdquo; that looks like a new failure but is actually the same dead transport. Evicting the cache forces the next call to build a fresh client.</p>
+<hr>
+<h2 id="the-unhealthy-provider-cache">The Unhealthy Provider Cache</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>_AUX_UNHEALTHY_TTL_SECONDS <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">600</span>  <span style="color:#6272a4"># 10 minutes</span>
+</span></span><span style="display:flex;"><span>_aux_unhealthy_until: Dict[<span style="color:#8be9fd;font-style:italic">str</span>, <span style="color:#8be9fd;font-style:italic">float</span>] <span style="color:#ff79c6">=</span> {}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">_mark_provider_unhealthy</span>(provider: <span style="color:#8be9fd;font-style:italic">str</span>, ttl: Optional[<span style="color:#8be9fd;font-style:italic">float</span>] <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>) <span style="color:#ff79c6">-&gt;</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>    label <span style="color:#ff79c6">=</span> _normalize_chain_label(provider)
+</span></span><span style="display:flex;"><span>    expires_at <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time() <span style="color:#ff79c6">+</span> (ttl <span style="color:#ff79c6">if</span> ttl <span style="color:#ff79c6">is</span> <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">None</span> <span style="color:#ff79c6">else</span> _AUX_UNHEALTHY_TTL_SECONDS)
+</span></span><span style="display:flex;"><span>    _aux_unhealthy_until[label] <span style="color:#ff79c6">=</span> expires_at
+</span></span><span style="display:flex;"><span>    logger<span style="color:#ff79c6">.</span>warning(
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Auxiliary: marking </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> unhealthy for </span><span style="color:#f1fa8c">%d</span><span style="color:#f1fa8c">s (payment / credit error). &#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Subsequent auxiliary calls will skip it until </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">.&#34;</span>,
+</span></span><span style="display:flex;"><span>        label, <span style="color:#8be9fd;font-style:italic">int</span>(ttl <span style="color:#ff79c6">or</span> _AUX_UNHEALTHY_TTL_SECONDS),
+</span></span><span style="display:flex;"><span>        time<span style="color:#ff79c6">.</span>strftime(<span style="color:#f1fa8c">&#34;%H:%M:%S&#34;</span>, time<span style="color:#ff79c6">.</span>localtime(expires_at)),
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">_is_provider_unhealthy</span>(label: <span style="color:#8be9fd;font-style:italic">str</span>) <span style="color:#ff79c6">-&gt;</span> <span style="color:#8be9fd;font-style:italic">bool</span>:
+</span></span><span style="display:flex;"><span>    expires_at <span style="color:#ff79c6">=</span> _aux_unhealthy_until<span style="color:#ff79c6">.</span>get(label)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> expires_at <span style="color:#ff79c6">is</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> time<span style="color:#ff79c6">.</span>time() <span style="color:#ff79c6">&gt;=</span> expires_at:
+</span></span><span style="display:flex;"><span>        _aux_unhealthy_until<span style="color:#ff79c6">.</span>pop(label, <span style="color:#ff79c6">None</span>)  <span style="color:#6272a4"># lazy eviction</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span></code></pre></div><p><strong>The problem this solves:</strong> In a long-running gateway session, auxiliary tasks fire frequently — every compression, every title generation, every session search. If OpenRouter is depleted, each of these tasks would hit OpenRouter first (it&rsquo;s first in the auto-detection chain), get a 402, then fall back. That&rsquo;s one wasted RTT per auxiliary call, potentially dozens per hour.</p>
+<p><strong>The solution:</strong> When any caller observes a payment error, mark that provider unhealthy for 10 minutes. All subsequent auxiliary calls skip it entirely. The TTL auto-expires so a topped-up account recovers without manual intervention.</p>
+<p><strong>The log message includes the exact expiry time</strong> (<code>time.strftime</code>). This is a small but important detail: when debugging &ldquo;why is my agent using Nous instead of OpenRouter?&rdquo;, seeing &ldquo;OpenRouter marked unhealthy until 14:32:15&rdquo; is immediately actionable. &ldquo;OpenRouter marked unhealthy for 600 seconds&rdquo; requires mental arithmetic.</p>
+<hr>
+<h2 id="the-_is_unsupported_parameter_error-pattern">The <code>_is_unsupported_parameter_error</code> Pattern</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">_is_unsupported_parameter_error</span>(exc: Exception, param: <span style="color:#8be9fd;font-style:italic">str</span>) <span style="color:#ff79c6">-&gt;</span> <span style="color:#8be9fd;font-style:italic">bool</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;&#34;&#34;Detect provider 400s for an unsupported request parameter.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    status <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">getattr</span>(exc, <span style="color:#f1fa8c">&#34;status_code&#34;</span>, <span style="color:#ff79c6">None</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> status <span style="color:#ff79c6">!=</span> <span style="color:#bd93f9">400</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>    err_lower <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">str</span>(exc)<span style="color:#ff79c6">.</span>lower()
+</span></span><span style="display:flex;"><span>    param_lower <span style="color:#ff79c6">=</span> param<span style="color:#ff79c6">.</span>lower()
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Match: &#34;unsupported parameter: temperature&#34;, &#34;temperature is not supported&#34;,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># &#34;unknown parameter: temperature&#34;, &#34;unrecognized request argument: temperature&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> param_lower <span style="color:#ff79c6">in</span> err_lower:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">any</span>(kw <span style="color:#ff79c6">in</span> err_lower <span style="color:#ff79c6">for</span> kw <span style="color:#ff79c6">in</span> (
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;unsupported&#34;</span>, <span style="color:#f1fa8c">&#34;not supported&#34;</span>, <span style="color:#f1fa8c">&#34;unknown parameter&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;unrecognized&#34;</span>, <span style="color:#f1fa8c">&#34;invalid parameter&#34;</span>,
+</span></span><span style="display:flex;"><span>        )):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># OpenAI SDK structured error: {&#34;error&#34;: {&#34;param&#34;: &#34;temperature&#34;, &#34;code&#34;: &#34;unsupported_parameter&#34;}}</span>
+</span></span><span style="display:flex;"><span>    body <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">getattr</span>(exc, <span style="color:#f1fa8c">&#34;body&#34;</span>, <span style="color:#ff79c6">None</span>) <span style="color:#ff79c6">or</span> {}
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">isinstance</span>(body, <span style="color:#8be9fd;font-style:italic">dict</span>):
+</span></span><span style="display:flex;"><span>        error_obj <span style="color:#ff79c6">=</span> body<span style="color:#ff79c6">.</span>get(<span style="color:#f1fa8c">&#34;error&#34;</span>, {})
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">isinstance</span>(error_obj, <span style="color:#8be9fd;font-style:italic">dict</span>):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> error_obj<span style="color:#ff79c6">.</span>get(<span style="color:#f1fa8c">&#34;param&#34;</span>) <span style="color:#ff79c6">==</span> param <span style="color:#ff79c6">or</span> error_obj<span style="color:#ff79c6">.</span>get(<span style="color:#f1fa8c">&#34;code&#34;</span>) <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;unsupported_parameter&#34;</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">False</span>
+</span></span></code></pre></div><p><strong>The insight:</strong> Provider 400 errors for unsupported parameters come in many forms. Some providers use structured error bodies (<code>{&quot;error&quot;: {&quot;param&quot;: &quot;temperature&quot;, &quot;code&quot;: &quot;unsupported_parameter&quot;}}</code>). Others use free-text messages. The function checks both, and it&rsquo;s parameterized so the same logic covers <code>temperature</code>, <code>max_tokens</code>, <code>seed</code>, <code>top_p</code>, and any future parameter.</p>
+<p><strong>This is a generalization of a specific production bug.</strong> The original code had a temperature-specific detector. When <code>max_tokens</code> started causing the same class of errors on different providers, the pattern was generalized rather than duplicated. This is the right engineering instinct: when you write the same exception detection logic twice, extract it.</p>
+<hr>
+<h2 id="the-timeout-architecture-for-streaming-calls">The Timeout Architecture for Streaming Calls</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>total_timeout <span style="color:#ff79c6">=</span> timeout <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">isinstance</span>(timeout, (<span style="color:#8be9fd;font-style:italic">int</span>, <span style="color:#8be9fd;font-style:italic">float</span>)) <span style="color:#ff79c6">and</span> timeout <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">0</span> <span style="color:#ff79c6">else</span> <span style="color:#ff79c6">None</span>
+</span></span><span style="display:flex;"><span>deadline <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>monotonic() <span style="color:#ff79c6">+</span> <span style="color:#8be9fd;font-style:italic">float</span>(total_timeout) <span style="color:#ff79c6">if</span> total_timeout <span style="color:#ff79c6">else</span> <span style="color:#ff79c6">None</span>
+</span></span><span style="display:flex;"><span>timed_out <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Event()
+</span></span><span style="display:flex;"><span>timeout_timer: Optional[threading<span style="color:#ff79c6">.</span>Timer] <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">_close_client_on_timeout</span>() <span style="color:#ff79c6">-&gt;</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>    timed_out<span style="color:#ff79c6">.</span>set()
+</span></span><span style="display:flex;"><span>    close <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">getattr</span>(<span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_client, <span style="color:#f1fa8c">&#34;close&#34;</span>, <span style="color:#ff79c6">None</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> callable(close):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>            close()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">except</span> Exception:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>        _evict_cached_client_instance(<span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_client)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">except</span> Exception:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> total_timeout:
+</span></span><span style="display:flex;"><span>        timeout_timer <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Timer(<span style="color:#8be9fd;font-style:italic">float</span>(total_timeout), _close_client_on_timeout)
+</span></span><span style="display:flex;"><span>        timeout_timer<span style="color:#ff79c6">.</span>daemon <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>        timeout_timer<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">with</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_client<span style="color:#ff79c6">.</span>responses<span style="color:#ff79c6">.</span>stream(<span style="color:#ff79c6">**</span>resp_kwargs) <span style="color:#ff79c6">as</span> stream:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">for</span> _event <span style="color:#ff79c6">in</span> stream:
+</span></span><span style="display:flex;"><span>            _check_cancelled()
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">except</span> Exception <span style="color:#ff79c6">as</span> exc:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> timed_out<span style="color:#ff79c6">.</span>is_set():
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">raise</span> TimeoutError(_timeout_message()) <span style="color:#ff79c6">from</span> exc
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">raise</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">finally</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> timeout_timer <span style="color:#ff79c6">is</span> <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>        timeout_timer<span style="color:#ff79c6">.</span>cancel()
+</span></span></code></pre></div><p><strong>The problem:</strong> Streaming LLM calls can stall indefinitely. The provider may accept the connection, start streaming, then stop mid-response without closing the connection. The httpx client&rsquo;s per-request timeout only covers the initial connection and the time between chunks — it does not enforce a total response time.</p>
+<p><strong>The solution:</strong> A <code>threading.Timer</code> fires after the total timeout, closes the httpx transport, and evicts the cached client. The <code>timed_out</code> event flag lets the exception handler distinguish &ldquo;timed out&rdquo; from &ldquo;other error&rdquo; and raise a clean <code>TimeoutError</code> instead of a confusing <code>ConnectionError</code>.</p>
+<p><strong>The cache eviction on timeout</strong> is critical. After the transport is closed, the cached client is poisoned — any subsequent call using it will fail immediately. Without eviction, the next auxiliary call reuses the dead client and fails with a connection error that looks like a new failure.</p>
+<p><strong>The <code>_check_cancelled()</code> function</strong> checks both the deadline and the agent&rsquo;s interrupt flag. This means a user pressing Ctrl+C during a streaming auxiliary call will cleanly interrupt it rather than waiting for the timeout to fire.</p>
+<hr>
+<h2 id="expert-insights">Expert Insights</h2>
+<h3 id="1-the-exception-handling-is-the-product">1. The Exception Handling IS the Product</h3>
+<p>For auxiliary LLM calls, the happy path is trivial: call the API, return the response. The exception handling is where the real engineering lives. A production agentic system will spend 5-10% of its time in exception recovery paths. Those paths determine whether the agent degrades gracefully or fails catastrophically.</p>
+<h3 id="2-classify-before-you-recover">2. Classify Before You Recover</h3>
+<p>Every recovery action in <code>call_llm</code> is gated on a classifier (<code>_is_payment_error</code>, <code>_is_rate_limit_error</code>, <code>_is_connection_error</code>, <code>_is_auth_error</code>). The classifiers are the most important code in the file. If a classifier is wrong, the recovery action is wrong. Invest in making classifiers precise.</p>
+<p>The most common mistake is treating all 429s as rate limits. A 429 with &ldquo;insufficient credits&rdquo; in the body is a billing exhaustion — retrying it will fail immediately, and retrying it 10 times will burn 10 API round-trips. Check the body, not just the status code.</p>
+<h3 id="3-the-is_auto-guard-protects-user-intent">3. The <code>is_auto</code> Guard Protects User Intent</h3>
+<p>Cross-provider fallback only runs when <code>resolved_provider in {&quot;auto&quot;, &quot;&quot;, None}</code>. This is not a performance optimization — it is a correctness constraint. When a user explicitly configures <code>provider: openrouter</code>, they are making a deliberate choice. Silently routing to Nous Portal when OpenRouter is rate-limited violates that choice and can cause unexpected billing on a provider the user didn&rsquo;t intend to use.</p>
+<p>Explicit provider = hard constraint. Auto = best-effort. Never conflate them.</p>
+<h3 id="4-connection-errors-poison-cached-clients">4. Connection Errors Poison Cached Clients</h3>
+<p>When a connection error occurs, the cached httpx transport is in an undefined state. It may be closed, half-read, or have a dead async event loop. Reusing it will fail immediately. Always evict the cached client after a connection error, even if you found a fallback provider. The next call to the original provider should build a fresh client.</p>
+<p><strong>&ldquo;Why not just create a new client on every call and skip the cache entirely?&rdquo;</strong></p>
+<p>This is a reasonable question. Client construction itself is cheap — allocating a connection pool object, copying config, creating a few Python objects. No I/O, no DNS, no TCP. Typically ~0.1–0.5ms. The expensive part is the TCP+TLS handshake, which happens on the first request, not on client construction.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Operation</th>
+          <th style="text-align: left">Typical cost</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Client construction</td>
+          <td style="text-align: left">~0.2ms (pure in-memory)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">TCP handshake</td>
+          <td style="text-align: left">~1–5ms LAN, ~50–200ms WAN</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">TLS handshake</td>
+          <td style="text-align: left">~10–100ms</td>
+      </tr>
+  </tbody>
+</table>
+<p>If you create a new client on every call, httpx opens a fresh TCP+TLS connection every time. For LLM APIs over HTTPS, that&rsquo;s 100–300ms of overhead per call — on top of the actual model latency. For a 2-second LLM call, that&rsquo;s a 5–15% overhead tax on every single request.</p>
+<p>What you&rsquo;re really caching is not the client object — it&rsquo;s the connection pool inside it. A cached client reuses established TCP connections and TLS sessions across calls. A new client pays the handshake cost every time.</p>
+<p><strong>The right pattern: cache the client, evict on error.</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>_clients: <span style="color:#8be9fd;font-style:italic">dict</span>[<span style="color:#8be9fd;font-style:italic">str</span>, httpx<span style="color:#ff79c6">.</span>AsyncClient] <span style="color:#ff79c6">=</span> {}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">get_client</span>(provider: <span style="color:#8be9fd;font-style:italic">str</span>) <span style="color:#ff79c6">-&gt;</span> httpx<span style="color:#ff79c6">.</span>AsyncClient:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> provider <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">in</span> _clients:
+</span></span><span style="display:flex;"><span>        _clients[provider] <span style="color:#ff79c6">=</span> httpx<span style="color:#ff79c6">.</span>AsyncClient(<span style="color:#ff79c6">...</span>)  <span style="color:#6272a4"># cheap: ~0.2ms</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> _clients[provider]  <span style="color:#6272a4"># returns pooled connections</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">evict_client</span>(provider: <span style="color:#8be9fd;font-style:italic">str</span>):
+</span></span><span style="display:flex;"><span>    client <span style="color:#ff79c6">=</span> _clients<span style="color:#ff79c6">.</span>pop(provider, <span style="color:#ff79c6">None</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> client:
+</span></span><span style="display:flex;"><span>        asyncio<span style="color:#ff79c6">.</span>create_task(client<span style="color:#ff79c6">.</span>aclose())  <span style="color:#6272a4"># drain gracefully</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">call_llm</span>(provider: <span style="color:#8be9fd;font-style:italic">str</span>, payload):
+</span></span><span style="display:flex;"><span>    client <span style="color:#ff79c6">=</span> get_client(provider)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">await</span> client<span style="color:#ff79c6">.</span>post(<span style="color:#ff79c6">...</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">except</span> (httpx<span style="color:#ff79c6">.</span>ConnectError, httpx<span style="color:#ff79c6">.</span>RemoteProtocolError):
+</span></span><span style="display:flex;"><span>        evict_client(provider)   <span style="color:#6272a4"># poisoned — throw it away</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">raise</span>                    <span style="color:#6272a4"># next call rebuilds fresh</span>
+</span></span></code></pre></div><p>Happy path: reuses TCP/TLS connections, fast. Error path: evicts the poisoned client, next call pays the reconnect cost once and re-warms the pool. The reconnect penalty on error is acceptable because you already have a failure to handle — a clean retry with a fresh client is strictly better than retrying with a broken one.</p>
+<h3 id="5-the-unhealthy-provider-cache-is-a-cost-control-mechanism">5. The Unhealthy Provider Cache Is a Cost Control Mechanism</h3>
+<p>The 10-minute unhealthy cache is not primarily about performance — it is about waste elimination. A common misconception: &ldquo;a 402 has no token cost, so why does it matter?&rdquo;</p>
+<p>A 402 has no token cost, but it has three real costs:</p>
+<p><strong>1. Latency cost (the most visible)</strong></p>
+<p>Without the unhealthy cache, every session pays the round-trip to a provider you already know is depleted:</p>
+<pre tabindex="0"><code>Session A: OpenRouter → 402 (50–200ms) → fallback → response ✓
+Session B: OpenRouter → 402 (50–200ms) → fallback → response ✓
+Session C: OpenRouter → 402 (50–200ms) → fallback → response ✓
+... × hundreds of concurrent sessions
+</code></pre><p>With the unhealthy cache:</p>
+<pre tabindex="0"><code>Session A: OpenRouter → 402 (50–200ms) → fallback → response ✓  [marks unhealthy]
+Session B: skip OpenRouter → fallback → response ✓  (0ms wasted)
+Session C: skip OpenRouter → fallback → response ✓  (0ms wasted)
+</code></pre><p>Every user is paying 50–200ms of pure waste waiting for a response you already know will fail.</p>
+<p><strong>2. Infrastructure cost</strong></p>
+<p>Each HTTP round-trip consumes CPU, a socket, a connection from your pool, and thread/coroutine scheduling time. At hundreds of concurrent sessions, this is measurable load on your gateway process — for zero benefit.</p>
+<p><strong>3. Fallback provider cost (the actual billing impact)</strong></p>
+<p>You probably pay the fallback provider per call or per token. If OpenRouter is your cheap primary and Anthropic-direct is your fallback:</p>
+<pre tabindex="0"><code>Without cache: 500 sessions × (1 wasted OpenRouter call + 1 Anthropic call)
+With cache:    500 sessions × (1 Anthropic call) + 1 wasted OpenRouter call
+</code></pre><p>The fallback call happens either way — but without the cache, you&rsquo;re also burning 500 unnecessary outbound HTTPS requests that show up in your infrastructure billing, rate limit counters, and connection pool exhaustion.</p>
+<p>Some providers also count failed requests against your rate limit quota. A 402 from OpenRouter may still consume a request slot depending on their implementation.</p>
+<p>The unhealthy cache converts &ldquo;hundreds of wasted round-trips per hour&rdquo; into &ldquo;one 402, then skip for 10 minutes.&rdquo; The 10-minute TTL auto-expires so a topped-up account recovers without manual intervention.</p>
+<h3 id="6-carry-stripped-kwargs-forward">6. Carry Stripped kwargs Forward</h3>
+<p>When a parameter-stripping retry (temperature, max_tokens) fails with a different error class, carry the stripped kwargs forward into the next recovery layer. This prevents double failures: &ldquo;temperature rejected, then payment error&rdquo; should fall through to the payment fallback using the temperature-stripped kwargs, not re-raise the temperature error.</p>
+<p><strong>The concrete failure scenario without carrying kwargs forward:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>original_kwargs <span style="color:#ff79c6">=</span> {<span style="color:#f1fa8c">&#34;model&#34;</span>: <span style="color:#f1fa8c">&#34;gpt-4&#34;</span>, <span style="color:#f1fa8c">&#34;temperature&#34;</span>: <span style="color:#bd93f9">2.5</span>, <span style="color:#f1fa8c">&#34;max_tokens&#34;</span>: <span style="color:#bd93f9">999999</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Layer 1: temperature=2.5 is invalid → strip it, retry</span>
+</span></span><span style="display:flex;"><span>stripped_kwargs <span style="color:#ff79c6">=</span> {<span style="color:#f1fa8c">&#34;model&#34;</span>: <span style="color:#f1fa8c">&#34;gpt-4&#34;</span>, <span style="color:#f1fa8c">&#34;max_tokens&#34;</span>: <span style="color:#bd93f9">999999</span>}
+</span></span><span style="display:flex;"><span>→ retry <span style="color:#ff79c6">with</span> stripped_kwargs
+</span></span><span style="display:flex;"><span>→ NOW hits <span style="color:#bd93f9">402</span> (balance depleted)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Layer 2 catches the 402 → but retries with... original_kwargs  ← ❌</span>
+</span></span><span style="display:flex;"><span>→ hits <span style="color:#bd93f9">422</span> again (temperature still invalid)
+</span></span><span style="display:flex;"><span>→ crashes <span style="color:#ff79c6">with</span> temperature error, <span style="color:#ff79c6">not</span> payment error
+</span></span></code></pre></div><p>The user sees a parameter error even though the real problem is payment. The temperature fix was already solved — you threw it away.</p>
+<p><strong>With carrying kwargs forward:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>original_kwargs <span style="color:#ff79c6">=</span> {<span style="color:#f1fa8c">&#34;model&#34;</span>: <span style="color:#f1fa8c">&#34;gpt-4&#34;</span>, <span style="color:#f1fa8c">&#34;temperature&#34;</span>: <span style="color:#bd93f9">2.5</span>, <span style="color:#f1fa8c">&#34;max_tokens&#34;</span>: <span style="color:#bd93f9">999999</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Layer 1: strips temperature, retries</span>
+</span></span><span style="display:flex;"><span>stripped_kwargs <span style="color:#ff79c6">=</span> {<span style="color:#f1fa8c">&#34;model&#34;</span>: <span style="color:#f1fa8c">&#34;gpt-4&#34;</span>, <span style="color:#f1fa8c">&#34;max_tokens&#34;</span>: <span style="color:#bd93f9">999999</span>}
+</span></span><span style="display:flex;"><span>→ hits <span style="color:#bd93f9">402</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Layer 2 catches the 402 → uses stripped_kwargs as the base  ← ✓</span>
+</span></span><span style="display:flex;"><span>→ switches provider, retries <span style="color:#ff79c6">with</span> {<span style="color:#f1fa8c">&#34;model&#34;</span>: <span style="color:#f1fa8c">&#34;gpt-4&#34;</span>, <span style="color:#f1fa8c">&#34;max_tokens&#34;</span>: <span style="color:#bd93f9">999999</span>}
+</span></span><span style="display:flex;"><span>→ succeeds (<span style="color:#ff79c6">or</span> fails cleanly <span style="color:#ff79c6">with</span> a payment error, <span style="color:#ff79c6">not</span> a param error)
+</span></span></code></pre></div><p><strong>The mental model:</strong> think of <code>kwargs</code> as a document being progressively corrected. Each recovery layer should hand off its corrected version, not the original. If Layer 2 grabs the original instead of Layer 1&rsquo;s output, it silently undoes Layer 1&rsquo;s work.</p>
+<pre tabindex="0"><code>original_kwargs
+    → [Layer 1 fix] → stripped_kwargs   # temperature problem solved
+        → [Layer 2 fix] → fallback_kwargs  # payment problem solved
+            → [Layer 3 fix] → ...
+</code></pre><p>The key is a single <code>current_kwargs</code> variable that accumulates all fixes and gets passed to every subsequent attempt, regardless of which layer is handling the error:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">call_with_recovery</span>(provider, <span style="color:#ff79c6">**</span>kwargs):
+</span></span><span style="display:flex;"><span>    current_kwargs <span style="color:#ff79c6">=</span> kwargs  <span style="color:#6272a4"># ← this travels forward and mutates</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">await</span> call(provider, <span style="color:#ff79c6">**</span>current_kwargs)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">except</span> InvalidParameterError:
+</span></span><span style="display:flex;"><span>        current_kwargs <span style="color:#ff79c6">=</span> strip_invalid_params(current_kwargs)  <span style="color:#6272a4"># fix it</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">await</span> call(provider, <span style="color:#ff79c6">**</span>current_kwargs)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">except</span> PaymentError:
+</span></span><span style="display:flex;"><span>            <span style="color:#6272a4"># carry current_kwargs (already stripped) into next layer</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">await</span> fallback_provider_call(<span style="color:#ff79c6">**</span>current_kwargs)  <span style="color:#6272a4"># ✓</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">except</span> PaymentError:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">await</span> fallback_provider_call(<span style="color:#ff79c6">**</span>current_kwargs)  <span style="color:#6272a4"># ✓</span>
+</span></span></code></pre></div><p>In Hermes, this is the <code>first_err = retry_err; kwargs = retry_kwargs</code> pattern at the end of each stripping block:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">except</span> Exception <span style="color:#ff79c6">as</span> retry_err:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> (_is_payment_error(retry_err) <span style="color:#ff79c6">or</span> _is_connection_error(retry_err)):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">raise</span>
+</span></span><span style="display:flex;"><span>    first_err <span style="color:#ff79c6">=</span> retry_err
+</span></span><span style="display:flex;"><span>    kwargs <span style="color:#ff79c6">=</span> retry_kwargs  <span style="color:#6272a4"># ← carry stripped kwargs forward</span>
+</span></span></code></pre></div><p><code>first_err</code> carries the new error class into the next classifier check. <code>kwargs</code> carries the cleaned request into the next retry attempt. Both must be updated together.</p>
+<h3 id="7-log-at-the-right-level">7. Log at the Right Level</h3>
+<ul>
+<li><code>logger.debug</code>: Internal state, credential resolution, cache hits/misses. Verbose, for debugging.</li>
+<li><code>logger.info</code>: Recovery actions taken (retried, rotated, fell back). Visible in normal operation.</li>
+<li><code>logger.warning</code>: Degraded state (provider marked unhealthy, fallback activated, credentials missing). Requires attention.</li>
+<li><code>logger.error</code>: Unrecoverable failures. Requires immediate action.</li>
+</ul>
+<p>The unhealthy provider log uses <code>logger.warning</code> and includes the exact expiry time. This is the right level — it is not an error (the system recovered), but it is not normal operation either.</p>
+<h3 id="8-test-the-exception-paths-not-just-the-happy-path">8. Test the Exception Paths, Not Just the Happy Path</h3>
+<p>The test suite for <code>call_llm</code> should cover:</p>
+<ul>
+<li>402 on primary provider → fallback to secondary</li>
+<li>429 (rate limit) on primary → fallback to secondary</li>
+<li>429 (billing) on primary → fallback to secondary (different from rate limit)</li>
+<li>401 on Nous → mint fresh agent key → retry</li>
+<li>401 on other provider → rotate pool → retry</li>
+<li>Temperature rejection → strip → retry</li>
+<li>max_tokens rejection → strip → retry</li>
+<li>Connection error → evict cache → raise</li>
+<li>Timeout → evict cache → raise TimeoutError</li>
+</ul>
+<p>Most of these are not tested in typical LLM application test suites. They are the failures that happen in production at 2am.</p>
+<hr>
+<h2 id="summary-the-exception-handling-taxonomy">Summary: The Exception Handling Taxonomy</h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Error class</th>
+          <th style="text-align: left">Detection</th>
+          <th style="text-align: left">Recovery</th>
+          <th style="text-align: left">Fallback?</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">No credentials</td>
+          <td style="text-align: left"><code>client is None</code></td>
+          <td style="text-align: left">Fail fast with actionable message</td>
+          <td style="text-align: left">No</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Temperature rejected</td>
+          <td style="text-align: left"><code>_is_unsupported_temperature_error</code></td>
+          <td style="text-align: left">Strip <code>temperature</code>, retry once</td>
+          <td style="text-align: left">Only if retry also fails</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>max_tokens</code> rejected</td>
+          <td style="text-align: left"><code>&quot;max_tokens&quot; in err_str</code> or ZAI code 1210</td>
+          <td style="text-align: left">Strip <code>max_tokens</code>/<code>max_completion_tokens</code>, retry once</td>
+          <td style="text-align: left">Only if retry also fails</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Auth expired (Nous)</td>
+          <td style="text-align: left"><code>_is_auth_error</code> + Nous base URL</td>
+          <td style="text-align: left">Mint fresh agent key, retry same provider</td>
+          <td style="text-align: left">No</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Auth expired (other)</td>
+          <td style="text-align: left"><code>_is_auth_error</code> + explicit provider</td>
+          <td style="text-align: left">Refresh credential store, retry same provider</td>
+          <td style="text-align: left">No</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Pool exhausted</td>
+          <td style="text-align: left"><code>_is_auth_error</code> / <code>_is_payment_error</code> / <code>_is_rate_limit_error</code> + pool exists</td>
+          <td style="text-align: left">Rotate pool entry, retry same provider</td>
+          <td style="text-align: left">No</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Payment / billing</td>
+          <td style="text-align: left"><code>_is_payment_error</code> + auto provider</td>
+          <td style="text-align: left">Mark unhealthy 10min, try next provider</td>
+          <td style="text-align: left">Yes (auto only)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Rate limit</td>
+          <td style="text-align: left"><code>_is_rate_limit_error</code> + auto provider</td>
+          <td style="text-align: left">One immediate retry, then try next provider</td>
+          <td style="text-align: left">Yes (auto only)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Connection error</td>
+          <td style="text-align: left"><code>_is_connection_error</code> + auto provider</td>
+          <td style="text-align: left">Evict cached client, try next provider</td>
+          <td style="text-align: left">Yes (auto only)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Connection error</td>
+          <td style="text-align: left"><code>_is_connection_error</code> + explicit provider</td>
+          <td style="text-align: left">Evict cached client</td>
+          <td style="text-align: left">No</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Unclassified</td>
+          <td style="text-align: left">Everything else</td>
+          <td style="text-align: left">Re-raise</td>
+          <td style="text-align: left">No</td>
+      </tr>
+  </tbody>
+</table>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2026-05-24-context-compressor-deep-dive/" data-toggle="tooltip" data-placement="top" title="Designing Context Compression for Production Agents: A Deep Dive into Hermes">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/2026-05-29-self-improvement-agent-deep-dive/" data-toggle="tooltip" data-placement="top" title="The Self-Improvement Agent in Hermes: A Deep Dive">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/agentic-ai" title="agentic ai">
+                            agentic ai
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ai" title="ai">
+                            ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/ai-agents" title="ai agents">
+                            ai agents
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/deep-learning" title="deep learning">
+                            deep learning
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/hermes" title="hermes">
+                            hermes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/llm-agents" title="llm agents">
+                            llm agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/prompt-engineering" title="prompt engineering">
+                            prompt engineering
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/tool-use" title="tool use">
+                            tool use
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<script src="/js/theme-toggle.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+</body>
+</html>

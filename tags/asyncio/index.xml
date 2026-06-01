@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Asyncio on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/asyncio/</link>
+    <description>Recent content in Asyncio on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 19 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/asyncio/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building a Multi-Platform Agentic Gateway: A Deep Dive into Hermes Gateway</title>
+      <link>http://akjamie.github.io/post/2026-05-19-gateway-deep-dive/</link>
+      <pubDate>Tue, 19 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-05-19-gateway-deep-dive/</guid>
+      <description>&lt;h1 id=&#34;building-a-multi-platform-agentic-gateway-a-deep-dive-into-hermes-gateway&#34;&gt;Building a Multi-Platform Agentic Gateway: A Deep Dive into Hermes Gateway&lt;/h1&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;em&gt;A Staff-Engineer-level study of the Hermes Agent messaging gateway — from process lifecycle to platform adapters, session management to streaming delivery, and the design patterns that make it production-grade across 15+ messaging platforms.&lt;/em&gt;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;[!NOTE]&lt;/p&gt;&#xA;&lt;h3 id=&#34;executive-tldr&#34;&gt;Executive TL;DR&lt;/h3&gt;&#xA;&lt;p&gt;This document is a comprehensive deep dive into the &lt;strong&gt;Hermes Gateway&lt;/strong&gt; — ~75,000+ lines of Python across 50+ modules connecting an AI agent to 15+ messaging platforms (Telegram, Discord, Slack, WhatsApp, Signal, Matrix, and more). Key architectural patterns:&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

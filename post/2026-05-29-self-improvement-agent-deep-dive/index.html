@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="The Self-Improvement Agent in Hermes: A Deep Dive" />
+    <meta property="og:title" content="The Self-Improvement Agent in Hermes: A Deep Dive" />
+    <meta property="twitter:title" content="The Self-Improvement Agent in Hermes: A Deep Dive" />
+    
+
+    
+    <meta name="description" content="Staff-engineer-level notes on Hermes Agent&#39;s procedural self-improvement loop: how the runtime turns solved problems, user corrections, and hard-won debugging paths into durable skills without interrupting the foreground task.">
+    <meta property="og:description" content="Staff-engineer-level notes on Hermes Agent&#39;s procedural self-improvement loop: how the runtime turns solved problems, user corrections, and hard-won debugging paths into durable skills without interrupting the foreground task." />
+    <meta property="twitter:description" content="Staff-engineer-level notes on Hermes Agent&#39;s procedural self-improvement loop: how the runtime turns solved problems, user corrections, and hard-won debugging paths into durable skills without interrupting the foreground task." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-05-29-self-improvement-agent-deep-dive/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>The Self-Improvement Agent in Hermes: A Deep Dive | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-05-29-self-improvement-agent-deep-dive/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/hermes" title="Hermes">
+                            Hermes
+                        </a>
+                        
+                        <a class="tag" href="/tags/self-improvement" title="Self-Improvement">
+                            Self-Improvement
+                        </a>
+                        
+                        <a class="tag" href="/tags/durable-skills" title="Durable Skills">
+                            Durable Skills
+                        </a>
+                        
+                        <a class="tag" href="/tags/procedural-memory" title="Procedural Memory">
+                            Procedural Memory
+                        </a>
+                        
+                        <a class="tag" href="/tags/agentic-ai" title="Agentic AI">
+                            Agentic AI
+                        </a>
+                        
+                    </div>
+                    <h1>The Self-Improvement Agent in Hermes: A Deep Dive</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Friday, May 29, 2026
+                            
+                                <span id="/post/2026-05-29-self-improvement-agent-deep-dive/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="the-self-improvement-agent-in-hermes-a-deep-dive">The Self-Improvement Agent in Hermes: A Deep Dive</h1>
+<blockquote>
+<p>Staff-engineer-level notes on Hermes Agent&rsquo;s procedural self-improvement
+loop: how the runtime turns solved problems, user corrections, and hard-won
+debugging paths into durable skills without interrupting the foreground task.</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>[!NOTE]</p>
+<h3 id="executive-tldr">Executive TL;DR</h3>
+<p>Hermes self-improvement is not a magic <code>auto_create_skill()</code> function. It is a
+runtime pattern composed from five pieces:</p>
+<ul>
+<li><strong>Foreground guidance:</strong> the main agent is told to save or patch skills when
+a complex workflow succeeds.</li>
+<li><strong>Iteration counters:</strong> the runtime tracks how much tool-heavy work has
+happened since the last skill review.</li>
+<li><strong>Background review fork:</strong> after the user-visible answer is delivered,
+Hermes starts a quiet review agent with the conversation transcript.</li>
+<li><strong>Narrow tool whitelist:</strong> the review fork may call only memory and skill
+tools, not arbitrary shell, web, or browser tools.</li>
+<li><strong>Procedural memory tool:</strong> <code>skill_manage</code> writes, patches, deletes, and
+annotates skills under Hermes&rsquo; skill library.</li>
+</ul>
+<p>The architecture matters more than the prompt. The learning loop is isolated
+from the foreground answer, bounded by tool permissions, marked with
+provenance, and implemented through the same skill API the main agent can use.</p>
+</blockquote>
+<hr>
+<h2 id="how-to-read-this-article">How to Read This Article</h2>
+<p>This blog is written for engineers designing production agents, not for users
+looking for the <code>/skills</code> command.</p>
+<p>Read it in four passes:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Pass</th>
+          <th style="text-align: left">Sections</th>
+          <th style="text-align: left">What to learn</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Conceptual</td>
+          <td style="text-align: left">1-3</td>
+          <td style="text-align: left">What Hermes means by self-improvement</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Runtime</td>
+          <td style="text-align: left">4-8</td>
+          <td style="text-align: left">How the loop fires and how the review fork runs</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Persistence</td>
+          <td style="text-align: left">9-12</td>
+          <td style="text-align: left">How skills are written, protected, and curated</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Design</td>
+          <td style="text-align: left">13-18</td>
+          <td style="text-align: left">The architectural lessons and tradeoffs</td>
+      </tr>
+  </tbody>
+</table>
+<p>If you only want the implementation map, read sections 4, 5, 6, 9, and 16.
+If you are designing your own learning agent, read sections 2, 13, 15, and 18.</p>
+<hr>
+<h2 id="1-what-self-improvement-means-in-hermes">1. What &ldquo;Self-Improvement&rdquo; Means in Hermes</h2>
+<p>The phrase &ldquo;self-improvement&rdquo; is easy to overstate. Hermes does not retrain its
+model. It does not edit its own Python source after every session. It does not
+blindly archive every conversation as a permanent instruction.</p>
+<p>Hermes improves by maintaining <strong>procedural memory</strong>.</p>
+<p>Procedural memory is different from user memory:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Store</th>
+          <th style="text-align: left">Captures</th>
+          <th style="text-align: left">Example</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">User/profile memory</td>
+          <td style="text-align: left">Who the user is and durable preferences</td>
+          <td style="text-align: left">&ldquo;The user prefers concise final answers.&rdquo;</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Session history</td>
+          <td style="text-align: left">What happened in previous conversations</td>
+          <td style="text-align: left">&ldquo;In session X, pytest failed due to missing env var.&rdquo;</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Skills</td>
+          <td style="text-align: left">How to do a recurring class of task</td>
+          <td style="text-align: left">&ldquo;When debugging gateway slash commands, inspect command registry first.&rdquo;</td>
+      </tr>
+  </tbody>
+</table>
+<p>The self-improvement loop is the mechanism that keeps the third store alive.
+When a task exposes a useful workflow, a pitfall, a correction, or a reusable
+debugging path, Hermes can update a skill so future sessions start with that
+knowledge already in the prompt.</p>
+<p>That is the key design move: Hermes improves <strong>the operating procedure around
+the model</strong>, not the model weights.</p>
+<hr>
+<h2 id="2-why-skills-are-the-right-unit-of-learning">2. Why Skills Are the Right Unit of Learning</h2>
+<p>An agent can learn at several granularities:</p>
+<ol>
+<li>Save raw transcripts.</li>
+<li>Save facts into memory.</li>
+<li>Save task summaries.</li>
+<li>Save executable procedures.</li>
+<li>Rewrite its source code.</li>
+</ol>
+<p>Hermes chooses option 4 for most self-improvement.</p>
+<p>Raw transcripts are too noisy. Facts are too weak for procedures. Summaries are
+useful for recall but not action. Source rewrites are high risk and require
+code review. Skills sit in the middle: structured enough to guide future work,
+plain-text enough to inspect, and narrow enough to patch.</p>
+<p>A good skill answers:</p>
+<ul>
+<li>When should this skill trigger?</li>
+<li>What sequence should the agent follow?</li>
+<li>What tools should it prefer?</li>
+<li>What pitfalls has experience revealed?</li>
+<li>How should the agent verify success?</li>
+<li>What supporting references, templates, or scripts exist?</li>
+</ul>
+<p>This makes skill creation a form of operational knowledge capture. Hermes is
+not trying to &ldquo;remember everything&rdquo;; it is trying to preserve the parts of a
+session that change future behavior.</p>
+<hr>
+<h2 id="3-the-high-level-architecture">3. The High-Level Architecture</h2>
+<p>At a high level, self-improvement looks like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>User turn
+</span></span><span style="display:flex;"><span>  |
+</span></span><span style="display:flex;"><span>  v
+</span></span><span style="display:flex;"><span>Foreground AIAgent handles the task
+</span></span><span style="display:flex;"><span>  |
+</span></span><span style="display:flex;"><span>  |-- uses tools, reads files, debugs, edits, tests
+</span></span><span style="display:flex;"><span>  |
+</span></span><span style="display:flex;"><span>  v
+</span></span><span style="display:flex;"><span>Final response is delivered to the user
+</span></span><span style="display:flex;"><span>  |
+</span></span><span style="display:flex;"><span>  v
+</span></span><span style="display:flex;"><span>Runtime checks memory/skill review triggers
+</span></span><span style="display:flex;"><span>  |
+</span></span><span style="display:flex;"><span>  v
+</span></span><span style="display:flex;"><span>Background AIAgent fork receives the transcript
+</span></span><span style="display:flex;"><span>  |
+</span></span><span style="display:flex;"><span>  |-- tool whitelist: memory + skills only
+</span></span><span style="display:flex;"><span>  |-- prompt: review conversation and update memory/skills
+</span></span><span style="display:flex;"><span>  |
+</span></span><span style="display:flex;"><span>  v
+</span></span><span style="display:flex;"><span>Review fork calls skill_manage(...)
+</span></span><span style="display:flex;"><span>  |
+</span></span><span style="display:flex;"><span>  v
+</span></span><span style="display:flex;"><span>Skill library is patched or extended
+</span></span><span style="display:flex;"><span>  |
+</span></span><span style="display:flex;"><span>  v
+</span></span><span style="display:flex;"><span>Future sessions load improved skill guidance
+</span></span></code></pre></div><p>There are two important separations:</p>
+<ol>
+<li><strong>Learning happens after the answer.</strong> The user does not wait for the review
+fork before getting the response.</li>
+<li><strong>Learning writes through a tool.</strong> The review fork does not mutate files by
+inventing ad hoc shell commands. It calls <code>skill_manage</code>, the same procedural
+memory API the rest of Hermes uses.</li>
+</ol>
+<p>This is what makes the design production-shaped rather than demo-shaped.</p>
+<hr>
+<h2 id="4-where-the-logic-lives">4. Where the Logic Lives</h2>
+<p>If you search for <code>auto_create_skill</code> in <code>run_agent.py</code>, you will not find it.
+The capability is distributed across a few explicit runtime surfaces:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">File</th>
+          <th style="text-align: left">Responsibility</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><code>agent/prompt_builder.py</code></td>
+          <td style="text-align: left">Foreground guidance that tells the main agent when to save or patch skills</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>run_agent.py</code></td>
+          <td style="text-align: left">Counters, review prompts, background review fork, trigger points</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>toolsets.py</code></td>
+          <td style="text-align: left">Exposes <code>skills_list</code>, <code>skill_view</code>, and <code>skill_manage</code> in the core toolset</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>tools/skill_manager_tool.py</code></td>
+          <td style="text-align: left">Implements skill creation, patching, supporting files, deletion, and telemetry</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>tools/skill_provenance.py</code></td>
+          <td style="text-align: left">Marks whether a write came from foreground work or background review</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>tools/skill_usage.py</code></td>
+          <td style="text-align: left">Tracks agent-created skills and patch activity for curator workflows</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>agent/curator.py</code></td>
+          <td style="text-align: left">Periodic consolidation and lifecycle management for accumulated skills</td>
+      </tr>
+  </tbody>
+</table>
+<p>The absence of one central function is intentional. Self-improvement crosses
+the agent loop, tool authorization, prompt design, persistence, and curation.
+Packing that into one &ldquo;create skill&rdquo; routine would hide the real system
+boundaries.</p>
+<hr>
+<h2 id="5-the-foreground-nudge">5. The Foreground Nudge</h2>
+<p>The first layer is not background automation. It is the main system prompt.</p>
+<p><code>agent/prompt_builder.py</code> contains <code>SKILLS_GUIDANCE</code>, which tells the agent:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>After completing a complex task (5+ tool calls), fixing a tricky error,
+</span></span><span style="display:flex;"><span>or discovering a non-trivial workflow, save the approach as a skill with
+</span></span><span style="display:flex;"><span>skill_manage so you can reuse it next time.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>When using a skill and finding it outdated, incomplete, or wrong, patch it
+</span></span><span style="display:flex;"><span>immediately with skill_manage(action=&#39;patch&#39;)...
+</span></span></code></pre></div><p>This matters because the foreground agent has the richest local context. It
+knows what it just discovered, what it tried, what failed, and what finally
+worked. If the task naturally produces a reusable method, the foreground agent
+can save it immediately.</p>
+<p>But foreground learning has a weakness: it competes with the user&rsquo;s task. If
+the agent is trying to finish a bug fix, forcing it to stop and author a skill
+can distract from delivery. Hermes therefore also has the background pass.</p>
+<p>The two modes are complementary:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Mode</th>
+          <th style="text-align: left">Best for</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Foreground <code>skill_manage</code></td>
+          <td style="text-align: left">Obvious, user-requested, or immediately relevant skill updates</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Background review</td>
+          <td style="text-align: left">Retrospective cleanup after the user-visible work is complete</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="6-the-skill-nudge-counter">6. The Skill Nudge Counter</h2>
+<p>Hermes does not run a skill review after every tiny turn. It uses a cadence.</p>
+<p>In <code>AIAgent.__init__</code>, <code>run_agent.py</code> initializes:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_skill_nudge_interval <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">10</span>
+</span></span><span style="display:flex;"><span>skills_config <span style="color:#ff79c6">=</span> _agent_cfg<span style="color:#ff79c6">.</span>get(<span style="color:#f1fa8c">&#34;skills&#34;</span>, {})
+</span></span><span style="display:flex;"><span><span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_skill_nudge_interval <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">int</span>(
+</span></span><span style="display:flex;"><span>    skills_config<span style="color:#ff79c6">.</span>get(<span style="color:#f1fa8c">&#34;creation_nudge_interval&#34;</span>, <span style="color:#bd93f9">10</span>)
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>The default means: after roughly ten tool-calling iterations since the last
+skill review, consider running a background skill review.</p>
+<p>This is a pragmatic signal. Tool-heavy work is where procedural knowledge tends
+to emerge:</p>
+<ul>
+<li>multiple file reads and patches</li>
+<li>failed test loops</li>
+<li>provider quirks</li>
+<li>CLI invocations</li>
+<li>recovery from bad assumptions</li>
+<li>user corrections during implementation</li>
+</ul>
+<p>Hermes increments <code>_iters_since_skill</code> during the agent loop. When the counter
+reaches the configured threshold and <code>skill_manage</code> is available, it flips a
+review flag and resets the counter.</p>
+<p>That last condition is important:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>only review skills if &#34;skill_manage&#34; is in valid_tool_names
+</span></span></code></pre></div><p>If the agent does not have the skill management tool, it does not pretend it
+can improve the skill library.</p>
+<hr>
+<h2 id="7-triggering-after-the-final-response">7. Triggering After the Final Response</h2>
+<p>The trigger happens after the foreground turn is complete.</p>
+<p>In the normal conversation path, <code>run_agent.py</code> checks:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">if</span> (
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_skill_nudge_interval <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">and</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_iters_since_skill <span style="color:#ff79c6">&gt;=</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_skill_nudge_interval
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">and</span> <span style="color:#f1fa8c">&#34;skill_manage&#34;</span> <span style="color:#ff79c6">in</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>valid_tool_names
+</span></span><span style="display:flex;"><span>):
+</span></span><span style="display:flex;"><span>    _should_review_skills <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_iters_since_skill <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0</span>
+</span></span></code></pre></div><p>Then, only after final response handling:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">if</span> final_response <span style="color:#ff79c6">and</span> <span style="color:#ff79c6">not</span> interrupted <span style="color:#ff79c6">and</span> (
+</span></span><span style="display:flex;"><span>    _should_review_memory <span style="color:#ff79c6">or</span> _should_review_skills
+</span></span><span style="display:flex;"><span>):
+</span></span><span style="display:flex;"><span>    <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_spawn_background_review(
+</span></span><span style="display:flex;"><span>        messages_snapshot<span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">list</span>(messages),
+</span></span><span style="display:flex;"><span>        review_memory<span style="color:#ff79c6">=</span>_should_review_memory,
+</span></span><span style="display:flex;"><span>        review_skills<span style="color:#ff79c6">=</span>_should_review_skills,
+</span></span><span style="display:flex;"><span>    )
+</span></span></code></pre></div><p>There is a similar block for the newer turn abstraction path, where
+<code>turn.tool_iterations</code> is added to <code>_iters_since_skill</code> and the same background
+review is spawned if the threshold fires.</p>
+<p>This is a subtle but important design:</p>
+<ul>
+<li>no final response, no learning pass</li>
+<li>interrupted turn, no learning pass</li>
+<li>no skill tool, no skill pass</li>
+<li>review runs after delivery, not before</li>
+</ul>
+<p>That avoids recording half-finished work as durable procedure.</p>
+<hr>
+<h2 id="8-the-background-review-fork">8. The Background Review Fork</h2>
+<p>The heart of the system is <code>_spawn_background_review(...)</code> in <code>run_agent.py</code>.</p>
+<p>It creates a second <code>AIAgent</code> in a background thread. This review agent is not a
+subroutine inside the main model call. It is a separate model invocation with
+the completed transcript as <code>conversation_history</code> and a review prompt appended
+as the next user message.</p>
+<p>Conceptually:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>review_agent <span style="color:#ff79c6">=</span> AIAgent(
+</span></span><span style="display:flex;"><span>    model<span style="color:#ff79c6">=</span><span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>model,
+</span></span><span style="display:flex;"><span>    max_iterations<span style="color:#ff79c6">=</span><span style="color:#bd93f9">16</span>,
+</span></span><span style="display:flex;"><span>    quiet_mode<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>,
+</span></span><span style="display:flex;"><span>    platform<span style="color:#ff79c6">=</span><span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>platform,
+</span></span><span style="display:flex;"><span>    provider<span style="color:#ff79c6">=</span><span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>provider,
+</span></span><span style="display:flex;"><span>    api_mode<span style="color:#ff79c6">=</span>parent_api_mode,
+</span></span><span style="display:flex;"><span>    base_url<span style="color:#ff79c6">=</span>parent_base_url,
+</span></span><span style="display:flex;"><span>    api_key<span style="color:#ff79c6">=</span>parent_api_key,
+</span></span><span style="display:flex;"><span>    credential_pool<span style="color:#ff79c6">=</span><span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>_credential_pool,
+</span></span><span style="display:flex;"><span>    parent_session_id<span style="color:#ff79c6">=</span><span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>session_id,
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>review_agent<span style="color:#ff79c6">.</span>run_conversation(
+</span></span><span style="display:flex;"><span>    user_message<span style="color:#ff79c6">=</span>review_prompt,
+</span></span><span style="display:flex;"><span>    conversation_history<span style="color:#ff79c6">=</span>messages_snapshot,
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>Several implementation details are doing real work here:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Detail</th>
+          <th style="text-align: left">Why it matters</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><code>quiet_mode=True</code></td>
+          <td style="text-align: left">The review fork should not look like a second conversation</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>max_iterations=16</code></td>
+          <td style="text-align: left">Learning is bounded and cannot run forever</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">inherited runtime credentials</td>
+          <td style="text-align: left">The fork uses the same provider/model context as the parent</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">copied session id/start</td>
+          <td style="text-align: left">Cache keys and session attribution stay aligned</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">status output suppression</td>
+          <td style="text-align: left">Review warnings do not leak into the user&rsquo;s UI</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">background thread approval callback</td>
+          <td style="text-align: left">Dangerous command prompts auto-deny instead of blocking stdin</td>
+      </tr>
+  </tbody>
+</table>
+<p>The fork is deliberately boring. It is just another Hermes agent, but with a
+different goal and a tighter toolbox.</p>
+<hr>
+<h2 id="9-the-review-prompt-is-policy-not-just-prompting">9. The Review Prompt Is Policy, Not Just Prompting</h2>
+<p>The <code>_SKILL_REVIEW_PROMPT</code> in <code>run_agent.py</code> is long because it encodes product
+policy, not just model instruction.</p>
+<p>It tells the review fork to look for:</p>
+<ul>
+<li>user corrections to style, tone, format, verbosity, or workflow</li>
+<li>non-trivial techniques, fixes, workarounds, or debugging paths</li>
+<li>loaded skills that proved wrong, stale, or incomplete</li>
+<li>reusable support files such as references, templates, and scripts</li>
+</ul>
+<p>It also tells the fork where to put the learning:</p>
+<ol>
+<li>Patch a currently loaded skill.</li>
+<li>Patch an existing umbrella skill.</li>
+<li>Add a support file under an existing umbrella.</li>
+<li>Create a new class-level umbrella skill only when nothing fits.</li>
+</ol>
+<p>The &ldquo;umbrella&rdquo; language is doing architectural work. Without it, agents tend to
+create one skill per incident:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>bad:
+</span></span><span style="display:flex;"><span>  fix-pytest-error-may-29
+</span></span><span style="display:flex;"><span>  debug-run-agent-skill-nudge
+</span></span><span style="display:flex;"><span>  patch-discord-command-alias-today
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>better:
+</span></span><span style="display:flex;"><span>  python-test-debugging
+</span></span><span style="display:flex;"><span>  hermes-agent-runtime
+</span></span><span style="display:flex;"><span>  gateway-command-routing
+</span></span></code></pre></div><p>The review prompt also contains negative guidance. Do not save:</p>
+<ul>
+<li>missing binaries</li>
+<li>unconfigured credentials</li>
+<li>fresh install errors</li>
+<li>transient failures that resolved</li>
+<li>one-off task narratives</li>
+<li>broad negative claims like &ldquo;browser tools do not work&rdquo;</li>
+</ul>
+<p>That last category is especially important. A self-improving agent can poison
+itself with stale prohibitions. If a tool failed because of a temporary setup
+issue, recording &ldquo;never use this tool&rdquo; is worse than not learning at all.</p>
+<p>My view: this is one of the most mature parts of the design. Good learning
+systems need anti-learning rules. The hard problem is not only deciding what to
+remember; it is preventing accidental permanent constraints.</p>
+<hr>
+<h2 id="10-tool-whitelisting-the-safety-boundary">10. Tool Whitelisting: The Safety Boundary</h2>
+<p>The review fork inherits the transcript, but it does not inherit unlimited
+power.</p>
+<p>Inside <code>_spawn_background_review</code>, Hermes computes a whitelist from:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>get_tool_definitions(
+</span></span><span style="display:flex;"><span>    enabled_toolsets<span style="color:#ff79c6">=</span>[<span style="color:#f1fa8c">&#34;memory&#34;</span>, <span style="color:#f1fa8c">&#34;skills&#34;</span>],
+</span></span><span style="display:flex;"><span>    quiet_mode<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>,
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>Then it installs a thread-local whitelist:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>set_thread_tool_whitelist(
+</span></span><span style="display:flex;"><span>    review_whitelist,
+</span></span><span style="display:flex;"><span>    deny_msg_fmt<span style="color:#ff79c6">=</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Background review denied non-whitelisted tool: </span><span style="color:#f1fa8c">{tool_name}</span><span style="color:#f1fa8c">. &#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;Only memory/skill tools are allowed.&#34;</span>
+</span></span><span style="display:flex;"><span>    ),
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>This is a major architectural choice. The review agent is allowed to write
+memory and skills. It is not allowed to run shell commands, browse the web,
+open browsers, modify project files, send messages, or execute arbitrary
+plugins.</p>
+<p>That makes the review fork a <strong>knowledge maintenance agent</strong>, not a second
+worker agent.</p>
+<p>This is the boundary I would preserve in any production implementation. If a
+background learning pass can run arbitrary tools, it becomes another agentic
+task runner, and now the user has two agents competing for side effects.</p>
+<hr>
+<h2 id="11-skill_manage-procedural-memory-as-a-tool">11. <code>skill_manage</code>: Procedural Memory as a Tool</h2>
+<p>The persistence API is <code>tools/skill_manager_tool.py</code>.</p>
+<p>Its module docstring says the key idea plainly:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Skills are the agent&#39;s procedural memory: they capture how to do a specific
+</span></span><span style="display:flex;"><span>type of task based on proven experience.
+</span></span></code></pre></div><p>The tool supports:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Action</th>
+          <th style="text-align: left">Purpose</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><code>create</code></td>
+          <td style="text-align: left">Create a new skill directory and <code>SKILL.md</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>edit</code></td>
+          <td style="text-align: left">Rewrite an existing <code>SKILL.md</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>patch</code></td>
+          <td style="text-align: left">Targeted find-and-replace in <code>SKILL.md</code> or support file</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>delete</code></td>
+          <td style="text-align: left">Remove/archive a skill</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>write_file</code></td>
+          <td style="text-align: left">Add reference, template, script, or asset files</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>remove_file</code></td>
+          <td style="text-align: left">Remove a support file</td>
+      </tr>
+  </tbody>
+</table>
+<p>The <code>create</code> path validates the name, category, frontmatter, content size, and
+name collision. It writes atomically, optionally scans the generated skill, and
+returns a structured JSON result.</p>
+<p>That matters because skills are not just prompt snippets. They are file-system
+artifacts with layout, metadata, support files, and lifecycle management.</p>
+<p>The default layout is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>~/.hermes/skills/
+</span></span><span style="display:flex;"><span>  my-skill/
+</span></span><span style="display:flex;"><span>    SKILL.md
+</span></span><span style="display:flex;"><span>    references/
+</span></span><span style="display:flex;"><span>    templates/
+</span></span><span style="display:flex;"><span>    scripts/
+</span></span><span style="display:flex;"><span>    assets/
+</span></span></code></pre></div><p>This layout lets the agent keep the <code>SKILL.md</code> concise while moving bulky
+session details, fixtures, and reusable scripts into support directories.</p>
+<hr>
+<h2 id="12-provenance-background-created-vs-user-directed">12. Provenance: Background-Created vs User-Directed</h2>
+<p>Hermes tags write origin at the start of each <code>run_conversation()</code> call:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>set_current_write_origin(
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">getattr</span>(<span style="font-style:italic">self</span>, <span style="color:#f1fa8c">&#34;_memory_write_origin&#34;</span>, <span style="color:#f1fa8c">&#34;assistant_tool&#34;</span>)
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>The background review fork sets:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>review_agent<span style="color:#ff79c6">.</span>_memory_write_origin <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;background_review&#34;</span>
+</span></span><span style="display:flex;"><span>review_agent<span style="color:#ff79c6">.</span>_memory_write_context <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;background_review&#34;</span>
+</span></span></code></pre></div><p>Then <code>skill_manage</code> checks that provenance:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">if</span> action <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;create&#34;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> is_background_review():
+</span></span><span style="display:flex;"><span>        mark_agent_created(name)
+</span></span></code></pre></div><p>This distinction is easy to miss but very important.</p>
+<p>A foreground skill creation may be user-directed: &ldquo;Create a skill for this.&rdquo;
+That is the user&rsquo;s artifact. A background-created skill is agent-generated
+procedural memory. The curator can treat those differently.</p>
+<p>This is the kind of metadata that looks optional until you operate the system
+for months. Without provenance, you cannot safely answer questions like:</p>
+<ul>
+<li>Which skills did the agent invent by itself?</li>
+<li>Which skills are user-authored?</li>
+<li>Which skills are safe candidates for auto-consolidation?</li>
+<li>Which skills should be protected from cleanup?</li>
+</ul>
+<p>Self-improvement without provenance becomes unmaintainable accumulation.</p>
+<hr>
+<h2 id="13-why-the-review-fork-runs-after-the-user-response">13. Why the Review Fork Runs After the User Response</h2>
+<p>The timing is not incidental. Learning after response has three benefits:</p>
+<ol>
+<li><strong>Latency isolation.</strong> The user gets the answer when the work is done, not
+when the learning pass is done.</li>
+<li><strong>Attention isolation.</strong> The foreground model focuses on solving the task,
+not simultaneously producing a polished reusable procedure.</li>
+<li><strong>State quality.</strong> The review sees the complete arc: initial request,
+failed attempts, final solution, and user-visible outcome.</li>
+</ol>
+<p>There is a cost: the background pass may miss nuance that the foreground model
+had in its working context. Hermes compensates by passing the full message
+snapshot and allowing foreground skill saves when obvious.</p>
+<p>This is a common production pattern: put the optional quality-improvement work
+on the side path, but keep a manual/foreground escape hatch for high-signal
+events.</p>
+<hr>
+<h2 id="14-why-the-review-fork-is-a-full-aiagent">14. Why the Review Fork Is a Full <code>AIAgent</code></h2>
+<p>Hermes could have implemented self-improvement as a plain LLM call:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>summarize this transcript into a skill update
+</span></span></code></pre></div><p>Instead, it creates another <code>AIAgent</code>.</p>
+<p>That gives the review pass:</p>
+<ul>
+<li>normal tool calling</li>
+<li>the same memory/skill dispatch system</li>
+<li>the same provider runtime</li>
+<li>the same session-aware logging</li>
+<li>the same error handling</li>
+<li>the same structured tool result messages</li>
+</ul>
+<p>The downside is complexity. A forked agent has to suppress status output,
+inherit credentials, avoid deadlocking on approvals, and avoid recursively
+triggering more review passes.</p>
+<p>Hermes handles the recursion issue explicitly:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>review_agent<span style="color:#ff79c6">.</span>_memory_nudge_interval <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span>review_agent<span style="color:#ff79c6">.</span>_skill_nudge_interval <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0</span>
+</span></span></code></pre></div><p>That prevents &ldquo;review of the review&rdquo; cascades.</p>
+<p>My architectural read: using a full agent is the right call because the thing
+being built is not a summary string. It is a controlled mutation to a durable
+knowledge store. Tool semantics matter.</p>
+<hr>
+<h2 id="15-the-security-model">15. The Security Model</h2>
+<p>Self-improvement is a write path. Write paths need boundaries.</p>
+<p>Hermes uses several:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Boundary</th>
+          <th style="text-align: left">Implementation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Tool availability</td>
+          <td style="text-align: left">Review fires only if <code>skill_manage</code> is valid</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Tool whitelist</td>
+          <td style="text-align: left">Background review can only use memory/skills</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Action schema</td>
+          <td style="text-align: left"><code>skill_manage</code> requires structured action arguments</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Path validation</td>
+          <td style="text-align: left">Support files must stay under allowed subdirectories</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Atomic writes</td>
+          <td style="text-align: left">Skill files are written via temp file + replace</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Optional scanner</td>
+          <td style="text-align: left"><code>skills.guard_agent_created</code> can scan agent-written skills</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Provenance</td>
+          <td style="text-align: left">Background-created skills are marked separately</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Curator lifecycle</td>
+          <td style="text-align: left">Agent-created skills can later be consolidated or pruned</td>
+      </tr>
+  </tbody>
+</table>
+<p>There is an honest comment in <code>tools/skill_manager_tool.py</code>: the agent-created
+skill scanner is off by default because the same agent can already execute code
+through other tools. Turning on a scanner can add friction and false positives
+without changing the fundamental trust boundary.</p>
+<p>That is a pragmatic security stance. The strongest boundary is not the scanner;
+it is the background review whitelist. The review fork cannot run terminal
+commands in the first place.</p>
+<hr>
+<h2 id="16-how-the-skill-becomes-active-later">16. How the Skill Becomes Active Later</h2>
+<p>Creating a skill is only half the loop. The next session has to see it.</p>
+<p><code>toolsets.py</code> includes the skills tools in <code>_HERMES_CORE_TOOLS</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;skills_list&#34;</span>, <span style="color:#f1fa8c">&#34;skill_view&#34;</span>, <span style="color:#f1fa8c">&#34;skill_manage&#34;</span>
+</span></span></code></pre></div><p>When the system prompt is built, <code>run_agent.py</code> checks whether skills tools are
+available:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>has_skills_tools <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">any</span>(
+</span></span><span style="display:flex;"><span>    name <span style="color:#ff79c6">in</span> <span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>valid_tool_names
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> name <span style="color:#ff79c6">in</span> [<span style="color:#f1fa8c">&#34;skills_list&#34;</span>, <span style="color:#f1fa8c">&#34;skill_view&#34;</span>, <span style="color:#f1fa8c">&#34;skill_manage&#34;</span>]
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>If skills are available, it calls <code>build_skills_system_prompt(...)</code>. That
+prompt includes the skill ecosystem and gives the model access to skill lookup
+and loading behavior.</p>
+<p>So the loop is:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>session N discovers technique
+</span></span><span style="display:flex;"><span>  -&gt; background review creates/patches skill
+</span></span><span style="display:flex;"><span>  -&gt; skill prompt cache is cleared
+</span></span><span style="display:flex;"><span>  -&gt; future session sees the updated skill library
+</span></span><span style="display:flex;"><span>  -&gt; agent can load/apply the improved procedure
+</span></span></code></pre></div><p><code>skill_manage</code> clears the skills system prompt cache after successful mutation.
+That avoids the classic bug where the agent writes a skill but future prompt
+construction still sees a stale skill snapshot.</p>
+<hr>
+<h2 id="17-curation-self-improvement-needs-maintenance">17. Curation: Self-Improvement Needs Maintenance</h2>
+<p>If every successful session creates a skill, the library eventually rots:</p>
+<ul>
+<li>duplicates appear</li>
+<li>narrow one-off skills pile up</li>
+<li>old guidance becomes stale</li>
+<li>overlapping umbrellas compete</li>
+<li>prompt listings grow noisy</li>
+</ul>
+<p>Hermes has a separate curator layer in <code>agent/curator.py</code> and related CLI
+commands. The background review prompt even mentions this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>If you notice two existing skills that overlap, note it in your reply --
+</span></span><span style="display:flex;"><span>the background curator handles consolidation at scale.
+</span></span></code></pre></div><p>This is another mature design point. Self-improvement is not only write-time
+capture. It is lifecycle management:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Phase</th>
+          <th style="text-align: left">Question</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Creation</td>
+          <td style="text-align: left">Is this learning worth saving?</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Patch</td>
+          <td style="text-align: left">Did a new pitfall refine an existing procedure?</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Support files</td>
+          <td style="text-align: left">Should bulky detail move out of <code>SKILL.md</code>?</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Consolidation</td>
+          <td style="text-align: left">Do two skills cover the same class?</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Archival</td>
+          <td style="text-align: left">Is an agent-created skill stale or unused?</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Pinning</td>
+          <td style="text-align: left">Did the user mark a skill as protected?</td>
+      </tr>
+  </tbody>
+</table>
+<p>Learning systems need garbage collection. Otherwise, the &ldquo;improved&rdquo; prompt
+becomes a landfill of obsolete advice.</p>
+<hr>
+<h2 id="18-design-insights">18. Design Insights</h2>
+<h3 id="insight-1-self-improvement-should-be-procedural-not-autobiographical">Insight 1: Self-improvement should be procedural, not autobiographical</h3>
+<p>The worst version of an agent memory system saves every story about what
+happened. That feels like learning, but it forces future agents to re-derive
+the lesson from narrative.</p>
+<p>Hermes pushes toward class-level skills. The saved artifact should say:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>When debugging this kind of problem, do these steps.
+</span></span></code></pre></div><p>not:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>On Friday, the user asked X, then I tried Y, then Z happened.
+</span></span></code></pre></div><p>Autobiography is useful as reference material. Procedure belongs in <code>SKILL.md</code>.</p>
+<h3 id="insight-2-anti-learning-is-as-important-as-learning">Insight 2: Anti-learning is as important as learning</h3>
+<p>The review prompt&rsquo;s &ldquo;Do NOT capture&rdquo; section is not defensive fluff. It prevents
+permanent damage.</p>
+<p>Agents are prone to overgeneralizing failures:</p>
+<ul>
+<li>&ldquo;npm failed once&rdquo; becomes &ldquo;do not use npm&rdquo;</li>
+<li>&ldquo;browser setup was broken&rdquo; becomes &ldquo;browser is unavailable&rdquo;</li>
+<li>&ldquo;credentials were missing&rdquo; becomes &ldquo;this integration does not work&rdquo;</li>
+</ul>
+<p>Good self-improvement systems need rules for what not to encode. Otherwise,
+they slowly accumulate fear.</p>
+<h3 id="insight-3-background-learning-must-be-side-effect-constrained">Insight 3: Background learning must be side-effect constrained</h3>
+<p>The review fork can mutate memory and skills, but not arbitrary files. That is
+the right boundary.</p>
+<p>A learning pass should not be able to continue the user&rsquo;s engineering task. It
+should only update the knowledge layer that helps future tasks.</p>
+<p>This is the difference between:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>background reviewer
+</span></span></code></pre></div><p>and:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>unsupervised second agent
+</span></span></code></pre></div><p>The first is operationally safe. The second creates race conditions and trust
+problems.</p>
+<h3 id="insight-4-prompt-design-carries-product-policy">Insight 4: Prompt design carries product policy</h3>
+<p>The self-improvement prompt encodes taste:</p>
+<ul>
+<li>prefer patching existing skills</li>
+<li>avoid session-specific names</li>
+<li>use support files for detail</li>
+<li>treat user frustration as high-signal</li>
+<li>avoid environment-specific prohibitions</li>
+</ul>
+<p>These are product decisions. They shape the knowledge base over time. In an
+agent system, prompts like this are not decoration; they are policy modules.</p>
+<h3 id="insight-5-provenance-is-not-optional">Insight 5: Provenance is not optional</h3>
+<p>Once agents can create knowledge artifacts, you need to know where each artifact
+came from.</p>
+<p>User-authored, bundled, hub-installed, foreground-created, and
+background-created skills should not all be treated identically. Hermes marks
+background-created skills so curator workflows can manage them without
+confusing them with user-owned content.</p>
+<h3 id="insight-6-cache-invalidation-is-part-of-learning">Insight 6: Cache invalidation is part of learning</h3>
+<p>The learning loop would be broken if the agent wrote a skill and then continued
+serving stale skill prompts. <code>skill_manage</code> clears the skill prompt cache after
+successful mutations.</p>
+<p>This is a small implementation detail with big consequences. Durable learning
+has to reach the next prompt construction path.</p>
+<hr>
+<h2 id="19-failure-modes-to-watch">19. Failure Modes to Watch</h2>
+<p>If you build a similar system, these are the failure modes I would test first:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Failure</th>
+          <th style="text-align: left">Symptom</th>
+          <th style="text-align: left">Mitigation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Over-capture</td>
+          <td style="text-align: left">Too many tiny skills</td>
+          <td style="text-align: left">Prefer umbrella patching before creation</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Under-capture</td>
+          <td style="text-align: left">Hard lessons never saved</td>
+          <td style="text-align: left">Foreground guidance plus background cadence</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Stale prohibitions</td>
+          <td style="text-align: left">Agent refuses tools based on old failures</td>
+          <td style="text-align: left">Explicit anti-learning rules</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Review latency</td>
+          <td style="text-align: left">User waits for skill writing</td>
+          <td style="text-align: left">Spawn review after final response</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Review side effects</td>
+          <td style="text-align: left">Background agent modifies task files</td>
+          <td style="text-align: left">Tool whitelist</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Recursive learning</td>
+          <td style="text-align: left">Review triggers another review</td>
+          <td style="text-align: left">Disable nudge intervals in fork</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Skill cache staleness</td>
+          <td style="text-align: left">New skills not visible later</td>
+          <td style="text-align: left">Clear prompt cache on mutation</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Provenance loss</td>
+          <td style="text-align: left">Curator cannot tell ownership</td>
+          <td style="text-align: left">Mark background-created skills</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Prompt bloat</td>
+          <td style="text-align: left">Skill list becomes noisy</td>
+          <td style="text-align: left">Curator consolidation and archival</td>
+      </tr>
+  </tbody>
+</table>
+<p>The subtle one is over-capture. A self-improving agent that writes too much can
+get worse. The knowledge base becomes noisy, contradictory, and expensive to
+load. The best learning loop is selective.</p>
+<hr>
+<h2 id="20-a-minimal-implementation-recipe">20. A Minimal Implementation Recipe</h2>
+<p>If you wanted to implement the Hermes pattern in another agent runtime, the
+minimal version would look like this:</p>
+<ol>
+<li>Define a procedural knowledge artifact with metadata and support files.</li>
+<li>Expose a structured <code>knowledge_manage</code> tool for create, patch, and support
+file writes.</li>
+<li>Add foreground guidance telling the agent when to save or patch procedures.</li>
+<li>Track a signal correlated with hard work, such as tool iterations.</li>
+<li>After final response, spawn a quiet review agent with the transcript.</li>
+<li>Whitelist the review agent to memory/procedure tools only.</li>
+<li>Use a review prompt that strongly prefers patching existing procedures.</li>
+<li>Mark provenance for background-created artifacts.</li>
+<li>Clear any prompt/index caches after mutation.</li>
+<li>Run periodic curation to merge, archive, and repair accumulated knowledge.</li>
+</ol>
+<p>The key is to treat self-improvement as a <strong>runtime subsystem</strong>, not as a
+single prompt.</p>
+<hr>
+<h2 id="21-why-this-design-feels-different-from-memory">21. Why This Design Feels Different from &ldquo;Memory&rdquo;</h2>
+<p>Many agent frameworks have memory. Fewer have procedural maintenance.</p>
+<p>Memory usually answers:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>What should I know about this user or past session?
+</span></span></code></pre></div><p>Skills answer:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>How should I operate when this class of work appears again?
+</span></span></code></pre></div><p>That difference changes the shape of the artifact. A memory can be a sentence.
+A skill needs trigger conditions, steps, pitfalls, tools, and verification.</p>
+<p>Hermes&rsquo; self-improvement loop recognizes that solved work is often more
+valuable as a reusable method than as a remembered fact.</p>
+<hr>
+<h2 id="22-final-takeaway">22. Final Takeaway</h2>
+<p>Hermes self-improvement is not the agent deciding to rewrite itself. It is a
+disciplined loop for converting experience into inspected, structured,
+procedural knowledge.</p>
+<p>The architecture has a clear philosophy:</p>
+<ul>
+<li>keep user delivery fast</li>
+<li>learn after the task is complete</li>
+<li>write through explicit tools</li>
+<li>constrain background side effects</li>
+<li>prefer improving existing knowledge over creating new fragments</li>
+<li>track provenance</li>
+<li>curate the library over time</li>
+</ul>
+<p>That is the practical version of self-improvement for production agents. Not
+&ldquo;the model gets smarter&rdquo; in the abstract, but &ldquo;the system gets better at doing
+recurring work because yesterday&rsquo;s hard-earned procedure is available tomorrow.&rdquo;</p>
+<hr>
+<p><em>Hermes Agent - May 2026</em></p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2026-05-27-llm-exception-handling-deep-dive/" data-toggle="tooltip" data-placement="top" title="Exception Handling for LLM Calls in Production Agentic Systems">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/agentic-ai" title="agentic ai">
+                            agentic ai
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ai" title="ai">
+                            ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/ai-agents" title="ai agents">
+                            ai agents
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/deep-learning" title="deep learning">
+                            deep learning
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/hermes" title="hermes">
+                            hermes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/llm-agents" title="llm agents">
+                            llm agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/prompt-engineering" title="prompt engineering">
+                            prompt engineering
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/tool-use" title="tool use">
+                            tool use
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<script src="/js/theme-toggle.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+</body>
+</html>

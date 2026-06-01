@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Summarization on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/summarization/</link>
+    <description>Recent content in Summarization on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 24 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/summarization/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Designing Context Compression for Production Agents: A Deep Dive into Hermes</title>
+      <link>http://akjamie.github.io/post/2026-05-24-context-compressor-deep-dive/</link>
+      <pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-05-24-context-compressor-deep-dive/</guid>
+      <description>&lt;h1 id=&#34;designing-context-compression-for-production-agents-a-deep-dive-into-hermes&#34;&gt;Designing Context Compression for Production Agents: A Deep Dive into Hermes&lt;/h1&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;Staff-engineer-level notes on &lt;code&gt;agent/context_compressor.py&lt;/code&gt;: how Hermes&#xA;preserves task continuity when a long-running agent outgrows the model context&#xA;window, and what the implementation teaches about summarization, compression,&#xA;and failure-tolerant agent design.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;[!NOTE]&lt;/p&gt;&#xA;&lt;h3 id=&#34;executive-tldr&#34;&gt;Executive TL;DR&lt;/h3&gt;&#xA;&lt;p&gt;Hermes context compression is not &amp;ldquo;summarize the chat when it gets long.&amp;rdquo; It is&#xA;a transcript rewrite algorithm with strict invariants:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Head / middle / tail partitioning:&lt;/strong&gt; keep the system prompt and first turns&#xA;intact, summarize the middle, and protect the recent tail by token budget.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Active task anchoring:&lt;/strong&gt; the latest user message must stay outside the&#xA;summary. A summarized &amp;ldquo;pending ask&amp;rdquo; is reference material, not a live user&#xA;turn.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Tool-aware compaction:&lt;/strong&gt; old tool outputs are deduplicated, summarized, and&#xA;pruned before any LLM call; tool call/result pairs are sanitized afterward so&#xA;providers never receive invalid message history.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Iterative summaries:&lt;/strong&gt; second and later compactions update the existing&#xA;handoff instead of recursively summarizing summaries as ordinary turns.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Multimodal budgeting:&lt;/strong&gt; images are charged a fixed token estimate so image&#xA;sessions do not accidentally preserve far more context than the model can fit.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Failure visibility:&lt;/strong&gt; if the summary model fails, Hermes inserts an explicit&#xA;fallback marker and records dropped-turn metadata instead of silently losing&#xA;context.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;how-to-use-this-deep-dive&#34;&gt;How to Use This Deep Dive&lt;/h2&gt;&#xA;&lt;p&gt;Read this document in four passes:&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

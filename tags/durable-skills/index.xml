@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Durable Skills on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/durable-skills/</link>
+    <description>Recent content in Durable Skills on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 29 May 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/durable-skills/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Self-Improvement Agent in Hermes: A Deep Dive</title>
+      <link>http://akjamie.github.io/post/2026-05-29-self-improvement-agent-deep-dive/</link>
+      <pubDate>Fri, 29 May 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-05-29-self-improvement-agent-deep-dive/</guid>
+      <description>&lt;h1 id=&#34;the-self-improvement-agent-in-hermes-a-deep-dive&#34;&gt;The Self-Improvement Agent in Hermes: A Deep Dive&lt;/h1&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;Staff-engineer-level notes on Hermes Agent&amp;rsquo;s procedural self-improvement&#xA;loop: how the runtime turns solved problems, user corrections, and hard-won&#xA;debugging paths into durable skills without interrupting the foreground task.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;[!NOTE]&lt;/p&gt;&#xA;&lt;h3 id=&#34;executive-tldr&#34;&gt;Executive TL;DR&lt;/h3&gt;&#xA;&lt;p&gt;Hermes self-improvement is not a magic &lt;code&gt;auto_create_skill()&lt;/code&gt; function. It is a&#xA;runtime pattern composed from five pieces:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Foreground guidance:&lt;/strong&gt; the main agent is told to save or patch skills when&#xA;a complex workflow succeeds.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Iteration counters:&lt;/strong&gt; the runtime tracks how much tool-heavy work has&#xA;happened since the last skill review.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Background review fork:&lt;/strong&gt; after the user-visible answer is delivered,&#xA;Hermes starts a quiet review agent with the conversation transcript.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Narrow tool whitelist:&lt;/strong&gt; the review fork may call only memory and skill&#xA;tools, not arbitrary shell, web, or browser tools.&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Procedural memory tool:&lt;/strong&gt; &lt;code&gt;skill_manage&lt;/code&gt; writes, patches, deletes, and&#xA;annotates skills under Hermes&amp;rsquo; skill library.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;The architecture matters more than the prompt. The learning loop is isolated&#xA;from the foreground answer, bounded by tool permissions, marked with&#xA;provenance, and implemented through the same skill API the main agent can use.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
