@@ -279,6 +279,33 @@
 <div data-pagefind-ignore="all">
 
 <div class="post-preview">
+    <a href="http://akjamie.github.io/post/2023-03-26-vault-agent-with-k8s/">
+        <h2 class="post-title">
+            Vault Agent with Kubernetes
+        </h2>
+	
+        <div class="post-content-preview">
+	
+            Nearly all requests to Vault must be accompanied by an authentication token. This includes all API requests,
+as well as via the Vault CLI and other libraries, therefore application running in kubernetes is no exception. Luckily,
+Vault provides Kubernetes auth method to authenticate the clients using a Kubernetes Service Account Token, and Vault
+Agent which could be leveraged to automatically inject the secrets from vault into kubernetes pods through init container
+pattern.
+        
+        </div>
+    </a>
+    <p class="post-meta">
+    
+        Posted by Jamie on Sunday, March 26, 2023
+        
+        
+    
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="http://akjamie.github.io/post/2023-03-25-vault-on-k8s/">
         <h2 class="post-title">
             Vault on Kubernetes
@@ -524,33 +551,6 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
 </div>
 <hr>
 
-<div class="post-preview">
-    <a href="http://akjamie.github.io/post/2021-08-09-aws-demo-01-autoscale-test/">
-        <h2 class="post-title">
-            Demo - AWS EC2 instance auto scaling
-        </h2>
-	
-        <h3 class="post-subtitle">
-            AWS PCA Prep Series
-        </h3>
-	
-        <div class="post-content-preview">
-	
-            To mark down some key steps for later review
-        
-        </div>
-    </a>
-    <p class="post-meta">
-    
-        Posted by Jamie Zhang on Monday, August 9, 2021
-        
-        
-    
-    </p>
-
-</div>
-<hr>
-
 </div>
 
             
@@ -672,6 +672,10 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
                
             
                
+                    <a href="/tags/agents" title="agents">
+                        agents
+                    </a>
+               
             
                
             
@@ -791,6 +795,8 @@ This is just the definition of what&rsquo;s JPA, let&rsquo;s recall how we persi
                     <a href="/tags/llm-agents" title="llm agents">
                         llm agents
                     </a>
+               
+            
                
             
                

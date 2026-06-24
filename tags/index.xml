@@ -6,8 +6,36 @@
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 29 May 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 23 Jun 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agents</title>
+      <link>http://akjamie.github.io/tags/agents/</link>
+      <pubDate>Tue, 23 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/agents/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Architecture</title>
+      <link>http://akjamie.github.io/tags/architecture/</link>
+      <pubDate>Tue, 23 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/architecture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Llm</title>
+      <link>http://akjamie.github.io/tags/llm/</link>
+      <pubDate>Tue, 23 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/llm/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Multi-Agent</title>
+      <link>http://akjamie.github.io/tags/multi-agent/</link>
+      <pubDate>Tue, 23 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/multi-agent/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Agentic AI</title>
       <link>http://akjamie.github.io/tags/agentic-ai/</link>
@@ -177,13 +205,6 @@
       <description></description>
     </item>
     <item>
-      <title>LLM</title>
-      <link>http://akjamie.github.io/tags/llm/</link>
-      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/llm/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Tool Use</title>
       <link>http://akjamie.github.io/tags/tool-use/</link>
       <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
@@ -233,13 +254,6 @@
       <description></description>
     </item>
     <item>
-      <title>Architecture</title>
-      <link>http://akjamie.github.io/tags/architecture/</link>
-      <pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/architecture/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Deep Learning</title>
       <link>http://akjamie.github.io/tags/deep-learning/</link>
       <pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate>
@@ -251,13 +265,6 @@
       <link>http://akjamie.github.io/tags/transformer/</link>
       <pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/transformer/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Agents</title>
-      <link>http://akjamie.github.io/tags/agents/</link>
-      <pubDate>Mon, 23 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/agents/</guid>
       <description></description>
     </item>
     <item>

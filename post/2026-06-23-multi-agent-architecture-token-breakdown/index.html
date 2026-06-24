@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="Multi-Agent Architectures: The Diagrams the Numbers Are Hiding" />
+    <meta property="og:title" content="Multi-Agent Architectures: The Diagrams the Numbers Are Hiding" />
+    <meta property="twitter:title" content="Multi-Agent Architectures: The Diagrams the Numbers Are Hiding" />
+    
+
+    
+    <meta name="description" content="A companion to LangChain&#39;s &#39;Choosing the Right Multi-Agent Architecture&#39; — full sequence diagrams and call-by-call token math for Skills, Handoffs, and Router, not just Subagents.">
+    <meta property="og:description" content="A companion to LangChain&#39;s &#39;Choosing the Right Multi-Agent Architecture&#39; — full sequence diagrams and call-by-call token math for Skills, Handoffs, and Router, not just Subagents." />
+    <meta property="twitter:description" content="A companion to LangChain&#39;s &#39;Choosing the Right Multi-Agent Architecture&#39; — full sequence diagrams and call-by-call token math for Skills, Handoffs, and Router, not just Subagents." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-06-23-multi-agent-architecture-token-breakdown/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Multi-Agent Architectures: The Diagrams the Numbers Are Hiding | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-06-23-multi-agent-architecture-token-breakdown/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/agents" title="agents">
+                            agents
+                        </a>
+                        
+                        <a class="tag" href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        <a class="tag" href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        <a class="tag" href="/tags/multi-agent" title="multi-agent">
+                            multi-agent
+                        </a>
+                        
+                    </div>
+                    <h1>Multi-Agent Architectures: The Diagrams the Numbers Are Hiding</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                    Jamie&#39;s Blog
+                             
+                            on 
+                            Tuesday, June 23, 2026
+                            
+                                <span id="/post/2026-06-23-multi-agent-architecture-token-breakdown/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="multi-agent-architectures-the-diagrams-the-numbers-are-hiding">Multi-Agent Architectures: The Diagrams the Numbers Are Hiding</h1>
+<p>LangChain&rsquo;s <a href="https://www.langchain.com/blog/choosing-the-right-multi-agent-architecture">Choosing the Right Multi-Agent Architecture</a> lays out four patterns — <strong>Subagents</strong>, <strong>Skills</strong>, <strong>Handoffs</strong>, and <strong>Router</strong> — and benchmarks them across three scenarios with tables of model-call counts and token totals. It&rsquo;s a genuinely useful framework. But there&rsquo;s a gap: in every one of the three benchmark scenarios, only <em>one</em> pattern gets a sequence diagram (almost always Subagents). The other three patterns get a number in a table and nothing to show how that number was produced.</p>
+<p>That&rsquo;s a problem, because the numbers aren&rsquo;t self-explanatory. A &ldquo;5 calls, ~9K tokens&rdquo; total looks like five equal, independent slices — but it isn&rsquo;t. Some calls in these flows are cheap routing decisions; others have to absorb everything every other agent just produced. Flattening that into one average-looking row hides exactly the tradeoff the post is trying to teach.</p>
+<p>This post fills in the missing diagrams and reconstructs the call-by-call math behind each pattern&rsquo;s numbers, scenario by scenario. The token figures below are illustrative reconstructions consistent with the architectures and totals described in the original post — not official numbers published by LangChain, since they didn&rsquo;t break down the per-call math either.</p>
+<h2 id="the-four-patterns-in-plain-terms">The four patterns, in plain terms</h2>
+<ul>
+<li><strong>Subagents</strong> — A main agent calls other agents like tools. Subagents are stateless and isolated; the main agent decides everything and stitches results together. Good for distinct domains (calendar, email, CRM) that never talk to the user directly.</li>
+<li><strong>Skills</strong> — One agent, with specialized instructions it loads on demand, like pulling a manual off a shelf. Good for one agent covering many specialties without hard walls between them.</li>
+<li><strong>Handoffs</strong> — Control passes between agents as the conversation progresses, and stays put until the next transfer. Good for staged flows (support, onboarding) where later steps unlock only after earlier ones finish.</li>
+<li><strong>Router</strong> — A classifier dispatches the request to one or more specialized agents (often in parallel) and merges what comes back. Stateless by design. Good for separate knowledge domains queried at once.</li>
+</ul>
+<p>With those in mind, here&rsquo;s the mental model that explains why each pattern produces the call counts and token totals it does.</p>
+<h2 id="the-mental-model-that-explains-every-number-in-the-original-tables">The mental model that explains every number in the original tables</h2>
+<p>Two simple rules account for almost every call-count and token figure in the source post:</p>
+<ol>
+<li><strong>A tool call costs two model turns, not one.</strong> The model has to (a) decide to call the tool and (b) read the tool&rsquo;s result and respond. Any pattern that adds a routing, handoff, or relay step on top of that adds more turns on top of those two.</li>
+<li><strong>Isolation vs. accumulation determines token growth, not call count.</strong> Patterns that isolate each subtask in its own context (Subagents, Router) keep individual calls small but pay a relay tax. Patterns that keep everything in one growing conversation (Skills, Handoffs) avoid the relay tax but every later call re-pays for everything that came before it.</li>
+</ol>
+<p>Keep these two rules in mind — they&rsquo;re the thread connecting every diagram below.</p>
+<hr>
+<h2 id="scenario-1-one-shot-request-buy-coffee">Scenario 1: One-shot request (&ldquo;buy coffee&rdquo;)</h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Pattern</th>
+          <th style="text-align: left">Model calls</th>
+          <th style="text-align: left">Why</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Subagents</td>
+          <td style="text-align: left">4</td>
+          <td style="text-align: left">Main agent routes (1) → subagent calls the tool (2) → subagent reads the result and reports back (3) → main agent relays that to the user (4)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Skills</td>
+          <td style="text-align: left">3</td>
+          <td style="text-align: left">Route/select skill (1) → call tool (2) → read result, respond directly (3)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Handoffs</td>
+          <td style="text-align: left">3</td>
+          <td style="text-align: left">Hand off to the right agent (1) → call tool (2) → read result, respond directly (3)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Router</td>
+          <td style="text-align: left">3</td>
+          <td style="text-align: left">Classify and dispatch (1) → call tool (2) → read result, respond directly (3)</td>
+      </tr>
+  </tbody>
+</table>
+<p>The difference is entirely the extra relay hop. Subagents&rsquo; fourth call doesn&rsquo;t add new <em>work</em> — it adds a second narrator.</p>
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant M as Main Agent
+    participant C as Coffee Subagent
+
+    U-&gt;&gt;M: &#34;buy coffee&#34;
+    Note over M: Call 1 — decide to invoke subagent
+    M-&gt;&gt;C: invoke coffee task
+    Note over C: Call 2 — issue buy_coffee tool call
+    Note over C: Call 3 — read tool result, draft summary
+    C--&gt;&gt;M: &#34;coffee ordered&#34;
+    Note over M: Call 4 — relay result to user
+    M--&gt;&gt;U: confirmation
+</pre>
+
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant A as Agent (skill loaded in-context)
+
+    U-&gt;&gt;A: &#34;buy coffee&#34;
+    Note over A: Call 1 — select/load coffee skill
+    A-&gt;&gt;A: issue buy_coffee tool call
+    Note over A: Call 2 — tool call
+    Note over A: Call 3 — read result, respond directly
+    A--&gt;&gt;U: confirmation
+</pre>
+
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant I as Intake Agent
+    participant C as Coffee Agent
+
+    U-&gt;&gt;I: &#34;buy coffee&#34;
+    Note over I: Call 1 — hand off to coffee agent
+    I-&gt;&gt;C: handoff
+    Note over C: Call 2 — issue buy_coffee tool call
+    Note over C: Call 3 — read result, respond directly
+    C--&gt;&gt;U: confirmation
+</pre>
+
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant Rt as Router
+    participant C as Coffee Agent
+
+    U-&gt;&gt;Rt: &#34;buy coffee&#34;
+    Note over Rt: Call 1 — classify &amp; dispatch
+    Rt-&gt;&gt;C: query
+    Note over C: Call 2 — issue buy_coffee tool call
+    C--&gt;&gt;Rt: tool result
+    Note over Rt: Call 3 — synthesize &amp; respond
+    Rt--&gt;&gt;U: confirmation
+</pre>
+
+<p>Same task, same tool, same number of <em>useful</em> steps across all three — they just route the decision through different participants. Skills keeps it inside one agent&rsquo;s own context; Handoffs hands control over to the coffee agent permanently, so it answers the user itself; Router always reads the result and synthesizes the final response itself, even when — like here — there&rsquo;s only one branch to synthesize from.</p>
+<hr>
+<h2 id="scenario-2-repeat-request-buy-coffee--buy-coffee-again">Scenario 2: Repeat request (&ldquo;buy coffee&rdquo; → &ldquo;buy coffee again&rdquo;)</h2>
+<p>This is where statefulness pays off — or doesn&rsquo;t.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Pattern</th>
+          <th style="text-align: left">Turn 2 calls</th>
+          <th style="text-align: left">Total</th>
+          <th style="text-align: left">Why</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Subagents</td>
+          <td style="text-align: left">4</td>
+          <td style="text-align: left">8</td>
+          <td style="text-align: left">Stateless subagent — every call repeats turn 1&rsquo;s full sequence</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Skills</td>
+          <td style="text-align: left">2</td>
+          <td style="text-align: left">5</td>
+          <td style="text-align: left">Skill is already loaded; skip the routing call, go straight to tool call → response</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Handoffs</td>
+          <td style="text-align: left">2</td>
+          <td style="text-align: left">5</td>
+          <td style="text-align: left">Already handed off to the coffee agent; skip the handoff call</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Router</td>
+          <td style="text-align: left">3</td>
+          <td style="text-align: left">6</td>
+          <td style="text-align: left">Router re-classifies on every request by design, even repeats</td>
+      </tr>
+  </tbody>
+</table>
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant A as Agent (skill loaded in-context)
+
+    Note over A: Turn 1 — full 3-call sequence (load skill → tool call → response)
+    U-&gt;&gt;A: &#34;buy coffee again&#34;
+    Note over A: Call 1 — issue buy_coffee tool call (skill already loaded)
+    Note over A: Call 2 — read result, respond directly
+    A--&gt;&gt;U: confirmation
+</pre>
+
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant C as Coffee Agent
+
+    Note over C: Turn 1 — handed off, tool call, response (3 calls)
+    U-&gt;&gt;C: &#34;buy coffee again&#34;
+    Note over C: Call 1 — issue buy_coffee tool call (still active agent, no re-handoff needed)
+    Note over C: Call 2 — read result, respond directly
+    C--&gt;&gt;U: confirmation
+</pre>
+
+<p>This is the architectural distinction that separates Handoffs from Router: a handoff is <em>permanent</em> until the active agent explicitly transfers control again. Once the Intake Agent hands control to the Coffee Agent, the Coffee Agent stays in the conversation loop for all subsequent user turns. The Intake Agent is not consulted again — there&rsquo;s no re-classification step on each turn, no re-routing through a central dispatcher. The user is now effectively talking directly to the Coffee Agent. In a Router pattern, by contrast, the next diagram shows that every single request must pass through the classifier again.</p>
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant Rt as Router
+    participant C as Coffee Agent
+
+    Note over Rt: Turn 1 — classify → dispatch → tool call → synthesize (3 calls)
+    U-&gt;&gt;Rt: &#34;buy coffee again&#34;
+    Note over Rt: Call 1 — classify again (stateless by design)
+    Rt-&gt;&gt;C: query
+    Note over C: Call 2 — tool call
+    C--&gt;&gt;Rt: tool result
+    Note over Rt: Call 3 — synthesize &amp; respond
+    Rt--&gt;&gt;U: confirmation
+</pre>
+
+<p>Subagents pays the same 4-call price every single time — that consistency is the whole point of the pattern&rsquo;s context isolation, but it means repeat requests never get cheaper. Router sits in between: it doesn&rsquo;t remember the <em>decision</em> to use the tool the way Skills/Handoffs do, but each of its calls stays small and parallel-friendly. Skills and Handoffs are the only patterns that genuinely benefit from &ldquo;we&rsquo;ve been here before.&rdquo;</p>
+<hr>
+<h2 id="scenario-3-multi-domain-query-compare-python-js-and-rust">Scenario 3: Multi-domain query (&ldquo;Compare Python, JS, and Rust&rdquo;)</h2>
+<p>This is the scenario in the diagram you uploaded, and where the numbers get interesting. Each language agent carries roughly 2,000 tokens of internal documentation.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Pattern</th>
+          <th style="text-align: left">Model calls</th>
+          <th style="text-align: left">Published total</th>
+          <th style="text-align: left"><em>Recalculated total</em></th>
+          <th style="text-align: left">Mechanism</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Subagents</td>
+          <td style="text-align: left">5</td>
+          <td style="text-align: left">~9K</td>
+          <td style="text-align: left">~11.4K</td>
+          <td style="text-align: left">Parallel fan-out; subagent contexts are isolated from each other, but the main agent accumulates all returned results, making the synthesis call 2-3x heavier than any individual subagent call</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Router</td>
+          <td style="text-align: left">5</td>
+          <td style="text-align: left">~9K</td>
+          <td style="text-align: left">~11.4K</td>
+          <td style="text-align: left">Same shape as Subagents — parallel fan-out, but the router maintains its own running context across all dispatches, so the synthesis call absorbs all returned analyses</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Skills</td>
+          <td style="text-align: left">3</td>
+          <td style="text-align: left">~15K</td>
+          <td style="text-align: left">~17K</td>
+          <td style="text-align: left">Fewer calls, but one growing conversation re-pays for itself every turn</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Handoffs</td>
+          <td style="text-align: left">7+</td>
+          <td style="text-align: left">~14K+</td>
+          <td style="text-align: left">~18.8K</td>
+          <td style="text-align: left">Sequential, no parallelism; each hop carries the full running history forward, and every handoff is a tool call costing two turns</td>
+      </tr>
+  </tbody>
+</table>
+<p>* Recalculated by holding the ~2,000-token per-domain doc size constant across all four patterns (the figure the original post itself states) and explicitly pricing in the synthesis call&rsquo;s real input size — see the per-call breakdowns below.</p>
+<h3 id="subagents--what-the-uploaded-diagram-actually-shows">Subagents — what the uploaded diagram actually shows</h3>
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant M as Main Agent
+    participant P as Python Subagent
+    participant J as JS Subagent
+    participant R as Rust Subagent
+
+    U-&gt;&gt;M: &#34;Compare Python, JS, and Rust&#34;
+    Note over M: Call 1 — routing (~1K)
+    par
+        M-&gt;&gt;P: invoke
+        Note over P: Call 2 (~2K)
+        P--&gt;&gt;M: python analysis
+    and
+        M-&gt;&gt;J: invoke
+        Note over J: Call 3 (~2K)
+        J--&gt;&gt;M: js analysis
+    and
+        M-&gt;&gt;R: invoke
+        Note over R: Call 4 (~2K)
+        R--&gt;&gt;M: rust analysis
+    end
+    Note over M: Call 5 — synthesis
+    M--&gt;&gt;U: synthesized comparison
+</pre>
+
+<p>Here&rsquo;s the catch, and the reason this diagram is worth scrutinizing rather than just reading off the totals: <strong>Call 5 cannot really be the same size as Calls 2–4.</strong> It has to receive all three returned analyses <em>plus</em> the original task before it can write anything. And for the per-subagent calls to land anywhere near a &ldquo;2K&rdquo; box, each subagent has to compress its ~2K of internal documentation down to a short returned analysis — it can&rsquo;t return the documentation itself, only a verdict drawn from it. Holding the per-domain doc size at the ~2,000 tokens the original post states, and assuming each subagent returns a condensed ~300-token analysis (not its full internal context), the real shape looks like:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Call</th>
+          <th style="text-align: left">Input</th>
+          <th style="text-align: left">Output</th>
+          <th style="text-align: left">Total</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">1 — routing</td>
+          <td style="text-align: left">~500</td>
+          <td style="text-align: left">~500 (tool call with task specs)</td>
+          <td style="text-align: left">~1K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">2 — Python subagent</td>
+          <td style="text-align: left">~2.2K (2K docs + ~200 task)</td>
+          <td style="text-align: left">~300 (condensed analysis)</td>
+          <td style="text-align: left">~2.5K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">3 — JS subagent</td>
+          <td style="text-align: left">same shape</td>
+          <td style="text-align: left">~300</td>
+          <td style="text-align: left">~2.5K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">4 — Rust subagent</td>
+          <td style="text-align: left">same shape</td>
+          <td style="text-align: left">~300</td>
+          <td style="text-align: left">~2.5K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">5 — synthesis</td>
+          <td style="text-align: left">~1.9K (500 original + 500 routing from Call 1 + 900 from 3 returned analyses)</td>
+          <td style="text-align: left">~1K</td>
+          <td style="text-align: left"><strong>~2.9K</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Total</strong></td>
+          <td style="text-align: left"></td>
+          <td style="text-align: left"></td>
+          <td style="text-align: left"><strong>~11.4K</strong></td>
+      </tr>
+  </tbody>
+</table>
+<p>That puts the realistic total around <strong>~11.4K</strong>, not the published ~9K — still meaningfully better than Skills, but the gap is smaller than the flat per-call boxes suggest, and the <em>last</em> call is consistently the most expensive one in the whole sequence, not an equal slice. This is the general shape of the &ldquo;centralized orchestration&rdquo; tradeoff: isolation keeps the fan-out calls cheap, but the synthesis step inherits the sum of everything that came back — and it only stays at ~2.5K per subagent call if each subagent is disciplined about returning a verdict, not a dump of its source material.</p>
+<h3 id="router--structurally-identical-to-subagents-here">Router — structurally identical to Subagents here</h3>
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant Rt as Router
+    participant P as Python Agent
+    participant J as JS Agent
+    participant Rs as Rust Agent
+
+    U-&gt;&gt;Rt: &#34;Compare Python, JS, and Rust&#34;
+    Note over Rt: Call 1 — classify &amp; dispatch (~1K)
+    par
+        Rt-&gt;&gt;P: query
+        Note over P: Call 2 (~2K)
+        P--&gt;&gt;Rt: python analysis
+    and
+        Rt-&gt;&gt;J: query
+        Note over J: Call 3 (~2K)
+        J--&gt;&gt;Rt: js analysis
+    and
+        Rt-&gt;&gt;Rs: query
+        Note over Rs: Call 4 (~2K)
+        Rs--&gt;&gt;Rt: rust analysis
+    end
+    Note over Rt: Call 5 — synthesize (see table below — this is the expensive one)
+    Rt--&gt;&gt;U: synthesized comparison
+</pre>
+
+<p>Router and Subagents land on the same total shape in this scenario because they&rsquo;re solving the fan-out the same way — parallel calls to isolated agents, plus one synthesis step by the router itself. But calling it &ldquo;isolated&rdquo; only tells half the story: each domain agent has its own fresh context (isolated from the other agents and from the router&rsquo;s running conversation), but the router&rsquo;s own context accumulates every returned analysis. That accumulation is what makes Call 5 the heaviest call in the sequence, not an equal slice like Calls 2-4. The numbers bear this out:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Call</th>
+          <th style="text-align: left">Input</th>
+          <th style="text-align: left">Output</th>
+          <th style="text-align: left">Total</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">1 — classify &amp; dispatch</td>
+          <td style="text-align: left">~500</td>
+          <td style="text-align: left">~500</td>
+          <td style="text-align: left">~1K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">2 — Python agent</td>
+          <td style="text-align: left">~2.2K (2K docs + ~200 task)</td>
+          <td style="text-align: left">~300 (condensed analysis)</td>
+          <td style="text-align: left">~2.5K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">3 — JS agent</td>
+          <td style="text-align: left">same shape</td>
+          <td style="text-align: left">~300</td>
+          <td style="text-align: left">~2.5K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">4 — Rust agent</td>
+          <td style="text-align: left">same shape</td>
+          <td style="text-align: left">~300</td>
+          <td style="text-align: left">~2.5K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">5 — synthesis</td>
+          <td style="text-align: left">~1.9K (500 original + 500 routing from Call 1 + 900 from 3 returned analyses)</td>
+          <td style="text-align: left">~1K</td>
+          <td style="text-align: left"><strong>~2.9K</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Total</strong></td>
+          <td style="text-align: left"></td>
+          <td style="text-align: left"></td>
+          <td style="text-align: left"><strong>~11.4K</strong></td>
+      </tr>
+  </tbody>
+</table>
+<p>Identical to the corrected Subagents math, for the same reason: a router that genuinely &ldquo;synthesizes results into a coherent response&rdquo; — which is the part of the definition that distinguishes it from just forwarding one agent&rsquo;s answer — has to read all three returned analyses before it can write anything. The architectural difference between Router and Subagents isn&rsquo;t in this scenario&rsquo;s numbers at all; it&rsquo;s in Scenario 2&rsquo;s repeat-request test, where Router re-classifies every time and Subagents stays flat regardless. Same shape now, different behavior over a conversation.</p>
+<h3 id="skills--no-isolation-so-every-call-re-pays-for-the-last-one">Skills — no isolation, so every call re-pays for the last one</h3>
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant A as Agent (single, growing context)
+
+    U-&gt;&gt;A: &#34;Compare Python, JS, and Rust&#34;
+    Note over A: Call 1 — load Python skill (~2K) + analyze
+    Note over A: Call 2 — load JS skill (~2K) + full prior history carried forward
+    Note over A: Call 3 — load Rust skill (~2K) + full prior history again + synthesize
+    A--&gt;&gt;U: synthesized comparison
+</pre>
+
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Call</th>
+          <th style="text-align: left">Input (running history + new skill)</th>
+          <th style="text-align: left">Output</th>
+          <th style="text-align: left">Call total</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">1</td>
+          <td style="text-align: left">500 + 2K (Python skill) = 2.5K</td>
+          <td style="text-align: left">400</td>
+          <td style="text-align: left">2.9K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">2</td>
+          <td style="text-align: left">2.9K (running) + 2K (JS skill) = 4.9K</td>
+          <td style="text-align: left">500</td>
+          <td style="text-align: left">5.4K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">3</td>
+          <td style="text-align: left">5.4K (running) + 2K (Rust skill) = 7.4K</td>
+          <td style="text-align: left">1.2K (synthesis)</td>
+          <td style="text-align: left">8.6K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Total</strong></td>
+          <td style="text-align: left"></td>
+          <td style="text-align: left"></td>
+          <td style="text-align: left"><strong>~17K</strong></td>
+      </tr>
+  </tbody>
+</table>
+<p>Only 3 calls — fewer than every other pattern — but each one is carrying the full weight of everything before it, <em>plus</em> a fresh 2K skill load. Note that holding the doc size at the same ~2,000 tokens used for Subagents and Handoffs (rather than shrinking it to make the total land closer to the published figure) actually pushes the realistic total to <strong>~17K</strong>, a bit above the original post&rsquo;s reported ~15K. The published number likely assumes either a smaller doc size or some compression on reload — either way, the direction of the result doesn&rsquo;t change: this is &ldquo;context accumulation&rdquo; made concrete. The call count looks efficient right up until you look at what&rsquo;s actually inside each call.</p>
+<h3 id="handoffs--no-parallelism-and-the-relay-tax-shows-up-at-every-hop">Handoffs — no parallelism, and the relay tax shows up at every hop</h3>
+<p>Handoffs can&rsquo;t fan out in parallel, because only one agent is &ldquo;active&rdquo; at a time — Python, JS, and Rust have to be visited one after another, and each transfer is its own tool call (which, per the two-turns rule, costs an extra turn beyond just the analysis itself). That&rsquo;s how this pattern ends up needing more calls than any other for the exact same task.</p>
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant I as Intake Agent
+    participant P as Python Agent
+    participant J as JS Agent
+    participant R as Rust Agent
+
+    U-&gt;&gt;I: &#34;Compare Python, JS, and Rust&#34;
+    Note over I: Call 1 — route (~700)
+    I-&gt;&gt;P: handoff
+    Note over P: Calls 2–3 — receive transfer, analyze Python (~4.3K)
+    P-&gt;&gt;J: handoff
+    Note over J: Calls 4–5 — receive transfer, analyze JS (~5.7K)
+    J-&gt;&gt;R: handoff
+    Note over R: Calls 6–7 — receive transfer, analyze Rust + synthesize (~8.1K)
+    R--&gt;&gt;U: synthesized comparison
+</pre>
+
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Call</th>
+          <th style="text-align: left">Agent</th>
+          <th style="text-align: left">Action</th>
+          <th style="text-align: left">Context in</th>
+          <th style="text-align: left">New content</th>
+          <th style="text-align: left">Output</th>
+          <th style="text-align: left">Call total</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">1</td>
+          <td style="text-align: left">Intake</td>
+          <td style="text-align: left">Route to Python</td>
+          <td style="text-align: left">500 (user)</td>
+          <td style="text-align: left">—</td>
+          <td style="text-align: left">200</td>
+          <td style="text-align: left">700</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">2</td>
+          <td style="text-align: left">Python</td>
+          <td style="text-align: left">Receive handoff</td>
+          <td style="text-align: left">700 (from intake)</td>
+          <td style="text-align: left">—</td>
+          <td style="text-align: left">200</td>
+          <td style="text-align: left">900</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">3</td>
+          <td style="text-align: left">Python</td>
+          <td style="text-align: left">Analyze with docs</td>
+          <td style="text-align: left">900 (from call 2)</td>
+          <td style="text-align: left">2K (docs)</td>
+          <td style="text-align: left">500</td>
+          <td style="text-align: left">3.4K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">4</td>
+          <td style="text-align: left">JS</td>
+          <td style="text-align: left">Receive handoff</td>
+          <td style="text-align: left">~1.4K (running)</td>
+          <td style="text-align: left">—</td>
+          <td style="text-align: left">200</td>
+          <td style="text-align: left">~1.6K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">5</td>
+          <td style="text-align: left">JS</td>
+          <td style="text-align: left">Analyze with docs</td>
+          <td style="text-align: left">~1.6K (from call 4)</td>
+          <td style="text-align: left">2K (docs)</td>
+          <td style="text-align: left">500</td>
+          <td style="text-align: left">~4.1K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">6</td>
+          <td style="text-align: left">Rust</td>
+          <td style="text-align: left">Receive handoff</td>
+          <td style="text-align: left">~2.1K (running)</td>
+          <td style="text-align: left">—</td>
+          <td style="text-align: left">200</td>
+          <td style="text-align: left">~2.3K</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">7</td>
+          <td style="text-align: left">Rust</td>
+          <td style="text-align: left">Analyze + synthesize</td>
+          <td style="text-align: left">~2.3K (from call 6)</td>
+          <td style="text-align: left">2K (docs)</td>
+          <td style="text-align: left">1.5K</td>
+          <td style="text-align: left"><strong>~5.8K</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"></td>
+          <td style="text-align: left"><strong>Total (7 calls)</strong></td>
+          <td style="text-align: left"></td>
+          <td style="text-align: left"></td>
+          <td style="text-align: left"></td>
+          <td style="text-align: left"></td>
+          <td style="text-align: left"><strong>~18.8K</strong></td>
+      </tr>
+  </tbody>
+</table>
+<p>Every handoff — the transfer of control from one agent to the next — happens as a tool call, and per the two-turns rule, each tool call adds its own round. The receiving agent&rsquo;s first call is always &ldquo;absorb the transferred context&rdquo; before it can do any real work. Over three hops, that&rsquo;s three extra turns that do nothing but pass the baton. The cumulative effect: Handoffs uses more calls than any other pattern AND has the highest token total, because each successive handoff call carries the full running history forward. Sequential execution is the structural reason this pattern can&rsquo;t compete with Subagents or Router on a fan-out task like this one, no matter how the token budget is tuned.</p>
+<hr>
+<h2 id="field-notes-for-architects-and-staff-engineers">Field notes for architects and staff engineers</h2>
+<p>The diagrams above settle the &ldquo;what&rsquo;s actually happening&rdquo; question. The following is what I&rsquo;d want a team to weigh before any of this becomes a design doc.</p>
+<p><strong>1. Don&rsquo;t compare patterns on tokens alone — multiply by your real traffic first.</strong>
+A token delta of a few thousand per request is noise at low volume and a board-level line item at high volume. Before treating any number above as a verdict, run it through your own shape: <code>extra_cost_per_month ≈ token_delta_per_request × requests_per_month × your_provider's_current_per-token_rate</code>. Pull the rate from your provider&rsquo;s pricing page rather than trusting any blog post&rsquo;s figure — rates change, and they differ for input vs. output tokens, which matters a lot for patterns like Skills where most of the growth is on the input side.</p>
+<p><strong>2. Prompt caching changes this calculus more than the architecture choice does.</strong>
+Every table above assumes full-price tokens on every call. Most providers now offer prompt caching, which bills a repeated, unchanged prefix at a steep discount on subsequent calls. This helps Skills and Handoffs disproportionately, because their defining trait — one conversation that grows but rarely changes its earlier content — is exactly the shape caching rewards. Subagents and Router benefit less, because each subagent&rsquo;s context is freshly assembled per call; only the static system-prompt portion is reliably cacheable, not the task-specific content. In other words: the &ldquo;expensive&rdquo; pattern on paper can be the cheaper one in production once caching is wired up correctly, and the &ldquo;cheap&rdquo; one can lose most of its advantage if its calls never share a stable prefix. Model your real cost with caching in the loop, not the raw token count.</p>
+<p><strong>3. Tokens and latency are different axes — a cheaper pattern can be the slower one.</strong>
+Skills wins on raw token count in some shapes, but its calls are strictly sequential — each one depends on the previous call&rsquo;s output before it can start. Subagents and Router can run their fan-out calls concurrently, so even when they cost more tokens in aggregate, they often finish in less wall-clock time because three calls run at once instead of three calls running back-to-back. If your product has a human waiting on the other end, profile latency separately from cost — optimizing one can quietly make the other worse.</p>
+<p><strong>4. The patterns fail differently — pick based on your blast radius, not just your budget.</strong></p>
+<ul>
+<li><em>Subagents / Router</em>: a single subagent erroring or timing out only affects its own branch. You can drop it, retry it, or note it&rsquo;s missing, and still answer with the other two-thirds of the result.</li>
+<li><em>Skills / Handoffs</em>: a bad step poisons everything downstream in the same context — a malformed tool call during the JS step can corrupt the Rust step and the synthesis that follows, because they all share one growing transcript.</li>
+<li><em>Handoffs specifically</em>: a mis-routed or dropped transfer strands the user mid-conversation with the wrong specialist, with no clean fallback to &ldquo;just ask someone else in parallel,&rdquo; since nothing else is running concurrently to fall back on.</li>
+</ul>
+<p>This is the kind of thing that doesn&rsquo;t show up in a token table and does show up in your on-call rotation. Decide it at design time, not after the first incident.</p>
+<p><strong>5. In practice, almost no mature system runs one pure pattern.</strong>
+Treat these four as primitives you compose, not mutually exclusive architectures. A common, pragmatic shape in production: a Router or Subagents layer handles the coarse &ldquo;which domain is this&rdquo; decision and runs the parallelizable work, while each domain-specific agent underneath uses Skills for its own on-demand specialization. The original post&rsquo;s mention of combining subagents and skills in a single framework isn&rsquo;t an aside — it&rsquo;s the realistic default once a system has more than two or three domains and more than one team touching it.</p>
+<p><strong>6. A short checklist before any of this gets built.</strong></p>
+<ul>
+<li>Do you actually need more than one agent? Most tasks don&rsquo;t. A single well-tooled agent is the right default, and every pattern above adds at least one coordination layer of cost and failure surface on top of it.</li>
+<li>Is the work genuinely parallelizable across independent domains? → lean Subagents or Router.</li>
+<li>Is it one evolving conversation with stages that should only unlock in order? → lean Handoffs.</li>
+<li>Is it one agent that occasionally needs deep, swappable expertise without hard isolation between specialties? → lean Skills.</li>
+<li>Will the same request repeat within a session? → favor the stateful patterns (Skills, Handoffs); the stateless ones (Subagents, Router) pay full price every time, by design.</li>
+<li>Is cost or latency your actual binding constraint? → profile both, separately, against your real traffic and your real cache hit rate, before the architecture decision — not after.</li>
+</ul>
+<hr>
+<h2 id="key-takeaways">Key takeaways</h2>
+<ul>
+<li><strong>Call counts and token totals measure different things.</strong> Subagents/Router minimize total tokens by isolating context; Skills minimizes call count by never isolating anything. Neither number alone tells you which is &ldquo;cheaper&rdquo; — you need both, and you need to know which calls are small and which are absorbing everyone else&rsquo;s output.</li>
+<li><strong>The synthesis/relay call is never the same size as the calls feeding it.</strong> Any diagram that draws the final call the same width as the fan-out calls before it is simplifying away the actual cost driver of centralized-orchestration patterns.</li>
+<li><strong>Sequential patterns (Handoffs) pay a structural tax that no token optimization fixes.</strong> If a task is genuinely parallelizable across domains, only Subagents and Router can use that parallelism — Handoffs is locked into one-at-a-time by design.</li>
+<li><strong>Statelessness is a tradeoff, not a flaw.</strong> Subagents and Router cost more on repeat requests (Scenario 2) precisely because they don&rsquo;t remember anything — the same property that makes them safe to use anywhere is what stops them from getting cheaper over a conversation.</li>
+</ul>
+<p>For the original framework, scoring tables, and the four-pattern decision guide this post builds on, see <a href="https://www.langchain.com/blog/choosing-the-right-multi-agent-architecture">LangChain&rsquo;s original post</a>.</p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2026-05-29-self-improvement-agent-deep-dive/" data-toggle="tooltip" data-placement="top" title="The Self-Improvement Agent in Hermes: A Deep Dive">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/agentic-ai" title="agentic ai">
+                            agentic ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/agents" title="agents">
+                            agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ai" title="ai">
+                            ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/ai-agents" title="ai agents">
+                            ai agents
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/deep-learning" title="deep learning">
+                            deep learning
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/hermes" title="hermes">
+                            hermes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/llm-agents" title="llm agents">
+                            llm agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/prompt-engineering" title="prompt engineering">
+                            prompt engineering
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/tool-use" title="tool use">
+                            tool use
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<script src="/js/theme-toggle.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"
+          data-cfasync="false" defer></script>
+  <script data-cfasync="false" defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
+    });
+  </script>
+
+</body>
+</html>

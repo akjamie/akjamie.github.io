@@ -2,13 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://akjamie.github.io/tags/agentic-ai/</loc>
-    <lastmod>2026-05-29T00:00:00+00:00</lastmod>
+    <loc>http://akjamie.github.io/tags/agents/</loc>
+    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/categories/ai/</loc>
-    <lastmod>2026-05-29T00:00:00+00:00</lastmod>
+    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/architecture/</loc>
+    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/categories/</loc>
+    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/</loc>
+    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/llm/</loc>
+    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/multi-agent/</loc>
+    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/2026-06-23-multi-agent-architecture-token-breakdown/</loc>
+    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/</loc>
+    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/</loc>
+    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/agentic-ai/</loc>
     <lastmod>2026-05-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/durable-skills/</loc>
@@ -17,19 +41,10 @@
     <loc>http://akjamie.github.io/tags/hermes/</loc>
     <lastmod>2026-05-29T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/</loc>
-    <lastmod>2026-05-29T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/post/</loc>
-    <lastmod>2026-05-29T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://akjamie.github.io/tags/procedural-memory/</loc>
     <lastmod>2026-05-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/self-improvement/</loc>
-    <lastmod>2026-05-29T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/</loc>
     <lastmod>2026-05-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/post/2026-05-29-self-improvement-agent-deep-dive/</loc>
@@ -110,9 +125,6 @@
     <loc>http://akjamie.github.io/tags/ai-agents/</loc>
     <lastmod>2026-05-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/tags/llm/</loc>
-    <lastmod>2026-05-04T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://akjamie.github.io/tags/tool-use/</loc>
     <lastmod>2026-05-04T00:00:00+00:00</lastmod>
   </url><url>
@@ -140,9 +152,6 @@
     <loc>http://akjamie.github.io/tags/ai/</loc>
     <lastmod>2026-02-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/tags/architecture/</loc>
-    <lastmod>2026-02-25T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://akjamie.github.io/tags/deep-learning/</loc>
     <lastmod>2026-02-25T00:00:00+00:00</lastmod>
   </url><url>
@@ -151,9 +160,6 @@
   </url><url>
     <loc>http://akjamie.github.io/tags/transformer/</loc>
     <lastmod>2026-02-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/agents/</loc>
-    <lastmod>2026-02-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/engineering-leadership/</loc>
     <lastmod>2026-02-23T00:00:00+00:00</lastmod>
