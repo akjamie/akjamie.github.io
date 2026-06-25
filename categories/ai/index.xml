@@ -6,8 +6,15 @@
     <description>Recent content in AI on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Jun 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 25 Jun 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/categories/ai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Observability &amp; Trace Collection: Spring Boot &amp; OpenTelemetry Engineering Reference</title>
+      <link>http://akjamie.github.io/post/2026-06-25-observability-tracing/</link>
+      <pubDate>Thu, 25 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-06-25-observability-tracing/</guid>
+      <description>&lt;h1 id=&#34;observability--trace-collection--engineering-reference&#34;&gt;Observability &amp;amp; Trace Collection — Engineering Reference&lt;/h1&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;Audience:&lt;/strong&gt; Staff engineers and senior contributors who need to understand the exact&#xA;implementation mechanics, call chains, and design rationale — not the &amp;ldquo;what&amp;rdquo; but the&#xA;&amp;ldquo;how&amp;rdquo; and &amp;ldquo;why&amp;rdquo;.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;[!NOTE]&lt;/p&gt;&#xA;&lt;h3 id=&#34;executive-tldr&#34;&gt;Executive TL;DR&lt;/h3&gt;&#xA;&lt;p&gt;This system implements LLM observability and trace collection using a pure &lt;strong&gt;OpenTelemetry (OTel) bridge&lt;/strong&gt; integrated with Spring Boot 4.1 and the Micrometer Observation API, bypassing the Langfuse SDK entirely.&#xA;Key architecture highlights:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Multi-Agent Architectures: The Diagrams the Numbers Are Hiding</title>
       <link>http://akjamie.github.io/post/2026-06-23-multi-agent-architecture-token-breakdown/</link>

@@ -2,19 +2,49 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://akjamie.github.io/categories/ai/</loc>
+    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/categories/</loc>
+    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/deepseek/</loc>
+    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/</loc>
+    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/langfuse/</loc>
+    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/llm-observability/</loc>
+    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/micrometer/</loc>
+    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/2026-06-25-observability-tracing/</loc>
+    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/opentelemetry/</loc>
+    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/</loc>
+    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/spring-boot/</loc>
+    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/</loc>
+    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/tracing/</loc>
+    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://akjamie.github.io/tags/agents/</loc>
     <lastmod>2026-06-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/categories/ai/</loc>
-    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://akjamie.github.io/tags/architecture/</loc>
-    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/categories/</loc>
-    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/</loc>
     <lastmod>2026-06-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/llm/</loc>
@@ -24,12 +54,6 @@
     <lastmod>2026-06-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/post/2026-06-23-multi-agent-architecture-token-breakdown/</loc>
-    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/post/</loc>
-    <lastmod>2026-06-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/</loc>
     <lastmod>2026-06-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/agentic-ai/</loc>
@@ -372,9 +396,6 @@
     <lastmod>2019-07-23T13:36:10+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/post/2019-07-21-spring-batch-single-process-remote-partitioning/</loc>
-    <lastmod>2019-07-23T13:36:10+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/spring-boot/</loc>
     <lastmod>2019-07-23T13:36:10+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</loc>

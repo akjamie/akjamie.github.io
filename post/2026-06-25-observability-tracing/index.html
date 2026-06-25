@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="Observability &amp; Trace Collection: Spring Boot &amp; OpenTelemetry Engineering Reference" />
+    <meta property="og:title" content="Observability &amp; Trace Collection: Spring Boot &amp; OpenTelemetry Engineering Reference" />
+    <meta property="twitter:title" content="Observability &amp; Trace Collection: Spring Boot &amp; OpenTelemetry Engineering Reference" />
+    
+
+    
+    <meta name="description" content="A staff-engineer-level reference on trace collection, data masking, and fallback handling using Spring Boot 4.1, Micrometer, and OpenTelemetry to Langfuse.">
+    <meta property="og:description" content="A staff-engineer-level reference on trace collection, data masking, and fallback handling using Spring Boot 4.1, Micrometer, and OpenTelemetry to Langfuse." />
+    <meta property="twitter:description" content="A staff-engineer-level reference on trace collection, data masking, and fallback handling using Spring Boot 4.1, Micrometer, and OpenTelemetry to Langfuse." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-06-25-observability-tracing/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Observability &amp; Trace Collection: Spring Boot &amp; OpenTelemetry Engineering Reference | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-06-25-observability-tracing/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/spring-boot" title="Spring Boot">
+                            Spring Boot
+                        </a>
+                        
+                        <a class="tag" href="/tags/opentelemetry" title="OpenTelemetry">
+                            OpenTelemetry
+                        </a>
+                        
+                        <a class="tag" href="/tags/micrometer" title="Micrometer">
+                            Micrometer
+                        </a>
+                        
+                        <a class="tag" href="/tags/tracing" title="Tracing">
+                            Tracing
+                        </a>
+                        
+                        <a class="tag" href="/tags/langfuse" title="Langfuse">
+                            Langfuse
+                        </a>
+                        
+                        <a class="tag" href="/tags/deepseek" title="DeepSeek">
+                            DeepSeek
+                        </a>
+                        
+                        <a class="tag" href="/tags/llm-observability" title="LLM Observability">
+                            LLM Observability
+                        </a>
+                        
+                    </div>
+                    <h1>Observability &amp; Trace Collection: Spring Boot &amp; OpenTelemetry Engineering Reference</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Thursday, June 25, 2026
+                            
+                                <span id="/post/2026-06-25-observability-tracing/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="observability--trace-collection--engineering-reference">Observability &amp; Trace Collection — Engineering Reference</h1>
+<blockquote>
+<p><strong>Audience:</strong> Staff engineers and senior contributors who need to understand the exact
+implementation mechanics, call chains, and design rationale — not the &ldquo;what&rdquo; but the
+&ldquo;how&rdquo; and &ldquo;why&rdquo;.</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>[!NOTE]</p>
+<h3 id="executive-tldr">Executive TL;DR</h3>
+<p>This system implements LLM observability and trace collection using a pure <strong>OpenTelemetry (OTel) bridge</strong> integrated with Spring Boot 4.1 and the Micrometer Observation API, bypassing the Langfuse SDK entirely.
+Key architecture highlights:</p>
+<ul>
+<li><strong>Zero Langfuse SDK overhead</strong>: Pure standard OTLP/HTTP protobuf export to Langfuse.</li>
+<li><strong>Selective tracing</strong>: <a href="https://github.com/akjamie/code-review-orchestrator/blob/main/src/main/java/org/akj/reviewer/config/TracingObservationPredicate.java">TracingObservationPredicate</a> gates and drops standard Spring Boot system/web spans, focusing exclusively on AI and pipeline operations.</li>
+<li><strong>Secure data handling</strong>: <a href="https://github.com/akjamie/code-review-orchestrator/blob/main/src/main/java/org/akj/reviewer/config/SensitiveDataMaskingFilter.java">SensitiveDataMaskingFilter</a> intercepts telemetry on observation stop, stripping credentials and PII via concurrent-safe regex mapping.</li>
+<li><strong>Robust streaming fallbacks</strong>: <a href="https://github.com/akjamie/code-review-orchestrator/blob/main/src/main/java/org/akj/reviewer/config/LangfuseObservationHandler.java">LangfuseObservationHandler</a> acts as a last-resort fallback to capture token outputs and tool call parameters for streaming or tool-call-only models.</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="terminology">Terminology</h2>
+<p>Three terms appear throughout this doc and are often conflated. Precise definitions in the
+context of this stack:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Term</th>
+          <th style="text-align: left">Layer</th>
+          <th style="text-align: left">Definition</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Trace</strong></td>
+          <td style="text-align: left">Langfuse / OTel</td>
+          <td style="text-align: left">A single end-to-end operation — in this system, one PR review. Contains a tree of spans sharing the same <code>traceId</code>. Langfuse shows a trace as a top-level row in the UI with its own <code>input</code> and <code>output</code>.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Span</strong></td>
+          <td style="text-align: left">OTel</td>
+          <td style="text-align: left">A named, timed unit of work within a trace — one LLM call, one tool invocation, or the root <code>review-pipeline</code> itself. Spans nest via <code>parentSpanId</code>. Each span carries key-value attributes (e.g. <code>gen_ai.request.model</code>, <code>langfuse.observation.input</code>).</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Observation</strong></td>
+          <td style="text-align: left">Micrometer</td>
+          <td style="text-align: left">The Micrometer-layer abstraction that maps 1:1 to an OTel <code>Span</code> after the bridge converts it. In code we work with <code>Observation</code> and <code>Observation.Context</code>; by the time data reaches Langfuse it is a span. Think of <code>Observation</code> as the mutable staging object before it is sealed and exported as an immutable <code>Span</code>.</td>
+      </tr>
+  </tbody>
+</table>
+<p>The relationship: <code>Observation.stop()</code> → Micrometer bridge → <code>OTel Span</code> sealed →
+<code>BatchSpanProcessor</code> queues it → <code>OtlpHttpSpanExporter</code> sends it → Langfuse stores it and
+groups spans by <code>traceId</code> to reconstruct the trace tree.</p>
+<hr>
+<h2 id="technology-stack--binding-points">Technology Stack &amp; Binding Points</h2>
+<pre tabindex="0"><code>Spring Boot 4.1 / Micrometer Observation API
+  └─ spring-boot-starter-opentelemetry  ← bridges Micrometer → OTel SDK
+       └─ OTel SDK (BatchSpanProcessor)
+            └─ OtlpHttpSpanExporter     ← OTLP/HTTP protobuf to Langfuse
+                 └─ Langfuse            ← http://localhost:3000/api/public/otel
+</code></pre><p><strong>No Langfuse SDK is used.</strong> The entire integration is pure OpenTelemetry. Spring Boot&rsquo;s
+auto-configuration wires the <code>MicrometerObservationAutoConfiguration</code> bridge that converts
+Micrometer <code>Observation</code> → OTel <code>Span</code> before export.</p>
+<p>Spring AI automatically creates <code>Observation</code> instances for every <code>ChatClient</code> call using
+<code>ChatModelObservationContext</code> — the same context our custom components read and enrich.</p>
+<h3 id="deepseek-auto-configuration">DeepSeek Auto-Configuration</h3>
+<p>The DeepSeek model integration is auto-configured via <code>spring-ai-autoconfigure-model-deepseek.jar</code> through <code>DeepSeekChatAutoConfiguration</code>:</p>
+<ul>
+<li><strong>Properties</strong>: Binds configurations under the <code>spring.ai.deepseek.chat.*</code> namespace (e.g. <code>temperature</code>, <code>model</code>).</li>
+<li><strong>Instantiation</strong>: Creates the <code>DeepSeekChatModel</code> bean and injects the <code>ObservationRegistry</code> directly into its builder.</li>
+<li><strong>Tracing Mechanism</strong>: Observability is baked natively inside the model class (<code>DeepSeekChatModel</code>). When <code>call()</code> or <code>stream()</code> is invoked, it creates observations dynamically using <code>ChatModelObservationDocumentation.CHAT_MODEL_OPERATION</code> without requiring external decorators or proxies.</li>
+</ul>
+<hr>
+<h2 id="full-call-chain-per-llm-invocation">Full Call Chain (per LLM invocation)</h2>
+<pre tabindex="0"><code>HTTP Request ──► ReviewPipeline.execute()
+                  │
+                  ├─① ReviewContextHolder.set(userId, sessionId)   ← ThreadLocal
+                  │
+                  ├─② Observation.start(&#34;review-pipeline&#34;, registry) ← root span
+                  │     └─ Context.root().makeCurrent()              ← isolate from HTTP span
+                  │
+                  └─③ orchestrator.runAgents(...)  ── Virtual Threads ──►
+                          │
+                          └─ BaseReviewAgent.review()
+                                └─ ChatClient.call()
+                                     │
+                                     └─[Spring AI internally]
+                                        ChatModelObservationContext.start()
+                                             │
+                                             ▼
+                                    ┌──────────────────────────────────────────┐
+                                    │      Micrometer Observation Pipeline      │
+                                    │                                           │
+                                    │  GATE    TracingObservationPredicate      │
+                                    │          .test(name, ctx) → true/false    │
+                                    │                                           │
+                                    │  FILTER  SensitiveDataMaskingFilter       │
+                                    │          .map(ctx) → enriched ctx         │
+                                    │          (runs before handlers, on stop)  │
+                                    │                                           │
+                                    │  HANDLER LangfuseObservationHandler       │
+                                    │          .onStop(ctx)                     │
+                                    │          (runs after all handlers)        │
+                                    │                                           │
+                                    │  HANDLER OTel bridge                      │
+                                    │          Observation → OTel Span          │
+                                    │          → BatchSpanProcessor             │
+                                    │          → OtlpHttpSpanExporter           │
+                                    └──────────────────────────────────────────┘
+</code></pre><hr>
+<h2 id="class-by-class-implementation-breakdown">Class-by-Class Implementation Breakdown</h2>
+<h3 id="tracingobservationpredicate--gate"><code>TracingObservationPredicate</code> — Gate</h3>
+<ul>
+<li><strong>Source Link:</strong> <a href="https://github.com/akjamie/code-review-orchestrator/blob/main/src/main/java/org/akj/reviewer/config/TracingObservationPredicate.java">TracingObservationPredicate.java</a></li>
+<li><strong>Interface:</strong> <code>io.micrometer.observation.ObservationPredicate</code></li>
+<li><strong>Role:</strong> Filters incoming observations to eliminate tracing noise.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>@Override
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">test</span>(String name, Observation.<span style="color:#50fa7b">Context</span> context) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> name <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">null</span> <span style="color:#ff79c6">&amp;&amp;</span> (
+</span></span><span style="display:flex;"><span>        name.<span style="color:#50fa7b">startsWith</span>(<span style="color:#f1fa8c">&#34;spring.ai.&#34;</span>) <span style="color:#ff79c6">||</span>   <span style="color:#6272a4">// ChatClient, ChatModel, tool spans</span>
+</span></span><span style="display:flex;"><span>        name.<span style="color:#50fa7b">startsWith</span>(<span style="color:#f1fa8c">&#34;gen_ai.&#34;</span>)     <span style="color:#ff79c6">||</span>   <span style="color:#6272a4">// OTel GenAI semantic conventions</span>
+</span></span><span style="display:flex;"><span>        name.<span style="color:#50fa7b">equals</span>(<span style="color:#f1fa8c">&#34;review-pipeline&#34;</span>)      <span style="color:#6272a4">// Custom root trace</span>
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Effect:</strong> Prevents standard web server request or database query spans from polluting the AI-focused telemetry backend. Only the core pipeline operations and LLM actions proceed.</p>
+<hr>
+<h3 id="tracespan-decision-logic-hierarchy">Trace/Span Decision Logic Hierarchy</h3>
+<p>Every core component in Spring AI (models, advisors, tool callbacks) initializes observations unconditionally.</p>
+<ul>
+<li><strong>ChatModel Spans</strong>: Emitted with name <code>gen_ai.client.operation</code> (or <code>spring.ai.chat</code>) inside the model call path.</li>
+<li><strong>Advisor Spans</strong>: Emitted with name <code>spring.ai.advisor</code> during chat client advisor executions.</li>
+<li><strong>Tool Spans</strong>: Emitted with name <code>gen_ai.tool_call</code> when model functions are invoked.</li>
+</ul>
+<p><code>TracingObservationPredicate</code> acts as a selective filter/gate. Spans that do not match the predicate pattern are demoted to no-ops at creation time, bypassing downstream filters, handlers, and exporter queues.</p>
+<hr>
+<h3 id="sensitivedatamaskingfilter--enrichment--masking"><code>SensitiveDataMaskingFilter</code> — Enrichment &amp; Masking</h3>
+<ul>
+<li><strong>Source Link:</strong> <a href="https://github.com/akjamie/code-review-orchestrator/blob/main/src/main/java/org/akj/reviewer/config/SensitiveDataMaskingFilter.java">SensitiveDataMaskingFilter.java</a></li>
+<li><strong>Interface:</strong> <code>io.micrometer.observation.ObservationFilter</code></li>
+<li><strong>Role:</strong> Performs context enrichment (injecting user metadata and capturing inputs/outputs) and redacting PII or secrets.</li>
+</ul>
+<h4 id="enrichment-flow">Enrichment Flow</h4>
+<ol>
+<li><strong>Input / Output Mapping</strong>: Reads <code>ChatModelObservationContext</code> or tool argument metadata and populates standard span attributes:
+<ul>
+<li>Sets <code>langfuse.observation.input</code> to the prompt text or tool call JSON arguments.</li>
+<li>Sets <code>langfuse.observation.output</code> to the completion text or tool call results.</li>
+</ul>
+</li>
+<li><strong>Metadata Injection</strong>: Resolves user and session identifiers from the current context and maps them to <code>langfuse.user.id</code> and <code>langfuse.session.id</code>.</li>
+</ol>
+<h4 id="masking-logic--concurrency-guard">Masking Logic &amp; Concurrency Guard</h4>
+<p>To avoid exposing sensitive information, the filter iterates through sensitive keys (such as prompts, completions, and arguments) and applies a series of masking rules for PEM private keys, GitHub PATs, AI keys (<code>sk-***</code>), Bearer tokens, basic auth credentials, and email addresses.</p>
+<p>Because <code>context.getHighCardinalityKeyValues()</code> is a live mutable collection in some Micrometer versions, mutating it directly throws a <code>ConcurrentModificationException</code>. To safely update attributes, a snapshot-then-update approach is required:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// Safe update strategy inside map(...)</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">var</span> keysToRemove <span style="color:#ff79c6">=</span> context.<span style="color:#50fa7b">getHighCardinalityKeyValues</span>().<span style="color:#50fa7b">stream</span>()
+</span></span><span style="display:flex;"><span>        .<span style="color:#50fa7b">map</span>(KeyValue::getKey)
+</span></span><span style="display:flex;"><span>        .<span style="color:#50fa7b">toList</span>(); <span style="color:#6272a4">// snapshot</span>
+</span></span><span style="display:flex;"><span>keysToRemove.<span style="color:#50fa7b">forEach</span>(context::removeHighCardinalityKeyValues);
+</span></span><span style="display:flex;"><span>updated.<span style="color:#50fa7b">forEach</span>(context::addHighCardinalityKeyValue);
+</span></span></code></pre></div><hr>
+<h3 id="langfuseobservationhandler--last-resort-output-fallback"><code>LangfuseObservationHandler</code> — Last-Resort Output Fallback</h3>
+<ul>
+<li><strong>Source Link:</strong> <a href="https://github.com/akjamie/code-review-orchestrator/blob/main/src/main/java/org/akj/reviewer/config/LangfuseObservationHandler.java">LangfuseObservationHandler.java</a></li>
+<li><strong>Interface:</strong> <code>io.micrometer.observation.ObservationHandler&lt;Observation.Context&gt;</code></li>
+<li><strong>Role:</strong> Ensures completions and tool payload data are consistently captured, even during non-standard lifecycles.</li>
+</ul>
+<h4 id="fallback-strategy">Fallback Strategy</h4>
+<p>During streaming responses, <code>observation.stop()</code> frequently fires before the response aggregation is completed. To ensure no data loss, this handler acts as a last-resort callback:</p>
+<ol>
+<li><strong>Tier 1 (Filter Win)</strong>: If the filter successfully populated <code>langfuse.observation.output</code>, the handler skips processing.</li>
+<li><strong>Tier 2 (Completion Copy)</strong>: Copies <code>gen_ai.completion</code> to <code>langfuse.observation.output</code> if present.</li>
+<li><strong>Tier 3 (Direct Response Reading)</strong>: If both are missing, it reads the response stream directly from <code>ChatModelObservationContext</code>, parsing both text and tool-call payload JSON structures.</li>
+</ol>
+<h4 id="ordering-guarantee">Ordering Guarantee</h4>
+<p>By declaring <code>LOWEST_PRECEDENCE</code> and wrapping execution in the handler phase, this handler is guaranteed to execute <em>after</em> all of Spring AI&rsquo;s built-ins have populated the observation context.</p>
+<hr>
+<h3 id="reviewcontextholder--cross-thread-context-propagation"><code>ReviewContextHolder</code> — Cross-Thread Context Propagation</h3>
+<ul>
+<li><strong>Source Link:</strong> <a href="https://github.com/akjamie/code-review-orchestrator/blob/main/src/main/java/org/akj/reviewer/config/ReviewContextHolder.java">ReviewContextHolder.java</a></li>
+<li><strong>Role:</strong> Manages the thread-bound review context.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">class</span> <span style="color:#50fa7b">ReviewContextHolder</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">final</span> InheritableThreadLocal<span style="color:#ff79c6">&lt;</span>ReviewContext<span style="color:#ff79c6">&gt;</span> CONTEXT <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> InheritableThreadLocal<span style="color:#ff79c6">&lt;&gt;</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// ... set, get, and clear wrappers</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><strong>Virtual Threads Compatibility:</strong>
+Because agent orchestration spawns tasks via virtual thread pools (<code>newVirtualThreadPerTaskExecutor()</code>), utilizing <code>InheritableThreadLocal</code> guarantees that child virtual threads automatically inherit context credentials (user and session data) from the parent request thread at creation time without explicit plumbing.</p>
+<hr>
+<h3 id="reviewpipeline--root-trace-construction"><code>ReviewPipeline</code> — Root Trace Construction</h3>
+<ul>
+<li><strong>Source Link:</strong> <a href="https://github.com/akjamie/code-review-orchestrator/blob/main/src/main/java/org/akj/reviewer/orchestrator/ReviewPipeline.java">ReviewPipeline.java</a></li>
+<li><strong>Role:</strong> Orchestrates the multi-agent execution pipeline.</li>
+</ul>
+<h4 id="root-span-isolation-pattern">Root Span Isolation Pattern</h4>
+<p>If an agent initiates an observation, it inherits the active OpenTelemetry context (e.g. the inbound HTTP endpoint span), nesting the entire review pipeline inside it. To display reviews as clean, top-level traces in Langfuse, the pipeline temporarily decouples the active context:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// Temporarily decouple Micrometer&#39;s current scope to isolate it from the HTTP span context.</span>
+</span></span><span style="display:flex;"><span>Observation.<span style="color:#50fa7b">Scope</span> originalScope <span style="color:#ff79c6">=</span> observationRegistry.<span style="color:#50fa7b">getCurrentObservationScope</span>();
+</span></span><span style="display:flex;"><span>observationRegistry.<span style="color:#50fa7b">setCurrentObservationScope</span>(<span style="color:#ff79c6">null</span>);
+</span></span><span style="display:flex;"><span>Observation observation;
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">try</span> (io.<span style="color:#50fa7b">opentelemetry</span>.<span style="color:#50fa7b">context</span>.<span style="color:#50fa7b">Scope</span> otelScope <span style="color:#ff79c6">=</span> io.<span style="color:#50fa7b">opentelemetry</span>.<span style="color:#50fa7b">context</span>.<span style="color:#50fa7b">Context</span>.<span style="color:#50fa7b">root</span>().<span style="color:#50fa7b">makeCurrent</span>()) {
+</span></span><span style="display:flex;"><span>    observation <span style="color:#ff79c6">=</span> Observation.<span style="color:#50fa7b">start</span>(<span style="color:#f1fa8c">&#34;review-pipeline&#34;</span>, observationRegistry);
+</span></span><span style="display:flex;"><span>} <span style="color:#ff79c6">finally</span> {
+</span></span><span style="display:flex;"><span>    observationRegistry.<span style="color:#50fa7b">setCurrentObservationScope</span>(originalScope); <span style="color:#6272a4">// Restore HTTP context</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This isolates the <code>&quot;review-pipeline&quot;</code> span as the root of its own trace, ensuring logical boundaries are clear in the Langfuse dashboard.</p>
+<hr>
+<h2 id="observation-lifecycle--exact-invocation-sequence">Observation Lifecycle — Exact Invocation Sequence</h2>
+<p>For a single <code>ChatClient.call()</code> within an agent:</p>
+<pre tabindex="0"><code>t=0  ChatModelObservationContext.start()
+       ├─ TracingObservationPredicate.test(&#34;spring.ai.chat&#34;, ctx)
+       │    → true  (name starts with &#34;spring.ai.&#34;)
+       └─ Observation is live; HTTP call to DeepSeek proceeds
+
+t=1  DeepSeek API returns response (or streaming aggregation completes)
+       └─ ChatModelObservationContext.setResponse(response)
+
+t=2  observation.stop() called by Spring AI (in doFinally / afterReceive)
+       │
+       ├─ SensitiveDataMaskingFilter.map(ctx)      ← FILTER PHASE
+       │    ├─ extract prompt → langfuse.observation.input
+       │    ├─ extract completion (if response != null) → langfuse.observation.output
+       │    ├─ inject user/session from ReviewContextHolder
+       │    └─ apply masking regexes to all sensitive keys
+       │
+       ├─ [Spring AI built-in handlers run]        ← HANDLER PHASE (in order)
+       │    └─ ChatModelCompletionObservationHandler.onStop() → logs to SLF4J only
+       │
+       └─ LangfuseObservationHandler.onStop(ctx)   ← LAST HANDLER
+            ├─ input fallback: fill langfuse.observation.input if blank
+            └─ output 3-tier fallback (Tier 1 usually wins on non-streaming path)
+
+t=3  OTel bridge converts Observation → OTel Span
+       └─ All highCardinalityKeyValues become span attributes
+
+t=4  BatchSpanProcessor buffers the span
+
+t=5  (async) OtlpHttpSpanExporter POSTs to
+       http://localhost:3000/api/public/otel
+       Headers: Authorization=Basic &lt;pk:sk base64&gt;, x-langfuse-ingestion-version=4
+</code></pre><hr>
+<h2 id="span-attribute-mapping-to-langfuse-fields">Span Attribute Mapping to Langfuse Fields</h2>
+<p>Langfuse reads specific OTel span attributes and maps them to its UI fields:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">OTel Span Attribute</th>
+          <th style="text-align: left">Langfuse Field</th>
+          <th style="text-align: left">Set by</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><code>langfuse.observation.input</code></td>
+          <td style="text-align: left">Span <strong>Input</strong></td>
+          <td style="text-align: left"><code>SensitiveDataMaskingFilter</code> / <code>LangfuseObservationHandler</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>langfuse.observation.output</code></td>
+          <td style="text-align: left">Span <strong>Output</strong></td>
+          <td style="text-align: left"><code>SensitiveDataMaskingFilter</code> / <code>LangfuseObservationHandler</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>langfuse.trace.input</code></td>
+          <td style="text-align: left">Trace <strong>Input</strong></td>
+          <td style="text-align: left"><code>ReviewPipeline</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>langfuse.trace.output</code></td>
+          <td style="text-align: left">Trace <strong>Output</strong></td>
+          <td style="text-align: left"><code>ReviewPipeline</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>langfuse.trace.name</code></td>
+          <td style="text-align: left">Trace <strong>Name</strong></td>
+          <td style="text-align: left"><code>SensitiveDataMaskingFilter</code> (copies <code>&quot;review-pipeline&quot;</code>)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>langfuse.user.id</code></td>
+          <td style="text-align: left">Trace <strong>User</strong></td>
+          <td style="text-align: left"><code>SensitiveDataMaskingFilter</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>langfuse.session.id</code></td>
+          <td style="text-align: left">Trace <strong>Session</strong></td>
+          <td style="text-align: left"><code>SensitiveDataMaskingFilter</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>gen_ai.request.model</code></td>
+          <td style="text-align: left">Span model label</td>
+          <td style="text-align: left">Spring AI (auto)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>gen_ai.usage.input_tokens</code></td>
+          <td style="text-align: left">Token counts</td>
+          <td style="text-align: left">Spring AI (auto)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>gen_ai.usage.output_tokens</code></td>
+          <td style="text-align: left">Token counts</td>
+          <td style="text-align: left">Spring AI (auto)</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="sensitive-key-set-masking-scope">Sensitive Key Set (Masking Scope)</h2>
+<p>The filter only masks attributes whose key is in this exact set:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">final</span> Set<span style="color:#ff79c6">&lt;</span>String<span style="color:#ff79c6">&gt;</span> SENSITIVE_KEYS <span style="color:#ff79c6">=</span> Set.<span style="color:#50fa7b">of</span>(
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;gen_ai.prompt&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;gen_ai.completion&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;spring.ai.tool.call.arguments&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;spring.ai.tool.call.result&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;langfuse.observation.input&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;langfuse.observation.output&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;langfuse.trace.input&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;langfuse.trace.output&#34;</span>
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// + any key starting with &#34;gen_ai.prompt.&#34; or &#34;gen_ai.completion.&#34; (index variants)</span>
+</span></span></code></pre></div><p>Low-cardinality attributes (model name, HTTP status, etc.) are <strong>never</strong> masked.</p>
+<hr>
+<h2 id="infrastructure--otlp-transport">Infrastructure &amp; OTLP Transport</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#6272a4"># application.yml — no explicit OTLP config needed here.</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Spring Boot reads standard OTel environment variables from the process environment.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">management</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">tracing</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">sampling</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">probability</span>: <span style="color:#bd93f9">1.0</span>   <span style="color:#6272a4"># sample every span</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#6272a4"># .env — loaded by run.ps1 before starting the JVM</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">OTEL_EXPORTER_OTLP_ENDPOINT</span><span style="color:#ff79c6">=</span>http://localhost:3000/api/public/otel
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">OTEL_EXPORTER_OTLP_HEADERS</span><span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">Authorization</span><span style="color:#ff79c6">=</span>Basic &lt;base64<span style="color:#ff79c6">(</span>pk:sk<span style="color:#ff79c6">)</span>&gt;,x-langfuse-ingestion-version<span style="color:#ff79c6">=</span><span style="color:#bd93f9">4</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">OTEL_EXPORTER_OTLP_PROTOCOL</span><span style="color:#ff79c6">=</span>http/protobuf   <span style="color:#6272a4"># Langfuse does NOT support gRPC OTLP</span>
+</span></span></code></pre></div><p><code>spring-boot-starter-opentelemetry</code> reads these via <code>OtlpAutoConfiguration</code> at startup —
+no code-level configuration required.</p>
+<p>The Langfuse self-hosted backend (<code>docker-compose.langfuse.yml</code>):</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Service</th>
+          <th style="text-align: left">Port</th>
+          <th style="text-align: left">Role</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><code>langfuse-server</code></td>
+          <td style="text-align: left"><code>3000</code></td>
+          <td style="text-align: left">OTLP ingest + UI</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>langfuse-worker</code></td>
+          <td style="text-align: left">—</td>
+          <td style="text-align: left">Async event processing (ClickHouse writes)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>postgres</code></td>
+          <td style="text-align: left"><code>5432</code></td>
+          <td style="text-align: left">Project/session metadata</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>clickhouse</code></td>
+          <td style="text-align: left"><code>8123</code></td>
+          <td style="text-align: left">Observation time-series storage</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>minio</code></td>
+          <td style="text-align: left"><code>9091</code></td>
+          <td style="text-align: left">Large payload object store (S3-compatible)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>redis</code></td>
+          <td style="text-align: left">—</td>
+          <td style="text-align: left">Worker job queue</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="key-design-decisions--rationale">Key Design Decisions — Rationale</h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Decision</th>
+          <th style="text-align: left">Alternative considered</th>
+          <th style="text-align: left">Why this choice</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><code>ObservationFilter</code> for prompt extraction</td>
+          <td style="text-align: left"><code>ObservationHandler</code></td>
+          <td style="text-align: left">Filters run before handlers and have write access to the context; handlers see the final state</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>InheritableThreadLocal</code> for context propagation</td>
+          <td style="text-align: left">Passing <code>ReviewContext</code> as method arg</td>
+          <td style="text-align: left">Virtual threads inherit it automatically; no plumbing changes needed across agent call chain</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Root trace isolation via <code>Context.root().makeCurrent()</code></td>
+          <td style="text-align: left">Letting the HTTP span be the parent</td>
+          <td style="text-align: left">Makes each PR review a top-level trace in Langfuse, not buried inside an HTTP span tree</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">3-tier fallback in handler</td>
+          <td style="text-align: left">Single write point in filter</td>
+          <td style="text-align: left">Filter misses streaming completions; handler&rsquo;s <code>onStop</code> fires after stream aggregation is complete</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>LOWEST_PRECEDENCE</code> on both filter and handler</td>
+          <td style="text-align: left">Custom numeric order</td>
+          <td style="text-align: left">Filter and handler pipelines are independent; <code>LOWEST_PRECEDENCE</code> in each ensures Spring AI built-ins run first in both pipelines</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">OTLP/HTTP protobuf, no Langfuse SDK</td>
+          <td style="text-align: left">Langfuse Python/JS SDK, or OpenLLMetry</td>
+          <td style="text-align: left">Zero SDK dependency; standard OTel is stable, protocol-agnostic, and portable</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="engineering-insights-gotchas--forward-looking-notes">Engineering Insights, Gotchas &amp; Forward-Looking Notes</h2>
+<h3 id="the-streaming-output-gap--what-actually-happens">The Streaming Output Gap — What Actually Happens</h3>
+<p>The doc says the 3-tier handler fallback covers streaming. It is worth being precise about <strong>why</strong> the race condition exists and <strong>what the fallback actually observes</strong>.</p>
+<p>Spring AI&rsquo;s streaming path (e.g. <code>DeepSeekChatModel.internalStream</code>) is implemented as a reactive <code>Flux</code>. The observation lifecycle is:</p>
+<pre tabindex="0"><code>Flux.create(...)
+  .doOnNext(chunk → aggregate into MessageAggregator)
+  .doFinally(_ → observation.stop())     ← fires on last item / error / cancel
+</code></pre><p><code>MessageAggregator.setResponse()</code> is called <strong>inside</strong> the subscriber&rsquo;s <code>onNext</code> chain <strong>before</strong> <code>doFinally</code>. So by the time <code>observation.stop()</code> fires:</p>
+<ol>
+<li><code>setResponse()</code> has already been called on the context ✓</li>
+<li><code>SensitiveDataMaskingFilter.map()</code> runs — <code>ctx.getResponse()</code> <strong>is not null</strong> ✓</li>
+</ol>
+<p>This means the streaming gap that existed in earlier Spring AI versions <strong>may be fully closed</strong> in the current version. The 3-tier handler is a safety net, not an active fix for a current failure mode. If you observe empty outputs in Langfuse for streaming calls, <strong>verify <code>setResponse()</code> ordering</strong> before blaming the handler — it may indicate a Spring AI version regression, not an application bug.</p>
+<blockquote>
+<p><strong>Diagnostic:</strong> Enable <code>logging.level.io.micrometer.observation=TRACE</code> and look for <code>&quot;langfuse.observation.output already set by filter&quot;</code> vs <code>&quot;Setting langfuse.observation.output from ChatModelObservationContext&quot;</code> to determine which tier is firing.</p>
+</blockquote>
+<hr>
+<h3 id="otlp-payload-size--diff-length-risk">OTLP Payload Size &amp; Diff-Length Risk</h3>
+<p>This application truncates diffs to 80,000 characters before sending them to agents. Those diffs flow through as prompt text into <code>langfuse.observation.input</code>. The full formatted prompt (system prompt + diff + prior messages) can approach <strong>100 KB per span attribute</strong>.</p>
+<p>The OTel SDK&rsquo;s <code>BatchSpanProcessor</code> defaults:</p>
+<ul>
+<li>Max queue size: <strong>2,048 spans</strong></li>
+<li>Max export batch size: <strong>512 spans</strong></li>
+<li>Export interval: <strong>5 seconds</strong></li>
+<li>Export timeout: <strong>30 seconds</strong></li>
+</ul>
+<p>A single review triggers ~5–6 spans (4 agents + synthesizer + root). At 100 KB per span, one review generates ~500 KB of OTLP payload — well within limits for development.</p>
+<p><strong>Where this breaks at scale:</strong></p>
+<ul>
+<li>Langfuse&rsquo;s OTLP ingestion has a <strong>4 MB hard limit per HTTP request</strong>. A batch of 512 spans at 100 KB each = 51 MB — the exporter will silently drop oversized batches.</li>
+<li>The <code>BatchSpanProcessor</code> queue is in-memory. Under bursty load (many PRs in parallel), the queue fills and new spans are dropped with a <code>&quot;DROPPED&quot;</code> log at WARN level.</li>
+</ul>
+<p><strong>Mitigation if this becomes a problem:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// Truncate langfuse.observation.input/output at the attribute level</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// before it reaches the OTel bridge, e.g. in LangfuseObservationHandler:</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">final</span> <span style="color:#8be9fd">int</span> MAX_ATTR_LENGTH <span style="color:#ff79c6">=</span> 32_768; <span style="color:#6272a4">// 32 KB</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">private</span> String <span style="color:#50fa7b">truncate</span>(String value) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> (value <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">null</span> <span style="color:#ff79c6">||</span> value.<span style="color:#50fa7b">length</span>() <span style="color:#ff79c6">&lt;=</span> MAX_ATTR_LENGTH) <span style="color:#ff79c6">return</span> value;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> value.<span style="color:#50fa7b">substring</span>(0, MAX_ATTR_LENGTH) <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#34;\n...[TRUNCATED]&#34;</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>No such truncation exists today — worth adding before production deployment.</p>
+<hr>
+<h3 id="inheritablethreadlocal-on-java-25--technical-debt"><code>InheritableThreadLocal</code> on Java 25 — Technical Debt</h3>
+<p><code>ReviewContextHolder</code> uses <code>InheritableThreadLocal</code>, which works for the current <code>Executors.newVirtualThreadPerTaskExecutor()</code> pattern. However:</p>
+<ul>
+<li><strong>Java 21+ ScopedValue Migration path:</strong> <code>ThreadLocal</code> (and by extension <code>InheritableThreadLocal</code>) is being phased out for virtual thread workloads. JEP 481 (<code>ScopedValue</code>) is standard/finalized in Java 25 and is the JDK&rsquo;s recommended replacement.</li>
+<li><strong>Inheritance is copy-on-create:</strong> The value is copied when the child virtual thread is created. If the parent thread modifies the holder after thread creation (unlikely here, but possible if the design evolves), the child sees a stale value.</li>
+<li><strong><code>clear()</code> is non-trivial in nested scenarios:</strong> If a virtual thread creates further child threads (e.g. async tool calls spawning more Virtual Threads), those grandchildren inherit the value correctly, but <code>clear()</code> on the parent does not propagate — the grandchildren keep the stale reference until their own GC cycle.</li>
+</ul>
+<p><strong>Recommended migration to <code>ScopedValue</code> (standardized in Java 25):</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#6272a4">// Replace in ReviewContextHolder:</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd;font-style:italic">static</span> <span style="color:#8be9fd;font-style:italic">final</span> ScopedValue<span style="color:#ff79c6">&lt;</span>ReviewContext<span style="color:#ff79c6">&gt;</span> CONTEXT <span style="color:#ff79c6">=</span> ScopedValue.<span style="color:#50fa7b">newInstance</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Usage in ReviewPipeline.execute():</span>
+</span></span><span style="display:flex;"><span>ScopedValue.<span style="color:#50fa7b">where</span>(ReviewContextHolder.<span style="color:#50fa7b">CONTEXT</span>, <span style="color:#ff79c6">new</span> ReviewContext(userId, sessionId))
+</span></span><span style="display:flex;"><span>           .<span style="color:#50fa7b">run</span>(() <span style="color:#ff79c6">-&gt;</span> {
+</span></span><span style="display:flex;"><span>               <span style="color:#6272a4">// all code here, including virtual thread spawning, sees the value</span>
+</span></span><span style="display:flex;"><span>           });
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// No explicit clear() needed — ScopedValue is automatically unbound at the end of run()</span>
+</span></span></code></pre></div><p><code>ScopedValue</code> provides structured, bounded scope — the value is never visible outside the <code>run()</code> block, eliminating the leak risk entirely.</p>
+<hr>
+<h3 id="otlp-export-failure--silent-data-loss">OTLP Export Failure — Silent Data Loss</h3>
+<p>If Langfuse is unreachable, the <code>BatchSpanProcessor</code> logs errors and drops spans after the export timeout expires. <strong>The application itself is unaffected</strong> — observability failure does not propagate back to the request path.</p>
+<p>What you will see in logs:</p>
+<pre tabindex="0"><code>WARN  io.opentelemetry.sdk.trace.export.BatchSpanProcessor - Exporter failed, Spans that were previously queued are discarded.
+</code></pre><p>What you will <strong>not</strong> see: any retry, any dead-letter queue, any alerting.</p>
+<p><strong>Debugging OTLP connectivity:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#6272a4"># Verify the endpoint is reachable and auth header is correct</span>
+</span></span><span style="display:flex;"><span>curl -v -X POST http://localhost:3000/api/public/otel/v1/traces <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>  -H <span style="color:#f1fa8c">&#34;Authorization: Basic </span><span style="color:#ff79c6">$(</span><span style="color:#8be9fd;font-style:italic">echo</span> -n <span style="color:#f1fa8c">&#39;pk-lf-xxx:sk-lf-xxx&#39;</span> | base64<span style="color:#ff79c6">)</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>  -H <span style="color:#f1fa8c">&#34;x-langfuse-ingestion-version: 4&#34;</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>  -H <span style="color:#f1fa8c">&#34;Content-Type: application/x-protobuf&#34;</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>  --data-binary @/dev/null
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Expect HTTP 200; 401 = wrong key; 404 = wrong URL path; connection refused = Langfuse down</span>
+</span></span></code></pre></div><p><strong>The <code>x-langfuse-ingestion-version: 4</code> header is mandatory for Langfuse 3.x.</strong> Omitting it causes Langfuse to silently accept the request with HTTP 200 but discard the payload. This is the most common &ldquo;traces not appearing&rdquo; root cause.</p>
+<hr>
+<h3 id="samplingprobability-10--production-consideration"><code>sampling.probability: 1.0</code> — Production Consideration</h3>
+<p>Currently every span is sampled (<code>probability: 1.0</code>). For development this is correct. For production with high PR volume:</p>
+<ul>
+<li>Each PR review generates ~6 spans</li>
+<li>At 100 PRs/day = 600 spans/day — entirely manageable for ClickHouse</li>
+<li>At 10,000 PRs/day = 60,000 spans/day — still fine; ClickHouse is designed for this</li>
+</ul>
+<p>Sampling reduction is unlikely to be needed unless the LLM call latency causes span attribute accumulation to outpace ClickHouse write throughput. Leave at <code>1.0</code> unless you observe ClickHouse CPU/memory pressure at scale.</p>
+<hr>
+<h3 id="attribute-write-ordering--why-tier-1-is-the-common-path">Attribute Write Ordering — Why Tier 1 Is the Common Path</h3>
+<p>The filter runs during <code>observation.stop()</code>. At that moment, for a <strong>non-streaming</strong> <code>ChatClient.call()</code>, the response is synchronously available. The filter writes <code>langfuse.observation.output</code> directly from the response object.</p>
+<p>When the OTel bridge runs (after all handlers), it reads the final state of the context&rsquo;s <code>highCardinalityKeyValues</code> map and converts each entry to an OTel span attribute. The bridge does not differentiate between attributes written by the filter vs. the handler — it sees only the final map state. This means:</p>
+<ul>
+<li>If the filter writes <code>langfuse.observation.output</code> (Tier 1 path), the handler&rsquo;s Tier 1 check short-circuits and does nothing — <strong>zero duplication risk</strong>.</li>
+<li>If the handler writes it (Tier 2 or 3), it calls <code>removeHighCardinalityKeyValues(key)</code> before <code>addHighCardinalityKeyValue(key, value)</code>, ensuring no duplicate keys exist.</li>
+</ul>
+<p>The <code>setHighCardinalityKeyValue</code> helper in both components enforces this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">private</span> <span style="color:#8be9fd">void</span> <span style="color:#50fa7b">setHighCardinalityKeyValue</span>(Observation.<span style="color:#50fa7b">Context</span> context, String key, String value) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> (value <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">null</span>) {
+</span></span><span style="display:flex;"><span>        context.<span style="color:#50fa7b">removeHighCardinalityKeyValues</span>(key);   <span style="color:#6272a4">// idempotent remove</span>
+</span></span><span style="display:flex;"><span>        context.<span style="color:#50fa7b">addHighCardinalityKeyValue</span>(KeyValue.<span style="color:#50fa7b">of</span>(key, value));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This is the correct pattern when writing to Micrometer&rsquo;s observation context outside the initial observation construction — always remove before add.</p>
+<hr>
+<h3 id="differentiating-spring-boot-websystem-traces-vs-spring-ai-traces">Differentiating Spring Boot Web/System Traces vs. Spring AI Traces</h3>
+<p>When running a standard Spring Boot web application, typical system spans (HTTP requests, database queries) are emitted alongside Spring AI spans. They can be distinguished and isolated using the following techniques:</p>
+<ol>
+<li>
+<p><strong>Naming Conventions</strong>:</p>
+<ul>
+<li>HTTP Server requests: <code>GET /api/review/{pr}</code> (from Spring Boot webmvc observations)</li>
+<li>Spring AI LLM operations: <code>gen_ai.client.operation</code></li>
+<li>Spring AI Advisors: <code>spring.ai.advisor</code></li>
+<li>Spring AI Tool Calls: <code>gen_ai.tool_call</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Filtering at the Micrometer Level</strong>:
+Use <code>TracingObservationPredicate</code> to drop HTTP server and system spans before they reach the exporter queues:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">public</span> <span style="color:#8be9fd">boolean</span> <span style="color:#50fa7b">test</span>(String name, Observation.<span style="color:#50fa7b">Context</span> context) {
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// Filter out standard Boot web/database traces to avoid polluting the AI tracing backend</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> name <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">null</span> <span style="color:#ff79c6">&amp;&amp;</span> (name.<span style="color:#50fa7b">startsWith</span>(<span style="color:#f1fa8c">&#34;gen_ai&#34;</span>) <span style="color:#ff79c6">||</span> name.<span style="color:#50fa7b">startsWith</span>(<span style="color:#f1fa8c">&#34;spring.ai&#34;</span>) <span style="color:#ff79c6">||</span> name.<span style="color:#50fa7b">equals</span>(<span style="color:#f1fa8c">&#34;review-pipeline&#34;</span>));
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+<li>
+<p><strong>Filtering in Analytics Backends</strong>:</p>
+<ul>
+<li>Spring AI spans contain domain-specific attributes such as <code>gen_ai.system</code> (<code>deepseek</code>), <code>gen_ai.usage.input_tokens</code>, and <code>langfuse.observation.input</code>.</li>
+<li>Spring Boot system spans carry HTTP and process-related attributes (<code>http.request.method</code>, <code>url.path</code>, <code>db.system</code>).</li>
+</ul>
+<p>These distinct namespaces allow backends (like Langfuse or OpenTelemetry collectors) to cleanly route or query traces based on attribute existence.</p>
+</li>
+</ol>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2026-06-23-multi-agent-architecture-token-breakdown/" data-toggle="tooltip" data-placement="top" title="Multi-Agent Architectures: The Diagrams the Numbers Are Hiding">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/agentic-ai" title="agentic ai">
+                            agentic ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/agents" title="agents">
+                            agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ai" title="ai">
+                            ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/ai-agents" title="ai agents">
+                            ai agents
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/deep-learning" title="deep learning">
+                            deep learning
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/hermes" title="hermes">
+                            hermes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/llm-agents" title="llm agents">
+                            llm agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/prompt-engineering" title="prompt engineering">
+                            prompt engineering
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-boot" title="spring boot">
+                            spring boot
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/tool-use" title="tool use">
+                            tool use
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<script src="/js/theme-toggle.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+</body>
+</html>
