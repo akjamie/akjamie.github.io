@@ -622,6 +622,34 @@ inventing ad hoc shell commands. It calls <code>skill_manage</code>, the same pr
 memory API the rest of Hermes uses.</li>
 </ol>
 <p>This is what makes the design production-shaped rather than demo-shaped.</p>
+<h3 id="how-it-works-mechanically">How it works mechanically</h3>
+<p>The question &ldquo;Background AIAgent fork receives the transcript&rdquo; in the diagram
+above is doing a lot of work. Here is the concrete answer:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># After the foreground agent delivers the final response:</span>
+</span></span><span style="display:flex;"><span>review_agent <span style="color:#ff79c6">=</span> AIAgent(
+</span></span><span style="display:flex;"><span>    model<span style="color:#ff79c6">=</span><span style="font-style:italic">self</span><span style="color:#ff79c6">.</span>model,
+</span></span><span style="display:flex;"><span>    max_iterations<span style="color:#ff79c6">=</span><span style="color:#bd93f9">16</span>,
+</span></span><span style="display:flex;"><span>    quiet_mode<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">...</span>inherited credentials <span style="color:#ff79c6">and</span> session context<span style="color:#ff79c6">...</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>review_agent<span style="color:#ff79c6">.</span>run_conversation(
+</span></span><span style="display:flex;"><span>    user_message<span style="color:#ff79c6">=</span>_SKILL_REVIEW_PROMPT,       <span style="color:#6272a4"># the review policy prompt</span>
+</span></span><span style="display:flex;"><span>    conversation_history<span style="color:#ff79c6">=</span>messages_snapshot,  <span style="color:#6272a4"># the full completed transcript</span>
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>That is it. There is no passive monitoring, no streaming hook, no separate
+analysis service. The foreground conversation finishes, its complete
+<code>messages</code> list is snapshotted, and that snapshot is passed as
+<code>conversation_history</code> to a brand-new <code>AIAgent</code> instance. The review prompt
+(<code>_SKILL_REVIEW_PROMPT</code>) is appended as the next user turn, and the new agent
+runs its own tool-calling loop.</p>
+<p><strong>Thread model.</strong> This second agent runs in a Python daemon thread spawned
+after the foreground response is returned. Because it is a daemon thread, it
+does not block the HTTP response — the user receives their answer immediately.
+It also does not block process shutdown: if the host process exits before the
+review completes, the daemon thread is silently abandoned. Hermes accepts this
+as a deliberate tradeoff: review is best-effort, not guaranteed. A half-written
+skill is safer than a delayed user response or a process that cannot exit.</p>
 <hr>
 <h2 id="4-where-the-logic-lives">4. Where the Logic Lives</h2>
 <p>If you search for <code>auto_create_skill</code> in <code>run_agent.py</code>, you will not find it.
@@ -823,6 +851,20 @@ as the next user message.</p>
       </tr>
   </tbody>
 </table>
+<p><strong>Thread lifecycle.</strong> The review agent runs in a Python <strong>daemon thread</strong>. This
+has three concrete consequences:</p>
+<ul>
+<li><strong>Non-blocking.</strong> The thread is started after the foreground response is
+already returned. The user&rsquo;s HTTP response (or CLI output) does not wait for
+the review to complete.</li>
+<li><strong>Process-exit safe.</strong> Because it is a daemon thread, the Python process can
+exit cleanly even if the review thread is still running. The thread is
+silently abandoned on exit rather than blocking shutdown.</li>
+<li><strong>Best-effort guarantee.</strong> Review is not transactional. A process restart
+mid-review means the review does not complete. Hermes accepts this: the
+foreground agent can still save skills directly (Section 5), so a missed
+background review is a quality gap, not a data loss.</li>
+</ul>
 <p>The fork is deliberately boring. It is just another Hermes agent, but with a
 different goal and a tighter toolbox.</p>
 <hr>
