@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="The Self-Declaration Principle: Why Handoffs Only Works When Agents Know Their Own Edges" />
+    <meta property="og:title" content="The Self-Declaration Principle: Why Handoffs Only Works When Agents Know Their Own Edges" />
+    <meta property="twitter:title" content="The Self-Declaration Principle: Why Handoffs Only Works When Agents Know Their Own Edges" />
+    
+
+    
+    <meta name="description" content="Self-declaration is not an optional enhancement to Handoffs — it&#39;s what makes Handoffs a coherent pattern. A conversation with Claude uncovered the design principle that every multi-agent framework tutorial quietly skips.">
+    <meta property="og:description" content="Self-declaration is not an optional enhancement to Handoffs — it&#39;s what makes Handoffs a coherent pattern. A conversation with Claude uncovered the design principle that every multi-agent framework tutorial quietly skips." />
+    <meta property="twitter:description" content="Self-declaration is not an optional enhancement to Handoffs — it&#39;s what makes Handoffs a coherent pattern. A conversation with Claude uncovered the design principle that every multi-agent framework tutorial quietly skips." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-07-08-handoffs-self-declaration-deep-dive/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>The Self-Declaration Principle: Why Handoffs Only Works When Agents Know Their Own Edges | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-07-08-handoffs-self-declaration-deep-dive/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/agents" title="agents">
+                            agents
+                        </a>
+                        
+                        <a class="tag" href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        <a class="tag" href="/tags/multi-agent" title="multi-agent">
+                            multi-agent
+                        </a>
+                        
+                        <a class="tag" href="/tags/handoffs" title="handoffs">
+                            handoffs
+                        </a>
+                        
+                        <a class="tag" href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        <a class="tag" href="/tags/system-design" title="system-design">
+                            system-design
+                        </a>
+                        
+                        <a class="tag" href="/tags/anthropic" title="anthropic">
+                            anthropic
+                        </a>
+                        
+                    </div>
+                    <h1>The Self-Declaration Principle: Why Handoffs Only Works When Agents Know Their Own Edges</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Wednesday, July 8, 2026
+                            
+                                <span id="/post/2026-07-08-handoffs-self-declaration-deep-dive/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="the-self-declaration-principle-why-handoffs-only-works-when-agents-know-their-own-edges">The Self-Declaration Principle: Why Handoffs Only Works When Agents Know Their Own Edges</h1>
+<p>After reading the LangChain taxonomy post and writing <a href="https://akjamie.github.io/post/2026-06-23-multi-agent-architecture-token-breakdown/">my own breakdown of the call-by-call numbers</a>, I still had a nagging feeling I didn&rsquo;t fully understand Handoffs. Not the mechanics — the handoff tool is simple enough. What I didn&rsquo;t understand was <em>why</em> Handoffs produces the call-count advantages it claims, and <em>under what conditions</em> it actually behaves like the pattern the diagrams promise.</p>
+<p>I brought that confusion to Claude. The conversation that followed clarified something that every framework tutorial and architecture diagram I had read quietly skipped over.</p>
+<p>This post is my attempt to write it down before I forget it — and to review it through the lens of how Anthropic&rsquo;s own agent engineering guidance frames these design choices.</p>
+<hr>
+<h2 id="what-i-was-confused-about">What I was confused about</h2>
+<p>The <a href="https://www.langchain.com/blog/choosing-the-right-multi-agent-architecture">LangChain post</a> and my own numbers breakdown both note that Handoffs achieves &ldquo;0 extra calls&rdquo; for topic-change detection. The explanation is always: the active agent handles this. It&rsquo;s already making an LLM call. No extra classification needed.</p>
+<p>That sounded right. But I kept hitting a gap: if the active agent doesn&rsquo;t <em>know</em> when it&rsquo;s out of scope, it doesn&rsquo;t detect the topic change — it just answers wrongly. And if it does detect topic changes, either it has to check relevance on every turn (which is exactly what Router does) or&hellip; something else has to happen.</p>
+<p>What is that <em>something else</em>? That&rsquo;s what I couldn&rsquo;t find in any of the tutorials.</p>
+<hr>
+<h2 id="what-claude-clarified">What Claude clarified</h2>
+<p>The thing that most framework docs quietly skip, Claude explained, is this:</p>
+<blockquote>
+<p><strong>Self-declaration is not an optional enhancement to Handoffs — it&rsquo;s what makes Handoffs a coherent pattern in the first place.</strong></p>
+</blockquote>
+<p>Without it, you have two broken halves:</p>
+<ul>
+<li><strong>Pointer without self-declaration</strong> → fast but silently misroutes on topic changes</li>
+<li><strong>Relevance check on every turn</strong> → correct but structurally identical to Router</li>
+</ul>
+<p>Self-declaration is what unifies them. The active agent is already making an LLM call to handle the request — the only additional cost is a few lines in its system prompt instructing it to signal when it&rsquo;s out of scope. That signal is essentially free, riding on a call you were paying for anyway.</p>
+<p>Once I heard it framed this way, the whole pattern snapped into place.</p>
+<hr>
+<h2 id="why-this-clarifies-the-full-four-pattern-table">Why this clarifies the full four-pattern table</h2>
+<p>The original LangChain post includes a column for model-call counts but never explains <em>who</em> detects topic changes in each pattern or what that detection costs. Here&rsquo;s the full picture:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Pattern</th>
+          <th style="text-align: left">Who detects topic change?</th>
+          <th style="text-align: left">Cost of detection</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Router</td>
+          <td style="text-align: left">Central classifier, every turn</td>
+          <td style="text-align: left">Always 1 extra call</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Handoffs</td>
+          <td style="text-align: left">Active agent, on demand</td>
+          <td style="text-align: left">0 extra calls</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Subagents</td>
+          <td style="text-align: left">Main agent implicitly, via tool selection</td>
+          <td style="text-align: left">0 extra calls</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Skills</td>
+          <td style="text-align: left">Same agent throughout, no handoff needed</td>
+          <td style="text-align: left">0 extra calls</td>
+      </tr>
+  </tbody>
+</table>
+<p>Handoffs is the <strong>only pattern</strong> where the currently executing agent is also responsible for its own boundary detection. That&rsquo;s a meaningful architectural commitment — not a footnote.</p>
+<p>It means each agent must be designed with <strong>domain awareness baked into its system prompt</strong>, not just task capability. An agent that only knows how to do its job but doesn&rsquo;t know the <em>edges</em> of its job is incomplete in a Handoffs system.</p>
+<hr>
+<h2 id="the-two-broken-halves-visualized">The two broken halves, visualized</h2>
+<p>Most implementations fall into one of two traps. Understanding why each one fails makes the self-declaration principle obvious.</p>
+<h3 id="broken-half-1-pointer-only">Broken half 1: Pointer only</h3>
+<p>The simplest implementation: A hands control to B. B&rsquo;s system prompt says <em>&ldquo;You are a billing specialist. Answer billing questions.&rdquo;</em></p>
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant I as Intake Agent
+    participant B as Billing Agent
+
+    U-&gt;&gt;I: &#34;cancel subscription&#34;
+    Note over I: Call 1 — handoff to Billing
+    I-&gt;&gt;B: handoff
+    U-&gt;&gt;B: &#34;will I lose access to the API keys?&#34;
+    Note over B: No scope boundary defined
+    Note over B: Call 2 — generates plausible answer
+    B--&gt;&gt;U: confidently wrong answer
+</pre>
+
+<p>The handoff <em>worked</em>. The conversation <em>failed</em>. The Billing Agent has no mechanism to detect out-of-scope questions. It generates a plausible-sounding answer that happens to be wrong — and the user has no way to know.</p>
+<p>This is the &ldquo;mechanism without protocol&rdquo; failure. The pointer routes correctly; the receiving agent has no contract.</p>
+<h3 id="broken-half-2-relevance-check-on-every-turn">Broken half 2: Relevance check on every turn</h3>
+<p>The second trap tries to fix the first by adding a relevance gate before every response:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">handle_request</span>(query, domain):
+</span></span><span style="display:flex;"><span>    is_relevant <span style="color:#ff79c6">=</span> llm<span style="color:#ff79c6">.</span>call(<span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;Is this query about </span><span style="color:#f1fa8c">{</span>domain<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">? Query: </span><span style="color:#f1fa8c">{</span>query<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> is_relevant:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> transfer_to_intake()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> llm<span style="color:#ff79c6">.</span>call(<span style="color:#f1fa8c">f</span><span style="color:#f1fa8c">&#34;Answer this </span><span style="color:#f1fa8c">{</span>domain<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c"> question: </span><span style="color:#f1fa8c">{</span>query<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">&#34;</span>)
+</span></span></code></pre></div><p>This works correctly — the agent never misroutes. The problem is structural:</p>
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant B as Billing Agent
+
+    U-&gt;&gt;B: &#34;cancel subscription&#34;
+    Note over B: Extra call — relevance check
+    B--&gt;&gt;U: billing response
+
+    U-&gt;&gt;B: &#34;will I lose API keys?&#34;
+    Note over B: Extra call — relevance check
+    Note over B: &#34;not billing&#34; → transfer
+    B-&gt;&gt;B: transfer out
+</pre>
+
+<p>You&rsquo;re paying for a classification call on every single turn. Compare this to Router:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left"></th>
+          <th style="text-align: left">Router</th>
+          <th style="text-align: left">Handoffs with relevance check</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Who classifies?</td>
+          <td style="text-align: left">Central classifier</td>
+          <td style="text-align: left">Active agent</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Cost per turn</td>
+          <td style="text-align: left">1 extra call</td>
+          <td style="text-align: left">1 extra call</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Where control lives</td>
+          <td style="text-align: left">Always returns to router</td>
+          <td style="text-align: left">Bounces back to intake</td>
+      </tr>
+  </tbody>
+</table>
+<p>They&rsquo;re structurally identical. You&rsquo;ve built a Router with extra indirection.</p>
+<hr>
+<h2 id="what-self-declaration-actually-is">What self-declaration actually is</h2>
+<p>Self-declaration means each agent&rsquo;s system prompt must explicitly define two things — and the system design must define a third:</p>
+<pre tabindex="0"><code>[Agent prompt]
+1. What requests belong to me       → handle directly, zero extra call
+2. What requests don&#39;t belong to me → transfer on demand, also zero extra call
+</code></pre><p>Item 1 is where the architectural advantage lives. The active agent stays active for the entire in-scope dialogue — every turn it handles directly costs zero extra calls. Item 2 fires only when the topic genuinely leaves the domain.</p>
+<p>Here&rsquo;s the Billing Agent, rewritten with all three:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>BILLING_PROMPT <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">You are a billing specialist.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">YOUR SCOPE:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- Payment methods, invoices, refunds, billing plan details
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- Subscription billing details, payment failures, retry logic
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- Billing history and receipts
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">NOT YOUR SCOPE (transfer to Account Agent):
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- API key management and access
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- Team/workspace settings and member management
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- Plan tier changes (upgrade/downgrade)
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">NOT YOUR SCOPE (transfer to Tech Support):
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- Bug reports, error messages, configuration issues
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">- Integration or performance problems
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>
+</span></span></code></pre></div><p>Now the same conversation that failed earlier works correctly — and more importantly, notice what the <em>normal</em> multi-turn case looks like:</p>
+<pre class="mermaid">
+  sequenceDiagram
+    participant U as User
+    participant I as Intake Agent
+    participant B as Billing Agent
+    participant A as Account Agent
+
+    U-&gt;&gt;I: &#34;cancel subscription&#34;
+    Note over I: Call 1 — classify, handoff
+    I-&gt;&gt;B: handoff
+    U-&gt;&gt;B: &#34;what are the billing cycles?&#34;
+    Note over B: Call 2 — in scope, answer directly (0 extra calls)
+    B--&gt;&gt;U: answer
+    U-&gt;&gt;B: &#34;can I get a refund for last month?&#34;
+    Note over B: Call 3 — in scope, answer directly (0 extra calls)
+    B--&gt;&gt;U: answer
+    U-&gt;&gt;B: &#34;will I lose API keys?&#34;
+    Note over B: Call 4 — out of scope, transfer signal riding on this call
+    B-&gt;&gt;A: transfer (no extra call — riding on Call 4)
+    Note over A: Call 5 — handle API key question
+    A--&gt;&gt;U: correct answer
+</pre>
+
+<p>Calls 2 and 3 are the whole point. The Billing Agent stays active and handles every in-scope turn with zero extra overhead. The transfer on Call 4 isn&rsquo;t a routine step — it only fires because the topic genuinely left billing&rsquo;s domain. Self-declaration is what makes this distinction possible: without it, the agent can&rsquo;t tell the difference between a turn it should handle and one it should hand off.</p>
+<hr>
+<h2 id="reviewing-the-pattern-through-an-agent-design-lens">Reviewing the pattern through an agent design lens</h2>
+<p>Looking at self-declaration through the lens of principled agent design surfaces four properties that go beyond the mechanics.</p>
+<h3 id="1-clarity-of-instruction-is-not-optional-for-trust">1. Clarity of instruction is not optional for trust</h3>
+<p>Agents in a pipeline form a <strong>trust chain</strong>. For that trust chain to work reliably, each agent must operate within <strong>clearly defined boundaries</strong> — not inferred ones. An agent that hasn&rsquo;t been told the edges of its domain cannot be trusted to stay within them, because LLMs naturally generate plausible continuations even for out-of-scope requests.</p>
+<p>Self-declaration is the mechanism that makes boundary enforcement explicit rather than inferred.</p>
+<h3 id="2-the-cost-of-ambiguity-is-a-safety-property-not-just-a-quality-one">2. The cost of ambiguity is a safety property, not just a quality one</h3>
+<p>When an agent misroutes because it wasn&rsquo;t told it was out of scope, the failure mode isn&rsquo;t just wrong output — it&rsquo;s an agent that confidently produces wrong output with no signal that it has done so. A confident wrong answer is worse than a refusal.</p>
+<p>This is the case for <strong>minimal footprint</strong> and <strong>explicit task scope</strong>: an agent that doesn&rsquo;t know when to stop is an agent that keeps going, often in the wrong direction.</p>
+<h3 id="3-handoff-design-is-a-humanagent-contract-not-just-an-agentagent-one">3. Handoff design is a human–agent contract, not just an agent–agent one</h3>
+<p>The three-line checklist (scope, transfer target, termination signal) is not just a technical protocol between agents. It&rsquo;s also the contract the <em>builder</em> makes with the system:</p>
+<ul>
+<li>If you can&rsquo;t write the scope for an agent, you don&rsquo;t yet understand the domain well enough to build the agent.</li>
+<li>If you can&rsquo;t write the transfer target, you have an incomplete system topology.</li>
+<li>If you can&rsquo;t write the termination signal, your conversation pointer has no way to reset safely.</li>
+</ul>
+<p>These aren&rsquo;t implementation details — they&rsquo;re the design artifacts that make a system auditable and debuggable by humans later.</p>
+<h3 id="4-the-failure-modes-are-asymmetric">4. The failure modes are asymmetric</h3>
+<p>The three self-declaration items fail in different directions:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Skipped item</th>
+          <th style="text-align: left">Failure direction</th>
+          <th style="text-align: left">Visibility</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Scope (what&rsquo;s mine)</td>
+          <td style="text-align: left">Silent wrong answer</td>
+          <td style="text-align: left">Low — failure invisible until QA or user complaint</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Transfer target (what&rsquo;s not mine)</td>
+          <td style="text-align: left">Dropped conversation</td>
+          <td style="text-align: left">Medium — user notices, restarts</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Termination signal (when done)</td>
+          <td style="text-align: left">Pointer leak</td>
+          <td style="text-align: left">Low — manifests as wrong-agent routing for next topic</td>
+      </tr>
+  </tbody>
+</table>
+<blockquote>
+<p><strong>Transfer target missing → Dropped conversation.</strong> The agent recognizes an out-of-scope question, doesn&rsquo;t guess, but has nowhere to send it. The user gets <em>&ldquo;I&rsquo;m sorry, I can&rsquo;t help with that&rdquo;</em> and has to start a new conversation and re-explain from scratch. This is the only failure that&rsquo;s immediately visible — the user knows something went wrong. That&rsquo;s why it lands in the &ldquo;Medium&rdquo; row: painful, but at least it doesn&rsquo;t silently give wrong information.</p>
+</blockquote>
+<blockquote>
+<p><strong>Pointer reset missing at orchestration layer → Pointer leak.</strong> The LLM can&rsquo;t reliably detect when a user is &ldquo;done&rdquo; — users follow up, return after a pause, or pivot mid-conversation. Pointer reset must be handled by the orchestration layer: a new session, a timeout, or an explicit user action resets the active agent back to Intake. If the orchestration layer has no reset logic, the pointer stays pinned to the last active agent indefinitely. The next unrelated topic — <em>&ldquo;What&rsquo;s my API quota?&rdquo;</em> — goes straight to the Billing Agent. Low-visibility because the system doesn&rsquo;t crash; it just quietly routes the wrong topic to the wrong specialist.</p>
+</blockquote>
+<blockquote>
+<p><strong>Scope missing → Silent wrong answer.</strong> The worst failure: the agent has no mechanism to recognize it&rsquo;s out of its depth, so it generates a plausible-sounding answer that happens to be wrong. The user follows the instructions, the system reports success, and nobody finds out until QA or a user complaint surfaces it.</p>
+</blockquote>
+<p>The damage ranking — scope worst, termination signal sneaky, transfer target at least visible — is what makes termination signal the most commonly skipped item. The team doesn&rsquo;t feel the pain immediately, only when a follow-up conversation starts routing through the wrong agent.</p>
+<hr>
+<h2 id="implementation-checklist-making-this-concrete">Implementation checklist: making this concrete</h2>
+<p>For every agent you build in a Handoffs system, verify all three items exist in the system prompt <strong>before</strong> any code is written:</p>
+<pre tabindex="0"><code>Agent: [name]
+
+✅ Scope defined:
+   - What requests belong to this agent (with examples if edge cases exist)
+
+✅ Transfer targets defined:
+   - What requests don&#39;t belong here
+   - Explicit transfer target for each out-of-scope category
+
+✅ Termination signal defined:
+   - The condition under which this agent signals completion
+   - The signal token or phrase (e.g., HANDOFF_COMPLETE, transfer_to_intake)
+</code></pre><p>If any item is missing, the agent is not ready to be built.</p>
+<hr>
+<h2 id="when-to-use-router-instead-of-handoffs">When to use Router instead of Handoffs</h2>
+<p>Self-declaration puts a meaningful design burden on every agent in the system. If that burden isn&rsquo;t feasible — because domain boundaries are fuzzy, because agents are built by different teams with different standards, or because the system needs to be auditable by a central classifier — Router is the correct choice.</p>
+<p><strong>Use Router instead of Handoffs when:</strong></p>
+<ul>
+<li>Domain boundaries can&rsquo;t be written precisely enough for each agent to self-declare accurately</li>
+<li>You need a central, inspectable record of every routing decision</li>
+<li>You can tolerate the extra classification call per turn in exchange for more predictable control flow</li>
+<li>The agents are third-party or externally maintained, so you can&rsquo;t guarantee their system prompts include self-declaration</li>
+</ul>
+<p><strong>Use Handoffs when:</strong></p>
+<ul>
+<li>Each agent&rsquo;s domain can be precisely specified</li>
+<li>Topic changes within a session are relatively infrequent (so &ldquo;0 cost on in-scope turns&rdquo; is a real advantage)</li>
+<li>The conversation has a natural sequential flow (triage → specialist → resolution)</li>
+<li>You&rsquo;re willing to invest in per-agent prompt design as a first-class engineering artifact</li>
+</ul>
+<hr>
+<h2 id="the-architectural-summary">The architectural summary</h2>
+<p>The design principle that ties all of this together:</p>
+<blockquote>
+<p><strong>In the Handoffs pattern, each agent must be designed with domain awareness baked into its system prompt — not just task capability.</strong></p>
+</blockquote>
+<p>This is what makes Handoffs architecturally distinct from Router. Router externalizes boundary detection to a central classifier that doesn&rsquo;t trust agents to know their own limits. Handoffs internalizes it — each agent carries its own scope definition and transfers when it recognizes something outside it.</p>
+<p>Router&rsquo;s approach is more robust at the cost of an extra call per turn.<br>
+Handoffs&rsquo; approach has zero cost when the query is in scope — but <strong>only when self-declaration is implemented correctly</strong>.</p>
+<p>Without self-declaration, you don&rsquo;t have a Handoffs system. You have a collection of agents with no coherent transfer protocol between them.</p>
+<hr>
+<p><em>This post is a follow-up to <a href="https://akjamie.github.io/post/2026-06-23-multi-agent-architecture-token-breakdown/">the call-by-call numbers breakdown of multi-agent architectures</a>. That post explains the price of each pattern. This one explains the protocol that makes Handoffs coherent — the design principle every framework tutorial quietly skips.</em></p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2026-06-25-observability-tracing/" data-toggle="tooltip" data-placement="top" title="Observability &amp; Trace Collection: Spring Boot &amp; OpenTelemetry Engineering Reference">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/agentic-ai" title="agentic ai">
+                            agentic ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/agents" title="agents">
+                            agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ai" title="ai">
+                            ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/ai-agents" title="ai agents">
+                            ai agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/deep-learning" title="deep learning">
+                            deep learning
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/hermes" title="hermes">
+                            hermes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/llm-agents" title="llm agents">
+                            llm agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/multi-agent" title="multi-agent">
+                            multi-agent
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/prompt-engineering" title="prompt engineering">
+                            prompt engineering
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-boot" title="spring boot">
+                            spring boot
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/tool-use" title="tool use">
+                            tool use
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<script src="/js/theme-toggle.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"
+          data-cfasync="false" defer></script>
+  <script data-cfasync="false" defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
+    });
+  </script>
+
+</body>
+</html>

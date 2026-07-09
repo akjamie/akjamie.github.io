@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>System-Design on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/system-design/</link>
+    <description>Recent content in System-Design on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 08 Jul 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/system-design/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Self-Declaration Principle: Why Handoffs Only Works When Agents Know Their Own Edges</title>
+      <link>http://akjamie.github.io/post/2026-07-08-handoffs-self-declaration-deep-dive/</link>
+      <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-07-08-handoffs-self-declaration-deep-dive/</guid>
+      <description>&lt;h1 id=&#34;the-self-declaration-principle-why-handoffs-only-works-when-agents-know-their-own-edges&#34;&gt;The Self-Declaration Principle: Why Handoffs Only Works When Agents Know Their Own Edges&lt;/h1&gt;&#xA;&lt;p&gt;After reading the LangChain taxonomy post and writing &lt;a href=&#34;https://akjamie.github.io/post/2026-06-23-multi-agent-architecture-token-breakdown/&#34;&gt;my own breakdown of the call-by-call numbers&lt;/a&gt;, I still had a nagging feeling I didn&amp;rsquo;t fully understand Handoffs. Not the mechanics — the handoff tool is simple enough. What I didn&amp;rsquo;t understand was &lt;em&gt;why&lt;/em&gt; Handoffs produces the call-count advantages it claims, and &lt;em&gt;under what conditions&lt;/em&gt; it actually behaves like the pattern the diagrams promise.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
