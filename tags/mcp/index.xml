@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>MCP on Jamie&#39;s Blog</title>
+    <title>Mcp on Jamie&#39;s Blog</title>
     <link>http://akjamie.github.io/tags/mcp/</link>
-    <description>Recent content in MCP on Jamie&#39;s Blog</description>
+    <description>Recent content in Mcp on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 16 Aug 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/tags/mcp/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Agent Skills: The Infrastructure Layer Your AI Stack Is Missing</title>
-      <link>http://akjamie.github.io/post/2026-03-21-agent-skills/</link>
-      <pubDate>Sat, 21 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/post/2026-03-21-agent-skills/</guid>
-      <description>&lt;h1 id=&#34;agent-skills-the-infrastructure-layer-your-ai-stack-is-missing&#34;&gt;Agent Skills: The Infrastructure Layer Your AI Stack Is Missing&lt;/h1&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;preface&#34;&gt;Preface&lt;/h2&gt;&#xA;&lt;p&gt;There is a moment in every mature engineering discipline when the conversation shifts from &lt;em&gt;&amp;ldquo;how do we make it work&amp;rdquo;&lt;/em&gt; to &lt;em&gt;&amp;ldquo;how do we make it work reliably, at scale, across teams.&amp;rdquo;&lt;/em&gt; For agentic AI systems, that moment has arrived — and the answer being proposed by Anthropic, in partnership with the broader agent tooling ecosystem, is a deceptively simple but architecturally profound abstraction: the &lt;strong&gt;Agent Skill&lt;/strong&gt;.&lt;/p&gt;</description>
+      <title>DeepSeek Harness: Interesting Architecture, but Is It the Right Choice for Building Agents?</title>
+      <link>http://akjamie.github.io/post/2026-08-16-deepseek-harness-architecture-analysis/</link>
+      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-08-16-deepseek-harness-architecture-analysis/</guid>
+      <description>&lt;h1 id=&#34;deepseek-harness-interesting-architecture-but-is-it-the-right-choice-for-building-agents&#34;&gt;DeepSeek Harness: Interesting Architecture, but Is It the Right Choice for Building Agents?&lt;/h1&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;A staff-engineering perspective on DeepSeek Harness — what the plugin architecture&#xA;actually buys you, where it adds integration cost, and which teams it is genuinely built for.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;[!NOTE]&lt;/p&gt;&#xA;&lt;h3 id=&#34;executive-tldr&#34;&gt;Executive TL;DR&lt;/h3&gt;&#xA;&lt;p&gt;DeepSeek Harness (open-sourced August 13, 2026, MIT) is a modular agent runtime built on&#xA;the Cordis plugin framework. Its formula: &lt;strong&gt;Agent = Model + Harness&lt;/strong&gt;, where every major&#xA;capability — model, tools, session, sandbox, even the agent loop itself — is a replaceable&#xA;plugin.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

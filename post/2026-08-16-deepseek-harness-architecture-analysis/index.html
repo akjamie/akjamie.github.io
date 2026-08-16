@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="DeepSeek Harness: Interesting Architecture, but Is It the Right Choice for Building Agents?" />
+    <meta property="og:title" content="DeepSeek Harness: Interesting Architecture, but Is It the Right Choice for Building Agents?" />
+    <meta property="twitter:title" content="DeepSeek Harness: Interesting Architecture, but Is It the Right Choice for Building Agents?" />
+    
+
+    
+    <meta name="description" content="A staff-engineering perspective on DeepSeek Harness — what the plugin architecture actually buys you, where it adds integration cost, and which teams it is genuinely built for.">
+    <meta property="og:description" content="A staff-engineering perspective on DeepSeek Harness — what the plugin architecture actually buys you, where it adds integration cost, and which teams it is genuinely built for." />
+    <meta property="twitter:description" content="A staff-engineering perspective on DeepSeek Harness — what the plugin architecture actually buys you, where it adds integration cost, and which teams it is genuinely built for." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-08-16-deepseek-harness-architecture-analysis/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>DeepSeek Harness: Interesting Architecture, but Is It the Right Choice for Building Agents? | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-08-16-deepseek-harness-architecture-analysis/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/agents" title="agents">
+                            agents
+                        </a>
+                        
+                        <a class="tag" href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        <a class="tag" href="/tags/deepseek" title="deepseek">
+                            deepseek
+                        </a>
+                        
+                        <a class="tag" href="/tags/harness" title="harness">
+                            harness
+                        </a>
+                        
+                        <a class="tag" href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        <a class="tag" href="/tags/system-design" title="system-design">
+                            system-design
+                        </a>
+                        
+                        <a class="tag" href="/tags/mcp" title="mcp">
+                            mcp
+                        </a>
+                        
+                        <a class="tag" href="/tags/agent-runtime" title="agent-runtime">
+                            agent-runtime
+                        </a>
+                        
+                    </div>
+                    <h1>DeepSeek Harness: Interesting Architecture, but Is It the Right Choice for Building Agents?</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Sunday, August 16, 2026
+                            
+                                <span id="/post/2026-08-16-deepseek-harness-architecture-analysis/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="deepseek-harness-interesting-architecture-but-is-it-the-right-choice-for-building-agents">DeepSeek Harness: Interesting Architecture, but Is It the Right Choice for Building Agents?</h1>
+<blockquote>
+<p>A staff-engineering perspective on DeepSeek Harness — what the plugin architecture
+actually buys you, where it adds integration cost, and which teams it is genuinely built for.</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>[!NOTE]</p>
+<h3 id="executive-tldr">Executive TL;DR</h3>
+<p>DeepSeek Harness (open-sourced August 13, 2026, MIT) is a modular agent runtime built on
+the Cordis plugin framework. Its formula: <strong>Agent = Model + Harness</strong>, where every major
+capability — model, tools, session, sandbox, even the agent loop itself — is a replaceable
+plugin.</p>
+<ul>
+<li><strong>Genuinely interesting for:</strong> agent infrastructure builders, agent researchers, and teams
+building primarily on DeepSeek models.</li>
+<li><strong>Not a replacement for:</strong> Claude Code, Codex, or established frameworks (DeepAgents, ADK,
+LangGraph) for standard enterprise workloads.</li>
+<li><strong>Key tension:</strong> architectural flexibility has real integration and maintenance cost — and
+the modularity argument only pays off if you actually need to swap runtime components.</li>
+<li><strong>Bottom line:</strong> before the architecture conversation starts, the burden of proof runs the
+other way — what does this do materially better for <em>your</em> workload?</li>
+</ul>
+</blockquote>
+<hr>
+<p>AI coding agents have created a new architectural question.</p>
+<p>Do you use a mature product — Claude Code, Codex? Build your own on top of DeepAgents, ADK, LangGraph? Or adopt a model-specific runtime like a DeepSeek-oriented harness?</p>
+<p>DeepSeek Harness looks attractive at first: an agent runtime built around composability, where major capabilities are treated as plugins. It&rsquo;s real, not hypothetical — DeepSeek open-sourced it on August 13, 2026, MIT license, built on a plugin framework called Cordis, with a stated formula: Agent = Model + Harness.</p>
+<p>But look at the architecture from a staff-engineering angle and one distinction matters more than it seems:</p>
+<p><strong>A technically interesting harness isn&rsquo;t automatically a compelling foundation for an enterprise agent platform.</strong></p>
+<p>That distinction is the whole piece.</p>
+<h2 id="model-agent-harness--three-different-things">Model, agent, harness — three different things</h2>
+<p>These get mixed together constantly.</p>
+<p>The <strong>model</strong> is the reasoning engine — DeepSeek, GPT, Claude, Kimi, GLM.</p>
+<p>The <strong>agent</strong> is model plus an execution loop plus tools: reason, call a tool, observe the result, reason again, repeat. This is the pattern the field has been running on since the 2022 ReAct paper — reason-and-act interleaved — with most of what came after (Reflexion, AutoGPT, MetaGPT) being variations on the same loop rather than a departure from it.</p>
+<p>The <strong>harness</strong> is the infrastructure controlling that loop — tool execution, context and session management, permissions, filesystem access, sandboxing, orchestration, state, and sometimes the loop itself.</p>
+<p>Stacked simply:</p>
+<pre class="mermaid">
+  graph TD
+    A[Application] --&gt; B[Agent]
+    B --&gt; C[&#34;Harness&lt;br/&gt;(context / tools / loop / sessions / sandbox / state)&#34;]
+    C --&gt; D[&#34;Model&lt;br/&gt;(DeepSeek / GPT / Claude…)&#34;]
+</pre>
+
+<p>Which immediately explains something: <strong>Claude Code, Codex, and an agent framework are not the same thing.</strong></p>
+<p>There&rsquo;s arguably a fourth layer worth naming here too, one that sits between harness and model rather than inside either: the tool/context interface itself. Since MCP shipped in late 2024, that interface has become the one place the industry has actually converged — a thin, stable contract that lets harnesses and models vary independently above and below it. It&rsquo;s the reason a company can wire DeepSeek into LangGraph without adopting anything DeepSeek-specific at all. Harnesses compete above that line; models compete below it.</p>
+<h2 id="claude-code-and-codex-are-solving-a-different-problem">Claude Code and Codex are solving a different problem</h2>
+<p>If the goal is &ldquo;give our developers a good coding agent,&rdquo; you usually don&rsquo;t want to build an agent runtime.</p>
+<p>You want repository exploration, code editing, terminal execution, tool calls, permissions, context management, testing, and recovery already solved — plus decent developer UX.</p>
+<p>That&rsquo;s the appeal of Claude Code and Codex. They&rsquo;re essentially finished products.</p>
+<p>Their internals aren&rsquo;t the extension point. You add MCP servers, tools, skills, integrations — but that&rsquo;s different from replacing the runtime itself.</p>
+<p>Most companies shouldn&rsquo;t rebuild this just to prove they can. A team with a year of production telemetry and a hundred engineers iterating on recovery, permissions, and UX is going to beat a bespoke internal build almost every time — that&rsquo;s not really an architecture argument, it&rsquo;s a &ldquo;who has more engineering hours&rdquo; argument.</p>
+<h2 id="so-whats-the-appeal-of-a-deepseek-style-harness">So what&rsquo;s the appeal of a DeepSeek-style harness?</h2>
+<p>It&rsquo;s not &ldquo;another coding assistant.&rdquo; It&rsquo;s the composability of the runtime itself.</p>
+<p>Instead of:</p>
+<pre tabindex="0"><code>Agent
+ ├── filesystem
+ ├── terminal
+ ├── memory
+ ├── model
+ └── agent loop
+</code></pre><p>think of it as:</p>
+<pre tabindex="0"><code>Harness
+ ├── model plugin
+ ├── tool plugin
+ ├── filesystem plugin
+ ├── session plugin
+ ├── sandbox plugin
+ └── agent-loop plugin
+</code></pre><p>That&rsquo;s what &ldquo;everything is a plugin&rdquo; actually means — the loop itself becomes replaceable, not a fixed implementation detail. Underneath the slogan, the actual plugin kernel — Cordis — is a fairly classic dependency/lifecycle manager: mount, unmount, wire services and events between components. It&rsquo;s the same instinct behind the old microkernel-versus-monolith argument from operating systems in the 90s, just aimed at agent runtimes instead of kernels. Smaller trusted core, more interfaces, more flexibility, more integration tax — the trade hasn&rsquo;t really changed, only the domain has.</p>
+<p>Which is genuinely interesting if you&rsquo;re doing agent infrastructure work. You can experiment with something like:</p>
+<pre tabindex="0"><code>Planner → parallel workers → Verifier → Critic → Fixer → final verifier
+</code></pre><p>instead of being stuck with the standard:</p>
+<pre tabindex="0"><code>Reason → tool → observe → reason → tool
+</code></pre><p>A few concrete engineering choices in the shipped runtime are worth calling out on their own, whether or not you ever adopt the whole thing:</p>
+<ul>
+<li><strong>Full session-log invariant:</strong> every model call is checked against a complete session log, so you can always reconstruct exactly what the model saw — no guessing after the fact.</li>
+<li><strong>Replay-based testing:</strong> testing reuses those same logs — record one real session, replay it against a mocked model, diff the output. No API keys in CI, no flaky &ldquo;LLM judges the test&rdquo; setup.</li>
+<li><strong>Fail-closed sandbox:</strong> if the sandbox can&rsquo;t confine a tool call properly, it refuses to run it, and the model is trained to ask again with a reason instead of getting stuck.</li>
+</ul>
+<h2 id="but-an-elegant-architecture-isnt-automatically-a-good-enterprise-choice">But an elegant architecture isn&rsquo;t automatically a good enterprise choice</h2>
+<p>Here&rsquo;s where it gets harder.</p>
+<p>Say a company already has:</p>
+<pre tabindex="0"><code>Existing AI platform
+  ├── model gateway
+  ├── authentication
+  ├── tools
+  ├── observability
+  ├── security
+  ├── deployment
+  ├── data layer
+  └── agent framework
+</code></pre><p>Adding another runtime means adding another integration boundary:</p>
+<pre tabindex="0"><code>Your platform → adapter → DeepSeek Harness
+                            ├── model abstraction
+                            ├── tools
+                            ├── sessions
+                            ├── filesystem
+                            └── agent loop
+</code></pre><p>Now your engineers need to understand two architectures instead of one.</p>
+<p>That&rsquo;s real cost — integration, operational complexity, debugging, security review, observability, upgrades, hiring, long-term maintenance.</p>
+<p>Modularity doesn&rsquo;t mean integrating it into another modular system is cheap. It&rsquo;s also worth being clear-eyed about how neutral this particular piece of modularity actually is: DeepSeek didn&rsquo;t build on top of upstream Cordis, they vendored a fork of it — patched locally, renamed into their own package scope, explicitly so the harness would &ldquo;fully own its framework layer.&rdquo; That&rsquo;s a defensible engineering call, but it means the plugin kernel isn&rsquo;t shared open infrastructure the way a protocol is; it&rsquo;s DeepSeek&rsquo;s private fork wearing an open license, and every future upstream Cordis release becomes a merge exercise against a fork DeepSeek controls, not something a downstream adopter can lean on independently.</p>
+<h2 id="the-multi-model-problem-matters-more">The multi-model problem matters more</h2>
+<p>Enterprises rarely want to bet everything on one model.</p>
+<p>A realistic platform looks like:</p>
+<pre tabindex="0"><code>Company Agent
+  ├── DeepSeek (adapter)
+  ├── GPT (adapter)
+  └── Claude (adapter)
+</code></pre><p>Which raises the question: <strong>how model-neutral is the harness, really?</strong></p>
+<p>Models aren&rsquo;t interchangeable — tool-calling semantics, reasoning state, streaming, structured output, context management, caching, parallel tool calls, multimodal input, token accounting, error handling all differ.</p>
+<p>DeepSeek&rsquo;s ecosystem is actively documenting integrations with a lot of existing agent and coding tools — Claude Code, Codex, OpenCode, Pi, Cline, others.</p>
+<p>That matters. It suggests <strong>DeepSeek doesn&rsquo;t need the whole ecosystem to adopt a DeepSeek-specific harness just to use DeepSeek models.</strong></p>
+<p>Their own integration guide, for example, shows DeepSeek configured as an OpenAI-compatible provider inside Pi — not requiring a DeepSeek-specific runtime.</p>
+<p>So a company can build on DeepAgents, ADK, or LangGraph on top of DeepSeek, without touching the DeepSeek Harness at all.</p>
+<p>One detail sharpens the neutrality question: Harness ships as an MCP <em>client</em> only — it consumes MCP servers but doesn&rsquo;t expose itself as one. For a project whose whole pitch is &ldquo;everything is a plugin, nothing is locked in,&rdquo; that&rsquo;s a quiet signal about where DeepSeek actually wants to compete — one layer above the interoperability substrate, not inside it.</p>
+<h2 id="which-is-the-real-question">Which is the real question</h2>
+<p>Why choose DeepSeek Harness over DeepAgents, ADK, or LangGraph?</p>
+<p>A framework like DeepAgents starts from &ldquo;here&rsquo;s a framework for building agents.&rdquo; A modular harness starts from &ldquo;here&rsquo;s a runtime whose components can themselves be replaced.&rdquo;</p>
+<p>The second gives you more freedom. Freedom has a price.</p>
+<p>The more components you make replaceable, the more interfaces you have to define and maintain — model interface, tool interface, session interface, filesystem interface, memory interface, sandbox interface, loop interface, orchestration interface.</p>
+<p>A staff engineer should be asking: <strong>which of these abstractions solve a problem we actually have</strong> — not how many things can be made pluggable.</p>
+<h2 id="everything-is-a-plugin-is-a-capability-not-a-justification">&ldquo;Everything is a plugin&rdquo; is a capability, not a justification</h2>
+<p>Plugin architectures sound impressive because they promise flexibility. Flexibility only has value when requirements actually change.</p>
+<p>If a company genuinely needs to experiment across multiple agent loops, multiple models, multiple memory systems, multiple sandboxes — a highly modular harness earns its complexity.</p>
+<p>But if the actual requirement is &ldquo;give 5,000 developers a reliable coding assistant,&rdquo; the priority is reliability, security, performance, cost, developer experience, observability, support — not whether you can swap out the filesystem implementation.</p>
+<p>That&rsquo;s the line between an interesting architecture and a useful product.</p>
+<h2 id="why-would-deepseek-release-a-harness-at-all">Why would DeepSeek release a harness at all?</h2>
+<p>The strongest explanation is strategic, not operational.</p>
+<p>If DeepSeek only ships a model — DeepSeek → API → someone else&rsquo;s agent — it controls the model layer and has almost no influence over the agent layer above it. The ecosystem could just converge toward Claude → Claude Code, GPT → Codex, and DeepSeek ends up as another model provider sitting underneath someone else&rsquo;s infrastructure.</p>
+<p>A harness lets DeepSeek compete one layer up. The goal, most likely, is to influence the agent stack — not just sell API calls. Given the earlier point about MCP, this reads as fairly deliberate: DeepSeek can&rsquo;t win the narrow-waist layer (that standard has already converged and isn&rsquo;t theirs to own), so the rational move is to compete where the questions are still open — one layer up, in orchestration.</p>
+<p>That&rsquo;s a reasonable strategy even if most enterprises never adopt the harness directly.</p>
+<h2 id="who-this-is-actually-for">Who this is actually for</h2>
+<p>Not &ldquo;every company.&rdquo; Narrower than that:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Audience</th>
+          <th>What they need</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Agent infrastructure builders</td>
+          <td>Deep control over execution loops, long-running tasks, tool orchestration, model routing, memory, sandboxing, permissions, subagents, recovery, evaluation</td>
+      </tr>
+      <tr>
+          <td>Agent researchers</td>
+          <td>The ability to swap the loop itself, not just tweak prompts</td>
+      </tr>
+      <tr>
+          <td>Teams building primarily on DeepSeek</td>
+          <td>Model-specific optimizations a generic framework won&rsquo;t expose</td>
+      </tr>
+  </tbody>
+</table>
+<p>Very different needs from a team that just wants an AI pair programmer.</p>
+<h2 id="the-burden-of-proof-runs-the-other-way">The burden of proof runs the other way</h2>
+<p>The question isn&rsquo;t &ldquo;why aren&rsquo;t we using DeepSeek Harness?&rdquo; It&rsquo;s:</p>
+<p><strong>&ldquo;What can this actually do materially better for our workload than the mature alternatives?&rdquo;</strong></p>
+<p>A convincing answer looks like one of these:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Type of advantage</th>
+          <th>What it would actually look like</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Better DeepSeek-specific performance</td>
+          <td>Measurable gains from harness-level understanding of model behavior</td>
+      </tr>
+      <tr>
+          <td>Better long-running agents</td>
+          <td>A stronger architecture for tasks running hundreds or thousands of steps</td>
+      </tr>
+      <tr>
+          <td>Better runtime experimentation</td>
+          <td>Swapping loop, memory, sandbox, or orchestration is genuinely easier than in competing frameworks</td>
+      </tr>
+      <tr>
+          <td>Better DeepSeek ecosystem integration</td>
+          <td>It becomes the reference runtime for getting max performance out of DeepSeek&rsquo;s agent-oriented models</td>
+      </tr>
+  </tbody>
+</table>
+<p>Without one of those, the modularity by itself isn&rsquo;t enough. It&rsquo;s also worth weighing this against what&rsquo;s not there yet: the published benchmark documentation for the release is essentially a stub with no eval methodology, and the full internal development history landed as a single squashed commit with no review trail. Neither is disqualifying for a developer preview — DeepSeek is upfront that the API surface is pre-1.0 and will break — but they&rsquo;re the kind of thing a due-diligence process checks before the architecture conversation even starts.</p>
+<h2 id="a-practical-decision-framework">A practical decision framework</h2>
+<p>For most organizations it comes down to:</p>
+<pre class="mermaid">
+  flowchart TD
+    A[Need a coding agent?] --&gt;|Yes| B[Use a mature product&lt;br/&gt;Claude Code, Codex]
+    A --&gt;|No, building a platform| C{Standard agent&lt;br/&gt;requirements?}
+    C --&gt;|Yes| D[DeepAgents, ADK, LangGraph]
+    C --&gt;|No, need to experiment&lt;br/&gt;with the runtime itself| E[Consider a modular&lt;br/&gt;harness architecture]
+</pre>
+
+<p>That last category is the one where DeepSeek Harness gets interesting — not because plugins are automatically better, but because the problem actually requires architectural replaceability.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>DeepSeek Harness&rsquo;s significance is easy to misread.</p>
+<p>It&rsquo;s not &ldquo;DeepSeek built a better Claude Code.&rdquo; It&rsquo;s also not &ldquo;companies should stop using Codex and Claude Code and build their own agents.&rdquo;</p>
+<p>The better read: <strong>DeepSeek is positioning itself beyond the model layer, experimenting with the runtime layer of agent systems</strong> — in a spot the protocol layer (MCP) has already settled around it, which is precisely why the runtime layer is still worth fighting for.</p>
+<p>From an engineering standpoint, that doesn&rsquo;t make it the obvious choice. For most companies, mature coding agents remain the pragmatic pick. For teams building custom agents, established frameworks — DeepAgents, ADK, LangGraph — already give you an easier starting point for multi-model systems.</p>
+<p>A DeepSeek-specific harness has to show a concrete advantage — DeepSeek-native model behavior, long-horizon execution, runtime-level experimentation — before the extra integration and maintenance cost is worth it. A few of its internal patterns, notably the enforced session-log invariant and the replay-based testing built on it, are worth studying on their own regardless of that verdict.</p>
+<p>So the right conclusion isn&rsquo;t &ldquo;DeepSeek Harness is unnecessary.&rdquo; It&rsquo;s: <strong>DeepSeek Harness is potentially valuable at the infrastructure layer, but its value depends entirely on whether you actually need control of the harness itself.</strong></p>
+<p>That&rsquo;s a much higher bar than &ldquo;everything is a plugin.&rdquo;</p>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2026-07-08-handoffs-self-declaration-deep-dive/" data-toggle="tooltip" data-placement="top" title="The Self-Declaration Principle: Why Handoffs Only Works When Agents Know Their Own Edges">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/agentic-ai" title="agentic ai">
+                            agentic ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/agents" title="agents">
+                            agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ai" title="ai">
+                            ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/ai-agents" title="ai agents">
+                            ai agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/deep-learning" title="deep learning">
+                            deep learning
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/deepseek" title="deepseek">
+                            deepseek
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/hermes" title="hermes">
+                            hermes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/llm-agents" title="llm agents">
+                            llm agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/multi-agent" title="multi-agent">
+                            multi-agent
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/prompt-engineering" title="prompt engineering">
+                            prompt engineering
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-boot" title="spring boot">
+                            spring boot
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/system-design" title="system-design">
+                            system-design
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/tool-use" title="tool use">
+                            tool use
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<script src="/js/theme-toggle.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"
+          data-cfasync="false" defer></script>
+  <script data-cfasync="false" defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Agent-Runtime on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/agent-runtime/</link>
+    <description>Recent content in Agent-Runtime on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 16 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/agent-runtime/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DeepSeek Harness: Interesting Architecture, but Is It the Right Choice for Building Agents?</title>
+      <link>http://akjamie.github.io/post/2026-08-16-deepseek-harness-architecture-analysis/</link>
+      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-08-16-deepseek-harness-architecture-analysis/</guid>
+      <description>&lt;h1 id=&#34;deepseek-harness-interesting-architecture-but-is-it-the-right-choice-for-building-agents&#34;&gt;DeepSeek Harness: Interesting Architecture, but Is It the Right Choice for Building Agents?&lt;/h1&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;A staff-engineering perspective on DeepSeek Harness — what the plugin architecture&#xA;actually buys you, where it adds integration cost, and which teams it is genuinely built for.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;[!NOTE]&lt;/p&gt;&#xA;&lt;h3 id=&#34;executive-tldr&#34;&gt;Executive TL;DR&lt;/h3&gt;&#xA;&lt;p&gt;DeepSeek Harness (open-sourced August 13, 2026, MIT) is a modular agent runtime built on&#xA;the Cordis plugin framework. Its formula: &lt;strong&gt;Agent = Model + Harness&lt;/strong&gt;, where every major&#xA;capability — model, tools, session, sandbox, even the agent loop itself — is a replaceable&#xA;plugin.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
