@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Open-Source on Jamie&#39;s Blog</title>
+    <title>Open Source on Jamie&#39;s Blog</title>
     <link>http://akjamie.github.io/tags/open-source/</link>
-    <description>Recent content in Open-Source on Jamie&#39;s Blog</description>
+    <description>Recent content in Open Source on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 16 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 24 Apr 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/tags/open-source/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>DeepSeek Harness: A Serious Coding Agent That Deserves a Serious Look</title>
-      <link>http://akjamie.github.io/post/2026-08-16-deepseek-harness-architecture-analysis/</link>
-      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/post/2026-08-16-deepseek-harness-architecture-analysis/</guid>
-      <description>&lt;h1 id=&#34;deepseek-harness-a-serious-coding-agent-that-deserves-a-serious-look&#34;&gt;DeepSeek Harness: A Serious Coding Agent That Deserves a Serious Look&lt;/h1&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;DeepSeek Harness isn&amp;rsquo;t an agent framework you wire into your platform. It&amp;rsquo;s a fully-featured coding agent — with CLI, web UI, sandbox, replay testing, and a plugin core — that ships ready to use and competes directly with Claude Code and Codex.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;[!NOTE]&lt;/p&gt;&#xA;&lt;h3 id=&#34;executive-tldr&#34;&gt;Executive TL;DR&lt;/h3&gt;&#xA;&lt;p&gt;DeepSeek Harness (open-sourced August 13, 2026, MIT) is a production-ready coding agent built on&#xA;a Cordis plugin core. Its formula: &lt;strong&gt;Agent = Model + Harness&lt;/strong&gt;, where the model, tools, sandbox,&#xA;session log, and agent loop are all replaceable plugins — but the &lt;em&gt;product&lt;/em&gt; is a coding agent, not&#xA;a framework for building one.&lt;/p&gt;</description>
-    </item>
     <item>
       <title>Self-Hosting Agentic AI: A Deep Dive into the OpenClaw Architecture</title>
       <link>http://akjamie.github.io/post/2026-04-24-openclaw-self-hosted-ai-agent/</link>

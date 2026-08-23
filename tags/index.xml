@@ -72,41 +72,6 @@
       <description></description>
     </item>
     <item>
-      <title>Architecture</title>
-      <link>http://akjamie.github.io/tags/architecture/</link>
-      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/architecture/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Coding-Agent</title>
-      <link>http://akjamie.github.io/tags/coding-agent/</link>
-      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/coding-agent/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Deepseek</title>
-      <link>http://akjamie.github.io/tags/deepseek/</link>
-      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/deepseek/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Harness</title>
-      <link>http://akjamie.github.io/tags/harness/</link>
-      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/harness/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Open-Source</title>
-      <link>http://akjamie.github.io/tags/open-source/</link>
-      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/open-source/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Anthropic</title>
       <link>http://akjamie.github.io/tags/anthropic/</link>
       <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
@@ -114,10 +79,24 @@
       <description></description>
     </item>
     <item>
+      <title>Architecture</title>
+      <link>http://akjamie.github.io/tags/architecture/</link>
+      <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/architecture/</guid>
+      <description></description>
+    </item>
+    <item>
       <title>Handoffs</title>
       <link>http://akjamie.github.io/tags/handoffs/</link>
       <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/handoffs/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>DeepSeek</title>
+      <link>http://akjamie.github.io/tags/deepseek/</link>
+      <pubDate>Thu, 25 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/deepseek/</guid>
       <description></description>
     </item>
     <item>
@@ -342,6 +321,13 @@
       <link>http://akjamie.github.io/tags/minimax/</link>
       <pubDate>Fri, 24 Apr 2026 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/minimax/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Open Source</title>
+      <link>http://akjamie.github.io/tags/open-source/</link>
+      <pubDate>Fri, 24 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/open-source/</guid>
       <description></description>
     </item>
     <item>
