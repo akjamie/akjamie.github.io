@@ -3,46 +3,76 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://akjamie.github.io/tags/agents/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/categories/ai/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/tags/anthropic/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/architecture/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
+    <loc>http://akjamie.github.io/post/2026-08-23-eval-architecture-and-red-teaming-guide/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/categories/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/code-review/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/evaluation/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/llm/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/multi-agent/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/owasp/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/red-teaming/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/security/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/system-design/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/</loc>
+    <lastmod>2026-08-23T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/agent-runtime/</loc>
+    <lastmod>2026-08-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/architecture/</loc>
+    <lastmod>2026-08-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/deepseek/</loc>
+    <lastmod>2026-08-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/post/2026-08-16-deepseek-harness-architecture-analysis/</loc>
+    <lastmod>2026-08-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/harness/</loc>
+    <lastmod>2026-08-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/mcp/</loc>
+    <lastmod>2026-08-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://akjamie.github.io/tags/anthropic/</loc>
     <lastmod>2026-07-08T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/handoffs/</loc>
     <lastmod>2026-07-08T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/llm/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/multi-agent/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/post/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/system-design/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/</loc>
-    <lastmod>2026-07-08T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://akjamie.github.io/post/2026-07-08-handoffs-self-declaration-deep-dive/</loc>
     <lastmod>2026-07-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/deepseek/</loc>
-    <lastmod>2026-06-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/langfuse/</loc>
     <lastmod>2026-06-25T00:00:00+00:00</lastmod>
