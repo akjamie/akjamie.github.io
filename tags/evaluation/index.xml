@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Evaluation on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/evaluation/</link>
+    <description>Recent content in Evaluation on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 23 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/evaluation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building Eval Literacy &amp; Red-Teaming for Multi-Agent AI Code Review</title>
+      <link>http://akjamie.github.io/post/2026-08-23-eval-architecture-and-red-teaming-guide/</link>
+      <pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-08-23-eval-architecture-and-red-teaming-guide/</guid>
+      <description>&lt;h1 id=&#34;-building-eval-literacy--red-teaming-for-multi-agent-ai-code-review&#34;&gt;🧠 Building Eval Literacy &amp;amp; Red-Teaming for Multi-Agent AI Code Review&lt;/h1&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;How to upgrade an AI Agent from a &amp;ldquo;working prototype&amp;rdquo; to an empirical, production-grade review system with OWASP 2026 Agentic Security defenses.&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;-bluf&#34;&gt;🎯 BLUF&lt;/h2&gt;&#xA;&lt;p&gt;Multi-agent AI code reviewers are easy to demo and dangerous to trust blindly. This project closes that gap: a 22-case empirical benchmark (&lt;strong&gt;Recall 91.2%&lt;/strong&gt;, &lt;strong&gt;Precision 94.7%&lt;/strong&gt;, &lt;strong&gt;F1 0.93&lt;/strong&gt;) plus OWASP ASI 2026 red-team defenses that cut a measured &lt;strong&gt;~80% prompt-injection attack success rate&lt;/strong&gt; down to near-zero — turning an LLM wrapper into an auditable, CI-gated production system where every prompt change is verified against both &lt;em&gt;capability&lt;/em&gt; (does it still catch real bugs?) and &lt;em&gt;security&lt;/em&gt; (can it still be manipulated?) before it ships.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
