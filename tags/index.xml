@@ -72,17 +72,17 @@
       <description></description>
     </item>
     <item>
-      <title>Agent-Runtime</title>
-      <link>http://akjamie.github.io/tags/agent-runtime/</link>
-      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/agent-runtime/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Architecture</title>
       <link>http://akjamie.github.io/tags/architecture/</link>
       <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/architecture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Coding-Agent</title>
+      <link>http://akjamie.github.io/tags/coding-agent/</link>
+      <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/coding-agent/</guid>
       <description></description>
     </item>
     <item>
@@ -100,10 +100,10 @@
       <description></description>
     </item>
     <item>
-      <title>Mcp</title>
-      <link>http://akjamie.github.io/tags/mcp/</link>
+      <title>Open-Source</title>
+      <link>http://akjamie.github.io/tags/open-source/</link>
       <pubDate>Sun, 16 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/mcp/</guid>
+      <guid>http://akjamie.github.io/tags/open-source/</guid>
       <description></description>
     </item>
     <item>
@@ -342,13 +342,6 @@
       <link>http://akjamie.github.io/tags/minimax/</link>
       <pubDate>Fri, 24 Apr 2026 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/minimax/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Open Source</title>
-      <link>http://akjamie.github.io/tags/open-source/</link>
-      <pubDate>Fri, 24 Apr 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/open-source/</guid>
       <description></description>
     </item>
     <item>

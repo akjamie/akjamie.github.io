@@ -47,10 +47,10 @@
     <loc>http://akjamie.github.io/tags/</loc>
     <lastmod>2026-08-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/tags/agent-runtime/</loc>
+    <loc>http://akjamie.github.io/tags/architecture/</loc>
     <lastmod>2026-08-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/tags/architecture/</loc>
+    <loc>http://akjamie.github.io/tags/coding-agent/</loc>
     <lastmod>2026-08-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/deepseek/</loc>
@@ -62,7 +62,7 @@
     <loc>http://akjamie.github.io/tags/harness/</loc>
     <lastmod>2026-08-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://akjamie.github.io/tags/mcp/</loc>
+    <loc>http://akjamie.github.io/tags/open-source/</loc>
     <lastmod>2026-08-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/anthropic/</loc>
@@ -198,9 +198,6 @@
     <lastmod>2026-05-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/minimax/</loc>
-    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://akjamie.github.io/tags/open-source/</loc>
     <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://akjamie.github.io/tags/self-hosted-llm/</loc>
