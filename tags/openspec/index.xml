@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>OpenSpec on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/openspec/</link>
+    <description>Recent content in OpenSpec on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 01 Nov 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/openspec/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>From AI-First &#43; SDD to Agentic SDLC: Building a Dual-PR Governance Engine for Autonomous Coding</title>
+      <link>http://akjamie.github.io/post/2026-11-01-agentic-sdlc-dual-pr-governance/</link>
+      <pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-11-01-agentic-sdlc-dual-pr-governance/</guid>
+      <description>&lt;h1 id=&#34;from-ai-first--sdd-to-agentic-sdlc-building-a-dual-pr-governance-engine-for-autonomous-coding&#34;&gt;From AI-First + SDD to Agentic SDLC: Building a Dual-PR Governance Engine for Autonomous Coding&lt;/h1&gt;&#xA;&lt;p&gt;Over the past three years, software engineering underwent two quiet revolutions.&lt;/p&gt;&#xA;&lt;p&gt;First came the &lt;strong&gt;AI-Assisted&lt;/strong&gt; era. Tools like early GitHub Copilot delivered inline tab-completions. The developer remained the compiler, the architect, and the typist—AI was simply an intelligent autocomplete.&lt;/p&gt;&#xA;&lt;p&gt;Then came the &lt;strong&gt;AI-First&lt;/strong&gt; era, powered by &lt;strong&gt;Spec-Driven Development (SDD)&lt;/strong&gt;. Senior engineers quickly realized that casual, conversational prompting produced fragile code. To get production-grade output from large language models in environments like &lt;strong&gt;VS Code + GitHub Copilot&lt;/strong&gt; and &lt;strong&gt;VS Code + OpenCode&lt;/strong&gt;, the industry converged on a disciplined methodology: write formal specifications first. We learned to draft Markdown PRDs, define OpenAPI schemas, and document BDD scenarios (&lt;code&gt;GIVEN / WHEN / THEN&lt;/code&gt;) before asking the model to write code. Feeding structured specifications into the model allowed teams to generate entire modules, database schemas, and integration suites cleanly. For teams practicing SDD, AI-first development became the gold standard of productivity.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -6,8 +6,15 @@
     <description>Recent content in DevOps on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Apr 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 02 Nov 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Scaling Agentic SDLC: Designing an Adaptive Auto Mode for Autonomous Coding</title>
+      <link>http://akjamie.github.io/post/2026-11-02-adaptive-governance-and-auto-mode/</link>
+      <pubDate>Mon, 02 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-11-02-adaptive-governance-and-auto-mode/</guid>
+      <description>&lt;h1 id=&#34;scaling-agentic-sdlc-designing-an-adaptive-auto-mode-for-autonomous-coding&#34;&gt;Scaling Agentic SDLC: Designing an Adaptive Auto Mode for Autonomous Coding&lt;/h1&gt;&#xA;&lt;p&gt;In &lt;a href=&#34;https://akjamie.github.io/post/2026-11-01-agentic-sdlc-dual-pr-governance/&#34;&gt;Part 1&lt;/a&gt;, I explained why moving from AI-first prompt engineering (VS Code + GitHub Copilot / OpenCode) to autonomous agentic coding (VS Code + Claude Code) breaks traditional software delivery, and why I built a strict Dual-PR Spec-First workflow for autonomous agents. By separating intent agreement from implementation execution, the architectural results were solid: zero contract drift, no test gaming, and strict boundary containment.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Kubernetes dashboard deployment</title>
       <link>http://akjamie.github.io/post/2022-04-12-kubernetes-dashboard/</link>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Database Migration on Jamie&#39;s Blog</title>
+    <link>http://akjamie.github.io/tags/database-migration/</link>
+    <description>Recent content in Database Migration on Jamie&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 20 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://akjamie.github.io/tags/database-migration/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Liquibase</title>
+      <link>http://akjamie.github.io/post/2019-10-20-liquibase-introduction/</link>
+      <pubDate>Sun, 20 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2019-10-20-liquibase-introduction/</guid>
+      <description>&lt;h1 id=&#34;simple-introduction&#34;&gt;Simple introduction&lt;/h1&gt;&#xA;&lt;p&gt;Liquibase is open source tool for database change and deployment management. provides a database agnostic way to deliver fast, safe, repeatable database deployments, more details please refer to &lt;a href=&#34;https://www.liquibase.org&#34;&gt;Liquibase website&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;Support more than 10 databases, like Mysql, Oracle, SQL Server,DB2,etc.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

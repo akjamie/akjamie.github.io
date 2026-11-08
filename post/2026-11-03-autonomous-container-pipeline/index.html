@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="Beyond the IDE: Running Autonomous Agentic SDLC in Isolated Containers" />
+    <meta property="og:title" content="Beyond the IDE: Running Autonomous Agentic SDLC in Isolated Containers" />
+    <meta property="twitter:title" content="Beyond the IDE: Running Autonomous Agentic SDLC in Isolated Containers" />
+    
+
+    
+    <meta name="description" content="How I finalized the architecture for running autonomous coding agents in isolated non-root containers with &#39;3&#43;1&#39; stage execution and autonomous PR review triage.">
+    <meta property="og:description" content="How I finalized the architecture for running autonomous coding agents in isolated non-root containers with &#39;3&#43;1&#39; stage execution and autonomous PR review triage." />
+    <meta property="twitter:description" content="How I finalized the architecture for running autonomous coding agents in isolated non-root containers with &#39;3&#43;1&#39; stage execution and autonomous PR review triage." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-11-03-autonomous-container-pipeline/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Beyond the IDE: Running Autonomous Agentic SDLC in Isolated Containers | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-11-03-autonomous-container-pipeline/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/agentic-sdlc" title="Agentic SDLC">
+                            Agentic SDLC
+                        </a>
+                        
+                        <a class="tag" href="/tags/ai-agents" title="AI Agents">
+                            AI Agents
+                        </a>
+                        
+                        <a class="tag" href="/tags/docker" title="Docker">
+                            Docker
+                        </a>
+                        
+                        <a class="tag" href="/tags/containers" title="Containers">
+                            Containers
+                        </a>
+                        
+                        <a class="tag" href="/tags/architecture" title="Architecture">
+                            Architecture
+                        </a>
+                        
+                        <a class="tag" href="/tags/autonomous-pipeline" title="Autonomous Pipeline">
+                            Autonomous Pipeline
+                        </a>
+                        
+                    </div>
+                    <h1>Beyond the IDE: Running Autonomous Agentic SDLC in Isolated Containers</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Tuesday, November 3, 2026
+                            
+                                <span id="/post/2026-11-03-autonomous-container-pipeline/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="beyond-the-ide-running-autonomous-agentic-sdlc-in-isolated-containers">Beyond the IDE: Running Autonomous Agentic SDLC in Isolated Containers</h1>
+<p>In <a href="https://akjamie.github.io/post/2026-11-01-agentic-sdlc-dual-pr-governance/">Part 1</a> and <a href="https://akjamie.github.io/post/2026-11-02-adaptive-governance-and-auto-mode/">Part 2</a>, I shared the governance rules that keep AI coding agents on track: Dual-PR Spec-First contracts and the adaptive L0–L3 <code>auto</code> mode.</p>
+<p>However, one practical problem remained: <strong>everything still runs on the developer&rsquo;s laptop</strong>.</p>
+<p>If an agent needs 10 minutes to run tests, explore AST files, and do a review pass, the developer has to keep their laptop awake, avoid switching branches, and baby-sit terminal prompts. If you try to run agents in standard CI, they either crash when asking for interactive input or make wild guesses.</p>
+<p>I wanted to take this entire workflow off developer machines and move it into an <strong>ephemeral, hardened container running in the background (<code>asdlc run --container</code>)</strong>.</p>
+<p>With the container design now finalized in <a href="https://github.com/akjamie/agentic-sdlc"><code>agentic-sdlc</code></a>, this post explains how the architecture works, how it handles human PR reviews without a terminal, and the trade-offs I made.</p>
+<hr>
+<h2 id="-bluf-bottom-line-up-front">🎯 BLUF (Bottom Line Up Front)</h2>
+<ul>
+<li><strong>The Goal</strong>: Run the Agentic SDLC lifecycle unattended in a non-root Linux container (<code>ubuntu:26.04</code>, <code>UID 10001:10001</code>), interacting with engineers strictly through Git and GitHub PR comments.</li>
+<li><strong>The &ldquo;3+1&rdquo; Stage Model</strong>: Instead of a &ldquo;black box&rdquo; that guesses what to do across days, the pipeline uses four clear stages: <code>--stage spec</code> (drafting and linting), <code>--stage apply</code> (TDD loop), <code>--stage verify</code> (14 quality gates and review), and <code>--stage fix</code> (autonomous review comment fixes).</li>
+<li><strong>Async PR Comment Grilling</strong>: If requirements are unclear, the container opens a Draft Spec PR, posts questions in a PR comment, and <strong>shuts down immediately (zero idle compute cost)</strong>. When a human replies on GitHub, re-running the command ingests the answers and moves forward.</li>
+<li><strong>3-Tier PR Review Triage</strong>: When colleagues leave review comments, <code>--stage fix</code> automatically classifies them into: code fixes (applies edits and reruns tests), technical questions (answers from <code>design.md</code> without editing code), and scope creep (politely defers to another issue).</li>
+<li><strong>Dual-Track Symmetry</strong>: The container mode does not break or replace the local IDE workflow. Both share the exact same Git repository and OpenSpec files as the single source of truth.</li>
+</ul>
+<hr>
+<h2 id="1-why-running-agents-on-laptops-doesnt-scale">1. Why Running Agents on Laptops Doesn&rsquo;t Scale</h2>
+<p>Watching tools like VS Code + Claude Code or terminal CLI agents write code in real time looks great in demos. But in real team workflows, running autonomous agents locally hits four clear walls:</p>
+<ol>
+<li><strong>Terminal Babysitting</strong>: A full TDD loop and multi-round review often take 5 to 15 minutes. Developers have to keep their laptops open and wait.</li>
+<li><strong>Workspace Contamination</strong>: Agents create build caches, temporary test files, and sometimes leave dirty Git state or mess up line endings (CRLF vs. LF on Windows).</li>
+<li><strong>Complex Input</strong>: Real requirements don&rsquo;t come as a short CLI string like <code>asdlc new &quot;Fix payment retry&quot;</code>. They come as Jira tickets, Figma links, and multi-page PRDs.</li>
+<li><strong>No TTY in Headless Mode</strong>: When an agent hits an unclear requirement, it prompts the user on standard input (<code>stdin</code>). In headless cloud runners with no TTY, this either crashes or forces the agent to hallucinate an answer.</li>
+</ol>
+<p>To make agentic coding practical at scale, the agent loop must move into an isolated container runtime.</p>
+<hr>
+<h2 id="2-architecture-host-vs-ephemeral-container-split">2. Architecture: Host vs. Ephemeral Container Split</h2>
+<p>The core design separates host configuration from untrusted container execution:</p>
+<pre class="mermaid">
+  flowchart TD
+    subgraph Host[&#34;Host Machine (Developer Laptop or CI Runner)&#34;]
+        CLI[&#34;&lt;b&gt;asdlc run --container&lt;/b&gt;&lt;br/&gt;Host Orchestrator CLI&#34;]
+        GCFG[&#34;~/.asdlc/config.yaml&lt;br/&gt;(Global Settings, Mode 0600)&#34;]
+        ACFG[&#34;Native AI Configs&lt;br/&gt;(Claude Code / Gemini CLI / Anthropic)&#34;]
+        CSKILL[&#34;~/.asdlc/skills/*&lt;br/&gt;(Jira / Confluence Skills)&#34;]
+        HFILES[&#34;Host Design Docs (--from-file)&lt;br/&gt;(PRDs, SQL schemas)&#34;]
+        GHTOKEN[&#34;Host Auth Extractor&lt;br/&gt;(gh auth token / Git Credentials)&#34;]
+    end
+
+    subgraph Container[&#34;Ephemeral Container (ubuntu:26.04 LTS, UID 10001:10001, --rm)&#34;]
+        WS[&#34;/workspace&lt;br/&gt;(Clean Linux Git Clone)&#34;]
+        INTAKE[&#34;openspec/changes/&amp;lt;id&amp;gt;/intake/&lt;br/&gt;(Snapshotted PRDs and Issues)&#34;]
+        
+        subgraph SESSIONS [&#34;Dual Process Isolation (Player != Referee)&#34;]
+            S1[&#34;Session A: Author / Implementer&lt;br/&gt;(claude -p / gemini)&#34;]
+            S2[&#34;Session B: Fresh Reviewer&lt;br/&gt;(Independent Spec &amp;amp; Impl Audit)&#34;]
+        end
+
+        GATES[&#34;Deterministic Quality Gates&lt;br/&gt;(asdlc lint · test · verify)&#34;]
+        OS_LOCK[&#34;Kernel Read-Only Spec Lock&lt;br/&gt;(proposal.md &amp;amp; specs/** locked 0444)&#34;]
+    end
+
+    subgraph Remote[&#34;Git Platform (GitHub / GitLab)&#34;]
+        PR1[&#34;Draft / Ready Spec PR&lt;br/&gt;(Async Q&amp;amp;A via PR Comments)&#34;]
+        MAIN[&#34;Protected main Branch&lt;br/&gt;(Merge permanently locks specSha)&#34;]
+        PR2[&#34;Implementation PR&lt;br/&gt;(Verified + AI Reviewed)&#34;]
+    end
+
+    CLI --&gt; GCFG
+    CLI --&gt; ACFG
+    CLI --&gt; CSKILL
+    CLI --&gt; HFILES
+    CLI --&gt; GHTOKEN
+
+    CLI -- &#34;docker create + docker cp (chown 10001:10001)&#34; --&gt; Container
+    WS --&gt; INTAKE
+    INTAKE --&gt; S1
+    S1 --&gt; S2
+    S2 --&gt; GATES
+    GATES -- &#34;Phase 1: Spec PR&#34; --&gt; PR1
+    PR1 -- &#34;Human Tech Lead Merge&#34; --&gt; MAIN
+    MAIN -- &#34;Phase 2: Unlock Implementation&#34; --&gt; OS_LOCK
+    OS_LOCK --&gt; S1
+    GATES -- &#34;Phase 2: Impl PR&#34; --&gt; PR2
+</pre>
+
+<hr>
+<h2 id="3-the-31-canonical-stage-execution-model">3. The &ldquo;3+1&rdquo; Canonical Stage Execution Model</h2>
+<p>A common mistake in autonomous coding tools is trying to build a &ldquo;magic black box&rdquo; that runs from start to finish without human touchpoints.</p>
+<p>In real teams, software delivery is naturally <strong>staged and asynchronous</strong>. You write a spec, wait for review, get approval, write code, get another review, and merge.</p>
+<p>Instead of guessing state, <code>agentic-sdlc</code> uses <strong>Bounded Stage-Driven Execution</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>                       THE &#34;3+1&#34; CANONICAL STAGES
+</span></span><span style="display:flex;"><span> ┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────────┐
+</span></span><span style="display:flex;"><span> │ 1. --stage spec      │  │ 2. --stage apply     │  │ 3. --stage verify    │
+</span></span><span style="display:flex;"><span> ├──────────────────────┤  ├──────────────────────┤  ├──────────────────────┤
+</span></span><span style="display:flex;"><span> │ Intake, AST explore, │  │ Task authoring and   │  │ 14 quality gates and │
+</span></span><span style="display:flex;"><span> │ spec drafting, AI    │  │ task-level TDD Red-  │  │ independent review;  │
+</span></span><span style="display:flex;"><span> │ review &amp; Ready Spec PR│ │ Green loop (0444 lock)│ │ opens Impl PR        │
+</span></span><span style="display:flex;"><span> └──────────────────────┘  └──────────────────────┘  └──────────────────────┘
+</span></span><span style="display:flex;"><span>                                      │
+</span></span><span style="display:flex;"><span>                         ┌────────────▼───────────┐
+</span></span><span style="display:flex;"><span>                         │   +1. --stage fix      │
+</span></span><span style="display:flex;"><span>                         ├────────────────────────┤
+</span></span><span style="display:flex;"><span>                         │ Autonomous triage and  │
+</span></span><span style="display:flex;"><span>                         │ resolution of human PR │
+</span></span><span style="display:flex;"><span>                         │ review comment threads │
+</span></span><span style="display:flex;"><span>                         └────────────────────────┘
+</span></span></code></pre></div><ol>
+<li><strong>Bounded Execution</strong>: Inside each run, the container does its job automatically (TDD loop, gate checks, review comment handling).</li>
+<li><strong>Clear Milestones</strong>: Between stages, the container stops and waits for human action on GitHub.</li>
+<li><strong>Zero Idle Compute</strong>: When a stage finishes or hits a question, the container destroys itself (<code>--rm</code>). It never sits idle waiting for someone to type.</li>
+</ol>
+<h3 id="the-full-lifecycle-sequence">The Full Lifecycle Sequence</h3>
+<pre class="mermaid">
+  sequenceDiagram
+  autonumber
+  actor Dev as Developer / Tech Lead
+  actor Rev as Peer Reviewer
+  participant Host as Host CLI (asdlc run)
+  participant Runner as Container (UID 10001)
+  participant AgentA as Session A (Author / Impl)
+  participant AgentR as Session B (Fresh Reviewer)
+  participant GitPR as GitHub / GitLab PR
+
+  Note over Dev,GitPR: Stage 1: Spec Authoring &amp; Review (--stage spec)
+  Dev-&gt;&gt;Host: asdlc run --from-issue JIRA-345 --from-file ./prd.md --stage spec
+  Host-&gt;&gt;Runner: Start container + copy workspace, config, skills
+  Runner-&gt;&gt;AgentA: Read intake/ files, explore AST, draft spec
+
+  alt Ambiguities Detected (OPEN items in clarifications.md)
+    AgentA-&gt;&gt;GitPR: Open Draft PR (asdlc:needs-clarification) + post Q1..Qn
+    Runner--&gt;&gt;Host: Exit cleanly 0 (zero idle container)
+    Dev-&gt;&gt;GitPR: Reply directly to Q1..Qn in PR comments
+    Dev-&gt;&gt;Host: asdlc run #34 --stage spec
+    Host-&gt;&gt;Runner: Ingest PR comments -&gt; Clear OPEN items in clarifications.md
+  end
+  Runner-&gt;&gt;AgentR: Spawn Session B (asdlc-spec-review, clean context)
+  Runner-&gt;&gt;Runner: Run deterministic gate: asdlc lint (must pass)
+  Runner-&gt;&gt;GitPR: Mark Ready Spec PR #34 + post review summary
+  Runner--&gt;&gt;Host: Destroy container (--rm)
+
+  opt Reviewer Leaves Feedback on Spec PR #34 (--stage fix)
+    Rev-&gt;&gt;GitPR: Post review comments or suggestions on Spec PR #34
+    Dev-&gt;&gt;Host: asdlc run #34 --stage fix
+    Host-&gt;&gt;Runner: Pull unresolved review threads via GraphQL
+    Runner-&gt;&gt;AgentA: Update proposal.md &amp; specs/** to address feedback
+    Runner-&gt;&gt;Runner: Run asdlc lint (must pass)
+    Runner-&gt;&gt;GitPR: Push fix commit + reply to thread + resolve thread
+    Runner--&gt;&gt;Host: Destroy container (--rm)
+  end
+
+  Dev-&gt;&gt;GitPR: Human Tech Lead reviews &amp; merges Spec PR #34 into main (locks specSha)
+
+  Note over Dev,GitPR: Stage 2: TDD Implementation (--stage apply)
+  Dev-&gt;&gt;Host: asdlc run feat-auth --stage apply
+  Host-&gt;&gt;Runner: Clone branch, lock specs as 0:0 0444 read-only
+  Runner-&gt;&gt;AgentA: Author tasks.md + run TDD loop (Red -&gt; Green -&gt; Refactor)
+  Runner-&gt;&gt;Runner: Local test suite passes on all tasks
+  Runner--&gt;&gt;Host: Destroy container (--rm)
+
+  Note over Dev,GitPR: Stage 3: Verification &amp; Impl Review (--stage verify)
+  Dev-&gt;&gt;Host: asdlc run feat-auth --stage verify
+  Host-&gt;&gt;Runner: Spawn Session B (asdlc-impl-review) + run asdlc verify (14 gates)
+  Runner-&gt;&gt;GitPR: Open Implementation PR #42 + attach evidence
+  Runner--&gt;&gt;Host: Destroy container (--rm)
+
+  opt Reviewer Leaves Feedback on Impl PR #42 (--stage fix)
+    Rev-&gt;&gt;GitPR: Post code review comments on Impl PR #42
+    Dev-&gt;&gt;Host: asdlc run #42 --stage fix
+    Host-&gt;&gt;Runner: Ingest review comments via GraphQL
+    Runner-&gt;&gt;AgentA: Modify source code &amp; tests to address feedback
+    Runner-&gt;&gt;Runner: Run asdlc verify (14 gates must pass)
+    Runner-&gt;&gt;GitPR: Push fix commit + reply to thread + resolve thread
+    Runner--&gt;&gt;Host: Destroy container (--rm)
+  end
+
+  Dev-&gt;&gt;GitPR: Human Approval &amp; Merge Impl PR into main
+</pre>
+
+<hr>
+<h2 id="4-handling-review-comments-without-a-terminal---stage-fix">4. Handling Review Comments Without a Terminal (<code>--stage fix</code>)</h2>
+<p>One common headache with automated coding is: what happens when human colleagues leave comments on a PR?</p>
+<p>Reviewers often don&rsquo;t click GitHub&rsquo;s formal &ldquo;Request Changes&rdquo; button. They leave inline questions, suggest renames, or ask why a certain library was chosen.</p>
+<p>When you run <code>asdlc run #42 --stage fix</code>, the container uses a <strong>3-Tier Triage Engine</strong>:</p>
+<pre class="mermaid">
+  flowchart TD
+    THREAD[&#34;Unresolved PR Review Thread (via GraphQL)&#34;] --&gt; CLASSIFY{&#34;Review Comment Triage Engine&#34;}
+
+    CLASSIFY --&gt;|Tier 1: Concrete Suggestion / Bug| T1[&#34;&lt;b&gt;Tier 1: Code Fix&lt;/b&gt;&lt;br/&gt;• Apply GitHub suggestion or code edit&lt;br/&gt;• Re-run unit tests &amp;amp; asdlc verify&lt;br/&gt;• Push fix commit &amp;amp; resolve thread&#34;]
+    CLASSIFY --&gt;|Tier 2: Technical Inquiry / Question| T2[&#34;&lt;b&gt;Tier 2: Technical Explanation&lt;/b&gt;&lt;br/&gt;• Extract rationale from design.md&lt;br/&gt;• Post inline reply in thread (Zero code edits)&lt;br/&gt;• Resolve thread&#34;]
+    CLASSIFY --&gt;|Tier 3: Scope Creep / Out-of-Bounds| T3[&#34;&lt;b&gt;Tier 3: Scope Creep Deflection&lt;/b&gt;&lt;br/&gt;• Identify boundary expansion&lt;br/&gt;• Reply explaining spec scope bounds&lt;br/&gt;• Defer to separate tracking issue&#34;]
+</pre>
+
+<ol>
+<li><strong>Tier 1 (Code Fixes &amp; Suggestions)</strong>: If a reviewer points out a bug, suggests a variable rename, or provides a GitHub suggestion block (````suggestion`), the agent updates the code, reruns the test suite, verifies all gates pass, commits, and resolves the thread.</li>
+<li><strong>Tier 2 (Technical Questions)</strong>: If a reviewer asks: <em>&ldquo;Why did you use Redis here instead of Caffeine cache?&rdquo;</em>, the agent does not touch the code. It reads <code>design.md</code>, writes a clear explanation as an inline reply, and resolves the thread.</li>
+<li><strong>Tier 3 (Scope Creep)</strong>: If a reviewer asks: <em>&ldquo;Can we also add export-to-Excel in this PR?&rdquo;</em>, the agent checks the locked spec. It politely replies that this is out of scope for the current change, suggests opening a new ticket, and resolves the thread.</li>
+</ol>
+<hr>
+<h2 id="5-dual-track-symmetry-zero-breaking-changes-for-ide-users">5. Dual-Track Symmetry: Zero Breaking Changes for IDE Users</h2>
+<p>A critical requirement was that container automation must <strong>not break the existing local workflow</strong>.</p>
+<p>Developers who prefer working in IDEs (Cursor, Windsurf, or IntelliJ IDEA with AI plugins) or terminal CLI tools can keep working exactly as before. Both tracks share the same Git repo and OpenSpec files:</p>
+<pre class="mermaid">
+  flowchart LR
+  subgraph Track1[&#34;Track 1: Local IDE Mode (Terminal)&#34;]
+    direction TB
+    I_NEW[&#34;asdlc new (Interactive Q&amp;amp;A)&#34;] --&gt; I_LINT[&#34;asdlc lint&#34;]
+    I_LINT --&gt; I_PR1[&#34;asdlc pr (Spec PR)&#34;]
+    I_PR1 --&gt; I_APP[&#34;asdlc apply (Local TDD)&#34;]
+    I_APP --&gt; I_VER[&#34;asdlc verify&#34;]
+    I_VER --&gt; I_PR2[&#34;asdlc pr (Impl PR)&#34;]
+  end
+
+  subgraph Shared[&#34;Single Source of Truth (Git + OpenSpec)&#34;]
+    direction TB
+    SPEC[&#34;proposal.md &amp;amp; specs/**&#34;]
+    LOCK[&#34;specSha Lock on main&#34;]
+    CODE[&#34;Source Code &amp;amp; Tests&#34;]
+  end
+
+  subgraph Track2[&#34;Track 2: Autonomous Container Mode (--container)&#34;]
+    direction TB
+    C_DRAFT[&#34;asdlc run (Draft &amp;amp; Explore)&#34;] --&gt; C_GRILL[&#34;Draft PR Async Comment Q&amp;amp;A&#34;]
+    C_GRILL --&gt; C_PR1[&#34;Ready Spec PR&#34;]
+    C_PR1 --&gt; C_TDD[&#34;Container TDD (0444 Spec Lock)&#34;]
+    C_TDD --&gt; C_VER[&#34;Verify &amp;amp; Impl Review&#34;]
+    C_VER --&gt; C_PR2[&#34;Open Impl PR&#34;]
+  end
+
+  I_NEW -.-&gt; SPEC
+  C_DRAFT -.-&gt; SPEC
+  I_PR1 -.-&gt; LOCK
+  C_PR1 -.-&gt; LOCK
+  I_APP -.-&gt; CODE
+  C_TDD -.-&gt; CODE
+
+  I_APP &lt;-.-&gt;|&#34;Bidirectional Handoff&#34;| C_TDD
+</pre>
+
+<ul>
+<li><strong>Handoff between modes</strong>: You can draft a spec interactively in your IDE, and then run <code>asdlc run feat-auth --stage apply --container</code> to let the container handle the implementation tests in the background.</li>
+<li><strong>Zero-Checkout Remote Mode</strong>: You can also run changes against remote repositories without cloning them locally:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>asdlc run <span style="color:#f1fa8c">&#34;Add payment retry logic&#34;</span> <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>  --repo my-org/payment-service <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>  --from-issue JIRA-512 <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>  --stage spec <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>  --container
+</span></span></code></pre></div></li>
+</ul>
+<hr>
+<h2 id="6-key-container-engineering-trade-offs">6. Key Container Engineering Trade-offs</h2>
+<p>Building an isolated container runner brought up several technical trade-offs:</p>
+<h3 id="1-ephemeral-internal-clone-vs-host--v-mounting">1. Ephemeral Internal Clone vs. Host <code>-v</code> Mounting</h3>
+<p>The simplest approach is mounting the local folder with <code>docker run -v $(pwd):/workspace</code>. I decided against this:</p>
+<ul>
+<li><strong>File I/O slow down</strong>: On Windows and macOS, bind mounts across virtualized file systems slow down build tools (npm, maven, pytest) by 5x to 10x.</li>
+<li><strong>Workspace pollution</strong>: Linux containers write Linux binary caches and symlinks into the host folder, often creating Git dirty state or CRLF line ending issues on Windows.</li>
+<li><strong>Decision</strong>: The container does a clean clone into internal ext4 <code>/workspace</code>. All code changes are pushed back via Git using temporary <code>gh auth token</code> credentials. The host directory stays completely clean.</li>
+</ul>
+<h3 id="2-atomic-base-config-vs-recursive-config-mutation">2. Atomic Base Config vs. Recursive Config Mutation</h3>
+<p>How should container model settings combine with host AI configuration?</p>
+<ul>
+<li>Mutating configuration files or trying to merge custom proxies, headers, and API keys often silently corrupts credentials.</li>
+<li><strong>Decision</strong>: Treat base configs as <strong>immutable units</strong> (copied as-is from host configs). If the container needs to use a specific model or provider (like an enterprise model instead of the developer&rsquo;s default), pass it via runtime CLI flags and environment variables:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>claude -p --model <span style="color:#f1fa8c">&#34;provider/model&#34;</span> <span style="color:#f1fa8c">&#34;&lt;prompt&gt;&#34;</span>
+</span></span></code></pre></div>Runtime flags take priority natively, avoiding any file modification on disk.</li>
+</ul>
+<h3 id="3-pure-data-staging-vs---nethost">3. Pure Data Staging vs. <code>--net=host</code></h3>
+<p>How should auth credentials pass into the container?</p>
+<ul>
+<li>In corporate environments, <code>--net=host</code> is often blocked by security policies (CIS benchmarks). Also, OAuth localhost browser redirects fail across WSL2 and macOS VM boundaries.</li>
+<li><strong>Decision</strong>: No <code>--net=host</code>. Authentication is extracted on the host and copied via single-direction <code>docker cp</code> with restricted permissions (<code>UID 10001:10001</code>, mode <code>0600</code>). The container runs inside a standard isolated bridge network.</li>
+</ul>
+<h3 id="4-linux-kernel-read-only-spec-lock-chmod-0444">4. Linux Kernel Read-Only Spec Lock (<code>chmod 0444</code>)</h3>
+<p>In Part 1, I introduced the <code>spec-tamper</code> rule to prevent agents from editing specs during implementation. In the container runner, this is enforced at the <strong>Linux kernel file system level</strong>:</p>
+<pre class="mermaid">
+  flowchart TD
+    subgraph KERNEL [&#34;Linux Kernel File System&#34;]
+        FILE[&#34;openspec/changes/&amp;lt;name&amp;gt;/specs/spec.md&#34;]
+        PERM[&#34;Ownership: root:root (0:0)&lt;br/&gt;Permissions: -r--r--r-- (0444)&#34;]
+        AGENT[&#34;Agent Process&lt;br/&gt;(UID 10001:10001, No Sudo)&#34;]
+    end
+
+    FILE --- PERM
+    AGENT --&gt;|&#34;Write / Edit Attempt&#34;| PERM
+    PERM --&gt;|Permission Denied| FAIL[&#34;🚫 Hard Kernel Block (OS Level)&#34;]
+</pre>
+
+<p>Before <code>--stage apply</code> starts, the container root script runs <code>chown -R 0:0 specs/</code> and <code>chmod -R 0444</code>, then drops permissions permanently to unprivileged <code>UID 10001</code>. Even if an agent runs <code>sed -i</code> to change a test expectation in the spec, the Linux kernel rejects it with <code>Permission denied</code>.</p>
+<hr>
+<h2 id="7-series-summary-the-full-journey">7. Series Summary: The Full Journey</h2>
+<p>Across these three posts, here is the full arc of building a governance system for autonomous coding:</p>
+<ol>
+<li><strong><a href="https://akjamie.github.io/post/2026-11-01-agentic-sdlc-dual-pr-governance/">Part 1: From AI-First + SDD to Agentic SDLC: Building a Dual-PR Governance Engine for Autonomous Coding</a></strong>: Why pairing AI-first coding with Spec-Driven Development (SDD) collapses under autonomous agent loops, and how Git-anchored Dual-PR governance fixes it.</li>
+<li><strong><a href="https://akjamie.github.io/post/2026-11-02-adaptive-governance-and-auto-mode/">Part 2: Scaling Agentic SDLC: Designing an Adaptive Auto Mode for Autonomous Coding</a></strong>: Learning from Anthropic&rsquo;s code review practices to build an L0–L3 adaptive mode that keeps routine tasks fast while protecting core APIs.</li>
+<li><strong>Part 3: Beyond the IDE: Running Autonomous Agentic SDLC in Isolated Containers</strong>: Moving agents off developer laptops into isolated non-root containers with &ldquo;3+1&rdquo; stage execution, zero-checkout remote runs, and autonomous PR review comment triage.</li>
+</ol>
+<p>AI agents are great at writing code quickly. But in real engineering teams, their value depends entirely on having <strong>hard, deterministic boundaries, clear contracts, and isolated review gates</strong> to keep production code safe.</p>
+<hr>
+<h2 id="-links--rfcs">🔗 Links &amp; RFCs</h2>
+<ul>
+<li><strong>Autonomous Pipeline RFC</strong>: <a href="https://github.com/akjamie/agentic-sdlc/blob/main/docs/autonomous-pipeline.md">Autonomous Container Pipeline Solution Proposal</a></li>
+<li><strong><code>agentic-sdlc</code> Repository</strong>: <a href="https://github.com/akjamie/agentic-sdlc">https://github.com/akjamie/agentic-sdlc</a></li>
+<li><strong>OpenSpec Protocol</strong>: <a href="https://openspec.dev">https://openspec.dev</a></li>
+<li><strong>Anthropic Engineering Blog</strong>: <a href="https://claude.dev/blog/solving-code-review-at-anthropic/">How the Claude Code team does code review</a></li>
+</ul>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2026-11-02-adaptive-governance-and-auto-mode/" data-toggle="tooltip" data-placement="top" title="Scaling Agentic SDLC: Designing an Adaptive Auto Mode for Autonomous Coding">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/agentic-ai" title="agentic ai">
+                            agentic ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/agentic-sdlc" title="agentic sdlc">
+                            agentic sdlc
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/agents" title="agents">
+                            agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ai" title="ai">
+                            ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/ai-agents" title="ai agents">
+                            ai agents
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/anthropic" title="anthropic">
+                            anthropic
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/code-review" title="code review">
+                            code review
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/deep-learning" title="deep learning">
+                            deep learning
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/devops" title="devops">
+                            devops
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/hermes" title="hermes">
+                            hermes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/llm-agents" title="llm agents">
+                            llm agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/multi-agent" title="multi-agent">
+                            multi-agent
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/prompt-engineering" title="prompt engineering">
+                            prompt engineering
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-boot" title="spring boot">
+                            spring boot
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/system-design" title="system design">
+                            system design
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/tool-use" title="tool use">
+                            tool use
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<script src="/js/theme-toggle.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"
+          data-cfasync="false" defer></script>
+  <script data-cfasync="false" defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
+    });
+  </script>
+
+</body>
+</html>

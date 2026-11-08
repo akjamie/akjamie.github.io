@@ -6,8 +6,29 @@
     <description>Recent content in AI Agents on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 04 May 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 03 Nov 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/tags/ai-agents/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the IDE: Running Autonomous Agentic SDLC in Isolated Containers</title>
+      <link>http://akjamie.github.io/post/2026-11-03-autonomous-container-pipeline/</link>
+      <pubDate>Tue, 03 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-11-03-autonomous-container-pipeline/</guid>
+      <description>&lt;h1 id=&#34;beyond-the-ide-running-autonomous-agentic-sdlc-in-isolated-containers&#34;&gt;Beyond the IDE: Running Autonomous Agentic SDLC in Isolated Containers&lt;/h1&gt;&#xA;&lt;p&gt;In &lt;a href=&#34;https://akjamie.github.io/post/2026-11-01-agentic-sdlc-dual-pr-governance/&#34;&gt;Part 1&lt;/a&gt; and &lt;a href=&#34;https://akjamie.github.io/post/2026-11-02-adaptive-governance-and-auto-mode/&#34;&gt;Part 2&lt;/a&gt;, I shared the governance rules that keep AI coding agents on track: Dual-PR Spec-First contracts and the adaptive L0–L3 &lt;code&gt;auto&lt;/code&gt; mode.&lt;/p&gt;&#xA;&lt;p&gt;However, one practical problem remained: &lt;strong&gt;everything still runs on the developer&amp;rsquo;s laptop&lt;/strong&gt;.&lt;/p&gt;&#xA;&lt;p&gt;If an agent needs 10 minutes to run tests, explore AST files, and do a review pass, the developer has to keep their laptop awake, avoid switching branches, and baby-sit terminal prompts. If you try to run agents in standard CI, they either crash when asking for interactive input or make wild guesses.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Scaling Agentic SDLC: Designing an Adaptive Auto Mode for Autonomous Coding</title>
+      <link>http://akjamie.github.io/post/2026-11-02-adaptive-governance-and-auto-mode/</link>
+      <pubDate>Mon, 02 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-11-02-adaptive-governance-and-auto-mode/</guid>
+      <description>&lt;h1 id=&#34;scaling-agentic-sdlc-designing-an-adaptive-auto-mode-for-autonomous-coding&#34;&gt;Scaling Agentic SDLC: Designing an Adaptive Auto Mode for Autonomous Coding&lt;/h1&gt;&#xA;&lt;p&gt;In &lt;a href=&#34;https://akjamie.github.io/post/2026-11-01-agentic-sdlc-dual-pr-governance/&#34;&gt;Part 1&lt;/a&gt;, I explained why moving from AI-first prompt engineering (VS Code + GitHub Copilot / OpenCode) to autonomous agentic coding (VS Code + Claude Code) breaks traditional software delivery, and why I built a strict Dual-PR Spec-First workflow for autonomous agents. By separating intent agreement from implementation execution, the architectural results were solid: zero contract drift, no test gaming, and strict boundary containment.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>From AI-First &#43; SDD to Agentic SDLC: Building a Dual-PR Governance Engine for Autonomous Coding</title>
+      <link>http://akjamie.github.io/post/2026-11-01-agentic-sdlc-dual-pr-governance/</link>
+      <pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-11-01-agentic-sdlc-dual-pr-governance/</guid>
+      <description>&lt;h1 id=&#34;from-ai-first--sdd-to-agentic-sdlc-building-a-dual-pr-governance-engine-for-autonomous-coding&#34;&gt;From AI-First + SDD to Agentic SDLC: Building a Dual-PR Governance Engine for Autonomous Coding&lt;/h1&gt;&#xA;&lt;p&gt;Over the past three years, software engineering underwent two quiet revolutions.&lt;/p&gt;&#xA;&lt;p&gt;First came the &lt;strong&gt;AI-Assisted&lt;/strong&gt; era. Tools like early GitHub Copilot delivered inline tab-completions. The developer remained the compiler, the architect, and the typist—AI was simply an intelligent autocomplete.&lt;/p&gt;&#xA;&lt;p&gt;Then came the &lt;strong&gt;AI-First&lt;/strong&gt; era, powered by &lt;strong&gt;Spec-Driven Development (SDD)&lt;/strong&gt;. Senior engineers quickly realized that casual, conversational prompting produced fragile code. To get production-grade output from large language models in environments like &lt;strong&gt;VS Code + GitHub Copilot&lt;/strong&gt; and &lt;strong&gt;VS Code + OpenCode&lt;/strong&gt;, the industry converged on a disciplined methodology: write formal specifications first. We learned to draft Markdown PRDs, define OpenAPI schemas, and document BDD scenarios (&lt;code&gt;GIVEN / WHEN / THEN&lt;/code&gt;) before asking the model to write code. Feeding structured specifications into the model allowed teams to generate entire modules, database schemas, and integration suites cleanly. For teams practicing SDD, AI-first development became the gold standard of productivity.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>What Claude Code&#39;s Source Code Taught Me About Building Production AI Agents</title>
       <link>http://akjamie.github.io/post/2026-05-04-claude-code-source-analysis-staff-engineer/</link>
@@ -16,11 +37,11 @@
       <description>&lt;h2 id=&#34;why-read-source-code&#34;&gt;Why Read Source Code?&lt;/h2&gt;&#xA;&lt;p&gt;Most writing about AI agents describes patterns in the abstract. Clean Mermaid diagrams, idealised loops, production-sounding words. None of it tells you how the system behaves when the LLM hallucinates a field name, or what happens when a Bash command runs for 20 seconds, or how you prevent a child agent from bankrupting your token budget.&lt;/p&gt;&#xA;&lt;p&gt;I read the source code of Anthropic&amp;rsquo;s &lt;strong&gt;Claude Code&lt;/strong&gt; — a production CLI agent shipped to real engineers daily — and traced every architectural decision back to its implementation. What follows are the patterns worth understanding before you design your next agentic system.&lt;/p&gt;</description>
     </item>
     <item>
-      <title>The Complete Guide to Building Agentic AI Systems: From Basics to Production</title>
+      <title>Building Production Agentic AI: Patterns, Evals, and Architecture Trade-offs</title>
       <link>http://akjamie.github.io/post/2025-12-11-build-agentic-ai/</link>
       <pubDate>Thu, 11 Dec 2025 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/post/2025-12-11-build-agentic-ai/</guid>
-      <description>&lt;h1 id=&#34;the-complete-guide-to-building-agentic-ai-systems-from-basics-to-production&#34;&gt;The Complete Guide to Building Agentic AI Systems: From Basics to Production&lt;/h1&gt;&#xA;&lt;h2 id=&#34;why-this-guide-matters&#34;&gt;Why This Guide Matters&lt;/h2&gt;&#xA;&lt;p&gt;If you&amp;rsquo;ve shipped LLM-based features, you&amp;rsquo;ve probably hit the wall where simple prompt engineering stops working. Your PM wants the AI to &amp;ldquo;do more,&amp;rdquo; your team is drowning in edge cases, and you&amp;rsquo;re not sure if you need better prompts, more tools, or an entirely different architecture.&lt;/p&gt;&#xA;&lt;p&gt;I&amp;rsquo;ve been there. After building several production agentic systems, here&amp;rsquo;s what I wish someone had told me on day one: &lt;strong&gt;The difference between teams that ship working AI agents and those that don&amp;rsquo;t isn&amp;rsquo;t the model—it&amp;rsquo;s the discipline around evaluation and error analysis.&lt;/strong&gt;&lt;/p&gt;</description>
+      <description>&lt;h1 id=&#34;building-production-agentic-ai-patterns-evals-and-architecture-trade-offs&#34;&gt;Building Production Agentic AI: Patterns, Evals, and Architecture Trade-offs&lt;/h1&gt;&#xA;&lt;h2 id=&#34;why-this-guide-matters&#34;&gt;Why This Guide Matters&lt;/h2&gt;&#xA;&lt;p&gt;If you&amp;rsquo;ve shipped LLM-based features, you&amp;rsquo;ve probably hit the wall where simple prompt engineering stops working. Your PM wants the AI to &amp;ldquo;do more,&amp;rdquo; your team is drowning in edge cases, and you&amp;rsquo;re not sure if you need better prompts, more tools, or an entirely different architecture.&lt;/p&gt;&#xA;&lt;p&gt;I&amp;rsquo;ve been there. After building several production agentic systems, here&amp;rsquo;s what I wish someone had told me on day one: &lt;strong&gt;The difference between teams that ship working AI agents and those that don&amp;rsquo;t isn&amp;rsquo;t the model—it&amp;rsquo;s the discipline around evaluation and error analysis.&lt;/strong&gt;&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

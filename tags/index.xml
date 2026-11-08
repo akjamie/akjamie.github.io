@@ -6,20 +6,111 @@
     <description>Recent content in Tags on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 23 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 03 Nov 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agentic SDLC</title>
+      <link>http://akjamie.github.io/tags/agentic-sdlc/</link>
+      <pubDate>Tue, 03 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/agentic-sdlc/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Agents</title>
+      <link>http://akjamie.github.io/tags/ai-agents/</link>
+      <pubDate>Tue, 03 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/ai-agents/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Architecture</title>
+      <link>http://akjamie.github.io/tags/architecture/</link>
+      <pubDate>Tue, 03 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/architecture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Autonomous Pipeline</title>
+      <link>http://akjamie.github.io/tags/autonomous-pipeline/</link>
+      <pubDate>Tue, 03 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/autonomous-pipeline/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Containers</title>
+      <link>http://akjamie.github.io/tags/containers/</link>
+      <pubDate>Tue, 03 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/containers/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Docker</title>
+      <link>http://akjamie.github.io/tags/docker/</link>
+      <pubDate>Tue, 03 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Anthropic</title>
+      <link>http://akjamie.github.io/tags/anthropic/</link>
+      <pubDate>Mon, 02 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/anthropic/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Code Review</title>
+      <link>http://akjamie.github.io/tags/code-review/</link>
+      <pubDate>Mon, 02 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/code-review/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>DevOps</title>
+      <link>http://akjamie.github.io/tags/devops/</link>
+      <pubDate>Mon, 02 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/devops/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>System Design</title>
+      <link>http://akjamie.github.io/tags/system-design/</link>
+      <pubDate>Mon, 02 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/system-design/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>OpenSpec</title>
+      <link>http://akjamie.github.io/tags/openspec/</link>
+      <pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/openspec/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Software Engineering</title>
+      <link>http://akjamie.github.io/tags/software-engineering/</link>
+      <pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/software-engineering/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Spec-Driven Development</title>
+      <link>http://akjamie.github.io/tags/spec-driven-development/</link>
+      <pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/spec-driven-development/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>TDD</title>
+      <link>http://akjamie.github.io/tags/tdd/</link>
+      <pubDate>Sun, 01 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/tags/tdd/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Agents</title>
       <link>http://akjamie.github.io/tags/agents/</link>
       <pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/agents/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Code-Review</title>
-      <link>http://akjamie.github.io/tags/code-review/</link>
-      <pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/code-review/</guid>
       <description></description>
     </item>
     <item>
@@ -62,27 +153,6 @@
       <link>http://akjamie.github.io/tags/security/</link>
       <pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/security/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>System-Design</title>
-      <link>http://akjamie.github.io/tags/system-design/</link>
-      <pubDate>Sun, 23 Aug 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/system-design/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Anthropic</title>
-      <link>http://akjamie.github.io/tags/anthropic/</link>
-      <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/anthropic/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Architecture</title>
-      <link>http://akjamie.github.io/tags/architecture/</link>
-      <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/architecture/</guid>
       <description></description>
     </item>
     <item>
@@ -303,13 +373,6 @@
       <description></description>
     </item>
     <item>
-      <title>AI Agents</title>
-      <link>http://akjamie.github.io/tags/ai-agents/</link>
-      <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/ai-agents/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Tool Use</title>
       <link>http://akjamie.github.io/tags/tool-use/</link>
       <pubDate>Mon, 04 May 2026 00:00:00 +0000</pubDate>
@@ -527,13 +590,6 @@
       <description></description>
     </item>
     <item>
-      <title>DevOps</title>
-      <link>http://akjamie.github.io/tags/devops/</link>
-      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/devops/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>AWS</title>
       <link>http://akjamie.github.io/tags/aws/</link>
       <pubDate>Mon, 09 Aug 2021 00:00:00 +0000</pubDate>
@@ -615,13 +671,6 @@
       <link>http://akjamie.github.io/tags/distributed-transaction/</link>
       <pubDate>Tue, 23 Jul 2019 19:40:10 +0000</pubDate>
       <guid>http://akjamie.github.io/tags/distributed-transaction/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Docker</title>
-      <link>http://akjamie.github.io/tags/docker/</link>
-      <pubDate>Tue, 23 Jul 2019 13:36:10 +0000</pubDate>
-      <guid>http://akjamie.github.io/tags/docker/</guid>
       <description></description>
     </item>
     <item>

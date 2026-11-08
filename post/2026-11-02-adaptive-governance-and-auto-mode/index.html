@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <script>
+    (function() {
+        
+        
+        const autoTheme = false;
+        if (autoTheme) {
+            document.documentElement.setAttribute('data-auto-theme', 'true');
+        }
+
+        const theme = localStorage.getItem('cleanwhite-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+    })();
+    </script>
+
+    
+    <meta property="og:site_name" content="Jamie&#39;s Blog">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="http://akjamie.github.io//img/ai-01.jpg">
+    <meta property="twitter:image" content="http://akjamie.github.io//img/ai-01.jpg" />
+    
+
+    
+    <meta name="title" content="Scaling Agentic SDLC: Designing an Adaptive Auto Mode for Autonomous Coding" />
+    <meta property="og:title" content="Scaling Agentic SDLC: Designing an Adaptive Auto Mode for Autonomous Coding" />
+    <meta property="twitter:title" content="Scaling Agentic SDLC: Designing an Adaptive Auto Mode for Autonomous Coding" />
+    
+
+    
+    <meta name="description" content="Borrowing lessons from Anthropic&#39;s code review architecture to scale the Dual-PR model into an adaptive &#39;auto&#39; mode that balances safety with developer speed.">
+    <meta property="og:description" content="Borrowing lessons from Anthropic&#39;s code review architecture to scale the Dual-PR model into an adaptive &#39;auto&#39; mode that balances safety with developer speed." />
+    <meta property="twitter:description" content="Borrowing lessons from Anthropic&#39;s code review architecture to scale the Dual-PR model into an adaptive &#39;auto&#39; mode that balances safety with developer speed." />
+    
+
+    <meta property="og:url" content="http://akjamie.github.io/post/2026-11-02-adaptive-governance-and-auto-mode/" />
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="
+&#34;Jamie Zhang, blog, personal website, internet, Web, cloud native, Kubernetes, microservices, Microservice&#34;">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Scaling Agentic SDLC: Designing an Adaptive Auto Mode for Autonomous Coding | The curious developer&#39;s ODYSSEY</title>
+
+    <link rel="canonical" href="/post/2026-11-02-adaptive-governance-and-auto-mode/">
+
+    
+
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.css">
+
+    
+    <link rel="stylesheet" href="/css/theme-variables.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.min.css">
+
+    
+    <link rel="stylesheet" href="/css/font-awesome.all.min.css">
+
+    
+    
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jamie&#39;s Blog</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ai/">ai</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cloud/">cloud</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/java/">java</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/microservice/">microservice</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/nosql/">nosql</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/others/">others</a>
+                        </li>
+                        
+                    
+
+		    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                    
+		            <li>
+                        <a href="#" id="theme-toggle" title="Toggle dark mode" style="opacity: 0;">
+                            <i class="fa fa-moon"></i>
+                            <i class="fa fa-sun" style="display: none;"></i>
+                        </a>
+		           </li>
+                    <script>
+                    (function() {
+                        
+                        var theme = localStorage.getItem('cleanwhite-theme') ||
+                                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                        var toggleBtn = document.getElementById('theme-toggle');
+                        if (toggleBtn) {
+                            var moonIcon = toggleBtn.querySelector('.fa-moon');
+                            var sunIcon = toggleBtn.querySelector('.fa-sun');
+
+                            if (theme === 'dark') {
+                                if (moonIcon) moonIcon.style.display = 'none';
+                                if (sunIcon) sunIcon.style.display = 'inline';
+                                toggleBtn.setAttribute('title', 'Switch to light mode');
+                            } else {
+                                if (moonIcon) moonIcon.style.display = 'inline';
+                                if (sunIcon) sunIcon.style.display = 'none';
+                                toggleBtn.setAttribute('title', 'Switch to dark mode');
+                            }
+
+                            
+                            requestAnimationFrame(function() {
+                                toggleBtn.style.transition = 'opacity 0.2s ease';
+                                toggleBtn.style.opacity = '1';
+                            });
+                        }
+                    })();
+                    </script>
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        var navLinks = document.querySelectorAll('.navbar-collapse a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                if ($navbar.className.indexOf('in') > 0) {
+                    
+                    $navbar.className = " ";
+                    setTimeout(function(){
+                        if($navbar.className.indexOf('in') < 0) {
+                            $collapse.style.height = "0px"
+                        }
+                    },400)
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/ai-01.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/agentic-sdlc" title="Agentic SDLC">
+                            Agentic SDLC
+                        </a>
+                        
+                        <a class="tag" href="/tags/ai-agents" title="AI Agents">
+                            AI Agents
+                        </a>
+                        
+                        <a class="tag" href="/tags/code-review" title="Code Review">
+                            Code Review
+                        </a>
+                        
+                        <a class="tag" href="/tags/anthropic" title="Anthropic">
+                            Anthropic
+                        </a>
+                        
+                        <a class="tag" href="/tags/system-design" title="System Design">
+                            System Design
+                        </a>
+                        
+                        <a class="tag" href="/tags/devops" title="DevOps">
+                            DevOps
+                        </a>
+                        
+                    </div>
+                    <h1>Scaling Agentic SDLC: Designing an Adaptive Auto Mode for Autonomous Coding</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                Jamie Zhang
+                             
+                            on 
+                            Monday, November 2, 2026
+                            
+                                <span id="/post/2026-11-02-adaptive-governance-and-auto-mode/" class="leancloud_visitors meta_data_item" data-flag-title="">
+    <span class="post-meta-item-icon">
+      <span class="octicon octicon-eye"></span> 
+    </span>
+    <i class="fa fa-eye"></i>
+    <span class="old-visitors-count" style="display: none;"></span>
+    <span class="leancloud-visitors-count"></span>
+</span>
+
+
+
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+
+<script>
+	AV.initialize("xPw359Vqc2mJIQwyn3kk1tr6-MdYXbMMI", "oWnYnSQrRigb5tOZHi4rcIGO");
+</script>
+
+<script type="text/javascript">
+function showTime(Counter) {
+    var query = new AV.Query(Counter);
+    var entries = [];
+    var $visitors = $(".leancloud_visitors");
+
+    $visitors.each(function() {
+        entries.push($(this).attr("id").trim());
+    });
+
+    query.containedIn('url', entries);
+    query.find()
+        .done(function(results) {
+            var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+            var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+
+            
+            
+            
+            
+
+            for (var i = 0; i < results.length; i++) {
+                var item = results[i];
+                var url = item.get('url');
+                var time = item.get('time');
+                var element = document.getElementById(url);
+
+                $(element).find(COUNT_CONTAINER_REF).text(time);
+            }
+            for (var i = 0; i < entries.length; i++) {
+                var url = entries[i];
+                var element = document.getElementById(url);
+                var countSpan = $(element).find(COUNT_CONTAINER_REF);
+                if (countSpan.text() == '') {
+                    var oldCountSpan = $(element).find(OLD_COUNT_CONTAINER_REF).text();
+                    if(oldCountSpan!=''){
+                        countSpan.text(0+parseInt(oldCountSpan));
+                    }else{
+                        countSpan.text(0);          
+                    }
+                }
+            }
+        })
+        .fail(function(object, error) {
+            console.log("Error: " + error.code + " " + error.message);
+        });
+}
+
+function addCount(Counter) {
+    var $visitors = $(".leancloud_visitors");
+    var url = $visitors.attr('id').trim();
+    var title = $visitors.attr('data-flag-title').trim();
+    var query = new AV.Query(Counter);
+
+    query.equalTo("url", url);
+    query.find({
+        success: function(results) {
+            if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                    success: function(counter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(counter.get('time'));
+                    },
+                    error: function(counter, error) {
+                        console.log('Failed to save Visitor num, with error message: ' + error.message);
+                    }
+                });
+            } else {
+                var newcounter = new Counter();
+                 
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+                acl.setPublicWriteAccess(true);
+                newcounter.setACL(acl);
+                 
+                newcounter.set("title", title);
+                newcounter.set("url", url);
+                var OLD_COUNT_CONTAINER_REF = '.old-visitors-count';
+                var $element = $(document.getElementById(url));
+                var oldCountSpan = $element.find(OLD_COUNT_CONTAINER_REF).text();
+                if(oldCountSpan!=''){
+                    newcounter.set("time", parseInt(oldCountSpan)+1);
+                }else{
+ 	                    newcounter.set("time",  1);
+                }
+                newcounter.save(null, {
+                    success: function(newcounter) {
+                        var $element = $(document.getElementById(url));
+                        $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                    },
+                    error: function(newcounter, error) {
+                        console.log('Failed to create');
+                    }
+                });
+            }
+        },
+        error: function(error) {
+            console.log('Error:' + error.code + " " + error.message);
+        }
+    });
+}
+$(function() {
+    var Counter = AV.Object.extend("Counter");
+    
+    
+    if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+    } else {
+        showTime(Counter);
+    }
+});
+</script>
+
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="scaling-agentic-sdlc-designing-an-adaptive-auto-mode-for-autonomous-coding">Scaling Agentic SDLC: Designing an Adaptive Auto Mode for Autonomous Coding</h1>
+<p>In <a href="https://akjamie.github.io/post/2026-11-01-agentic-sdlc-dual-pr-governance/">Part 1</a>, I explained why moving from AI-first prompt engineering (VS Code + GitHub Copilot / OpenCode) to autonomous agentic coding (VS Code + Claude Code) breaks traditional software delivery, and why I built a strict Dual-PR Spec-First workflow for autonomous agents. By separating intent agreement from implementation execution, the architectural results were solid: zero contract drift, no test gaming, and strict boundary containment.</p>
+<p>Then I ran into the human reality of software engineering: <strong>developer pushback</strong>.</p>
+<p>When a developer needed to update a comment, tweak a test fixture, or adjust an internal helper function, the tool still demanded a full Spec PR, human approval on <code>main</code>, a locked SHA, and a second Implementation PR. Developers found it excessive, and rightly so.</p>
+<p>Around the same time, Anthropic&rsquo;s Claude Code team published a blog post: <a href="https://claude.dev/blog/solving-code-review-at-anthropic/"><em>&ldquo;How the Claude Code team does code review&rdquo;</em></a>. It explained how they handle code reviews when 90% of their codebase is written by agents.</p>
+<p>Their core insight helped me redesign <code>agentic-sdlc</code> with an <strong>Adaptive Risk-Tiered Governance engine (<code>auto</code> mode)</strong>. Here is how it works, the design choices I made, and how to roll it out safely.</p>
+<hr>
+<h2 id="-bluf-bottom-line-up-front">🎯 BLUF (Bottom Line Up Front)</h2>
+<ul>
+<li><strong>The Problem</strong>: Forcing Dual-PR on every task creates too much red tape for everyday fixes. But dropping back to an ungoverned single PR brings back boundary bugs and &ldquo;Player == Referee&rdquo; test bias.</li>
+<li><strong>Anthropic&rsquo;s Lesson</strong>: When agents write most of your code, asking <em>&ldquo;Did a human read every line?&rdquo;</em> stops working. Anthropic uses a multi-layer setup: automated pre-PR checks, risk-tiered approvals, a 3-round review cap to stop endless debates, and clear human ownership (&ldquo;You land it, you own it&rdquo;).</li>
+<li><strong>My Design</strong>: An <strong><code>auto</code> mode</strong> (<code>asdlc config set workflow_mode auto</code>) using four risk tiers (L0 to L3):
+<ul>
+<li><strong>L0 / L1 (Routine tasks)</strong>: Use a Single PR with automated checks or independent AI review, eligible for auto-merge under a <strong>Bounded Positive Safety Envelope</strong> ($\le 5$ files, no public API exports, no god-nodes).</li>
+<li><strong>L2 / L3 (APIs, schemas, auth)</strong>: Strictly enforce the Dual-PR Spec-First flow with human Tech Lead sign-off.</li>
+</ul>
+</li>
+<li><strong>The Multi-Stack Reality</strong>: Directory-name regexes alone failed across multi-stack benchmarks (97 under-classifications across 120 enterprise cases in Java, Python, Go, Node, .NET). <code>agentic-sdlc</code> replaced brittle paths with a <strong>&lt;50ms lightweight 3-layer static fingerprint engine</strong> + Graphify 1-hop AST topology.</li>
+<li><strong>Humane In-Place Escalation</strong>: If an L1 task expands to touch an API during implementation, keep the PR in-place and route to a human, instead of forcing a branch restart.</li>
+<li><strong>Anti-Gaming Hash Chain</strong>: Every tier transition is sealed in an append-only SHA-256 hash-chained <code>risk-history.jsonl</code>, preventing agents from self-downgrading <code>L2 -&gt; L1</code>.</li>
+</ul>
+<hr>
+<h2 id="1-when-strict-process-meets-developer-reality">1. When Strict Process Meets Developer Reality</h2>
+<p>After building the Dual-PR model in Part 1, the technical logic was sound. But in daily use, developers quickly ran into friction:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Developer: &#34;I just need to fix a typo in the README and update one test fixture.&#34;
+</span></span><span style="display:flex;"><span>Tool:      &#34;Please open a Spec PR, wait for Tech Lead merge on main, 
+</span></span><span style="display:flex;"><span>            lock specSha, branch to impl, and open an Implementation PR.&#34;
+</span></span><span style="display:flex;"><span>Developer: &#34;I&#39;m just going to turn this tool off.&#34;
+</span></span></code></pre></div><p>This is a classic governance trap. If your safety rules treat a typo fix with the same friction as a database migration or an auth rewrite, developers will simply bypass the rules.</p>
+<p>I needed a middle ground: <strong>fast-track routine changes without giving up safety on high-impact code.</strong></p>
+<hr>
+<h2 id="2-what-i-learned-from-anthropics-review-post">2. What I Learned from Anthropic&rsquo;s Review Post</h2>
+<p>In October 2026, the Claude Code team at Anthropic shared how they manage reviews internally. Across their repository, daily merged changes jumped from <strong>2,500 in May to over 30,000 in September</strong>.</p>
+<p>With that volume, reading every line of code is simply impossible. A few key ideas stood out to me:</p>
+<ol>
+<li><strong>Review has two separate jobs</strong>: catching bugs before deployment, and sharing system context across the team.</li>
+<li><strong>One size does not fit all</strong>: Low-risk changes (docs, small bug fixes) should merge quickly once automated tests pass. High-risk changes (auth, billing, core libraries) must require human eyes.</li>
+<li><strong>Set a round cap on AI reviews</strong>: An AI reviewer will endlessly argue about style or small preferences if you let it. Anthropic set a <strong>3-round limit</strong>. If the author and reviewer agents don&rsquo;t agree by round 3, stop the loop and bring in a human.</li>
+<li><strong>&ldquo;You land it, you own it&rdquo;</strong>: A green bot check does not excuse human responsibility. The engineer who prompted the agent owns the change in production.</li>
+</ol>
+<hr>
+<h2 id="3-the-architecture-l0l3-adaptive-governance">3. The Architecture: L0–L3 Adaptive Governance</h2>
+<p>To balance speed and safety, I introduced the <strong>Adaptive Dual-Track Engine</strong> (<code>asdlc config set workflow_mode auto</code>).</p>
+<p>When a change starts, the engine evaluates three vectors:</p>
+<ol>
+<li><strong>Vector 1 (Task Intent)</strong>: Pre-code intent from the prompt, structured spec contract blocks, and host agent declarations.</li>
+<li><strong>Vector 2 (Security &amp; Data Boundaries)</strong>: Detection of database DDL statements (<code>CREATE TABLE</code>, <code>ALTER TABLE</code>), authentication engines, and credential patterns.</li>
+<li><strong>Vector 3 (AST Topology &amp; Architecture via Graphify)</strong>: Quantitative fan-in analysis—how many dependent files rely on the functions or classes being modified.</li>
+</ol>
+<pre class="mermaid">
+  flowchart TD
+    REQ[&#34;Natural Language Prompt / Diff&#34;] --&gt; ASSESS{&#34;Neuro-Symbolic Risk Engine&lt;br/&gt;(Static Fingerprints + AST Invariants)&#34;}
+
+    ASSESS --&gt;|&#34;L0: Docs, Typo, Test Fixture&#34;| T_L0[&#34;&lt;b&gt;Level L0 · Trivial&lt;/b&gt;&lt;br/&gt;Docs, pure test fixtures&#34;]
+    ASSESS --&gt;|&#34;L1: Bounded Local Logic (&lt;= 5 files)&#34;| T_L1[&#34;&lt;b&gt;Level L1 · Routine&lt;/b&gt;&lt;br/&gt;Internal utils, local helpers&#34;]
+    ASSESS --&gt;|&#34;L2: Public API, DB DDL, Shared Hub&#34;| T_L2[&#34;&lt;b&gt;Level L2 · Structural&lt;/b&gt;&lt;br/&gt;FastAPI, Spring, Schemas, God-Nodes&#34;]
+    ASSESS --&gt;|&#34;L3: Auth Engine, DROP TABLE, Governance&#34;| T_L3[&#34;&lt;b&gt;Level L3 · Critical&lt;/b&gt;&lt;br/&gt;Security, Auth, .sdlc/policy&#34;]
+
+    subgraph FAST_TRACK [&#34;Fast-Track: Single-PR Flow&#34;]
+        T_L0 --&gt; SP1[&#34;Direct Implementation&lt;br/&gt;(Spec &amp; Code in 1 PR)&#34;]
+        T_L1 --&gt; SP1
+        SP1 --&gt; V_AUTO[&#34;Local asdlc verify&lt;br/&gt;(12 Quality Gates)&#34;]
+        V_AUTO --&gt; PR_AUTO[&#34;Single PR to main&lt;br/&gt;(Eligible for Auto-Merge)&#34;]
+    end
+
+    subgraph SPEC_FIRST [&#34;Spec-First Track: Dual-PR Flow&#34;]
+        T_L2 --&gt; DP1[&#34;Spec PR to main&#34;]
+        T_L3 --&gt; DP1
+        DP1 --&gt; G_SPEC[&#34;Spec Review &amp; Tech Lead Approval&#34;]
+        G_SPEC --&gt; S_LOCK[&#34;specSha Lock on main&#34;]
+        S_LOCK --&gt; DP2[&#34;Implementation Unlocked&#34;]
+        DP2 --&gt; DP3[&#34;Task-level TDD Loop&#34;]
+        DP3 --&gt; PR_IMPL[&#34;Implementation PR&lt;br/&gt;(Human Tech Lead Sign-off)&#34;]
+    end
+
+    SP1 -.-&gt;|&#34;In-Place Escalation&lt;br/&gt;(Touches API/DDL during coding)&#34;| ESCALATE[&#34;Keep Single PR in-place&lt;br/&gt;Revoke auto-merge &amp; route to Lead&#34;]
+    ESCALATE -.-&gt; PR_IMPL
+</pre>
+
+<h3 id="the-governance-tier-matrix">The Governance Tier Matrix</h3>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: center">Tier</th>
+          <th style="text-align: left">Typical Scope</th>
+          <th style="text-align: center">Workflow</th>
+          <th style="text-align: center">Spec PR Needed?</th>
+          <th style="text-align: center">Review Type</th>
+          <th style="text-align: center">Auto-Merge?</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center"><strong>L0</strong></td>
+          <td style="text-align: left">Docs, comments, typos, test fixtures</td>
+          <td style="text-align: center"><strong>Single PR</strong></td>
+          <td style="text-align: center">No</td>
+          <td style="text-align: center">Automated CI checks</td>
+          <td style="text-align: center">✅ Yes (on green CI)</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>L1</strong></td>
+          <td style="text-align: left">Internal utilities, CI configs, local refactors ($\le 5$ files)</td>
+          <td style="text-align: center"><strong>Single PR</strong></td>
+          <td style="text-align: center">No</td>
+          <td style="text-align: center">Independent AI Review</td>
+          <td style="text-align: center">✅ Yes (on green review)</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>L2</strong></td>
+          <td style="text-align: left">Public APIs (FastAPI/Spring/Go), DB schemas, AST hubs ($\ge 20$)</td>
+          <td style="text-align: center"><strong>Dual PR</strong></td>
+          <td style="text-align: center"><strong>Yes</strong></td>
+          <td style="text-align: center">AI Review + Human Lead</td>
+          <td style="text-align: center">❌ No (Human Lead required)</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"><strong>L3</strong></td>
+          <td style="text-align: left">Destructive DDL (<code>DROP</code>), auth engines, <code>.sdlc/policy.yaml</code></td>
+          <td style="text-align: center"><strong>Dual PR</strong></td>
+          <td style="text-align: center"><strong>Yes</strong></td>
+          <td style="text-align: center">AI Review + Human Lead</td>
+          <td style="text-align: center">❌ No (Human Lead required)</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="4-key-engineering-discoveries--trade-offs-in-auto-mode">4. Key Engineering Discoveries &amp; Trade-offs in Auto-Mode</h2>
+<p>Building an adaptive mode brought up several deep engineering challenges. Here are the core technical decisions:</p>
+<h3 id="1-the-multi-stack-reality-why-path-regexes-failed-97120-under-classifications">1. The Multi-Stack Reality: Why Path Regexes Failed (97/120 Under-Classifications)</h3>
+<p>An early prototype used simple path regular expressions (e.g., matching <code>/api/</code> or <code>/migrations/</code>).</p>
+<p>When I stress-tested this against a benchmark of <strong>120 real-world enterprise test cases across Java (Spring Boot, Quarkus), Python (FastAPI, Django), Go, Node.js, Kotlin, and .NET</strong>, simple path regexes suffered <strong>97 under-classifications</strong>:</p>
+<ul>
+<li>A Flyway database migration at <code>src/main/resources/db/mysql/2026/V12__alter.sql</code> was missed because the path lacked a literal <code>/migration/</code> segment.</li>
+<li>A Go server in <code>cmd/server/main.go</code> exporting public routes via <code>echo.New()</code> or <code>gin.Default()</code> was missed because it wasn&rsquo;t placed under <code>/api/</code>.</li>
+</ul>
+<p>To fix this without embedding heavy, slow compilers into the CLI, I engineered a <strong>&lt;50ms lightweight 3-layer static fingerprint engine</strong>:</p>
+<ol>
+<li><strong>Framework Import &amp; Decorator Signatures</strong>: Detecting <code>@RestController</code>, <code>APIRouter</code>, <code>echo.New()</code>, <code>gin.Default()</code>, <code>@Controller</code>.</li>
+<li><strong>Schema &amp; DDL Content Headers</strong>: Scanning for <code>CREATE TABLE</code>, <code>ALTER TABLE</code>, foreign keys, and migration annotations.</li>
+<li><strong>Build Manifests &amp; Dependencies</strong>: Inspecting structural changes in <code>package.json</code>, <code>pom.xml</code>, or <code>go.mod</code>.</li>
+</ol>
+<p>Combined with Graphify 1-hop in-degree, this accurately surfaces structural changes across languages in milliseconds.</p>
+<h3 id="2-the-l0--l1-bounded-positive-safety-envelope">2. The L0 + L1 Bounded Positive Safety Envelope</h3>
+<p>Why not simply classify every non-documentation change as L2?</p>
+<ul>
+<li>Forcing L2 on every single internal code change would destroy the L1 fast track, bringing back the exact friction developers complained about.</li>
+<li><strong>Decision</strong>: Establish a strict <strong>Bounded Positive Safety Envelope</strong> for L1:
+<ul>
+<li>Total changed files must be $\le 5$.</li>
+<li>Must not touch root package exports (<code>index.js</code>, <code>mod.rs</code>, public interfaces).</li>
+<li>Must not modify an AST hub with in-degree $\ge 20$.</li>
+<li>Must contain zero API/DDL/auth static fingerprints.</li>
+</ul>
+</li>
+</ul>
+<p>If a change fits inside this envelope, it moves quickly through the Single-PR pipeline.</p>
+<h3 id="3-humane-in-place-escalation-vs-branch-restarts">3. Humane In-Place Escalation vs. Branch Restarts</h3>
+<p>Suppose an engineer prompts an agent: <em>&ldquo;Refactor the order discount helper.&rdquo;</em> This gets classified as <strong>L1</strong> (Single PR).</p>
+<p>Halfway through coding, the agent realizes it needs to add a new column to a database table or alter a public API route.</p>
+<p>In a strict gate system, CI would block the PR and say: <em><code>[ERROR] Database schema touched on a Single-PR branch. Please stash your code, open a Spec PR, get it merged, and rebase.</code></em> That makes developers hate the tool.</p>
+<p>Instead, I implemented <strong>Humane In-Place Escalation (Invariant #8)</strong>:</p>
+<ul>
+<li>The single PR stays <strong>in-place</strong>. No stashing, no branch recreating.</li>
+<li><code>asdlc verify</code> detects the boundary expansion via the <code>risk-escape</code> check.</li>
+<li>It automatically <strong>revokes auto-merge</strong> and adds the label <code>asdlc:escalated-to-lead</code>.</li>
+<li>The PR routes to a human Tech Lead for review and approval.</li>
+</ul>
+<p>Safety is preserved, and the developer&rsquo;s work is not thrown away.</p>
+<h3 id="4-anti-gaming-hash-chain-risk-historyjsonl">4. Anti-Gaming Hash Chain (<code>risk-history.jsonl</code>)</h3>
+<p>An early prototype let the authoring agent write a local file declaring its own risk level. An agent will almost always declare itself &ldquo;L1 Low Risk&rdquo; because it wants to complete the task without waiting for human approval.</p>
+<p>To prevent this:</p>
+<ul>
+<li>Every level transition is sealed in an append-only, SHA-256 hash-chained log (<code>risk-history.jsonl</code>).</li>
+<li>Manual or agent downgrades (<code>L2 -&gt; L1</code>) break the hash chain and are instantly blocked by <code>level-integrity</code>.</li>
+<li>The static fingerprint engine acts as an immutable invariant guard. If the diff contains <code>DROP TABLE</code> or touches <code>.sdlc/policy.yaml</code>, it is unconditionally forced to L3.</li>
+</ul>
+<h3 id="5-3-round-review-cap-to-stop-infinite-loops">5. 3-Round Review Cap to Stop Infinite Loops</h3>
+<p>Adopting Anthropic&rsquo;s rule, independent review sessions (<code>asdlc-impl-review</code>) are capped at <strong>3 rounds</strong>.</p>
+<p>If the implementation agent and review agent cannot agree on a clean diff after 3 rounds, the loop stops. Instead of wasting tokens on minor formatting arguments, the PR gets labeled <code>asdlc:needs-human-arbitration</code> for a human to make the call.</p>
+<hr>
+<h2 id="5-how-to-roll-this-out-a-two-stage-playbook">5. How to Roll This Out: A Two-Stage Playbook</h2>
+<p>If an engineering team wants to adopt this, I recommend doing it in two phases:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>PHASE 1: Team Onboarding                  PHASE 2: Steady-State Delivery
+</span></span><span style="display:flex;"><span>┌─────────────────────────────────┐       ┌─────────────────────────────────┐
+</span></span><span style="display:flex;"><span>│ workflow_mode: spec-first       │  ──▶  │ workflow_mode: auto             │
+</span></span><span style="display:flex;"><span>│ (Dual-PR for all changes)       │       │ (Adaptive L0–L3 Dual-Track)     │
+</span></span><span style="display:flex;"><span>└─────────────────────────────────┘       └─────────────────────────────────┘
+</span></span><span style="display:flex;"><span> • Builds team spec discipline             • Zero friction for L0/L1 tasks
+</span></span><span style="display:flex;"><span> • Teaches writing clear BDD scenarios     • Strong safety on L2/L3 code
+</span></span><span style="display:flex;"><span> • Calibrates AI reviewer baseline         • Maximum team development speed
+</span></span></code></pre></div><ol>
+<li><strong>Phase 1: Start with <code>spec-first</code> (<code>asdlc config set workflow_mode spec-first</code>)</strong>:
+Run mandatory Spec-First for 3 to 4 weeks. This gets both human engineers and AI agents used to writing clear BDD specs and thinking about architecture before writing code.</li>
+<li><strong>Phase 2: Switch to <code>auto</code> (<code>asdlc config set workflow_mode auto</code>)</strong>:
+Once the team is comfortable with the spec format, switch to <code>auto</code>. Routine fixes move through the fast track, while critical contracts stay protected.</li>
+</ol>
+<hr>
+<h2 id="6-whats-next-taking-agents-off-developer-laptops">6. What&rsquo;s Next: Taking Agents Off Developer Laptops</h2>
+<p>With <code>auto</code> mode working, I solved the balance between safety and speed. But one big limitation remained:</p>
+<p><strong>Developers still had to run everything locally in their IDE.</strong></p>
+<p>You still have to keep your laptop open, watch test suites run, and handle prompts in your local terminal.</p>
+<p>Can this entire agent workflow move off developer machines into an <strong>isolated, hardened container running headlessly in the background</strong>—handling all human interaction asynchronously through Git and GitHub PR comments? Taking agents off developer laptops is the next logical step in autonomous software engineering.</p>
+<hr>
+<h2 id="-links--references">🔗 Links &amp; References</h2>
+<ul>
+<li><strong>Part 1</strong>: <a href="https://akjamie.github.io/post/2026-11-01-agentic-sdlc-dual-pr-governance/">From AI-First + SDD to Agentic SDLC: Building a Dual-PR Governance Engine for Autonomous Coding</a></li>
+<li><strong>Anthropic Engineering Blog</strong>: <a href="https://claude.dev/blog/solving-code-review-at-anthropic/">How the Claude Code team does code review (Oct 2026)</a></li>
+<li><strong><code>agentic-sdlc</code> Repository</strong>: <a href="https://github.com/akjamie/agentic-sdlc">https://github.com/akjamie/agentic-sdlc</a></li>
+</ul>
+
+
+                
+                
+<div class="entry-shang text-center">
+    
+	    <p>「真诚赞赏，手留余香」</p>
+	
+	<button class="zs show-zs btn btn-bred">赞赏支持</button>
+</div>
+<div class="zs-modal-bg"></div>
+<div class="zs-modal-box">
+	<div class="zs-modal-head">
+		<button type="button" class="close">×</button>
+		<span class="author"><a href="http://akjamie.github.io/"><img src="/img/favicon.png" />Jamie&#39;s Blog</a></span>
+        
+	        <p class="tip"><i></i><span>真诚赞赏，手留余香</span></p>
+		
+ 
+	</div>
+	<div class="zs-modal-body">
+		<div class="zs-modal-btns">
+			<button class="btn btn-blink" data-num="2">2元</button>
+			<button class="btn btn-blink" data-num="5">5元</button>
+			<button class="btn btn-blink" data-num="10">10元</button>
+			<button class="btn btn-blink" data-num="50">50元</button>
+			<button class="btn btn-blink" data-num="100">100元</button>
+			<button class="btn btn-blink" data-num="1">任意金额</button>
+		</div>
+		<div class="zs-modal-pay">
+			<button class="btn btn-bred" id="pay-text">2元</button>
+			<p>使用<span id="pay-type">微信</span>扫描二维码完成支付</p>
+			<img src="/img/reward/wechat-2.png"  id="pay-image"/>
+		</div>
+	</div>
+	<div class="zs-modal-footer">
+		<label><input type="radio" name="zs-type" value="wechat" class="zs-type" checked="checked"><span ><span class="zs-wechat"><img src="/img/reward/wechat-btn.png"/></span></label>
+		<label><input type="radio" name="zs-type" value="alipay" class="zs-type" class="zs-alipay"><img src="/img/reward/alipay-btn.png"/></span></label>
+	</div>
+</div>
+<script type="text/javascript" src="/js/reward.js"></script>
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/post/2026-11-01-agentic-sdlc-dual-pr-governance/" data-toggle="tooltip" data-placement="top" title="From AI-First &#43; SDD to Agentic SDLC: Building a Dual-PR Governance Engine for Autonomous Coding">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/post/2026-11-03-autonomous-container-pipeline/" data-toggle="tooltip" data-placement="top" title="Beyond the IDE: Running Autonomous Agentic SDLC in Isolated Containers">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+                
+
+                
+
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/agentic-ai" title="agentic ai">
+                            agentic ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/agentic-sdlc" title="agentic sdlc">
+                            agentic sdlc
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/agents" title="agents">
+                            agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/ai" title="ai">
+                            ai
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/ai-agents" title="ai agents">
+                            ai agents
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/anthropic" title="anthropic">
+                            anthropic
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/architecture" title="architecture">
+                            architecture
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/aws" title="aws">
+                            aws
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/code-review" title="code review">
+                            code review
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/deep-learning" title="deep learning">
+                            deep learning
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/devops" title="devops">
+                            devops
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/docker" title="docker">
+                            docker
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/hermes" title="hermes">
+                            hermes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/k8s" title="k8s">
+                            k8s
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/kubernetes" title="kubernetes">
+                            kubernetes
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/llm" title="llm">
+                            llm
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/llm-agents" title="llm agents">
+                            llm agents
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/multi-agent" title="multi-agent">
+                            multi-agent
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/nosql" title="nosql">
+                            nosql
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/prompt-engineering" title="prompt engineering">
+                            prompt engineering
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/python" title="python">
+                            python
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/redis" title="redis">
+                            redis
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring" title="spring">
+                            spring
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/spring-boot" title="spring boot">
+                            spring boot
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/spring-cloud" title="spring cloud">
+                            spring cloud
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/system-design" title="system design">
+                            system design
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/tool-use" title="tool use">
+                            tool use
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/transaction-management" title="transaction management">
+                            transaction management
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/transformer" title="transformer">
+                            transformer
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/vault" title="vault">
+                            vault
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <li>
+                        <a href="mailto:akjamie.zhang@outlook.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat-qrcode.png">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/akjamie">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/jamie-zhang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Jamie&#39;s Blog" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jamie&#39;s Blog 2026
+                    
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    (function() {
+        function updateTagcloudColors() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const startColor = isDark ? '#808080' : '#bbbbee';
+            if($('#tag_cloud').length !== 0 && $.fn.tagcloud) {
+                $.fn.tagcloud.defaults = {
+                    color: {start: startColor, end: '#0085a1'},
+                };
+                $('#tag_cloud a').tagcloud();
+            }
+        }
+
+        
+        $(document).ready(function() {
+            updateTagcloudColors();
+        });
+
+        
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    updateTagcloudColors();
+                }
+            });
+        });
+
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    })();
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<script src="/js/theme-toggle.js"></script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow" title="' + t + '">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"
+          data-cfasync="false" defer></script>
+  <script data-cfasync="false" defer>
+    document.addEventListener('DOMContentLoaded', function () {
+      mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
+    });
+  </script>
+
+</body>
+</html>

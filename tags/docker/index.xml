@@ -6,8 +6,15 @@
     <description>Recent content in Docker on Jamie&#39;s Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 23 Jul 2019 13:36:10 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 03 Nov 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://akjamie.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Beyond the IDE: Running Autonomous Agentic SDLC in Isolated Containers</title>
+      <link>http://akjamie.github.io/post/2026-11-03-autonomous-container-pipeline/</link>
+      <pubDate>Tue, 03 Nov 2026 00:00:00 +0000</pubDate>
+      <guid>http://akjamie.github.io/post/2026-11-03-autonomous-container-pipeline/</guid>
+      <description>&lt;h1 id=&#34;beyond-the-ide-running-autonomous-agentic-sdlc-in-isolated-containers&#34;&gt;Beyond the IDE: Running Autonomous Agentic SDLC in Isolated Containers&lt;/h1&gt;&#xA;&lt;p&gt;In &lt;a href=&#34;https://akjamie.github.io/post/2026-11-01-agentic-sdlc-dual-pr-governance/&#34;&gt;Part 1&lt;/a&gt; and &lt;a href=&#34;https://akjamie.github.io/post/2026-11-02-adaptive-governance-and-auto-mode/&#34;&gt;Part 2&lt;/a&gt;, I shared the governance rules that keep AI coding agents on track: Dual-PR Spec-First contracts and the adaptive L0–L3 &lt;code&gt;auto&lt;/code&gt; mode.&lt;/p&gt;&#xA;&lt;p&gt;However, one practical problem remained: &lt;strong&gt;everything still runs on the developer&amp;rsquo;s laptop&lt;/strong&gt;.&lt;/p&gt;&#xA;&lt;p&gt;If an agent needs 10 minutes to run tests, explore AST files, and do a review pass, the developer has to keep their laptop awake, avoid switching branches, and baby-sit terminal prompts. If you try to run agents in standard CI, they either crash when asking for interactive input or make wild guesses.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Spring Cloud Series</title>
       <link>http://akjamie.github.io/post/2019-07-15-spring-cloud-demo-overview/</link>
